@@ -1,0 +1,15 @@
+*.log
+*.pot
+*.pyc
+*.pid
+*.o
+*.pyo
+*.bak
+
+
+env
+settings_local.py
+.DS_Store
+.idea
+backups
+db.sqlite3
