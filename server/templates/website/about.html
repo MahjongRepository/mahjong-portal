@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {% trans 'About' %}
+{% endblock %}
 
 {% block content %}
-    About
+    {% trans 'This is my vision of current russian riichi mahjong leader board.' %}
 {% endblock %}

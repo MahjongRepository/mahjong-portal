@@ -15,9 +15,12 @@ class Tournament(BaseModel):
     ]
 
     name = models.CharField(max_length=255)
+    slug = models.SlugField()
+
     date = models.DateField()
     number_of_days = models.PositiveSmallIntegerField(default=0)
     number_of_sessions = models.PositiveSmallIntegerField(default=0)
+    number_of_players = models.PositiveSmallIntegerField(default=0)
     game_type = models.PositiveSmallIntegerField(choices=GAME_TYPES, default=RIICHI)
 
     clubs = models.ManyToManyField(Club)

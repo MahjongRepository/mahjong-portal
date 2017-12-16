@@ -5,4 +5,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('website.urls')),
     url(r'^rating/', include('rating.urls')),
+    url(r'^tournament/', include('tournament.urls')),
 ]

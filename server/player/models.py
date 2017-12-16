@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext as _
 
 from leaderboard.models import BaseModel
 from settings.models import Country, City
@@ -24,6 +25,7 @@ class Player(BaseModel):
     ]
     
     objects = PlayerManager()
+    all_objects = models.Manager()
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -40,4 +42,7 @@ class Player(BaseModel):
 
     @property
     def full_name(self):
+        if self.is_hide:
+            return _('Hidden name')
+        
         return ' '.join([self.first_name, self.last_name])

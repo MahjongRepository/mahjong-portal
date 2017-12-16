@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block additiona_title %}
+    {{ rating.name }}
+{% endblock %}
+
 {% block content %}
     <div>
         <h1>{{ rating.name }}</h1>

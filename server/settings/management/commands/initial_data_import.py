@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
         TournamentResult.objects.all().delete()
 
-        Player.objects.all().delete()
+        Player.all_objects.all().delete()
         Tournament.objects.all().delete()
         Club.objects.all().delete()
 
@@ -308,6 +308,7 @@ class Command(BaseCommand):
             for tournament_id in self.tournaments:
                 tournament_dict = self.tournaments[tournament_id]
                 tournament_object = Tournament.objects.create(
+                    slug=slugify(tournament_dict['name_en']),
                     name_en=tournament_dict['name_en'],
                     name_ru=tournament_dict['name_ru'],
                     number_of_sessions=tournament_dict['sessions'],
@@ -315,6 +316,7 @@ class Command(BaseCommand):
                     tournament_type=tournament_types[tournament_dict['type']],
                     city=tournament_dict['city'] and cities_objects[tournament_dict['city']] or None,
                     country=country_objects['RUS'],
+                    number_of_players=len(tournament_dict['results'])
                 )
 
                 if tournament_dict['club_id']:
