@@ -6,7 +6,7 @@ from rating.models import Rating
 
 def home(request):
     rating = Rating.objects.get(type=Rating.INNER)
-    players = Player.objects.all().order_by('inner_rating_place', 'id')[:25]
+    players = Player.objects.all().order_by('inner_rating_place')[:25]
 
     return render(request, 'website/home.html', {
         'page': 'home',

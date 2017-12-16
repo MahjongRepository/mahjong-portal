@@ -9,7 +9,7 @@ from unidecode import unidecode
 
 from club.models import Club
 from player.models import Player
-from rating.models import Rating
+from rating.models import Rating, RatingDelta
 from settings.models import Country, City, TournamentType
 from tournament.models import Tournament, TournamentResult
 
@@ -22,6 +22,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print('Start', end='\n\n')
 
+        RatingDelta.objects.all().delete()
         Rating.objects.all().delete()
 
         TournamentResult.objects.all().delete()
@@ -302,7 +303,7 @@ class Command(BaseCommand):
                 player_dict['country'] = country_objects[player_dict['country']]
                 player_dict['city'] = player_dict['city'] and cities_objects[player_dict['city']] or None
                 del player_dict['name']
-
+                player_dict['slug'] = slug=slugify('{} {}'.format(player_dict['last_name_en'], player_dict['first_name_en']))
                 player_objects[player_id] = Player.objects.create(**player_dict)
 
             for tournament_id in self.tournaments:
@@ -331,6 +332,11 @@ class Command(BaseCommand):
                         place=tournament_result['place'],
                         scores=tournament_result['scores'],
                     )
+
+        players_without_results = Player.objects.filter(tournament_results__isnull=True)
+        print('Players without results: {}'.format(players_without_results.count()), end='\n\n')
+        for player_name in players_without_results:
+            print(player_name.last_name_ru, player_name.first_name_ru)
 
         print('Done')
 

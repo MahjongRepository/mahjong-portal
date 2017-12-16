@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {{ player.full_name }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ player.full_name }}</h1>
+        <p>
+            {% trans 'Place in inner rating:' %} {{ player.inner_rating_place }},
+            {% trans 'with' %} {{ player.inner_rating_score }} {% trans 'points' %}
+        </p>
+
+        <p>{% trans 'Rating changes:' %}</p>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% trans 'Delta' %}</th>
+                <th scope="col">{% trans 'Date' %}</th>
+                <th scope="col">{% trans 'Tournament' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for delta in deltas %}
+                <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>
+                        {% if delta.is_active %}
+                            {% if delta.delta > 500 %}
+                                <span class="badge badge-success">{{ delta.delta }}</span>
+                            {% else %}
+                                <span class="badge badge-warning">{{ delta.delta }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge badge-secondary">{{ delta.delta }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ delta.tournament.date }}</td>
+                    <td><a href="{% url 'tournament_details' delta.tournament.slug %}">{{ delta.tournament.name }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

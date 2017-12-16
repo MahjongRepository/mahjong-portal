@@ -10,14 +10,14 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">{% trans 'Name' %}</th>
-                    <th scope="col">{% trans 'Score' %}</th>
+                    <th scope="col">{% trans 'Points' %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for player in players %}
                     <tr>
                         <th scope="row">{{ player.inner_rating_place }}</th>
-                        <td>{{ player.full_name }}</td>
+                        <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
                         <td>{{ player.inner_rating_score }}</td>
                     </tr>
                 {% endfor %}

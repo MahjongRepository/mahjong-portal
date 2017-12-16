@@ -29,6 +29,7 @@ class Player(BaseModel):
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
 
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
@@ -37,7 +38,8 @@ class Player(BaseModel):
     is_replacement = models.BooleanField(default=False)
     is_hide = models.BooleanField(default=False)
 
-    inner_rating_score = models.DecimalField(default=0, decimal_places=2, max_digits=10)
+    # cached fields, to better performance
+    inner_rating_score = models.PositiveSmallIntegerField(default=0)
     inner_rating_place = models.PositiveIntegerField(default=0)
 
     @property

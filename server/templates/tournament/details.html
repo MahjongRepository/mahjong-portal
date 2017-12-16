@@ -25,7 +25,13 @@
             {% for result in results %}
                 <tr>
                     <th scope="row">{{ result.place }}</th>
-                    <td>{{ result.player.full_name }}</td>
+                    <td>
+                        {% if result.player.is_replacement %}
+                            {{ result.player.full_name }}
+                        {% else %}
+                            <a href="{% url 'player_details' result.player.slug %}">{{ result.player.full_name }}</a>
+                        {% endif %}
+                    </td>
                     {# two default filters is not mistake, it didn't work with float otherwise #}
                     <td>{{ result.scores|default:'-'|floatformat:0|default:'-' }}</td>
                 </tr>
