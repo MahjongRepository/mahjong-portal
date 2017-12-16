@@ -30,4 +30,4 @@ class TournamentResult(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='results', on_delete=models.PROTECT)
     player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results')
     place = models.PositiveSmallIntegerField()
-    scores = models.FloatField(default=None, null=True)
+    scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)

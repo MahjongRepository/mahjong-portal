@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<nav aria-label="Player navigation" class="p-3">
+    <ul class="pagination">
+        {% if players.has_previous %}
+            <li class="page-item">
+                <a href="?page={{ players.previous_page_number }}"
+                   class="page-link previous">&lsaquo;&lsaquo; {% trans "Previous" %}</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link previous">&lsaquo;&lsaquo; {% trans "Previous" %}</span>
+            </li>
+        {% endif %}
+
+        {% if players.has_next %}
+            <li class="page-item">
+                <a href="?page={{ players.next_page_number }}"
+                   class="page-link previous">{% trans "Next" %} &rsaquo;&rsaquo;</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link next">{% trans "Next" %} &rsaquo;&rsaquo;</span>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

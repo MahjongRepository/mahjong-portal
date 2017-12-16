@@ -2,13 +2,14 @@ import csv
 import os
 
 from datetime import datetime
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
 from unidecode import unidecode
 
 from club.models import Club
 from player.models import Player
+from rating.models import Rating
 from settings.models import Country, City, TournamentType
 from tournament.models import Tournament, TournamentResult
 
@@ -20,6 +21,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print('Start', end='\n\n')
+
+        Rating.objects.all().delete()
 
         TournamentResult.objects.all().delete()
 
@@ -272,6 +275,11 @@ class Command(BaseCommand):
         }
 
         with transaction.atomic():
+            Rating.objects.create(type=Rating.INNER,
+                                  name_ru='Внутренний рейтинг',
+                                  name_en='Inner rating',
+                                  slug='inner')
+
             for country in self.countries:
                 country_objects[country] = Country.objects.create(**countries_data[country])
 

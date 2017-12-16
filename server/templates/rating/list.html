@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div>
+        <h1>{{ rating.name }}</h1>
+        <p>{{ players.start_index }} &ndash; {{ players.end_index }} {% trans 'of' %} {{ players.paginator.count }}</p>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% trans 'Name' %}</th>
+                <th scope="col">{% trans 'Score' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for player in players %}
+                <tr>
+                    <th scope="row">{{ player.inner_rating_place }}</th>
+                    <td>{{ player.full_name }}</td>
+                    <td>{{ player.inner_rating_score }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% include 'rating/_pagination.html' %}
+    </div>
+
+{% endblock %}

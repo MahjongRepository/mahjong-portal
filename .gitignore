@@ -6,7 +6,7 @@
 *.pyo
 *.bak
 
-
+collected_static
 env
 settings_local.py
 .DS_Store
