@@ -14,6 +14,7 @@
                 <th scope="col">#</th>
                 <th scope="col">{% trans 'Name' %}</th>
                 <th scope="col">{% trans 'Date' %}</th>
+                <th scope="col">{% trans 'City' %}</th>
                 <th scope="col">{% trans 'Players' %}</th>
                 <th scope="col">{% trans 'Sessions' %}</th>
             </tr>
@@ -24,6 +25,7 @@
                     <th scope="row">{{ forloop.counter }}</th>
                     <td><a href="{% url 'tournament_details' tournament.slug %}">{{ tournament.name }}</a></td>
                     <td>{{ tournament.date }}</td>
+                    <td>{{ tournament.city.name }}</td>
                     <td>{{ tournament.number_of_players }}</td>
                     <td>{{ tournament.number_of_sessions|default:'-' }}</td>
                 </tr>

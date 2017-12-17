@@ -42,12 +42,20 @@ class Command(BaseCommand):
         clubs_csv = os.path.join(csv_dir, 'clubs.csv')
         tournaments_csv = os.path.join(csv_dir, 'tournaments.csv')
         results_csv = os.path.join(csv_dir, 'results.csv')
+        cities_csv = os.path.join(csv_dir, 'cities.csv')
 
         self.players = {}
         self.clubs = {}
         self.tournaments = {}
         self.countries = []
         self.cities = []
+        self.cities_translation = {}
+
+        with open(cities_csv, 'r') as f:
+            reader = csv.DictReader(f, delimiter=',')
+
+            for row in reader:
+                self.cities_translation[row['ru']] = row['en']
 
         print('Process players...')
 
@@ -71,8 +79,8 @@ class Command(BaseCommand):
             'name': 'игрок замены',
             'first_name_ru': 'замены',
             'last_name_ru': 'Игрок',
-            'first_name_en': 'Replacement',
-            'last_name_en': 'player',
+            'first_name_en': 'player',
+            'last_name_en': 'Replacement',
             'gender': Player.NONE,
             'country': 'RUS',
             'city': None,
@@ -143,7 +151,7 @@ class Command(BaseCommand):
                 t_type = row['type'].strip().lower()
 
                 name_ru = name
-                name_en = unidecode(name)
+                name_en = row['name_en'].strip()
 
                 sessions = sessions and int(sessions) or 0
                 date = datetime.strptime(date, '%m/%d/%Y')
@@ -271,8 +279,8 @@ class Command(BaseCommand):
         player_objects = {}
 
         tournament_types = {
-            'club': TournamentType.objects.create(name_ru='Клубный', name_en='Club', slug='club'),
-            'ema': TournamentType.objects.create(name_ru='EMA', name_en='EMA', slug='ema')
+            'club': TournamentType.objects.create(name_ru='Клубный турнир', name_en='Club tournament', slug='club'),
+            'ema': TournamentType.objects.create(name_ru='Официальный EMA', name_en='Official EMA', slug='ema')
         }
 
         with transaction.atomic():
@@ -285,7 +293,7 @@ class Command(BaseCommand):
                 country_objects[country] = Country.objects.create(**countries_data[country])
 
             for city in self.cities:
-                cities_objects[city] = City.objects.create(name_ru=city, name_en=unidecode(city))
+                cities_objects[city] = City.objects.create(name_ru=city, name_en=self.cities_translation[city])
 
             for club_id in self.clubs:
                 club_dict = self.clubs[club_id]
@@ -303,7 +311,7 @@ class Command(BaseCommand):
                 player_dict['country'] = country_objects[player_dict['country']]
                 player_dict['city'] = player_dict['city'] and cities_objects[player_dict['city']] or None
                 del player_dict['name']
-                player_dict['slug'] = slug=slugify('{} {}'.format(player_dict['last_name_en'], player_dict['first_name_en']))
+                player_dict['slug'] = slug=slugify('{} {}'.format(player_dict['first_name_en'], player_dict['last_name_en']))
                 player_objects[player_id] = Player.objects.create(**player_dict)
 
             for tournament_id in self.tournaments:

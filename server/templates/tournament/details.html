@@ -13,6 +13,13 @@
             {% trans 'with' %} {{ tournament.number_of_players }} {% trans 'players' %}
             {% trans 'and' %} {{ tournament.number_of_sessions }} {% trans 'sessions' %}
         </p>
+        <p>
+            {% if tournament.is_official_ema %}
+                <span class="badge badge-success">{{ tournament.tournament_type.name }}</span>
+            {% else %}
+                <span class="badge badge-primary">{{ tournament.tournament_type.name }}</span>
+            {% endif %}
+        </p>
         <table class="table table-hover">
             <thead>
             <tr>

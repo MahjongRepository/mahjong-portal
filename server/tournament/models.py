@@ -28,6 +28,9 @@ class Tournament(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
 
+    def is_official_ema(self):
+        return self.tournament_type.slug == 'ema'
+
 
 class TournamentResult(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='results', on_delete=models.PROTECT)

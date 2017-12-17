@@ -12,14 +12,19 @@
             {% trans 'Place in inner rating:' %} {{ player.inner_rating_place }},
             {% trans 'with' %} {{ player.inner_rating_score }} {% trans 'points' %}
         </p>
+        <p>
+            {% trans 'From' %} {% if player.city %}{{ player.city.name }},{% endif %} {{ player.country.name }}
+        </p>
 
-        <p>{% trans 'Rating changes:' %}</p>
-        <table class="table table-hover">
+        <h4>{% trans 'Rating changes' %}</h4>
+        <table class="table table-hover table-responsive-sm">
             <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">{% trans 'Delta' %}</th>
+                <th scope="col">{% trans 'Place changes' %}</th>
                 <th scope="col">{% trans 'Date' %}</th>
+                <th scope="col">{% trans 'Rank' %}</th>
                 <th scope="col">{% trans 'Tournament' %}</th>
             </tr>
             </thead>
@@ -29,16 +34,38 @@
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>
                         {% if delta.is_active %}
-                            {% if delta.delta > 500 %}
+                            {% if delta.delta > 0 %}
                                 <span class="badge badge-success">{{ delta.delta }}</span>
+                            {% elif delta.delta == 0 %}
+                                <span class="badge badge-primary">{{ delta.delta }}</span>
                             {% else %}
-                                <span class="badge badge-warning">{{ delta.delta }}</span>
+                                <span class="badge badge-danger">{{ delta.delta }}</span>
                             {% endif %}
                         {% else %}
                             <span class="badge badge-secondary">{{ delta.delta }}</span>
                         {% endif %}
                     </td>
+                    <td>
+                        <span class="badge
+                        {% if not delta.is_active %}
+                            badge-secondary
+                        {% elif not delta.rating_place_before or delta.rating_place_before == delta.rating_place_after %}
+                            badge-primary
+                        {% elif delta.rating_place_before > delta.rating_place_after  %}
+                            badge-success
+                        {% else %}
+                             badge-danger
+                        {% endif %}
+                        ">
+                            {% if delta.rating_place_before and delta.rating_place_before != delta.rating_place_after %}
+                                {{ delta.rating_place_before }} ->
+                            {% endif %}
+
+                            {{ delta.rating_place_after }}
+                        </span>
+                    </td>
                     <td>{{ delta.tournament.date }}</td>
+                    <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
                     <td><a href="{% url 'tournament_details' delta.tournament.slug %}">{{ delta.tournament.name }}</a></td>
                 </tr>
             {% endfor %}

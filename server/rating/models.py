@@ -25,3 +25,7 @@ class RatingDelta(BaseModel):
     tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name='rating_delta')
     delta = models.IntegerField()
     is_active = models.BooleanField(default=False)
+
+    tournament_place = models.PositiveSmallIntegerField(default=0)
+    rating_place_before = models.PositiveSmallIntegerField(default=0)
+    rating_place_after = models.PositiveSmallIntegerField(default=0)

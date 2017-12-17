@@ -39,12 +39,12 @@ class Player(BaseModel):
     is_hide = models.BooleanField(default=False)
 
     # cached fields, to better performance
-    inner_rating_score = models.PositiveSmallIntegerField(default=0)
-    inner_rating_place = models.PositiveIntegerField(default=0)
+    inner_rating_score = models.PositiveIntegerField(default=None, null=True, blank=True)
+    inner_rating_place = models.PositiveIntegerField(default=None, null=True, blank=True)
 
     @property
     def full_name(self):
         if self.is_hide:
             return _('Hidden name')
         
-        return ' '.join([self.first_name, self.last_name])
+        return ' '.join([self.last_name, self.first_name])

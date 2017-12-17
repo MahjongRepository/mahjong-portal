@@ -42,11 +42,11 @@ class InnerRatingTestCase(TestCase):
 
         tournament = self._create_tournament(players=60, session=4)
 
-        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.2)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.15)
 
         tournament = self._create_tournament(players=80, session=4)
 
-        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.3)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.2)
 
     def test_tournament_coefficient_and_number_of_sessions(self):
         calculator = InnerRatingCalculation()
@@ -56,15 +56,15 @@ class InnerRatingTestCase(TestCase):
 
         tournament = self._create_tournament(players=16, session=8)
 
-        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.05)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.1)
 
         tournament = self._create_tournament(players=16, session=10)
 
-        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.07)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.12)
 
         tournament = self._create_tournament(players=16, session=12)
 
-        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.1)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.15)
 
     def test_calculate_player_base_rank(self):
         calculator = InnerRatingCalculation()
@@ -73,16 +73,21 @@ class InnerRatingTestCase(TestCase):
         result = self._create_tournament_result(tournament, place=1)
         self.assertEqual(calculator.calculate_base_rank(result), 1000)
 
-        result = self._create_tournament_result(tournament, place=80)
-        self.assertEqual(calculator.calculate_base_rank(result), 0)
+        result = self._create_tournament_result(tournament, place=20)
+        self.assertEqual(calculator.calculate_base_rank(result), 513)
 
         result = self._create_tournament_result(tournament, place=40)
-        self.assertEqual(calculator.calculate_base_rank(result), 506)
+        self.assertEqual(calculator.calculate_base_rank(result), 0)
+
+        result = self._create_tournament_result(tournament, place=60)
+        self.assertEqual(calculator.calculate_base_rank(result), -513)
+
+        result = self._create_tournament_result(tournament, place=80)
+        self.assertEqual(calculator.calculate_base_rank(result), -1000)
 
     def test_calculate_rating_delta(self):
         calculator = InnerRatingCalculation()
         tournament = self._create_tournament(players=80, session=12)
 
-        result = self._create_tournament_result(tournament, place=40)
-        # 506 * 1.4
-        self.assertEqual(calculator.calculate_rating_delta(result), 708)
+        result = self._create_tournament_result(tournament, place=20)
+        self.assertEqual(calculator.calculate_rating_delta(result), 693)
