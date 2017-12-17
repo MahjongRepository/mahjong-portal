@@ -293,7 +293,11 @@ class Command(BaseCommand):
                 country_objects[country] = Country.objects.create(**countries_data[country])
 
             for city in self.cities:
-                cities_objects[city] = City.objects.create(name_ru=city, name_en=self.cities_translation[city])
+                cities_objects[city] = City.objects.create(
+                    name_ru=city,
+                    name_en=self.cities_translation[city],
+                    slug=slugify(self.cities_translation[city])
+                )
 
             for club_id in self.clubs:
                 club_dict = self.clubs[club_id]
@@ -311,11 +315,12 @@ class Command(BaseCommand):
                 player_dict['country'] = country_objects[player_dict['country']]
                 player_dict['city'] = player_dict['city'] and cities_objects[player_dict['city']] or None
                 del player_dict['name']
-                player_dict['slug'] = slug=slugify('{} {}'.format(player_dict['first_name_en'], player_dict['last_name_en']))
+                player_dict['slug'] = slug=slugify('{} {}'.format(player_dict['last_name_en'], player_dict['first_name_en']))
                 player_objects[player_id] = Player.objects.create(**player_dict)
 
             for tournament_id in self.tournaments:
                 tournament_dict = self.tournaments[tournament_id]
+                print(tournament_dict['name_en'])
                 tournament_object = Tournament.objects.create(
                     slug=slugify(tournament_dict['name_en']),
                     name_en=tournament_dict['name_en'],

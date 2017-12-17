@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n humanize %}
 
 {% block additiona_title %}
     {{ tournament.name }}
@@ -40,7 +40,7 @@
                         {% endif %}
                     </td>
                     {# two default filters is not mistake, it didn't work with float otherwise #}
-                    <td>{{ result.scores|default:'-'|floatformat:0|default:'-' }}</td>
+                    <td>{{ result.scores|floatformat:0|intcomma }}</td>
                 </tr>
             {% endfor %}
             </tbody>

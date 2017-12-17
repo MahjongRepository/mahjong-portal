@@ -1,3 +1,9 @@
 body {
     margin-top: 80px;
 }
+
+.languageChange select {
+    width: 150px;
+    margin-top: 40px;
+    margin-right: 20px;
+}

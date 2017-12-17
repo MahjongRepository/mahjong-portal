@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-17 16:06+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: player/models.py:48
+msgid "Hidden name"
+msgstr "Имя скрыто"
+
+#: templates/base.html:9 templates/base.html:15
+msgid "Mahjong Leader Board"
+msgstr "Турнирый рейтинг маджонга"
+
+#: templates/base.html:23 templates/tournament/list.html:5
+#: templates/tournament/list.html:10
+msgid "Tournaments"
+msgstr "Турниры"
+
+#: templates/base.html:26 templates/website/about.html:5
+msgid "About"
+msgstr "О рейтинге"
+
+#: templates/player/details.html:12
+msgid "Place in inner rating:"
+msgstr "Место во внутреннем рейтинге"
+
+#: templates/player/details.html:13 templates/tournament/details.html:13
+msgid "with"
+msgstr "с"
+
+#: templates/player/details.html:13
+msgid "points"
+msgstr "очки"
+
+#: templates/player/details.html:16
+msgid "From"
+msgstr "Из"
+
+#: templates/player/details.html:19
+msgid "Rating changes"
+msgstr "Изменения рейтинга"
+
+#: templates/player/details.html:24
+msgid "Delta"
+msgstr "Дельта"
+
+#: templates/player/details.html:25
+msgid "Place changes"
+msgstr "Изменения места"
+
+#: templates/player/details.html:26 templates/tournament/list.html:16
+msgid "Date"
+msgstr "Дата"
+
+#: templates/player/details.html:27
+msgid "Rank"
+msgstr "Ранг"
+
+#: templates/player/details.html:28
+msgid "Tournament"
+msgstr "Турнир"
+
+#: templates/rating/_pagination.html:8 templates/rating/_pagination.html:12
+msgid "Previous"
+msgstr "Назад"
+
+#: templates/rating/_pagination.html:19 templates/rating/_pagination.html:23
+msgid "Next"
+msgstr "Вперед"
+
+#: templates/rating/_results_table.html:7 templates/tournament/details.html:27
+#: templates/tournament/list.html:15
+msgid "Name"
+msgstr "Имя"
+
+#: templates/rating/_results_table.html:8 templates/tournament/list.html:17
+msgid "City"
+msgstr "Город"
+
+#: templates/rating/_results_table.html:9
+msgid "Points"
+msgstr "Очки"
+
+#: templates/rating/list.html:11
+msgid "of"
+msgstr "из"
+
+#: templates/tournament/details.html:12
+msgid "Held"
+msgstr "Прошел"
+
+#: templates/tournament/details.html:13
+msgid "players"
+msgstr "игроков"
+
+#: templates/tournament/details.html:14
+msgid "and"
+msgstr "и"
+
+#: templates/tournament/details.html:14
+msgid "sessions"
+msgstr "игр"
+
+#: templates/tournament/details.html:28
+msgid "Scores"
+msgstr "Очки"
+
+#: templates/tournament/list.html:18
+msgid "Players"
+msgstr "Игроки"
+
+#: templates/tournament/list.html:19
+msgid "Sessions"
+msgstr "Игр"
+
+#: templates/website/about.html:9
+msgid "This is my vision of current russian riichi mahjong leader board."
+msgstr "Это моё видение текущего турнирного рейтинга России"
+
+#: templates/website/home.html:6
+msgid "Top 25 players"
+msgstr "Лучше 25 игроков"
+
+#: templates/website/home.html:7
+msgid "all results"
+msgstr "все результаты"

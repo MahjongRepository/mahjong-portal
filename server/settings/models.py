@@ -10,9 +10,9 @@ class Country(BaseModel):
 
 class City(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
 
 class TournamentType(BaseModel):
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)

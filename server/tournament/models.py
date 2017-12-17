@@ -15,7 +15,7 @@ class Tournament(BaseModel):
     ]
 
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
     date = models.DateField()
     number_of_days = models.PositiveSmallIntegerField(default=0)
