@@ -26,8 +26,8 @@ class Command(BaseCommand):
         rating = Rating.objects.get(type=Rating.INNER)
 
         RatingDelta.objects.filter(rating=rating).delete()
-        Player.objects.all().update(inner_rating_place=None)
-        Player.objects.all().update(inner_rating_score=None)
+        Player.objects.all().update(inner_rating_place=0)
+        Player.objects.all().update(inner_rating_score=0)
 
         calculator = InnerRatingCalculation()
 
@@ -56,9 +56,6 @@ class Command(BaseCommand):
                                            player=player,
                                            delta=rating_delta,
                                            rating_place_before=place_before)
-
-                if not player.inner_rating_score:
-                    player.inner_rating_score = 0
 
                 player.inner_rating_score += rating_delta
                 player.save()
