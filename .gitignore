@@ -13,3 +13,4 @@ settings_local.py
 .idea
 backups
 db.sqlite3
+whoosh_index

@@ -100,7 +100,7 @@ class Command(BaseCommand):
             RatingDelta.objects.filter(player=player, rating=rating).update(is_active=False)
             RatingDelta.objects.filter(id__in=last_results_ids, rating=rating).update(is_active=True)
 
-            player.inner_rating_score = score or 0
+            player.inner_rating_score = score
             player.save()
 
         # .asc(nulls_last=True) crashed query, probably a bug in translation_models

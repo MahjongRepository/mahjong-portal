@@ -3,5 +3,8 @@ django-modeltranslation==0.12.1
 Unidecode==0.4.21
 psycopg2==2.7.3.2
 
+django-haystack==2.6.1
+Whoosh==2.7.4
+
 # for production
 gunicorn==19.7.1

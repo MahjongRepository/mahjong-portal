@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-17 16:06+0000\n"
+"POT-Creation-Date: 2017-12-18 15:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,13 +37,13 @@ msgstr "Турниры"
 msgid "About"
 msgstr "О рейтинге"
 
+#: templates/base.html:32 templates/base.html:33
+msgid "Search"
+msgstr "Поиск"
+
 #: templates/player/details.html:12
 msgid "Place in inner rating:"
 msgstr "Место во внутреннем рейтинге"
-
-#: templates/player/details.html:13 templates/tournament/details.html:13
-msgid "with"
-msgstr "с"
 
 #: templates/player/details.html:13
 msgid "points"
@@ -85,16 +85,17 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Вперед"
 
-#: templates/rating/_results_table.html:7 templates/tournament/details.html:27
-#: templates/tournament/list.html:15
+#: templates/rating/_results_table.html:8 templates/tournament/details.html:27
+#: templates/tournament/list.html:15 templates/website/search.html:12
 msgid "Name"
 msgstr "Имя"
 
-#: templates/rating/_results_table.html:8 templates/tournament/list.html:17
+#: templates/rating/_results_table.html:9 templates/tournament/list.html:17
+#: templates/website/search.html:13
 msgid "City"
 msgstr "Город"
 
-#: templates/rating/_results_table.html:9
+#: templates/rating/_results_table.html:10 templates/website/search.html:14
 msgid "Points"
 msgstr "Очки"
 
@@ -105,6 +106,10 @@ msgstr "из"
 #: templates/tournament/details.html:12
 msgid "Held"
 msgstr "Прошел"
+
+#: templates/tournament/details.html:13
+msgid "with"
+msgstr "с"
 
 #: templates/tournament/details.html:13
 msgid "players"
@@ -141,3 +146,11 @@ msgstr "Лучше 25 игроков"
 #: templates/website/home.html:7
 msgid "all results"
 msgstr "все результаты"
+
+#: templates/website/search.html:5
+msgid "Search results for"
+msgstr "Результаты поиска"
+
+#: templates/website/search.html:29
+msgid "nothing found"
+msgstr "ничего не нашлось"
