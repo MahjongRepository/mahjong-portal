@@ -141,7 +141,7 @@ msgstr "Это моё видение текущего турнирного ре�
 
 #: templates/website/home.html:6
 msgid "Top 25 players"
-msgstr "Лучше 25 игроков"
+msgstr "Лучшие 25 игроков"
 
 #: templates/website/home.html:7
 msgid "all results"
