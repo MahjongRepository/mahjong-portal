@@ -26,7 +26,7 @@ msgstr "Имя скрыто"
 
 #: templates/base.html:9 templates/base.html:15
 msgid "Mahjong Leader Board"
-msgstr "Турнирый рейтинг маджонга"
+msgstr "Турнирый рейтинг"
 
 #: templates/base.html:23 templates/tournament/list.html:5
 #: templates/tournament/list.html:10
