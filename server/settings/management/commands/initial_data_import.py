@@ -320,7 +320,6 @@ class Command(BaseCommand):
 
             for tournament_id in self.tournaments:
                 tournament_dict = self.tournaments[tournament_id]
-                print(tournament_dict['name_en'])
                 tournament_object = Tournament.objects.create(
                     slug=slugify(tournament_dict['name_en']),
                     name_en=tournament_dict['name_en'],

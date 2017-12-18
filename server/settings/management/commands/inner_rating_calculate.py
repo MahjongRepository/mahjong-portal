@@ -57,6 +57,9 @@ class Command(BaseCommand):
                                            delta=rating_delta,
                                            rating_place_before=place_before)
 
+                if not player.inner_rating_score:
+                    player.inner_rating_score = 0
+
                 player.inner_rating_score += rating_delta
                 player.save()
 
