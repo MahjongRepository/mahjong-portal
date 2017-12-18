@@ -9,8 +9,8 @@
     <div>
         <h1>{{ player.full_name }}</h1>
         <p>
-            {% trans 'Place in inner rating:' %} {{ player.inner_rating_place }},
-            {% trans 'with' %} {{ player.inner_rating_score }} {% trans 'points' %}
+            {% trans 'Place in inner rating:' %} {{ player.inner_rating_place }}
+            ({{ player.inner_rating_score }} {% trans 'points' %})
         </p>
         <p>
             {% trans 'From' %} {% if player.city %}{{ player.city.name }},{% endif %} {{ player.country.name }}

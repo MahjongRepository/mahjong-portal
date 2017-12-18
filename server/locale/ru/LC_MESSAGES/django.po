@@ -47,7 +47,7 @@ msgstr "с"
 
 #: templates/player/details.html:13
 msgid "points"
-msgstr "очки"
+msgstr "очков"
 
 #: templates/player/details.html:16
 msgid "From"
