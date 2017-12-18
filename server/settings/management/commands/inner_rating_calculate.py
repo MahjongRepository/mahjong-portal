@@ -26,8 +26,8 @@ class Command(BaseCommand):
         rating = Rating.objects.get(type=Rating.INNER)
 
         RatingDelta.objects.filter(rating=rating).delete()
-        Player.objects.all().update(inner_rating_place=0)
-        Player.objects.all().update(inner_rating_score=0)
+        Player.objects.all().update(inner_rating_place=None)
+        Player.objects.all().update(inner_rating_score=None)
 
         calculator = InnerRatingCalculation()
 
@@ -100,10 +100,13 @@ class Command(BaseCommand):
             RatingDelta.objects.filter(player=player, rating=rating).update(is_active=False)
             RatingDelta.objects.filter(id__in=last_results_ids, rating=rating).update(is_active=True)
 
-            player.inner_rating_score = score
+            player.inner_rating_score = score or 0
             player.save()
 
-        players = Player.all_objects.all().order_by('-inner_rating_score')
+        # .asc(nulls_last=True) crashed query, probably a bug in translation_models
+        # and because of this we have this ugly code
+        players = list(Player.objects.filter(inner_rating_score__isnull=False).order_by('-inner_rating_score'))
+        players.extend(list(Player.objects.filter(inner_rating_score__isnull=True)))
         place = 1
 
         for player in players:

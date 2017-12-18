@@ -39,8 +39,13 @@
                             <a href="{% url 'player_details' result.player.slug %}">{{ result.player.full_name }}</a>
                         {% endif %}
                     </td>
-                    {# two default filters is not mistake, it didn't work with float otherwise #}
-                    <td>{{ result.scores|floatformat:0|intcomma }}</td>
+                    <td>
+                        {% if result.scores %}
+                            {{ result.scores|floatformat:0|intcomma }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
