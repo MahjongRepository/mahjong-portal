@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-18 15:23+0000\n"
+"POT-Creation-Date: 2017-12-19 05:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,20 +24,21 @@ msgstr ""
 msgid "Hidden name"
 msgstr "Имя скрыто"
 
-#: templates/base.html:9 templates/base.html:15
+#: templates/base.html:9 templates/base.html:45
 msgid "Mahjong Leader Board"
 msgstr "Турнирый рейтинг"
 
-#: templates/base.html:23 templates/tournament/list.html:5
+#: templates/base.html:53 templates/tournament/list.html:5
 #: templates/tournament/list.html:10
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:26 templates/website/about.html:5
+#: templates/base.html:56 templates/website/about.html:5
+#: templates/website/about_en.html:5 templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтинге"
 
-#: templates/base.html:32 templates/base.html:33
+#: templates/base.html:61 templates/base.html:62
 msgid "Search"
 msgstr "Поиск"
 
@@ -134,10 +135,6 @@ msgstr "Игроки"
 #: templates/tournament/list.html:19
 msgid "Sessions"
 msgstr "Игр"
-
-#: templates/website/about.html:9
-msgid "This is my vision of current russian riichi mahjong leader board."
-msgstr "Это моё видение текущего турнирного рейтинга России"
 
 #: templates/website/home.html:6
 msgid "Top 25 players"

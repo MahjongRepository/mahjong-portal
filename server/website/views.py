@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from player.models import Player
@@ -17,7 +18,11 @@ def home(request):
 
 
 def about(request):
-    return render(request, 'website/about.html', {
+    template = 'about_en.html'
+    if get_language() == 'ru':
+        template = 'about_ru.html'
+
+    return render(request, 'website/{}'.format(template), {
         'page': 'about'
     })
 

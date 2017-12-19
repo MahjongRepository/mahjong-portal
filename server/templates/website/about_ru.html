@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {% trans 'About' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <p>Еще одна версия турнирного рейтинга России по риичи маджонгу. Все еще в разработке.</p>
+        <h2>Расчет рейтинга</h2>
+        <p>Для каждого турнира мы расчитывает турнирный коэффициент и базовый рейтинг игрока.</p>
+        <p>И из нх расчитывается дельта рейтинга:</p>
+        <code>
+            delta =  base_rank * tournament_coefficient
+        </code>
+
+        <h3 class="mt-4">Базовый рейтинг игрока</h3>
+
+        <p>Базовый рейтинг игрока зависит от позиции игрока в турнире</p>
+        <ul>
+            <li>Первое место = 1000 очков</li>
+            <li>Середина таблицы = 0 очков</li>
+            <li>Последнее место = -1000 очков</li>
+        </ul>
+        <p>Все другие места расчитываются по формуле:</p>
+        <code>
+            base_rank = ((number_of_players - place - middle) / (number_of_players - middle - 1)) * 1000
+        </code>
+
+        <h3 class="mt-4">Турнирный коэффициент</h3>
+        <p>Турнирный коэффициент базируется на количестве игроков турнира и количестве игровых сессий.</p>
+
+        <p>Количество игроков:</p>
+        <table class="table table-responsive table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Игроки</th>
+                <th scope="col">Дополнительный коэффициент</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>&le; 16</td>
+                <td>-0.2</td>
+            </tr>
+            <tr>
+                <td>&ge; 24</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>&ge; 40</td>
+                <td>0.1</td>
+            </tr>
+            <tr>
+                <td>&ge; 80</td>
+                <td>0.2</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p>Количество игр:</p>
+        <table class="table table-responsive table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">Игры</th>
+                <th scope="col">Дополнительный коэффициент</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>&le; 4</td>
+                <td>-0.2</td>
+            </tr>
+            <tr>
+                <td>&ge; 8</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>&ge; 10</td>
+                <td>0.1</td>
+            </tr>
+            <tr>
+                <td>&ge; 12</td>
+                <td>0.3</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p>Например, коэффициент турнира с 10 игровыми сессиями и 60 игроками:  <code>coefficient = 1 (base) + 0.1 (sessions) + 0.1 (player) = 1.2</code></p>
+    </div>
+
+{% endblock %}
