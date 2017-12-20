@@ -11,6 +11,7 @@ TOURNAMENT_RESULTS = 10
 
 
 class InnerRatingCalculation(object):
+    players = None
 
     def calculate_players_deltas(self, tournament, rating):
         """
@@ -20,13 +21,19 @@ class InnerRatingCalculation(object):
         :return:
         """
 
+        self.players = list(Player.all_objects.all())
+
         results = (TournamentResult.objects
                    .filter(tournament=tournament)
-                   .prefetch_related('tournament')
-                   .prefetch_related('player'))
+                   .prefetch_related('tournament'))
 
         for result in results:
-            player = result.player
+            player = None
+
+            for player_iter in self.players:
+                if player_iter.id == result.player_id:
+                    player = player_iter
+
             rating_delta = self.calculate_rating_delta(result)
 
             place_before = 0
@@ -38,16 +45,17 @@ class InnerRatingCalculation(object):
                                        rating=rating,
                                        player=player,
                                        delta=rating_delta,
-                                       rating_place_before=place_before,
-                                       rating_place_after=0)
+                                       rating_place_before=place_before)
 
             if not player.inner_rating_score:
                 player.inner_rating_score = 0
 
             player.inner_rating_score += rating_delta
-            player.save()
 
         self._recalculate_players_positions(tournament, rating)
+
+        for player in self.players:
+            player.save()
 
     def calculate_tournament_coefficient(self, tournament):
         """
@@ -136,11 +144,11 @@ class InnerRatingCalculation(object):
         """
         self._chose_active_tournament_results(tournament, rating)
 
-        players = Player.all_objects.all().order_by('-inner_rating_score')
+        self.players = self._sort_players_by_scores(self.players)
 
         deltas = RatingDelta.objects.filter(tournament=tournament, rating=rating).prefetch_related('player')
         for delta in deltas:
-            for player in players:
+            for player in self.players:
                 if player.id == delta.player_id:
                     delta.rating_place_after = player.inner_rating_place
                     delta.save()
@@ -154,9 +162,8 @@ class InnerRatingCalculation(object):
         :param rating: Rating model
         :return:
         """
-        players = Player.all_objects.all()
 
-        for player in players:
+        for player in self.players:
             two_years_ago = tournament.date - timedelta(days=INCLUDED_DAYS)
             last_results = (RatingDelta.objects
                                 .filter(player=player)
@@ -173,16 +180,14 @@ class InnerRatingCalculation(object):
             RatingDelta.objects.filter(id__in=last_results_ids, rating=rating).update(is_active=True)
 
             player.inner_rating_score = score
-            player.save()
 
-        # .asc(nulls_last=True) crashed query, probably a bug in translation_models
-        # and because of this we have this ugly code
-        players = list(Player.objects.filter(inner_rating_score__isnull=False).order_by('-inner_rating_score'))
-        players.extend(list(Player.objects.filter(inner_rating_score__isnull=True)))
+        self.players = self._sort_players_by_scores(self.players)
         place = 1
 
-        for player in players:
+        for player in self.players:
             player.inner_rating_place = place
-            player.save()
 
             place += 1
+
+    def _sort_players_by_scores(self, players):
+        return sorted(players, key=lambda x: (x.inner_rating_score is not None, x.inner_rating_score), reverse=True)
