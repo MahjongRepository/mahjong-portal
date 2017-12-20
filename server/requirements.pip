@@ -1,6 +1,5 @@
 Django==1.11.8
 django-modeltranslation==0.12.1
-Unidecode==0.4.21
 psycopg2==2.7.3.2
 
 django-haystack==2.6.1

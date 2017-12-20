@@ -5,11 +5,11 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.text import slugify
-from unidecode import unidecode
 
 from club.models import Club
 from player.models import Player
 from rating.models import Rating, RatingDelta
+from rating.utils import transliterate_name
 from settings.models import Country, City, TournamentType
 from tournament.models import Tournament, TournamentResult
 
@@ -113,11 +113,11 @@ class Command(BaseCommand):
             for row in reader:
                 club_id = row['club_id'].strip().lower()
                 name = row['name'].strip()
+                name_en = row['name_en'].strip()
                 website = row['website'].strip()
                 city = row['city'].strip().lower().title()
 
                 name_ru = name
-                name_en = unidecode(name)
 
                 if city and city not in self.cities:
                     print('City is not exists: {}'.format(city))
@@ -371,8 +371,8 @@ class Command(BaseCommand):
             first_name_en = temp[0].strip().title()
             last_name_en = temp[1].strip().title()
         else:
-            first_name_en = unidecode(first_name_ru).title()
-            last_name_en = unidecode(last_name_ru).title()
+            first_name_en = transliterate_name(first_name_ru).title()
+            last_name_en = transliterate_name(last_name_ru).title()
 
         if gender == u'ж':
             gender = Player.FEMALE
