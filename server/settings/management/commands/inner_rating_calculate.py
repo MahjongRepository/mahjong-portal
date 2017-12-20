@@ -1,16 +1,10 @@
-from datetime import timedelta
-
 from django.core.management.base import BaseCommand
-from django.db.models import Sum
 from django.utils import timezone
 
 from player.models import Player
 from rating.calculation.inner import InnerRatingCalculation
 from rating.models import Rating, RatingDelta
-from tournament.models import Tournament, TournamentResult
-
-
-
+from tournament.models import Tournament
 
 
 def get_date_string():
