@@ -38,7 +38,8 @@ class InnerRatingCalculation(object):
                                        rating=rating,
                                        player=player,
                                        delta=rating_delta,
-                                       rating_place_before=place_before)
+                                       rating_place_before=place_before,
+                                       rating_place_after=0)
 
             if not player.inner_rating_score:
                 player.inner_rating_score = 0
