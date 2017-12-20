@@ -13,6 +13,9 @@
             {% trans 'with' %} {{ tournament.number_of_players }} {% trans 'players' %}
             {% trans 'and' %} {{ tournament.number_of_sessions }} {% trans 'sessions' %}
         </p>
+        {% if tournament.city %}
+            <p><a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a></p>
+        {% endif %}
         <p>
             {% if tournament.is_official_ema %}
                 <span class="badge badge-success">{{ tournament.tournament_type.name }}</span>

@@ -13,7 +13,10 @@
             ({{ player.inner_rating_score }} {% trans 'points' %})
         </p>
         <p>
-            {% trans 'From' %} {% if player.city %}{{ player.city.name }},{% endif %} {{ player.country.name }}
+            {% if player.city %}
+                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name }}</a>,
+            {% endif %}
+            {{ player.country.name }}
         </p>
 
         <h4>{% trans 'Rating changes' %}</h4>

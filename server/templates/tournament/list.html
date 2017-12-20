@@ -8,29 +8,6 @@
 {% block content %}
     <div>
         <h1>{% trans 'Tournaments' %}</h1>
-        <table class="table table-hover table-responsive-sm">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">{% trans 'Name' %}</th>
-                <th scope="col">{% trans 'Date' %}</th>
-                <th scope="col">{% trans 'City' %}</th>
-                <th scope="col">{% trans 'Players' %}</th>
-                <th scope="col">{% trans 'Sessions' %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for tournament in tournaments %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td><a href="{% url 'tournament_details' tournament.slug %}">{{ tournament.name }}</a></td>
-                    <td>{{ tournament.date|date:'d N Y' }}</td>
-                    <td>{{ tournament.city.name }}</td>
-                    <td>{{ tournament.number_of_players }}</td>
-                    <td>{{ tournament.number_of_sessions|default:'-' }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% include 'tournament/_tournaments_table.html' %}
     </div>
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-19 05:00+0000\n"
+"POT-Creation-Date: 2017-12-20 04:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
 #: templates/base.html:53 templates/tournament/list.html:5
-#: templates/tournament/list.html:10
+#: templates/tournament/list.html:10 templates/website/city.html:10
 msgid "Tournaments"
 msgstr "Турниры"
 
@@ -50,31 +50,28 @@ msgstr "Место во внутреннем рейтинге"
 msgid "points"
 msgstr "очков"
 
-#: templates/player/details.html:16
-msgid "From"
-msgstr "Из"
-
-#: templates/player/details.html:19
+#: templates/player/details.html:22
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/details.html:24
+#: templates/player/details.html:27
 msgid "Delta"
 msgstr "Дельта"
 
-#: templates/player/details.html:25
+#: templates/player/details.html:28
 msgid "Place changes"
 msgstr "Изменения места"
 
-#: templates/player/details.html:26 templates/tournament/list.html:16
+#: templates/player/details.html:29
+#: templates/tournament/_tournaments_table.html:8
 msgid "Date"
 msgstr "Дата"
 
-#: templates/player/details.html:27
+#: templates/player/details.html:30
 msgid "Rank"
 msgstr "Ранг"
 
-#: templates/player/details.html:28
+#: templates/player/details.html:31
 msgid "Tournament"
 msgstr "Турнир"
 
@@ -86,12 +83,14 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Вперед"
 
-#: templates/rating/_results_table.html:8 templates/tournament/details.html:27
-#: templates/tournament/list.html:15 templates/website/search.html:12
+#: templates/rating/_results_table.html:8
+#: templates/tournament/_tournaments_table.html:7
+#: templates/tournament/details.html:30 templates/website/search.html:12
 msgid "Name"
 msgstr "Имя"
 
-#: templates/rating/_results_table.html:9 templates/tournament/list.html:17
+#: templates/rating/_results_table.html:9
+#: templates/tournament/_tournaments_table.html:9
 #: templates/website/search.html:13
 msgid "City"
 msgstr "Город"
@@ -103,6 +102,15 @@ msgstr "Очки"
 #: templates/rating/list.html:11
 msgid "of"
 msgstr "из"
+
+#: templates/tournament/_tournaments_table.html:10
+#: templates/website/city.html:13
+msgid "Players"
+msgstr "Игроки"
+
+#: templates/tournament/_tournaments_table.html:11
+msgid "Sessions"
+msgstr "Игр"
 
 #: templates/tournament/details.html:12
 msgid "Held"
@@ -124,17 +132,9 @@ msgstr "и"
 msgid "sessions"
 msgstr "игр"
 
-#: templates/tournament/details.html:28
+#: templates/tournament/details.html:31
 msgid "Scores"
 msgstr "Очки"
-
-#: templates/tournament/list.html:18
-msgid "Players"
-msgstr "Игроки"
-
-#: templates/tournament/list.html:19
-msgid "Sessions"
-msgstr "Игр"
 
 #: templates/website/home.html:6
 msgid "Top 25 players"

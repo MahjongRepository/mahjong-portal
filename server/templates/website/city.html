@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {{ city.name }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% if tournaments %}
+            <h1>{% trans 'Tournaments' %} {% if tournaments|length > 1 %}({{ tournaments|length }}){% endif %}</h1>
+            {% include 'tournament/_tournaments_table.html' %}
+        {% endif %}
+
+        {% if players %}
+            <h1>{% trans 'Players' %} {% if players|length > 1 %}({{ players|length }}){% endif %}</h1>
+            {% include 'rating/_results_table.html' %}
+        {% endif %}
+    </div>
+{% endblock %}
