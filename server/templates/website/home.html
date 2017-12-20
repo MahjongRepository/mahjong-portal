@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
+{% block additiona_title %}
+    {% trans 'Top 25 players' %}
+{% endblock %}
+
 {% block content %}
     <div>
         <h1>{% trans 'Top 25 players' %}</h1>
