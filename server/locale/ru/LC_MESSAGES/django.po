@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-20 04:23+0000\n"
+"POT-Creation-Date: 2017-12-21 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: player/models.py:48
+#: player/models.py:54
 msgid "Hidden name"
 msgstr "Имя скрыто"
 
@@ -29,18 +29,35 @@ msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
 #: templates/base.html:53 templates/tournament/list.html:5
-#: templates/tournament/list.html:10 templates/website/city.html:10
+#: templates/tournament/list.html:10 templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:56 templates/website/about.html:5
+#: templates/base.html:56 templates/club/list.html:5
+#: templates/club/list.html:10
+msgid "Clubs"
+msgstr "Клубы"
+
+#: templates/base.html:59 templates/website/about.html:5
 #: templates/website/about_en.html:5 templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтинге"
 
-#: templates/base.html:61 templates/base.html:62
+#: templates/base.html:64 templates/base.html:65
 msgid "Search"
 msgstr "Поиск"
+
+#: templates/club/list.html:15 templates/rating/_results_table.html:8
+#: templates/tournament/_tournaments_table.html:7
+#: templates/tournament/details.html:46 templates/website/search.html:12
+msgid "Name"
+msgstr "Имя"
+
+#: templates/club/list.html:16 templates/rating/_results_table.html:9
+#: templates/tournament/_tournaments_table.html:9
+#: templates/website/search.html:13
+msgid "City"
+msgstr "Город"
 
 #: templates/player/details.html:12
 msgid "Place in inner rating:"
@@ -83,18 +100,6 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Вперед"
 
-#: templates/rating/_results_table.html:8
-#: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/details.html:30 templates/website/search.html:12
-msgid "Name"
-msgstr "Имя"
-
-#: templates/rating/_results_table.html:9
-#: templates/tournament/_tournaments_table.html:9
-#: templates/website/search.html:13
-msgid "City"
-msgstr "Город"
-
 #: templates/rating/_results_table.html:10 templates/website/search.html:14
 msgid "Points"
 msgstr "Очки"
@@ -104,7 +109,7 @@ msgid "of"
 msgstr "из"
 
 #: templates/tournament/_tournaments_table.html:10
-#: templates/website/city.html:13
+#: templates/website/city.html:16
 msgid "Players"
 msgstr "Игроки"
 
@@ -112,35 +117,31 @@ msgstr "Игроки"
 msgid "Sessions"
 msgstr "Игр"
 
-#: templates/tournament/details.html:12
+#: templates/tournament/details.html:13
 msgid "Held"
 msgstr "Прошел"
 
-#: templates/tournament/details.html:13
-msgid "with"
-msgstr "с"
-
-#: templates/tournament/details.html:13
+#: templates/tournament/details.html:14
 msgid "players"
 msgstr "игроков"
 
-#: templates/tournament/details.html:14
+#: templates/tournament/details.html:15
 msgid "and"
 msgstr "и"
 
-#: templates/tournament/details.html:14
+#: templates/tournament/details.html:15
 msgid "sessions"
 msgstr "игр"
 
-#: templates/tournament/details.html:31
+#: templates/tournament/details.html:47
 msgid "Scores"
 msgstr "Очки"
 
-#: templates/website/home.html:6
+#: templates/website/home.html:5 templates/website/home.html:10
 msgid "Top 25 players"
 msgstr "Лучшие 25 игроков"
 
-#: templates/website/home.html:7
+#: templates/website/home.html:11
 msgid "all results"
 msgstr "все результаты"
 

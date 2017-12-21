@@ -8,14 +8,29 @@
 {% block content %}
     <div>
         <h1>{{ tournament.name }}</h1>
+
         <p>
             {% trans 'Held' %} {{ tournament.date }},
-            {% trans 'with' %} {{ tournament.number_of_players }} {% trans 'players' %}
+            {% trans 'players' %} {{ tournament.number_of_players }}
             {% trans 'and' %} {{ tournament.number_of_sessions }} {% trans 'sessions' %}
         </p>
+
         {% if tournament.city %}
-            <p><a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a></p>
+            <p>
+                <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
+            </p>
         {% endif %}
+
+        {% with clubs=tournament.clubs.all %}
+            {% if clubs %}
+                <p>
+                    {% for club in clubs %}
+                        <a href="{% url 'club_details' club.slug %}">{{ club.name }}</a>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+        {% endwith %}
+
         <p>
             {% if tournament.is_official_ema %}
                 <span class="badge badge-success">{{ tournament.tournament_type.name }}</span>
@@ -23,6 +38,7 @@
                 <span class="badge badge-primary">{{ tournament.tournament_type.name }}</span>
             {% endif %}
         </p>
+
         <table class="table table-hover table-responsive-sm">
             <thead>
             <tr>

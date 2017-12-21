@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block additiona_title %}
+    {{ club.name }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ club.name }}</h1>
+        {% if club.website %}
+            <p><a href="{{ club.website }}" target="_blank">{{ club.website }}</a></p>
+        {% endif %}
+
+        {% if tournaments %}
+            {% include 'tournament/_tournaments_table.html' %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -11,8 +11,8 @@ def tournament_list(request):
     })
 
 
-def tournament_details(request, tournament_slug):
-    tournament = get_object_or_404(Tournament, slug=tournament_slug)
+def tournament_details(request, slug):
+    tournament = get_object_or_404(Tournament, slug=slug)
     results = TournamentResult.objects.filter(tournament=tournament).order_by('place')
     return render(request, 'tournament/details.html', {
         'tournament': tournament,

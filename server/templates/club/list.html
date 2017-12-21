@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {% trans 'Clubs' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans 'Clubs' %}</h1>
+        <table class="table table-hover table-responsive-sm mt-4">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% trans 'Name' %}</th>
+                <th scope="col">{% trans 'City' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for club in clubs %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td><a href="{% url 'club_details' club.slug %}">{{ club.name }}</a></td>
+                    <td>
+                        {% if club.city %}
+                            <a href="{% url 'city_page' club.city.slug %}">{{ club.city.name }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
