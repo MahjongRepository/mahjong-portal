@@ -10,11 +10,13 @@ before_install:
   - export DJANGO_SETTINGS_MODULE=leaderboard.settings
 
 install:
-  - pip install -r server/requirements.txt
+  - cd server
+  - pip install -r requirements.pip
 
 before_script:
   - psql -c "CREATE DATABASE travis_db;" -U postgres
 
 script:
-  - python server/manage.py migrate --noinput
-  - python server/manage.py test --noinput
+  - cd server
+  - python manage.py migrate --noinput
+  - python manage.py test --noinput
