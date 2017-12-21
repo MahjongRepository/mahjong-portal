@@ -42,6 +42,12 @@ class Player(BaseModel):
     inner_rating_score = models.IntegerField(default=None, null=True, blank=True)
     inner_rating_place = models.PositiveIntegerField(default=None, null=True, blank=True)
 
+    def __unicode__(self):
+        return self.full_name
+
+    def __str__(self):
+        return self.__unicode__()
+
     @property
     def full_name(self):
         if self.is_hide:
