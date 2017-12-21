@@ -157,8 +157,21 @@ HAYSTACK_CONNECTIONS = {
 
 YANDEX_METRIKA_ID = ''
 
-
 try:
     from .settings_local import *
 except:
     pass
+
+# for travis
+
+if 'TRAVIS' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql_psycopg2',
+            'NAME':     'travis_db',
+            'USER':     'postgres',
+            'PASSWORD': '',
+            'HOST':     'localhost',
+            'PORT':     '',
+        }
+    }
