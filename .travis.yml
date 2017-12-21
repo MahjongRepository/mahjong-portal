@@ -17,6 +17,5 @@ before_script:
   - psql -c "CREATE DATABASE travis_db;" -U postgres
 
 script:
-  - cd server
   - python manage.py migrate --noinput
   - python manage.py test --noinput
