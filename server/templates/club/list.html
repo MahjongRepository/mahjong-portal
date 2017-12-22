@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block additional_js %}
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang={{ map_language }}" type="text/javascript"></script>
     <script type="text/javascript">
         ymaps.ready(init);
         var yandexMap;
