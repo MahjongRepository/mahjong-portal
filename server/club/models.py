@@ -10,7 +10,7 @@ class Club(BaseModel):
     slug = models.SlugField(unique=True)
     website = models.URLField(null=True, blank=True)
 
-    players = models.ManyToManyField(Player, related_name='clubs')
+    players = models.ManyToManyField(Player, related_name='clubs', blank=True)
 
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
