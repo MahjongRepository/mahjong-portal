@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from settings.models import Country
+
+
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+
+admin.site.register(Country, CountryAdmin)
