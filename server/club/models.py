@@ -15,4 +15,5 @@ class Club(BaseModel):
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
-
+    lat = models.DecimalField(max_digits=21, decimal_places=15, null=True, blank=True)
+    lng = models.DecimalField(max_digits=21, decimal_places=15, null=True, blank=True)

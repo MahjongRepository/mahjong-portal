@@ -5,7 +5,7 @@ from club.models import Club
 
 
 def club_list(request):
-    clubs = Club.objects.all().annotate(Count('players')).order_by('name_ru')
+    clubs = Club.objects.all().order_by('city__name')
 
     return render(request, 'club/list.html', {
         'clubs': clubs,

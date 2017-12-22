@@ -1,13 +1,44 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n l10n %}
 
 {% block additiona_title %}
     {% trans 'Clubs' %}
 {% endblock %}
 
+{% block additional_js %}
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        var yandexMap;
+
+        function init(){
+            yandexMap = new ymaps.Map("map", {
+                center: [63.70882313, 100.19522972],
+                zoom: 2,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+
+            {% localize off %}
+                {% for club in clubs %}
+                    {% if club.lat and club.lng %}
+                        yandexMap.geoObjects.add(
+                            new ymaps.Placemark([{{ club.lat }}, {{ club.lng }}], {
+                                hintContent: '{{ club.name }}',
+                                balloonContent: '{{ club.name }} {% if club.website %}<br><a href="{{ club.website }}" target="_blank">{{ club.website }}</a>{% endif %}'
+                            }));
+                    {% endif %}
+                {% endfor %}
+            {% endlocalize %}
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
     <div>
         <h1>{% trans 'Clubs' %}</h1>
+        <div >
+            <div id="map" style="width: 100%; height: 300px;"></div>
+        </div>
         <table class="table table-hover table-responsive-sm mt-4">
             <thead>
             <tr>
