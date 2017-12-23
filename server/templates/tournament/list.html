@@ -3,11 +3,19 @@
 
 {% block additiona_title %}
     {% trans 'Tournaments' %}
+    {% if current_year != 'all' %}
+        {% trans 'during' %} {{ current_year }}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     <div>
-        <h1>{% trans 'Tournaments' %}</h1>
+        <h1>
+            {% trans 'Tournaments' %}
+            {% if current_year != 'all' %}
+                {% trans 'during' %} {{ current_year }}
+            {% endif %}
+        </h1>
         <div class="filters">
             <a href="{% url 'tournament_list' %}">
                 <span class="badge badge-{% if current_year == 'all' %}success{% else %}primary{% endif %}">{% trans 'all' %}</span>

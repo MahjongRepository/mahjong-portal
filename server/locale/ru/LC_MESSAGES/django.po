@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-21 15:05+0000\n"
+"POT-Creation-Date: 2017-12-23 02:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,12 +29,12 @@ msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
 #: templates/base.html:53 templates/tournament/list.html:5
-#: templates/tournament/list.html:10 templates/website/city.html:11
+#: templates/tournament/list.html:11 templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
 #: templates/base.html:56 templates/club/list.html:5
-#: templates/club/list.html:10
+#: templates/club/list.html:38
 msgid "Clubs"
 msgstr "Клубы"
 
@@ -47,13 +47,13 @@ msgstr "О рейтинге"
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/club/list.html:15 templates/rating/_results_table.html:8
+#: templates/club/list.html:46 templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:7
 #: templates/tournament/details.html:46 templates/website/search.html:12
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/list.html:16 templates/rating/_results_table.html:9
+#: templates/club/list.html:47 templates/rating/_results_table.html:9
 #: templates/tournament/_tournaments_table.html:9
 #: templates/website/search.html:13
 msgid "City"
@@ -136,6 +136,14 @@ msgstr "игр"
 #: templates/tournament/details.html:47
 msgid "Scores"
 msgstr "Очки"
+
+#: templates/tournament/list.html:13
+msgid "during"
+msgstr "за"
+
+#: templates/tournament/list.html:18
+msgid "all"
+msgstr "все"
 
 #: templates/website/home.html:5 templates/website/home.html:10
 msgid "Top 25 players"
