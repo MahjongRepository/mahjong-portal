@@ -8,6 +8,16 @@
 {% block content %}
     <div>
         <h1>{% trans 'Tournaments' %}</h1>
+        <div class="filters">
+            <a href="{% url 'tournament_list' %}">
+                <span class="badge badge-{% if current_year == 'all' %}success{% else %}primary{% endif %}">{% trans 'all' %}</span>
+            </a>
+            {% for year in years %}
+                <a href="{% url 'tournament_list' %}?year={{ year }}">
+                    <span class="badge badge-{% if current_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
+                </a>
+            {% endfor %}
+        </div>
         {% include 'tournament/_tournaments_table.html' %}
     </div>
 {% endblock %}
