@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-23 02:16+0000\n"
+"POT-Creation-Date: 2017-12-24 03:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,12 +24,28 @@ msgstr ""
 msgid "Hidden name"
 msgstr "Имя скрыто"
 
+#: templates/404.html:5 templates/404.html:10 templates/500.html:5
+msgid "404 Page Not Found"
+msgstr "404 ошибка"
+
+#: templates/404.html:11
+msgid "The page you requested was not found."
+msgstr "Запрашиваемой страницы не существует."
+
+#: templates/500.html:10
+msgid "500 Internal Server Error"
+msgstr "500 ошибка"
+
+#: templates/500.html:11
+msgid "Unexpected error was caused."
+msgstr "Что-то пошло не так."
+
 #: templates/base.html:9 templates/base.html:45
 msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
 #: templates/base.html:53 templates/tournament/list.html:5
-#: templates/tournament/list.html:11 templates/website/city.html:11
+#: templates/tournament/list.html:14 templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
@@ -137,11 +153,11 @@ msgstr "игр"
 msgid "Scores"
 msgstr "Очки"
 
-#: templates/tournament/list.html:13
+#: templates/tournament/list.html:7 templates/tournament/list.html:16
 msgid "during"
 msgstr "за"
 
-#: templates/tournament/list.html:18
+#: templates/tournament/list.html:21
 msgid "all"
 msgstr "все"
 

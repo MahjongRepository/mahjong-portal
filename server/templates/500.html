@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {% trans '404 Page Not Found' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans '500 Internal Server Error' %}</h1>
+        <p>{% trans 'Unexpected error was caused.' %}</p>
+    </div>
+{% endblock %}
