@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans 'New tournaments' %}</h1>
+        {% for tournament in tournaments %}
+            <a href="{% url 'upload_results' tournament.id %}">{{ tournament.name }}</a> <br>
+        {% endfor %}
+    </div>
+{% endblock %}

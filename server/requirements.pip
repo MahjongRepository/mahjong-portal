@@ -1,6 +1,7 @@
 Django==1.11.8
 django-modeltranslation==0.12.1
 psycopg2==2.7.3.2
+django-bootstrap4==0.0.4
 
 django-haystack==2.6.1
 Whoosh==2.7.4

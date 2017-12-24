@@ -30,6 +30,9 @@ class Tournament(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
 
+    def __unicode__(self):
+        return self.name
+
     def is_official_ema(self):
         return self.tournament_type.slug == 'ema'
 
@@ -39,3 +42,6 @@ class TournamentResult(BaseModel):
     player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results')
     place = models.PositiveSmallIntegerField()
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.name

@@ -13,4 +13,5 @@ urlpatterns += i18n_patterns(
     url(r'^tournament/', include('tournament.urls')),
     url(r'^club/', include('club.urls')),
     url(r'^player/', include('player.urls')),
+    url(r'^system/', include('system.urls')),
 )

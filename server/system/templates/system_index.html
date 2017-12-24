@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block additiona_title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <a href="{% url 'new_tournaments' %}">{% trans 'New tournaments' %}</a>
+    </div>
+{% endblock %}

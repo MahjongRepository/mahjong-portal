@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.utils import timezone
 
 from player.models import Player
@@ -13,26 +14,37 @@ def get_date_string():
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument('--tournament_id', type=int)
+
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
+        erase_scores = True
+
         rating = Rating.objects.get(type=Rating.INNER)
+        if options['tournament_id']:
+            erase_scores = False
+            tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('date')
+        else:
+            tournaments = Tournament.objects.all().order_by('date')
 
-        RatingDelta.objects.filter(rating=rating).delete()
-        Player.objects.all().update(inner_rating_place=None)
-        Player.objects.all().update(inner_rating_score=None)
+        with transaction.atomic():
+            if erase_scores:
+                RatingDelta.objects.filter(rating=rating).delete()
 
-        calculator = InnerRatingCalculation()
+                Player.objects.all().update(inner_rating_place=None)
+                Player.objects.all().update(inner_rating_score=None)
 
-        tournaments = Tournament.objects.all().order_by('date')
+            calculator = InnerRatingCalculation()
 
-        processed = 1
-        total = tournaments.count()
-        for tournament in tournaments:
-            print('Process {}/{}'.format(processed, total))
+            processed = 1
+            total = tournaments.count()
+            for tournament in tournaments:
+                print('Process {}/{}'.format(processed, total))
 
-            calculator.calculate_players_deltas(tournament, rating)
+                calculator.calculate_players_deltas(tournament, rating)
 
-            processed += 1
+                processed += 1
 
         print('{0}: End'.format(get_date_string()))

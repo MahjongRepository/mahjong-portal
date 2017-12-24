@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap4 %}
+
+{% block additiona_title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block additional_css %}
+    <style>
+        input[type=file] {
+            margin-left: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1 class="mb-4">{% trans 'Upload results' %}</h1>
+
+        {% if success %}
+            <div class="alert alert-success">
+                {% trans 'Success!' %}
+            </div>
+        {% endif %}
+
+        {% if file_was_uploaded and not_found_users %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for user in not_found_users %}
+                        <li>{{ user }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form action="{% url 'upload_results' tournament.id %}" method="POST" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}
