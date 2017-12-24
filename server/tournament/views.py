@@ -17,7 +17,7 @@ def tournament_list(request):
     if current_year != default_year_filter and current_year not in years:
         current_year = default_year_filter
 
-    tournaments = Tournament.objects.all().order_by('-date')
+    tournaments = Tournament.objects.filter(is_enabled=True).order_by('-date')
 
     if current_year != default_year_filter:
         tournaments = tournaments.filter(date__year=current_year)

@@ -23,6 +23,8 @@ class Tournament(BaseModel):
     number_of_players = models.PositiveSmallIntegerField(default=0)
     game_type = models.PositiveSmallIntegerField(choices=GAME_TYPES, default=RIICHI)
 
+    is_enabled = models.BooleanField(default=True)
+
     clubs = models.ManyToManyField(Club)
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
