@@ -30,7 +30,7 @@ def tournament_list(request):
     })
 
 
-def tournament_details(request, slug):
+def tournament_details(request, year, month, day, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
     results = TournamentResult.objects.filter(tournament=tournament).order_by('place')
 

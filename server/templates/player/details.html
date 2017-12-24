@@ -69,7 +69,7 @@
                     </td>
                     <td><nobr>{{ delta.tournament.date|date:'d-m-Y' }}</nobr></td>
                     <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
-                    <td><a href="{% url 'tournament_details' delta.tournament.slug %}">{{ delta.tournament.name }}</a></td>
+                    <td><a href="{% url 'tournament_details' delta.tournament.date.year delta.tournament.date.month delta.tournament.date.day delta.tournament.slug %}">{{ delta.tournament.name }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
