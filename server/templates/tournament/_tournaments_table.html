@@ -16,7 +16,7 @@
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td><a href="{% url 'tournament_details' tournament.date.year tournament.date.month tournament.date.day tournament.slug %}">{{ tournament.name }}</a></td>
-            <td><nobr>{{ tournament.date|date:'d-m-Y' }}</nobr></td>
+            <td><nobr>{{ tournament.date|date:'m-d-Y' }}</nobr></td>
             <td>
                 {% if tournament.city %}
                     <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
