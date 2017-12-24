@@ -24,7 +24,7 @@
                         yandexMap.geoObjects.add(
                             new ymaps.Placemark([{{ club.lat }}, {{ club.lng }}], {
                                 hintContent: '{{ club.name }}',
-                                balloonContent: '{{ club.name }} {% if club.website %}<br><a href="{{ club.website }}" target="_blank">{{ club.website }}</a>{% endif %}'
+                                balloonContent: '<a href="{% url 'club_details' club.slug %}">{{ club.name }}</a> {% if club.website %}<br><a href="{{ club.website }}" target="_blank">{{ club.website }}</a>{% endif %}'
                             }));
                     {% endif %}
                 {% endfor %}
