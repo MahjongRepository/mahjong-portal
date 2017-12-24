@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-24 03:43+0000\n"
+"POT-Creation-Date: 2017-12-24 08:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,28 @@ msgstr ""
 #: player/models.py:54
 msgid "Hidden name"
 msgstr "Имя скрыто"
+
+#: system/templates/system_index.html:5
+#: system/templates/tournament_admin/new_tournaments.html:5
+#: system/templates/tournament_admin/upload_results.html:5
+#: templates/base.html:68
+msgid "Admin page"
+msgstr "Админка"
+
+#: system/templates/system_index.html:10
+#: system/templates/tournament_admin/new_tournaments.html:10
+#| msgid "Tournaments"
+msgid "New tournaments"
+msgstr "Новые турниры"
+
+#: system/templates/tournament_admin/upload_results.html:18
+#| msgid "all results"
+msgid "Upload results"
+msgstr "Загрузить результаты"
+
+#: system/templates/tournament_admin/upload_results.html:22
+msgid "Success!"
+msgstr "Успех!"
 
 #: templates/404.html:5 templates/404.html:10 templates/500.html:5
 msgid "404 Page Not Found"
@@ -40,26 +62,30 @@ msgstr "500 ошибка"
 msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
-#: templates/base.html:9 templates/base.html:45
+#: templates/base.html:9 templates/base.html:47
 msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
-#: templates/base.html:53 templates/tournament/list.html:5
+#: templates/base.html:55 templates/tournament/list.html:5
 #: templates/tournament/list.html:14 templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:56 templates/club/list.html:5
+#: templates/base.html:58 templates/club/list.html:5
 #: templates/club/list.html:38
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:59 templates/website/about.html:5
-#: templates/website/about_en.html:5 templates/website/about_ru.html:5
+#: templates/base.html:61 templates/website/about_en.html:5
+#: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтинге"
 
-#: templates/base.html:64 templates/base.html:65
+#: templates/base.html:65
+msgid "Django admin"
+msgstr "Django админка"
+
+#: templates/base.html:74 templates/base.html:75
 msgid "Search"
 msgstr "Поиск"
 
