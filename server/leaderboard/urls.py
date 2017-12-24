@@ -10,8 +10,8 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     url(r'', include('website.urls')),
     url(r'^rating/', include('rating.urls')),
-    url(r'^tournament/', include('tournament.urls')),
-    url(r'^club/', include('club.urls')),
-    url(r'^player/', include('player.urls')),
+    url(r'^tournaments/', include('tournament.urls')),
+    url(r'^clubs/', include('club.urls')),
+    url(r'^players/', include('player.urls')),
     url(r'^system/', include('system.urls')),
 )
