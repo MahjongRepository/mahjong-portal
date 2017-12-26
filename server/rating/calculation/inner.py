@@ -164,12 +164,12 @@ class InnerRatingCalculation(object):
         """
 
         for player in self.players:
-            two_years_ago = tournament.date - timedelta(days=INCLUDED_DAYS)
+            two_years_ago = tournament.end_date - timedelta(days=INCLUDED_DAYS)
             last_results = (RatingDelta.objects
                                 .filter(player=player)
                                 .filter(rating=rating)
-                                .filter(tournament__date__gte=two_years_ago)
-                                .order_by('-tournament__date')[:TOURNAMENT_RESULTS])
+                                .filter(tournament__end_date__gte=two_years_ago)
+                                .order_by('-tournament__end_date')[:TOURNAMENT_RESULTS])
 
             score = last_results.aggregate(Sum('delta'))['delta__sum']
 

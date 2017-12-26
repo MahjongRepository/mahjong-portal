@@ -67,9 +67,9 @@
                             {{ delta.rating_place_after }}
                         </span>
                     </td>
-                    <td><nobr>{{ delta.tournament.date|date:'d-m-Y' }}</nobr></td>
+                    <td><nobr>{{ delta.tournament.end_date|date:'d-m-Y' }}</nobr></td>
                     <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
-                    <td><a href="{% url 'tournament_details' delta.tournament.date.year delta.tournament.date.month delta.tournament.date.day delta.tournament.slug %}">{{ delta.tournament.name }}</a></td>
+                    <td><a href="{% url 'tournament_details' delta.tournament.end_date.year delta.tournament.end_date.month delta.tournament.end_date.day delta.tournament.slug %}">{{ delta.tournament.name }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>

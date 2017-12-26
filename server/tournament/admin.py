@@ -8,16 +8,16 @@ class TournamentForm(forms.ModelForm):
 
     class Meta:
         model = Tournament
-        exclude = ['name']
+        exclude = ['name', 'registration_description']
 
 
 class TournamentAdmin(admin.ModelAdmin):
     form = TournamentForm
 
     prepopulated_fields = {'slug': ['name_en']}
-    list_display = ['name', 'date', 'is_enabled']
+    list_display = ['name', 'end_date', 'is_upcoming']
 
-    ordering = ['-date']
+    ordering = ['-end_date']
 
     filter_horizontal = ['clubs']
 

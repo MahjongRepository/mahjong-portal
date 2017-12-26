@@ -9,7 +9,7 @@ from tournament.models import Tournament, TournamentResult
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new_tournaments(request):
-    tournaments = Tournament.objects.filter(is_enabled=False)
+    tournaments = Tournament.objects.filter(is_upcoming=True)
     return render(request, 'tournament_admin/new_tournaments.html', {
         'tournaments': tournaments
     })
@@ -81,7 +81,7 @@ def upload_results(request, tournament_id):
                         scores=scores,
                     )
 
-                tournament.is_enabled = True
+                tournament.is_upcoming = False
                 tournament.save()
 
                 success = True

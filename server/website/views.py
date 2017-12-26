@@ -48,7 +48,7 @@ def search(request):
 
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
-    tournaments = Tournament.objects.filter(city=city).order_by('-date')
+    tournaments = Tournament.objects.filter(city=city).order_by('-end_date')
     players = Player.objects.filter(city=city).order_by('inner_rating_place')
     return render(request, 'website/city.html', {
         'city': city,

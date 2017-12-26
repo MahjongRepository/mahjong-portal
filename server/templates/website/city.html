@@ -13,7 +13,7 @@
         {% endif %}
 
         {% if players %}
-            <h1>{% trans 'Players' %} {% if players|length > 1 %}({{ players|length }}){% endif %}</h1>
+            <h1>{% trans 'Players' context 'list of players' %} {% if players|length > 1 %}({{ players|length }}){% endif %}</h1>
             {% include 'rating/_results_table.html' %}
         {% endif %}
     </div>

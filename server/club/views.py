@@ -1,4 +1,3 @@
-from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import get_language
 
@@ -21,7 +20,7 @@ def club_list(request):
 
 def club_details(request, slug):
     club = get_object_or_404(Club, slug=slug)
-    tournaments = club.tournament_set.all().order_by('-date')
+    tournaments = club.tournament_set.all().order_by('-end_date')
     return render(request, 'club/details.html', {
         'club': club,
         'tournaments': tournaments,

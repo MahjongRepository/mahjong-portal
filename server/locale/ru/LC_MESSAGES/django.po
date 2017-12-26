@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-24 08:49+0000\n"
+"POT-Creation-Date: 2017-12-26 02:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,12 +33,10 @@ msgstr "Админка"
 
 #: system/templates/system_index.html:10
 #: system/templates/tournament_admin/new_tournaments.html:10
-#| msgid "Tournaments"
 msgid "New tournaments"
 msgstr "Новые турниры"
 
 #: system/templates/tournament_admin/upload_results.html:18
-#| msgid "all results"
 msgid "Upload results"
 msgstr "Загрузить результаты"
 
@@ -67,7 +65,7 @@ msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
 #: templates/base.html:55 templates/tournament/list.html:5
-#: templates/tournament/list.html:14 templates/website/city.html:11
+#: templates/tournament/list.html:21 templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
@@ -91,7 +89,7 @@ msgstr "Поиск"
 
 #: templates/club/list.html:46 templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/details.html:46 templates/website/search.html:12
+#: templates/tournament/details.html:62 templates/website/search.html:12
 msgid "Name"
 msgstr "Имя"
 
@@ -151,41 +149,62 @@ msgid "of"
 msgstr "из"
 
 #: templates/tournament/_tournaments_table.html:10
-#: templates/website/city.html:16
+msgctxt "number of players"
 msgid "Players"
-msgstr "Игроки"
+msgstr "Игроков"
 
 #: templates/tournament/_tournaments_table.html:11
 msgid "Sessions"
 msgstr "Игр"
 
 #: templates/tournament/details.html:13
+msgid "Will be held"
+msgstr "Пройдет"
+
+#: templates/tournament/details.html:16
 msgid "Held"
 msgstr "Прошел"
 
-#: templates/tournament/details.html:14
+#: templates/tournament/details.html:17
 msgid "players"
 msgstr "игроков"
 
-#: templates/tournament/details.html:15
+#: templates/tournament/details.html:18
 msgid "and"
 msgstr "и"
 
-#: templates/tournament/details.html:15
+#: templates/tournament/details.html:18
 msgid "sessions"
 msgstr "игр"
 
-#: templates/tournament/details.html:47
+#: templates/tournament/details.html:48
+msgid "Registration"
+msgstr "Регистрация"
+
+#: templates/tournament/details.html:52
+msgid "Description"
+msgstr "Описание"
+
+#: templates/tournament/details.html:63
 msgid "Scores"
 msgstr "Очки"
 
-#: templates/tournament/list.html:7 templates/tournament/list.html:16
+#: templates/tournament/list.html:7 templates/tournament/list.html:23
 msgid "during"
 msgstr "за"
 
-#: templates/tournament/list.html:21
+#: templates/tournament/list.html:14
+msgid "Upcoming tournaments"
+msgstr "Ближайшие турниры"
+
+#: templates/tournament/list.html:29
 msgid "all"
 msgstr "все"
+
+#: templates/website/city.html:16
+msgctxt "list of players"
+msgid "Players"
+msgstr "Игроки"
 
 #: templates/website/home.html:5 templates/website/home.html:10
 msgid "Top 25 players"

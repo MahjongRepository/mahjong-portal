@@ -20,7 +20,7 @@ class RatingTestMixin(object):
         return Tournament.objects.create(
             name='test',
             slug=make_random_letters_and_digit_string(),
-            date=timezone.now(),
+            end_date=timezone.now(),
             country=self.country,
             tournament_type=self.tournament_type,
             number_of_players=players,

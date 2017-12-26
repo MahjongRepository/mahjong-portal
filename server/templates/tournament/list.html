@@ -10,18 +10,26 @@
 
 {% block content %}
     <div>
+        {% if upcoming_tournaments %}
+            <h1>{% trans 'Upcoming tournaments' %}</h1>
+            {% with upcoming_tournaments as tournaments %}
+                {% include 'tournament/_tournaments_table.html' %}
+            {% endwith %}
+        {% endif %}
+
         <h1>
             {% trans 'Tournaments' %}
             {% if current_year != 'all' %}
                 {% trans 'during' %} {{ current_year }}
             {% endif %}
         </h1>
+
         <div class="filters">
             <a href="{% url 'tournament_list' %}">
                 <span class="badge badge-{% if current_year == 'all' %}success{% else %}primary{% endif %}">{% trans 'all' %}</span>
             </a>
             {% for year in years %}
-                <a href="{% url 'tournament_list' %}?year={{ year }}">
+                <a href="{% url 'tournament_list' year %}">
                     <span class="badge badge-{% if current_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
                 </a>
             {% endfor %}

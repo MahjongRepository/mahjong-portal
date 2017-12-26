@@ -17,13 +17,17 @@ class Tournament(BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
 
-    date = models.DateField()
-    number_of_days = models.PositiveSmallIntegerField(default=0)
-    number_of_sessions = models.PositiveSmallIntegerField(default=0)
-    number_of_players = models.PositiveSmallIntegerField(default=0)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField()
+
+    number_of_days = models.PositiveSmallIntegerField(default=0, blank=True)
+    number_of_sessions = models.PositiveSmallIntegerField(default=0, blank=True)
+    number_of_players = models.PositiveSmallIntegerField(default=0, blank=True)
     game_type = models.PositiveSmallIntegerField(choices=GAME_TYPES, default=RIICHI)
 
-    is_enabled = models.BooleanField(default=True)
+    is_upcoming = models.BooleanField(default=False)
+    registration_description = models.TextField(null=True, blank=True, default='')
+    registration_link = models.URLField(null=True, blank=True, default='')
 
     clubs = models.ManyToManyField(Club)
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
@@ -44,4 +48,4 @@ class TournamentResult(BaseModel):
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
 
     def __unicode__(self):
-        return self.name
+        return self.tournament.name

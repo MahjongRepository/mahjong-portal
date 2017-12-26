@@ -3,10 +3,11 @@ from django.shortcuts import render, get_object_or_404
 from tournament.models import Tournament, TournamentResult
 
 
-def tournament_list(request):
+def tournament_list(request, year=None):
+
     default_year_filter = 'all'
     try:
-        current_year = request.GET.get('year', default_year_filter)
+        current_year = year or default_year_filter
         if current_year != default_year_filter:
             current_year = int(current_year)
     except ValueError:
@@ -17,13 +18,15 @@ def tournament_list(request):
     if current_year != default_year_filter and current_year not in years:
         current_year = default_year_filter
 
-    tournaments = Tournament.objects.filter(is_enabled=True).order_by('-date')
+    tournaments = Tournament.objects.filter(is_upcoming=False).order_by('-end_date')
+    upcoming_tournaments = Tournament.objects.filter(is_upcoming=True).order_by('start_date')
 
     if current_year != default_year_filter:
-        tournaments = tournaments.filter(date__year=current_year)
+        tournaments = tournaments.filter(end_date__year=current_year)
 
     return render(request, 'tournament/list.html', {
         'tournaments': tournaments,
+        'upcoming_tournaments': upcoming_tournaments,
         'years': years,
         'current_year': current_year,
         'page': 'tournament',

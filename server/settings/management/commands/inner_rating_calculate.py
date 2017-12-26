@@ -25,9 +25,9 @@ class Command(BaseCommand):
         rating = Rating.objects.get(type=Rating.INNER)
         if options['tournament_id']:
             erase_scores = False
-            tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('date')
+            tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('end_date')
         else:
-            tournaments = Tournament.objects.all().order_by('date')
+            tournaments = Tournament.objects.all().order_by('end_date')
 
         with transaction.atomic():
             if erase_scores:

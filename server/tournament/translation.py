@@ -1,6 +1,5 @@
 from modeltranslation.translator import translator, TranslationOptions
 
-from club.models import Club
 from settings.models import TournamentType
 from tournament.models import Tournament
 
@@ -10,7 +9,7 @@ class TournamentTypeTranslationOptions(TranslationOptions):
 
 
 class TournamentTranslationOptions(TranslationOptions):
-    fields = ['name']
+    fields = ['name', 'registration_description']
 
 
 translator.register(TournamentType, TournamentTypeTranslationOptions)
