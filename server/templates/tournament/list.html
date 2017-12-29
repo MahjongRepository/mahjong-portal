@@ -2,6 +2,9 @@
 {% load i18n %}
 
 {% block additiona_title %}
+    {% if tournament_type %}
+        EMA
+    {% endif %}
     {% trans 'Tournaments' %}
     {% if current_year != 'all' %}
         {% trans 'during' %} {{ current_year }}
@@ -11,6 +14,9 @@
 {% block content %}
     <div>
         <h1>
+            {% if tournament_type %}
+                EMA
+            {% endif %}
             {% trans 'Tournaments' %}
             {% if current_year != 'all' %}
                 {% trans 'during' %} {{ current_year }}
