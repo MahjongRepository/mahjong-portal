@@ -44,3 +44,6 @@ class RatingResult(BaseModel):
 
     def __unicode__(self):
         return self.rating.name
+
+    def get_deltas(self):
+        return RatingDelta.objects.filter(player=self.player, rating=self.rating).order_by('-tournament__end_date')

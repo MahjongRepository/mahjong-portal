@@ -15,13 +15,13 @@
             {{ player.country.name }}
         </p>
 
-        {% if rating_result %}
-            <p>
-                {{ rating_result.rating.name }}: {% trans 'place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})
-            </p>
-        {% endif %}
+        {% for rating_result in rating_results %}
+            <h4 class="mt-4">{{ rating_result.rating.name }}</h4>
 
-        {% if deltas %}
+            <p>
+                {% trans 'place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})
+            </p>
+
             <h4>{% trans 'Rating changes' %}</h4>
 
             <table class="table table-hover table-responsive-sm">
@@ -35,7 +35,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for delta in deltas %}
+                {% for delta in rating_result.get_deltas %}
                     <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>
@@ -58,6 +58,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-        {% endif %}
+        {% endfor %}
     </div>
 {% endblock %}

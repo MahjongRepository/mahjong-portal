@@ -4,7 +4,7 @@ from settings.models import TournamentType
 from tournament.models import Tournament, TournamentResult
 
 
-def tournament_list(request, year=None):
+def tournament_list(request, tournament_type=None, year=None):
 
     default_year_filter = 'all'
     try:
@@ -14,26 +14,29 @@ def tournament_list(request, year=None):
     except ValueError:
         current_year = default_year_filter
 
-    years = [2017, 2016, 2015, 2014, 2013]
+    years = [2018, 2017, 2016, 2015, 2014, 2013]
 
     if current_year != default_year_filter and current_year not in years:
         current_year = default_year_filter
 
-    tournaments = (Tournament.objects
-                             .filter(is_upcoming=False)
-                             .exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
-                             .order_by('-end_date'))
-    upcoming_tournaments = Tournament.objects.filter(is_upcoming=True).order_by('start_date')
+    tournaments = Tournament.objects.all()
 
     if current_year != default_year_filter:
         tournaments = tournaments.filter(end_date__year=current_year)
 
+    if tournament_type == 'ema':
+        tournaments = tournaments.exclude(tournament_type__slug=TournamentType.CLUB)
+    else:
+        tournaments = tournaments.exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+
+    tournaments = tournaments.order_by('-end_date')
+
     return render(request, 'tournament/list.html', {
         'tournaments': tournaments,
-        'upcoming_tournaments': upcoming_tournaments,
+        'tournament_type': tournament_type,
         'years': years,
         'current_year': current_year,
-        'page': 'tournament',
+        'page': tournament_type or 'tournament',
     })
 
 
