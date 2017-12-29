@@ -15,7 +15,8 @@ class TournamentAdmin(admin.ModelAdmin):
     form = TournamentForm
 
     prepopulated_fields = {'slug': ['name_en']}
-    list_display = ['name', 'end_date', 'is_upcoming']
+    list_display = ['name', 'start_date', 'end_date', 'is_upcoming']
+    list_filter = ['tournament_type']
 
     ordering = ['-end_date']
 

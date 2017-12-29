@@ -20,7 +20,6 @@ class Tournament(BaseModel):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField()
 
-    number_of_days = models.PositiveSmallIntegerField(default=0, blank=True)
     number_of_sessions = models.PositiveSmallIntegerField(default=0, blank=True)
     number_of_players = models.PositiveSmallIntegerField(default=0, blank=True)
     game_type = models.PositiveSmallIntegerField(choices=GAME_TYPES, default=RIICHI)
@@ -29,10 +28,12 @@ class Tournament(BaseModel):
     registration_description = models.TextField(null=True, blank=True, default='')
     registration_link = models.URLField(null=True, blank=True, default='')
 
-    clubs = models.ManyToManyField(Club)
+    clubs = models.ManyToManyField(Club, blank=True)
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
+
+    ema_id = models.CharField(max_length=20, null=True, blank=True)
 
     def __unicode__(self):
         return self.name

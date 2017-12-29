@@ -26,8 +26,18 @@ class City(BaseModel):
 
 
 class TournamentType(BaseModel):
+    CLUB = 'club'
+    EMA = 'ema'
+    FOREIGN_EMA = 'fema'
+
+    TYPES = [
+        [CLUB, 'club'],
+        [EMA, 'ema'],
+        [FOREIGN_EMA, 'fema']
+    ]
+
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, choices=TYPES)
 
     def __unicode__(self):
         return self.name

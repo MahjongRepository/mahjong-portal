@@ -3,8 +3,13 @@ django-modeltranslation==0.12.1
 psycopg2==2.7.3.2
 django-bootstrap4==0.0.4
 
+# for search
 django-haystack==2.6.1
 Whoosh==2.7.4
+
+# for web parsing
+beautifulsoup4==4.6.0
+requests==2.18.4
 
 # for production
 gunicorn==19.7.1

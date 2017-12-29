@@ -31,12 +31,14 @@ class Player(BaseModel):
     last_name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
-    country = models.ForeignKey(Country, on_delete=models.PROTECT)
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
     gender = models.PositiveSmallIntegerField(choices=GENDERS, default=NONE)
     is_replacement = models.BooleanField(default=False)
     is_hide = models.BooleanField(default=False)
+
+    ema_id = models.CharField(max_length=30, null=True, blank=True, default='')
 
     # cached fields, to better performance
     inner_rating_score = models.IntegerField(default=None, null=True, blank=True)

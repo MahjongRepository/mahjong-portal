@@ -29,3 +29,6 @@ class RatingDelta(BaseModel):
     tournament_place = models.PositiveSmallIntegerField(default=0)
     rating_place_before = models.PositiveSmallIntegerField(default=0)
     rating_place_after = models.PositiveSmallIntegerField(default=0)
+
+    def __unicode__(self):
+        return self.tournament.name

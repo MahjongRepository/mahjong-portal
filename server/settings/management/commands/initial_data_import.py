@@ -315,7 +315,7 @@ class Command(BaseCommand):
                 player_dict['country'] = country_objects[player_dict['country']]
                 player_dict['city'] = player_dict['city'] and cities_objects[player_dict['city']] or None
                 del player_dict['name']
-                player_dict['slug'] = slug=slugify('{} {}'.format(player_dict['last_name_en'], player_dict['first_name_en']))
+                player_dict['slug'] = slugify('{} {}'.format(player_dict['last_name_en'], player_dict['first_name_en']))
                 player_objects[player_id] = Player.objects.create(**player_dict)
 
             for tournament_id in self.tournaments:
