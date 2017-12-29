@@ -10,13 +10,6 @@
 
 {% block content %}
     <div>
-        {% if upcoming_tournaments %}
-            <h1>{% trans 'Upcoming tournaments' %}</h1>
-            {% with upcoming_tournaments as tournaments %}
-                {% include 'tournament/_tournaments_table.html' %}
-            {% endwith %}
-        {% endif %}
-
         <h1>
             {% trans 'Tournaments' %}
             {% if current_year != 'all' %}

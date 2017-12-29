@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-29 07:09+0000\n"
+"POT-Creation-Date: 2017-12-29 08:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,11 +61,11 @@ msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
 #: templates/base.html:9 templates/base.html:47
-msgid "Mahjong Leader Board"
-msgstr "Турнирный рейтинг"
+msgid "Mahjong portal"
+msgstr "Маджонг портал"
 
 #: templates/base.html:55 templates/base.html:68 templates/club/details.html:16
-#: templates/tournament/list.html:5 templates/tournament/list.html:21
+#: templates/tournament/list.html:5 templates/tournament/list.html:14
 #: templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
@@ -103,11 +103,11 @@ msgstr "Имя"
 msgid "City"
 msgstr "Город"
 
-#: templates/player/details.html:20
+#: templates/player/details.html:22
 msgid "place"
 msgstr "место"
 
-#: templates/player/details.html:20
+#: templates/player/details.html:22
 msgid "scores"
 msgstr "очков"
 
@@ -189,24 +189,24 @@ msgstr "Описание"
 msgid "Scores"
 msgstr "Очки"
 
-#: templates/tournament/list.html:7 templates/tournament/list.html:23
+#: templates/tournament/list.html:7 templates/tournament/list.html:16
 msgid "during"
 msgstr "за"
-
-#: templates/tournament/list.html:14
-msgid "Upcoming tournaments"
-msgstr "Ближайшие турниры"
 
 #: templates/website/city.html:16
 msgctxt "list of players"
 msgid "Players"
 msgstr "Игроки"
 
-#: templates/website/home.html:5 templates/website/home.html:10
-msgid "Top 25 players"
-msgstr "Лучшие 25 игроков"
+#: templates/website/home.html:5 templates/website/home.html:17
+msgid "Top 15 players"
+msgstr "Лучшие 15 игроков"
 
 #: templates/website/home.html:11
+msgid "Upcoming tournaments"
+msgstr "Ближайшие турниры"
+
+#: templates/website/home.html:18
 msgid "all results"
 msgstr "все результаты"
 

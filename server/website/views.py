@@ -4,18 +4,24 @@ from haystack.forms import ModelSearchForm
 
 from player.models import Player
 from rating.models import Rating, RatingResult
-from settings.models import City
+from settings.models import City, TournamentType
 from tournament.models import Tournament
 
 
 def home(request):
     rating = Rating.objects.get(type=Rating.INNER)
-    rating_results = RatingResult.objects.filter(rating=rating).order_by('place')[:25]
+    rating_results = RatingResult.objects.filter(rating=rating).order_by('place')[:15]
+
+    upcoming_tournaments = (Tournament.objects
+                                      .filter(is_upcoming=True)
+                                      .exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+                                      .order_by('start_date'))
 
     return render(request, 'website/home.html', {
         'page': 'home',
         'rating_results': rating_results,
-        'rating': rating
+        'rating': rating,
+        'upcoming_tournaments': upcoming_tournaments
     })
 
 
