@@ -1,6 +1,6 @@
 from django.db import models
 
-from leaderboard.models import BaseModel
+from mahjong_portal.models import BaseModel
 
 
 class Country(BaseModel):

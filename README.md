@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MahjongRepository/mahjong-leaderboard.svg?branch=master)](https://travis-ci.org/MahjongRepository/mahjong-leaderboard)
+[![Build Status](https://travis-ci.org/MahjongRepository/mahjong-portal.svg?branch=master)](https://travis-ci.org/MahjongRepository/mahjong-portal)
 
 Tested with Python **3.5+** only.
 

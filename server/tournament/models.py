@@ -1,7 +1,7 @@
 from django.db import models
 
 from club.models import Club
-from leaderboard.models import BaseModel
+from mahjong_portal.models import BaseModel
 from player.models import Player
 from settings.models import TournamentType, City, Country
 

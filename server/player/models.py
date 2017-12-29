@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from leaderboard.models import BaseModel
+from mahjong_portal.models import BaseModel
 from settings.models import Country, City
 
 
