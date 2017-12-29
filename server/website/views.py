@@ -44,10 +44,8 @@ def search(request):
     query_list = [x.object for x in results]
     players = [x for x in query_list if x.__class__ == Player]
 
-    rating_results = RatingResult.objects.filter(player__id__in=[x.id for x in players]).order_by('place')
-
     return render(request, 'website/search.html', {
-        'rating_results': rating_results,
+        'players': players,
         'search_query': query
     })
 
