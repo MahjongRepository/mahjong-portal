@@ -4,7 +4,7 @@ from django.utils import timezone
 from player.models import Player
 from rating.calculation.inner import InnerRatingCalculation
 from rating.mixins import RatingTestMixin
-from rating.models import Rating, RatingDelta
+from rating.models import Rating, RatingDelta, RatingResult
 from settings.models import Country, TournamentType
 from tournament.models import Tournament, TournamentResult
 
@@ -16,38 +16,38 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
     def test_tournament_coefficient_and_number_of_players(self):
         calculator = InnerRatingCalculation()
-        tournament = self.create_tournament(players=16, sessions=8)
 
+        tournament = self.create_tournament(players=0, sessions=8)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1)
+
+        tournament = self.create_tournament(players=16, sessions=8)
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 0.8)
 
         tournament = self.create_tournament(players=24, sessions=8)
-
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1)
 
         tournament = self.create_tournament(players=40, sessions=8)
-
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.1)
 
         tournament = self.create_tournament(players=80, sessions=8)
-
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.2)
 
     def test_tournament_coefficient_and_number_of_sessions(self):
         calculator = InnerRatingCalculation()
-        tournament = self.create_tournament(players=24, sessions=4)
 
+        tournament = self.create_tournament(players=24, sessions=0)
+        self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1)
+
+        tournament = self.create_tournament(players=24, sessions=4)
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 0.8)
 
         tournament = self.create_tournament(players=24, sessions=8)
-
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1)
 
         tournament = self.create_tournament(players=24, sessions=10)
-
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.1)
 
         tournament = self.create_tournament(players=24, sessions=12)
-
         self.assertEqual(calculator.calculate_tournament_coefficient(tournament), 1.3)
 
     def test_calculate_player_base_rank(self):
@@ -93,19 +93,8 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         calculator.calculate_players_deltas(tournament, rating)
 
-        first_player = Player.objects.get(id=first_player.id)
-        second_player = Player.objects.get(id=second_player.id)
-
-        self.assertEqual(first_player.inner_rating_place, 1)
-        self.assertEqual(second_player.inner_rating_place, 2)
-
-        first_delta = RatingDelta.objects.get(player=first_player, tournament=tournament)
-        second_delta = RatingDelta.objects.get(player=second_player, tournament=tournament)
-
-        self.assertEqual(first_delta.rating_place_before, 0)
-        self.assertEqual(first_delta.rating_place_after, 1)
-        self.assertEqual(second_delta.rating_place_before, 0)
-        self.assertEqual(second_delta.rating_place_after, 2)
+        self.assertEqual(RatingResult.objects.get(player=first_player).place, 1)
+        self.assertEqual(RatingResult.objects.get(player=second_player).place, 2)
 
         # Second tournament
 
@@ -115,16 +104,5 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         calculator.calculate_players_deltas(tournament, rating)
 
-        first_player = Player.objects.get(id=first_player.id)
-        second_player = Player.objects.get(id=second_player.id)
-
-        self.assertEqual(first_player.inner_rating_place, 2)
-        self.assertEqual(second_player.inner_rating_place, 1)
-
-        first_delta = RatingDelta.objects.get(player=first_player, tournament=tournament)
-        second_delta = RatingDelta.objects.get(player=second_player, tournament=tournament)
-
-        self.assertEqual(first_delta.rating_place_before, 1)
-        self.assertEqual(first_delta.rating_place_after, 2)
-        self.assertEqual(second_delta.rating_place_before, 2)
-        self.assertEqual(second_delta.rating_place_after, 1)
+        self.assertEqual(RatingResult.objects.get(player=first_player).place, 2)
+        self.assertEqual(RatingResult.objects.get(player=second_player).place, 1)

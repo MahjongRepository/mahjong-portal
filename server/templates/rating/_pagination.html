@@ -2,9 +2,9 @@
 
 <nav aria-label="Player navigation" class="p-3">
     <ul class="pagination">
-        {% if players.has_previous %}
+        {% if rating_results.has_previous %}
             <li class="page-item">
-                <a href="?page={{ players.previous_page_number }}"
+                <a href="?page={{ rating_results.previous_page_number }}"
                    class="page-link previous">&lsaquo;&lsaquo; {% trans "Previous" %}</a>
             </li>
         {% else %}
@@ -13,9 +13,9 @@
             </li>
         {% endif %}
 
-        {% if players.has_next %}
+        {% if rating_results.has_next %}
             <li class="page-item">
-                <a href="?page={{ players.next_page_number }}"
+                <a href="?page={{ rating_results.next_page_number }}"
                    class="page-link previous">{% trans "Next" %} &rsaquo;&rsaquo;</a>
             </li>
         {% else %}

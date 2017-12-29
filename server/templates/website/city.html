@@ -12,8 +12,8 @@
             {% include 'tournament/_tournaments_table.html' %}
         {% endif %}
 
-        {% if players %}
-            <h1>{% trans 'Players' context 'list of players' %} {% if players|length > 1 %}({{ players|length }}){% endif %}</h1>
+        {% if rating_results %}
+            <h1>{% trans 'Players' context 'list of players' %} {% if rating_results|length > 1 %}({{ rating_results|length }}){% endif %}</h1>
             {% include 'rating/_results_table.html' %}
         {% endif %}
     </div>

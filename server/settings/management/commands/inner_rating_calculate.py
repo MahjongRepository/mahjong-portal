@@ -4,7 +4,8 @@ from django.utils import timezone
 
 from player.models import Player
 from rating.calculation.inner import InnerRatingCalculation
-from rating.models import Rating, RatingDelta
+from rating.models import Rating, RatingDelta, RatingResult
+from settings.models import TournamentType
 from tournament.models import Tournament
 
 
@@ -32,9 +33,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             if erase_scores:
                 RatingDelta.objects.filter(rating=rating).delete()
-
-                Player.objects.all().update(inner_rating_place=None)
-                Player.objects.all().update(inner_rating_score=None)
+                RatingResult.objects.filter(rating=rating).delete()
 
             calculator = InnerRatingCalculation()
 

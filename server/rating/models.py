@@ -18,6 +18,9 @@ class Rating(BaseModel):
 
     type = models.PositiveSmallIntegerField(choices=TYPES)
 
+    def __unicode__(self):
+        return self.name
+
 
 class RatingDelta(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
@@ -27,8 +30,17 @@ class RatingDelta(BaseModel):
     is_active = models.BooleanField(default=False)
 
     tournament_place = models.PositiveSmallIntegerField(default=0)
-    rating_place_before = models.PositiveSmallIntegerField(default=0)
-    rating_place_after = models.PositiveSmallIntegerField(default=0)
 
     def __unicode__(self):
         return self.tournament.name
+
+
+class RatingResult(BaseModel):
+    rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='rating_results')
+
+    score = models.IntegerField(default=None, null=True, blank=True)
+    place = models.PositiveIntegerField(default=None, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.rating.name

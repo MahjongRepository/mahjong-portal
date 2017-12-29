@@ -2,24 +2,25 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 
 from player.models import Player
-from rating.models import Rating
+from rating.models import Rating, RatingResult
 
 
 def rating_list(request, slug):
     rating = get_object_or_404(Rating, slug=slug)
-    players = Player.objects.all().order_by('inner_rating_place', 'id')
+
+    rating_results = RatingResult.objects.filter(rating=rating).order_by('place')
 
     page = request.GET.get('page')
-    paginator = Paginator(players, 25)
+    paginator = Paginator(rating_results, 25)
 
     try:
-        players = paginator.page(page)
+        rating_results = paginator.page(page)
     except PageNotAnInteger:
-        players = paginator.page(1)
+        rating_results = paginator.page(1)
     except EmptyPage:
-        players = paginator.page(paginator.num_pages)
+        rating_results = paginator.page(paginator.num_pages)
 
     return render(request, 'rating/list.html', {
         'rating': rating,
-        'players': players,
+        'rating_results': rating_results,
     })

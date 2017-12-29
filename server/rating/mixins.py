@@ -12,7 +12,7 @@ class RatingTestMixin(object):
     tournament_type = None
 
     def set_up_initial_objects(self):
-        self.country = Country.objects.create(code='ru', name='Russia')
+        self.country = Country.objects.create(code='RU', name='Russia')
         self.player = self.create_player()
         self.tournament_type = TournamentType.objects.create(name='ema')
 

@@ -61,11 +61,14 @@
                 <a class="nav-link" href="{% url 'about' %}">{% trans 'About' %}</a>
             </li>
             {% if user.is_superuser %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'admin:index' %}">{% trans 'Django admin' %}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'system_index' %}">{% trans 'Admin page' %}</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans 'Django admin' %}</a>
+                        <a class="dropdown-item" href="{% url 'system_index' %}">{% trans 'Admin page' %}</a>
+                    </div>
                 </li>
             {% endif %}
         </ul>

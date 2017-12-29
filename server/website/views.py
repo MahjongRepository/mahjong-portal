@@ -3,18 +3,18 @@ from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from player.models import Player
-from rating.models import Rating
+from rating.models import Rating, RatingResult
 from settings.models import City
 from tournament.models import Tournament
 
 
 def home(request):
     rating = Rating.objects.get(type=Rating.INNER)
-    players = Player.objects.all().order_by('inner_rating_place')[:25]
+    rating_results = RatingResult.objects.filter(rating=rating).order_by('place')[:25]
 
     return render(request, 'website/home.html', {
         'page': 'home',
-        'players': players,
+        'rating_results': rating_results,
         'rating': rating
     })
 
@@ -38,10 +38,10 @@ def search(request):
     query_list = [x.object for x in results]
     players = [x for x in query_list if x.__class__ == Player]
 
-    players = sorted(players, key=lambda x: x.inner_rating_place)
+    rating_results = RatingResult.objects.filter(player__id__in=[x.id for x in players]).order_by('place')
 
     return render(request, 'website/search.html', {
-        'players': players,
+        'rating_results': rating_results,
         'search_query': query
     })
 
@@ -49,9 +49,9 @@ def search(request):
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
     tournaments = Tournament.objects.filter(city=city).order_by('-end_date')
-    players = Player.objects.filter(city=city).order_by('inner_rating_place')
+    rating_results = RatingResult.objects.filter(player__city=city).order_by('place')
     return render(request, 'website/city.html', {
         'city': city,
-        'players': players,
+        'rating_results': rating_results,
         'tournaments': tournaments
     })

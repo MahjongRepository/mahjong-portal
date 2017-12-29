@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-26 02:31+0000\n"
+"POT-Creation-Date: 2017-12-29 05:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: player/models.py:54
+#: player/models.py:52
 msgid "Hidden name"
 msgstr "Имя скрыто"
 
@@ -64,8 +64,9 @@ msgstr "Что-то пошло не так."
 msgid "Mahjong Leader Board"
 msgstr "Турнирный рейтинг"
 
-#: templates/base.html:55 templates/tournament/list.html:5
-#: templates/tournament/list.html:21 templates/website/city.html:11
+#: templates/base.html:55 templates/club/details.html:16
+#: templates/tournament/list.html:5 templates/tournament/list.html:21
+#: templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
@@ -89,35 +90,30 @@ msgstr "Поиск"
 
 #: templates/club/list.html:46 templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/details.html:62 templates/website/search.html:12
+#: templates/tournament/details.html:62
 msgid "Name"
 msgstr "Имя"
 
 #: templates/club/list.html:47 templates/rating/_results_table.html:9
 #: templates/tournament/_tournaments_table.html:9
-#: templates/website/search.html:13
 msgid "City"
 msgstr "Город"
 
-#: templates/player/details.html:12
-msgid "Place in inner rating:"
-msgstr "Место во внутреннем рейтинге"
+#: templates/player/details.html:19
+msgid "place"
+msgstr "место"
 
-#: templates/player/details.html:13
-msgid "points"
+#: templates/player/details.html:19
+msgid "scores"
 msgstr "очков"
 
 #: templates/player/details.html:22
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/details.html:27
+#: templates/player/details.html:28
 msgid "Delta"
 msgstr "Дельта"
-
-#: templates/player/details.html:28
-msgid "Place changes"
-msgstr "Изменения места"
 
 #: templates/player/details.html:29
 #: templates/tournament/_tournaments_table.html:8
@@ -140,7 +136,7 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Вперед"
 
-#: templates/rating/_results_table.html:10 templates/website/search.html:14
+#: templates/rating/_results_table.html:10
 msgid "Points"
 msgstr "Очки"
 
@@ -218,6 +214,15 @@ msgstr "все результаты"
 msgid "Search results for"
 msgstr "Результаты поиска"
 
-#: templates/website/search.html:29
+#: templates/website/search.html:10
 msgid "nothing found"
 msgstr "ничего не нашлось"
+
+#~ msgid "Place in inner rating:"
+#~ msgstr "Место во внутреннем рейтинге"
+
+#~ msgid "points"
+#~ msgstr "очков"
+
+#~ msgid "Place changes"
+#~ msgstr "Изменения места"

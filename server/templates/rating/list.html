@@ -8,7 +8,7 @@
 {% block content %}
     <div>
         <h1>{{ rating.name }}</h1>
-        <p>{{ players.start_index }} &ndash; {{ players.end_index }} {% trans 'of' %} {{ players.paginator.count }}</p>
+        <p>{{ rating_results.start_index }} &ndash; {{ rating_results.end_index }} {% trans 'of' %} {{ rating_results.paginator.count }}</p>
 
         {% include 'rating/_results_table.html' %}
         {% include 'rating/_pagination.html' %}

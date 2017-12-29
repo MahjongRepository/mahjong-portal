@@ -1,9 +1,11 @@
 from datetime import timedelta
 
 from django.db.models import Sum
+from django.utils import timezone
 
 from player.models import Player
-from rating.models import RatingDelta
+from rating.models import RatingDelta, RatingResult
+from settings.models import Country
 from tournament.models import TournamentResult
 
 INCLUDED_DAYS = 2 * 365
@@ -13,6 +15,13 @@ TOURNAMENT_RESULTS = 10
 class InnerRatingCalculation(object):
     players = None
 
+    def get_players(self):
+        """
+        Determine what players should be participated in the rating
+        :return:
+        """
+        return list(Player.objects.filter(country__code='RU'))
+
     def calculate_players_deltas(self, tournament, rating):
         """
         Load all tournament results and recalculate players rating position
@@ -21,41 +30,43 @@ class InnerRatingCalculation(object):
         :return:
         """
 
-        self.players = list(Player.all_objects.all())
+        self.players = self.get_players()
 
         results = (TournamentResult.objects
                    .filter(tournament=tournament)
                    .prefetch_related('tournament'))
 
-        for result in results:
-            player = None
+        for player in self.players:
+            player.rating_result, _ = RatingResult.objects.get_or_create(rating=rating, player=player)
 
+        for result in results:
+            # this method to find player is here for queries optimization
+            player = None
             for player_iter in self.players:
                 if player_iter.id == result.player_id:
                     player = player_iter
 
-            rating_delta = self.calculate_rating_delta(result)
+            # player not should be visible in our rating
+            if not player:
+                continue
 
-            place_before = 0
-            if RatingDelta.objects.filter(player=player, rating=rating).exists():
-                place_before = player.inner_rating_place
+            rating_delta = self.calculate_rating_delta(result)
 
             RatingDelta.objects.create(tournament=result.tournament,
                                        tournament_place=result.place,
                                        rating=rating,
                                        player=player,
-                                       delta=rating_delta,
-                                       rating_place_before=place_before)
+                                       delta=rating_delta)
 
-            if not player.inner_rating_score:
-                player.inner_rating_score = 0
+            if not player.rating_result.score:
+                player.rating_result.score = 0
 
-            player.inner_rating_score += rating_delta
+            player.rating_result.score += rating_delta
 
-        self._recalculate_players_positions(tournament, rating)
+        self._chose_active_tournament_results(tournament, rating)
 
         for player in self.players:
-            player.save()
+            player.rating_result.save()
 
     def calculate_tournament_coefficient(self, tournament):
         """
@@ -69,7 +80,7 @@ class InnerRatingCalculation(object):
 
         # Players
 
-        if tournament.number_of_players <= 16:
+        if tournament.number_of_players <= 16 and tournament.number_of_players != 0:
             calculated -= 20
 
         if tournament.number_of_players >= 40:
@@ -83,7 +94,7 @@ class InnerRatingCalculation(object):
 
         # Sessions
 
-        if tournament.number_of_sessions <= 4:
+        if tournament.number_of_sessions <= 4 and tournament.number_of_sessions != 0:
             calculated -= 20
 
         if tournament.number_of_sessions >= 10:
@@ -134,25 +145,6 @@ class InnerRatingCalculation(object):
         base_rank = self.calculate_base_rank(tournament_result)
         return round(tournament_coefficient * base_rank)
 
-    def _recalculate_players_positions(self, tournament, rating):
-        """
-        To be able properly set positions deltas (eg. 12 place -> 1 place)
-        we need to recalculate players positions after each tournament
-        :param tournament: Tournament model
-        :param rating: Rating model
-        :return:
-        """
-        self._chose_active_tournament_results(tournament, rating)
-
-        self.players = self._sort_players_by_scores(self.players)
-
-        deltas = RatingDelta.objects.filter(tournament=tournament, rating=rating).prefetch_related('player')
-        for delta in deltas:
-            for player in self.players:
-                if player.id == delta.player_id:
-                    delta.rating_place_after = player.inner_rating_place
-                    delta.save()
-
     def _chose_active_tournament_results(self, tournament, rating):
         """
         Method to decide what results we will use for rating.
@@ -164,7 +156,7 @@ class InnerRatingCalculation(object):
         """
 
         for player in self.players:
-            two_years_ago = tournament.end_date - timedelta(days=INCLUDED_DAYS)
+            two_years_ago = timezone.now() - timedelta(days=INCLUDED_DAYS)
             last_results = (RatingDelta.objects
                                 .filter(player=player)
                                 .filter(rating=rating)
@@ -179,15 +171,14 @@ class InnerRatingCalculation(object):
             RatingDelta.objects.filter(player=player, rating=rating).update(is_active=False)
             RatingDelta.objects.filter(id__in=last_results_ids, rating=rating).update(is_active=True)
 
-            player.inner_rating_score = score
+            player.rating_result.score = score
 
         self.players = self._sort_players_by_scores(self.players)
+
         place = 1
-
         for player in self.players:
-            player.inner_rating_place = place
-
+            player.rating_result.place = place
             place += 1
 
     def _sort_players_by_scores(self, players):
-        return sorted(players, key=lambda x: (x.inner_rating_score is not None, x.inner_rating_score), reverse=True)
+        return sorted(players, key=lambda x: (x.rating_result.score is not None, x.rating_result.score), reverse=True)

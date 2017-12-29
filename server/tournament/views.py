@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 
+from settings.models import TournamentType
 from tournament.models import Tournament, TournamentResult
 
 
@@ -18,7 +19,10 @@ def tournament_list(request, year=None):
     if current_year != default_year_filter and current_year not in years:
         current_year = default_year_filter
 
-    tournaments = Tournament.objects.filter(is_upcoming=False).order_by('-end_date')
+    tournaments = (Tournament.objects
+                             .filter(is_upcoming=False)
+                             .exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+                             .order_by('-end_date'))
     upcoming_tournaments = Tournament.objects.filter(is_upcoming=True).order_by('start_date')
 
     if current_year != default_year_filter:
@@ -33,7 +37,7 @@ def tournament_list(request, year=None):
     })
 
 
-def tournament_details(request, year, month, day, slug):
+def tournament_details(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
     results = TournamentResult.objects.filter(tournament=tournament).order_by('place')
 

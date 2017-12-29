@@ -40,10 +40,6 @@ class Player(BaseModel):
 
     ema_id = models.CharField(max_length=30, null=True, blank=True, default='')
 
-    # cached fields, to better performance
-    inner_rating_score = models.IntegerField(default=None, null=True, blank=True)
-    inner_rating_place = models.PositiveIntegerField(default=None, null=True, blank=True)
-
     def __unicode__(self):
         return self.full_name
 
