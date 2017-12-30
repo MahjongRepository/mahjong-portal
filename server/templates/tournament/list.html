@@ -4,8 +4,10 @@
 {% block title %}
     {% if tournament_type %}
         EMA
+        {% trans 'tournaments' %}
+    {% else %}
+        {% trans 'Tournaments' %}
     {% endif %}
-    {% trans 'tournaments' %}
     {% trans 'during' %} {{ current_year }}
 {% endblock %}
 
@@ -14,11 +16,11 @@
         <h1>
             {% if tournament_type %}
                 EMA
+                {% trans 'tournaments' %}
+            {% else %}
+                {% trans 'Tournaments' %}
             {% endif %}
-            {% trans 'Tournaments' %}
-            {% if current_year != 'all' %}
-                {% trans 'during' %} {{ current_year }}
-            {% endif %}
+            {% trans 'during' %} {{ current_year }}
         </h1>
 
         <div class="filters">
