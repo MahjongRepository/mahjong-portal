@@ -117,7 +117,7 @@ msgstr "Город"
 
 #: templates/club/list.html:42
 msgid "List with map of all russian riichi mahjong clubs"
-msgstr "Список и карта всех русских риичи маджонг клубов"
+msgstr "Список и карта всех российских риичи маджонг клубов"
 
 #: templates/player/details.html:12
 msgid "From"
