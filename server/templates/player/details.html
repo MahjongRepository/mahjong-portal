@@ -73,7 +73,7 @@
     {% if player.city %}
         {{ player.city.name|genitive|title }}, {{ player.country }}
     {% else %}
-        {{ player.country|title }}
+        {{ player.country|genitive|title }}
     {% endif %}
 ">
 {% endblock %}
