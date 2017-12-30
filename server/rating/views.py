@@ -5,12 +5,12 @@ from player.models import Player
 from rating.models import Rating, RatingResult
 
 
-def rating_list(request, slug):
+def rating_list(request, slug, page=None):
     rating = get_object_or_404(Rating, slug=slug)
 
     rating_results = RatingResult.objects.filter(rating=rating).order_by('place')
 
-    page = request.GET.get('page')
+    page = page or 1
     paginator = Paginator(rating_results, 25)
 
     try:
@@ -20,7 +20,7 @@ def rating_list(request, slug):
     except EmptyPage:
         rating_results = paginator.page(paginator.num_pages)
 
-    return render(request, 'rating/list.html', {
+    return render(request, 'rating/details.html', {
         'rating': rating,
         'rating_results': rating_results,
     })
