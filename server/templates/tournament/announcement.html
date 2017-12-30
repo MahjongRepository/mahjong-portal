@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block additiona_title %}
+    {{ tournament.name }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ tournament.name }}</h1>
+
+        <p>{% trans 'Will be held' %} {{ tournament.start_date }}</p>
+
+        {% include 'tournament/_tournament_header.html' %}
+
+        {% if tournament.registration_link %}
+            <h3>{% trans 'Registration' %}</h3>
+            <p><a href="{{ tournament.registration_link }}" target="_blank">{{ tournament.registration_link }}</a></p>
+        {% endif %}
+
+        {% if tournament.registration_description %}
+            <h3>{% trans 'Description' %}</h3>
+            <p>{{ tournament.registration_description|linebreaksbr }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

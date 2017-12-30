@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from club.models import Club
 from mahjong_portal.models import BaseModel
@@ -39,7 +40,13 @@ class Tournament(BaseModel):
         return self.name
 
     def is_official_ema(self):
-        return self.tournament_type.slug == 'ema'
+        return self.tournament_type.slug != TournamentType.CLUB
+
+    def get_url(self):
+        if self.is_upcoming:
+            return reverse('tournament_announcement', kwargs={'slug': self.slug})
+        else:
+            return reverse('tournament_details', kwargs={'slug': self.slug})
 
 
 class TournamentResult(BaseModel):

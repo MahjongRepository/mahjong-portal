@@ -9,84 +9,45 @@
     <div>
         <h1>{{ tournament.name }}</h1>
 
-        {% if tournament.is_upcoming %}
-            <p>{% trans 'Will be held' %} {{ tournament.start_date }}</p>
-        {% else %}
-            <p>
-                {% trans 'Held' %} {{ tournament.end_date }},
-                {% trans 'players' %} {{ tournament.number_of_players }}
-                {% if tournament.number_of_sessions %}
-                    {% trans 'and' %} {{ tournament.number_of_sessions }} {% trans 'sessions' %}
-                {% endif %}
-            </p>
-        {% endif %}
-
-        {% if tournament.city %}
-            <p>
-                <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
-            </p>
-        {% endif %}
-
-        {% with clubs=tournament.clubs.all %}
-            {% if clubs %}
-                <p>
-                    {% for club in clubs %}
-                        <a href="{% url 'club_details' club.slug %}">{{ club.name }}</a>{% if not forloop.last %},{% endif %}
-                    {% endfor %}
-                </p>
-            {% endif %}
-        {% endwith %}
-
         <p>
-            {% if tournament.is_official_ema %}
-                <span class="badge badge-success">{{ tournament.tournament_type.name }}</span>
-            {% else %}
-                <span class="badge badge-primary">{{ tournament.tournament_type.name }}</span>
+            {% trans 'Held' %} {{ tournament.end_date }},
+            {% trans 'players' %} {{ tournament.number_of_players }}
+            {% if tournament.number_of_sessions %}
+                {% trans 'and' %} {{ tournament.number_of_sessions }} {% trans 'sessions' %}
             {% endif %}
         </p>
 
-        {% if tournament.is_upcoming %}
-            {% if tournament.registration_link %}
-                <h3>{% trans 'Registration' %}</h3>
-                <p><a href="{{ tournament.registration_link }}" target="_blank">{{ tournament.registration_link }}</a></p>
-            {% endif %}
-            {% if tournament.registration_description %}
-                <h3>{% trans 'Description' %}</h3>
-                <p>{{ tournament.registration_description|linebreaksbr }}</p>
-            {% endif %}
-        {% endif %}
+        {% include 'tournament/_tournament_header.html' %}
 
-        {% if results %}
-            <table class="table table-hover table-responsive-sm">
-                <thead>
+        <table class="table table-hover table-responsive-sm">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{% trans 'Name' %}</th>
+                <th scope="col">{% trans 'Scores' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for result in results %}
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{% trans 'Name' %}</th>
-                    <th scope="col">{% trans 'Scores' %}</th>
+                    <th scope="row">{{ result.place }}</th>
+                    <td>
+                        {% if result.player.is_replacement %}
+                            {{ result.player.full_name }}
+                        {% else %}
+                            <a href="{% url 'player_details' result.player.slug %}">{{ result.player.full_name }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if result.scores %}
+                            {{ result.scores|floatformat:0|intcomma }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                {% for result in results %}
-                    <tr>
-                        <th scope="row">{{ result.place }}</th>
-                        <td>
-                            {% if result.player.is_replacement %}
-                                {{ result.player.full_name }}
-                            {% else %}
-                                <a href="{% url 'player_details' result.player.slug %}">{{ result.player.full_name }}</a>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if result.scores %}
-                                {{ result.scores|floatformat:0|intcomma }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

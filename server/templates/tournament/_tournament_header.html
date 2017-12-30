@@ -1,0 +1,23 @@
+{% if tournament.city %}
+    <p>
+        <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
+    </p>
+{% endif %}
+
+{% with clubs=tournament.clubs.all %}
+    {% if clubs %}
+        <p>
+            {% for club in clubs %}
+                <a href="{% url 'club_details' club.slug %}">{{ club.name }}</a>{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endwith %}
+
+<p>
+    {% if tournament.is_official_ema %}
+        <span class="badge badge-success">{{ tournament.tournament_type.name }}</span>
+    {% else %}
+        <span class="badge badge-primary">{{ tournament.tournament_type.name }}</span>
+    {% endif %}
+</p>

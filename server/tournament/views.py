@@ -49,3 +49,12 @@ def tournament_details(request, slug):
         'results': results,
         'page': 'tournament'
     })
+
+
+def tournament_announcement(request, slug):
+    tournament = get_object_or_404(Tournament, slug=slug)
+
+    return render(request, 'tournament/announcement.html', {
+        'tournament': tournament,
+        'page': 'tournament'
+    })
