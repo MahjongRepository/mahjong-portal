@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-30 05:08+0000\n"
+"POT-Creation-Date: 2017-12-30 05:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgstr "Имя скрыто"
 #: system/templates/system_index.html:5
 #: system/templates/tournament_admin/new_tournaments.html:5
 #: system/templates/tournament_admin/upload_results.html:5
-#: templates/base.html:93
+#: templates/base.html:91
 msgid "Admin page"
 msgstr "Админка"
 
@@ -60,34 +60,33 @@ msgstr "500 ошибка"
 msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
-#: templates/base.html:11 templates/base.html:61 templates/website/home.html:5
+#: templates/base.html:59 templates/website/home.html:5
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
-#: templates/base.html:69 templates/base.html:82 templates/club/details.html:23
-#: templates/tournament/list.html:8 templates/tournament/list.html:18
-#: templates/tournament/list.html:48 templates/website/city.html:11
+#: templates/base.html:67 templates/base.html:80 templates/club/details.html:23
+#: templates/tournament/list.html:18 templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:72 templates/club/list.html:10
+#: templates/base.html:70 templates/club/list.html:10
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:75 templates/website/about_en.html:5
+#: templates/base.html:73 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтинге"
 
-#: templates/base.html:83
+#: templates/base.html:81
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: templates/base.html:92
+#: templates/base.html:90
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:100 templates/base.html:101
+#: templates/base.html:98 templates/base.html:99
 msgid "Search"
 msgstr "Поиск"
 
@@ -216,6 +215,10 @@ msgstr "игр"
 #: templates/tournament/details.html:27
 msgid "Scores"
 msgstr "Очки"
+
+#: templates/tournament/list.html:8 templates/tournament/list.html:48
+msgid "tournaments"
+msgstr "турниры"
 
 #: templates/tournament/list.html:9 templates/tournament/list.html:20
 #: templates/tournament/list.html:49
