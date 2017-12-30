@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'haystack',
     'raven.contrib.django.raven_compat',
 
+    'mahjong_portal',
     'club',
     'settings',
     'player',

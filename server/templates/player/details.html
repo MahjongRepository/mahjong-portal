@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n russian_words_morph %}
 
 {% block additiona_title %}
     {{ player.full_name }}
@@ -9,10 +9,14 @@
     <div>
         <h1>{{ player.full_name }}</h1>
         <p>
+            {% trans 'From' %}
             {% if player.city %}
-                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name }}</a>,
+                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>,
+                {{ player.country.name }}
+            {% else %}
+                {{ player.country.name|genitive|title }}
             {% endif %}
-            {{ player.country.name }}
+
         </p>
 
         {% for rating_result in rating_results %}
@@ -65,6 +69,11 @@
 {% block meta_tags %}
     <meta name="description" content="
     {% trans 'Riichi mahjong player' %} {{ player.full_name }}
-    {% trans 'from' %} {% if player.city %}{{ player.city }},{% endif %} {{ player.country }}
+    {% trans 'from' %}
+    {% if player.city %}
+        {{ player.city.name|genitive|title }}, {{ player.country }}
+    {% else %}
+        {{ player.country|title }}
+    {% endif %}
 ">
 {% endblock %}

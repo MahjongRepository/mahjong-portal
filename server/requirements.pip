@@ -3,6 +3,9 @@ django-modeltranslation==0.12.1
 psycopg2==2.7.3.2
 django-bootstrap4==0.0.4
 
+pymorphy2==0.8
+pymorphy2-dicts-ru==2.4.404381.4453942
+
 # for search
 django-haystack==2.6.1
 Whoosh==2.7.4
