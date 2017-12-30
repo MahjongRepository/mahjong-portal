@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-30 05:51+0000\n"
+"POT-Creation-Date: 2017-12-30 05:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,7 +65,8 @@ msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
 #: templates/base.html:67 templates/base.html:80 templates/club/details.html:23
-#: templates/tournament/list.html:18 templates/website/city.html:11
+#: templates/tournament/list.html:9 templates/tournament/list.html:21
+#: templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
@@ -216,18 +217,23 @@ msgstr "игр"
 msgid "Scores"
 msgstr "Очки"
 
-#: templates/tournament/list.html:8 templates/tournament/list.html:48
+#: templates/tournament/list.html:7 templates/tournament/list.html:19
+#: templates/tournament/list.html:50
 msgid "tournaments"
 msgstr "турниры"
 
-#: templates/tournament/list.html:9 templates/tournament/list.html:20
-#: templates/tournament/list.html:49
+#: templates/tournament/list.html:11 templates/tournament/list.html:23
+#: templates/tournament/list.html:51
 msgid "during"
 msgstr "за"
 
-#: templates/tournament/list.html:44
+#: templates/tournament/list.html:46
 msgid "Riichi mahjong"
 msgstr "Риичи маджонг"
+
+#: templates/tournament/list.html:51
+msgid "year"
+msgstr "год"
 
 #: templates/website/city.html:16
 msgctxt "list of players"
