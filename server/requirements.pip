@@ -11,5 +11,8 @@ Whoosh==2.7.4
 beautifulsoup4==4.6.0
 requests==2.18.4
 
+# for monitoring
+raven==6.4.0
+
 # for production
 gunicorn==19.7.1

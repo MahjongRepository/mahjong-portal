@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'bootstrap4',
     'haystack',
+    'raven.contrib.django.raven_compat',
 
     'club',
     'settings',
