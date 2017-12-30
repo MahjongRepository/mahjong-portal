@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n russian_words_morph %}
 
 {% block additiona_title %}
     {{ city.name }}
@@ -20,5 +20,5 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="{% trans 'Riichi mahjong players and tournaments from ' %} {{ city.name }}">
+    <meta name="description" content="{% trans 'Riichi mahjong players and tournaments from ' %} {{ city.name|genitive|title }}">
 {% endblock %}
