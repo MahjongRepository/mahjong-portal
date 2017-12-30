@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize %}
+{% load i18n humanize russian_words_morph %}
 
 {% block title %}
     {{ club.name }}
@@ -29,6 +29,6 @@
 {% block meta_tags %}
     <meta name="description" content="
     {% trans 'Riichi mahjong club' %} “{{ club.name }}” {% trans 'in' %}
-    {% if club.city %}{{ club.city }},{% endif %} {{ club.country }}
+    {% if club.city %}{{ club.city.name|prepositional|title }},{% endif %} {{ club.country }}
     ">
 {% endblock %}
