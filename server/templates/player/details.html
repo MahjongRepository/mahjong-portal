@@ -16,10 +16,10 @@
         </p>
 
         {% for rating_result in rating_results %}
-            <h4 class="mt-4">{{ rating_result.rating.name }}</h4>
+            <h4 class="mt-4"><a href="">{{ rating_result.rating.name }}</a></h4>
 
             <p>
-                {% trans 'place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})
+                {% trans 'Place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})
             </p>
 
             <h4>{% trans 'Rating changes' %}</h4>
@@ -60,4 +60,11 @@
             </table>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="
+    {% trans 'Riichi mahjong player' %} {{ player.full_name }}
+    {% trans 'from' %} {% if player.city %}{{ player.city }},{% endif %} {{ player.country }}
+">
 {% endblock %}

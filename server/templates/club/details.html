@@ -12,9 +12,23 @@
             <p><a href="{{ club.website }}" target="_blank">{{ club.website }}</a></p>
         {% endif %}
 
+        <p>
+            {% if club.city %}
+                <a href="{% url 'city_page' club.city.slug %}">{{ club.city.name }}</a>,
+            {% endif %}
+            {{ club.country }}
+        </p>
+
         {% if tournaments %}
             <h2>{% trans 'Tournaments' %}</h2>
             {% include 'tournament/_tournaments_table.html' %}
         {% endif %}
     </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="
+    {% trans 'Riichi mahjong club' %} “{{ club.name }}” {% trans 'in' %}
+    {% if club.city %}{{ club.city }},{% endif %} {{ club.country }}
+    ">
 {% endblock %}

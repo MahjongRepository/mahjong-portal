@@ -51,3 +51,11 @@
         </table>
     </div>
 {% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="
+    {{ tournament.name }}
+    {% trans 'Held' %} {{ tournament.end_date }}
+    {% trans 'in' %} {% if tournament.city %}{{ tournament.city }},{% endif %} {{ tournament.country }}
+">
+{% endblock %}

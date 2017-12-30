@@ -37,3 +37,7 @@
         <p>{% trans 'nothing found' %}</p>
     {% endif %}
 {% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Search results for' %} “{{ search_query }}”">
+{% endblock %}

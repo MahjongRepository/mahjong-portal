@@ -18,3 +18,7 @@
         {% endif %}
     </div>
 {% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Riichi mahjong players and tournaments from ' %} {{ city.name }}">
+{% endblock %}

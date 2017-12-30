@@ -15,6 +15,7 @@ class Rating(BaseModel):
 
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
+    description = models.TextField(null=True, blank=True, default='')
 
     type = models.PositiveSmallIntegerField(choices=TYPES)
 

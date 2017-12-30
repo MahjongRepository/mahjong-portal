@@ -1,8 +1,9 @@
-{% if tournament.city %}
-    <p>
-        <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
-    </p>
-{% endif %}
+<p>
+    {% if tournament.city %}
+        <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>,
+    {% endif %}
+    {{ tournament.country.name }}
+</p>
 
 {% with clubs=tournament.clubs.all %}
     {% if clubs %}

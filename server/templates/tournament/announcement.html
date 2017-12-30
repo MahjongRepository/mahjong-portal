@@ -24,3 +24,7 @@
         {% endif %}
     </div>
 {% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ tournament.registration_description|default:tournament.name }}">
+{% endblock %}

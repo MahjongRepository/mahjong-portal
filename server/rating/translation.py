@@ -4,7 +4,7 @@ from rating.models import Rating
 
 
 class RatingTranslationOptions(TranslationOptions):
-    fields = ['name']
+    fields = ['name', 'description']
 
 
 translator.register(Rating, RatingTranslationOptions)

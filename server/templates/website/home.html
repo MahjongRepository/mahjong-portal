@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Mahjong portal" %}
+    {% trans 'Mahjong portal' %}
 {% endblock %}
 
 {% block content %}
@@ -18,4 +18,8 @@
         <p>{{ rating.name }}, <a href="{% url 'rating' rating.slug %}">{% trans 'all results' %}</a></p>
         {% include 'rating/_results_table.html' %}
     </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Website with riichi mahjong tournaments' %}">
 {% endblock %}

@@ -6,9 +6,7 @@
         EMA
     {% endif %}
     {% trans 'Tournaments' %}
-    {% if current_year != 'all' %}
-        {% trans 'during' %} {{ current_year }}
-    {% endif %}
+    {% trans 'during' %} {{ current_year }}
 {% endblock %}
 
 {% block content %}
@@ -39,4 +37,15 @@
         </div>
         {% include 'tournament/_tournaments_table.html' %}
     </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="
+    {% trans 'Riichi mahjong' %}
+    {% if tournament_type %}
+        EMA
+    {% endif %}
+    {% trans 'Tournaments' %}
+    {% trans 'during' %} {{ current_year }}
+    ">
 {% endblock %}

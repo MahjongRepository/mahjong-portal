@@ -13,5 +13,8 @@
         {% include 'rating/_results_table.html' %}
         {% include 'rating/_pagination.html' %}
     </div>
+{% endblock %}
 
+{% block meta_tags %}
+    <meta name="description" content="{{ rating.description }}">
 {% endblock %}

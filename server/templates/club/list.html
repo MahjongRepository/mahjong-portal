@@ -2,35 +2,7 @@
 {% load i18n l10n %}
 
 {% block additiona_title %}
-    {% trans 'Clubs' %}
-{% endblock %}
-
-{% block additional_js %}
-    <script src="https://api-maps.yandex.ru/2.1/?lang={{ map_language }}" type="text/javascript"></script>
-    <script type="text/javascript">
-        ymaps.ready(init);
-        var yandexMap;
-
-        function init(){
-            yandexMap = new ymaps.Map("map", {
-                center: [63.70882313, 100.19522972],
-                zoom: 2,
-                controls: ['zoomControl', 'fullscreenControl']
-            });
-
-            {% localize off %}
-                {% for club in clubs %}
-                    {% if club.lat and club.lng %}
-                        yandexMap.geoObjects.add(
-                            new ymaps.Placemark([{{ club.lat }}, {{ club.lng }}], {
-                                hintContent: '{{ club.name }}',
-                                balloonContent: '<a href="{% url 'club_details' club.slug %}">{{ club.name }}</a> {% if club.website %}<br><a href="{{ club.website }}" target="_blank">{{ club.website }}</a>{% endif %}'
-                            }));
-                    {% endif %}
-                {% endfor %}
-            {% endlocalize %}
-        }
-    </script>
+    {% trans 'Riichi mahjong russian clubs' %}
 {% endblock %}
 
 {% block content %}
@@ -64,4 +36,36 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'List with map of all russian riichi mahjong clubs' %}">
+{% endblock %}
+
+{% block additional_js %}
+    <script src="https://api-maps.yandex.ru/2.1/?lang={{ map_language }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        var yandexMap;
+
+        function init(){
+            yandexMap = new ymaps.Map("map", {
+                center: [63.70882313, 100.19522972],
+                zoom: 2,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+
+            {% localize off %}
+                {% for club in clubs %}
+                    {% if club.lat and club.lng %}
+                        yandexMap.geoObjects.add(
+                            new ymaps.Placemark([{{ club.lat }}, {{ club.lng }}], {
+                                hintContent: '{{ club.name }}',
+                                balloonContent: '<a href="{% url 'club_details' club.slug %}">{{ club.name }}</a> {% if club.website %}<br><a href="{{ club.website }}" target="_blank">{{ club.website }}</a>{% endif %}'
+                            }));
+                    {% endif %}
+                {% endfor %}
+            {% endlocalize %}
+        }
+    </script>
 {% endblock %}
