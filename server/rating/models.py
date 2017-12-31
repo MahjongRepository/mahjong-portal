@@ -19,6 +19,9 @@ class Rating(BaseModel):
 
     type = models.PositiveSmallIntegerField(choices=TYPES)
 
+    class Meta:
+        ordering = ['id']
+
     def __unicode__(self):
         return self.name
 

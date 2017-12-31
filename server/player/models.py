@@ -40,6 +40,9 @@ class Player(BaseModel):
 
     ema_id = models.CharField(max_length=30, null=True, blank=True, default='')
 
+    class Meta:
+        ordering = ['last_name']
+
     def __unicode__(self):
         return self.full_name
 

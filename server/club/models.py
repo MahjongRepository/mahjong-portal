@@ -18,5 +18,8 @@ class Club(BaseModel):
     lat = models.DecimalField(max_digits=21, decimal_places=15, null=True, blank=True)
     lng = models.DecimalField(max_digits=21, decimal_places=15, null=True, blank=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __unicode__(self):
         return self.name
