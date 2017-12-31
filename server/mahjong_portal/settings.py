@@ -169,6 +169,8 @@ HAYSTACK_CONNECTIONS = {
 }
 
 YANDEX_METRIKA_ID = ''
+GOOGLE_VERIFICATION_CODE = ''
+YANDEX_VERIFICATION_CODE = ''
 
 try:
     from .settings_local import *

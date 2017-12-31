@@ -8,6 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
 
+    {% if GOOGLE_VERIFICATION_CODE %}
+        <meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />
+    {% endif %}
+
+    {% if YANDEX_VERIFICATION_CODE %}
+        <meta name="yandex-verification" content="{{ YANDEX_VERIFICATION_CODE }}" />
+    {% endif %}
+
     <meta property="og:url" content="{{ SCHEME }}://{{ request.get_host }}{{ request.get_full_path }}" />
     <meta property="og:type" content="website" />
     <meta property="og:image:width" content="200" />
