@@ -9,7 +9,11 @@
     <div>
         <h1>{{ tournament.name }}</h1>
 
-        <p>{% trans 'Will be held' %} {{ tournament.start_date }}</p>
+        {% if tournament.is_upcoming %}
+            <p>{% trans 'Will be held' %} {{ tournament.start_date }}</p>
+        {% else %}
+            <p>{% trans 'Held' %} {{ tournament.end_date }}, <a href="{{ tournament.get_url }}">{% trans 'all results' %}</a></p>
+        {% endif %}
 
         {% include 'tournament/_tournament_header.html' %}
 
