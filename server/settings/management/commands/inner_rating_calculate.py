@@ -46,4 +46,6 @@ class Command(BaseCommand):
 
                 processed += 1
 
+            calculator.calculate_players_rating_rank(rating)
+
         print('{0}: End'.format(get_date_string()))

@@ -1,6 +1,7 @@
 from django.utils import timezone
 
 from player.models import Player
+from rating.models import RatingDelta, Rating
 from rating.utils import make_random_letters_and_digit_string
 from settings.models import TournamentType, Country
 from tournament.models import Tournament, TournamentResult
@@ -16,11 +17,14 @@ class RatingTestMixin(object):
         self.player = self.create_player()
         self.tournament_type = TournamentType.objects.create(name='ema')
 
-    def create_tournament(self, players=1, sessions=1):
+    def create_tournament(self, players=1, sessions=1, start_date=None, end_date=None):
+        start_date = start_date or timezone.now().date()
+        end_date = end_date or timezone.now().date()
         return Tournament.objects.create(
             name='test',
             slug=make_random_letters_and_digit_string(),
-            end_date=timezone.now(),
+            start_date=start_date,
+            end_date=end_date,
             country=self.country,
             tournament_type=self.tournament_type,
             number_of_players=players,
@@ -41,4 +45,18 @@ class RatingTestMixin(object):
             place=place,
             tournament=tournament,
             player=player
+        )
+
+    def create_rating_delta(self, rating, tournament, player, delta):
+        return RatingDelta.objects.create(
+            tournament=tournament,
+            tournament_place=1,
+            rating=rating,
+            player=player,
+            delta=delta,
+            players_coefficient=1,
+            sessions_coefficient=1,
+            tournament_coefficient=2,
+            base_rank=0,
+            tournament_age=100
         )

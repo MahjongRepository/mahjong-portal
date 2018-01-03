@@ -44,15 +44,15 @@
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>
                             {% if delta.is_active %}
-                                {% if delta.delta > 0 %}
-                                    <span class="badge badge-success">{{ delta.delta }}</span>
-                                {% elif delta.delta == 0 %}
-                                    <span class="badge badge-primary">{{ delta.delta }}</span>
+                                {% if delta.base_rank > 500 %}
+                                    <span class="badge badge-success">{{ delta.base_rank }}</span>
+                                {% elif delta.base_rank == 0 %}
+                                    <span class="badge badge-primary">{{ delta.base_rank }}</span>
                                 {% else %}
-                                    <span class="badge badge-danger">{{ delta.delta }}</span>
+                                    <span class="badge badge-danger">{{ delta.base_rank }}</span>
                                 {% endif %}
                             {% else %}
-                                <span class="badge badge-secondary">{{ delta.delta }}</span>
+                                <span class="badge badge-secondary">{{ delta.base_rank }}</span>
                             {% endif %}
                         </td>
                         <td><nobr>{{ delta.tournament.end_date|date:'d-m-Y' }}</nobr></td>
