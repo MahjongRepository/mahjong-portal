@@ -28,7 +28,9 @@ class RatingTestMixin(object):
             country=self.country,
             tournament_type=self.tournament_type,
             number_of_players=players,
-            number_of_sessions=sessions
+            number_of_sessions=sessions,
+            tournament_coefficient=2,
+            tournament_age=100
         )
 
     def create_player(self):
@@ -54,9 +56,5 @@ class RatingTestMixin(object):
             rating=rating,
             player=player,
             delta=delta,
-            players_coefficient=1,
-            sessions_coefficient=1,
-            tournament_coefficient=2,
             base_rank=0,
-            tournament_age=100
         )

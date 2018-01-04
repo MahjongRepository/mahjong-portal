@@ -33,10 +33,6 @@ class RatingDelta(BaseModel):
     is_active = models.BooleanField(default=False)
 
     base_rank = models.DecimalField(decimal_places=2, max_digits=10)
-    players_coefficient = models.DecimalField(decimal_places=2, max_digits=10)
-    sessions_coefficient = models.DecimalField(decimal_places=2, max_digits=10)
-    tournament_coefficient = models.DecimalField(decimal_places=2, max_digits=10)
-    tournament_age = models.DecimalField(decimal_places=2, max_digits=10)
     delta = models.DecimalField(decimal_places=2, max_digits=10)
 
     tournament_place = models.PositiveSmallIntegerField(default=0)
@@ -51,6 +47,8 @@ class RatingResult(BaseModel):
 
     score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
+
+    rating_calculation = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return self.rating.name

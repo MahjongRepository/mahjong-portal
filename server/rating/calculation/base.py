@@ -11,7 +11,7 @@ class BaseRating(object):
         """
         raise NotImplemented
 
-    def calculate_tournament_coefficient(self, tournament):
+    def tournament_coefficient(self, tournament):
         """
         Increase or decrease tournament coefficient
         based on it's properties

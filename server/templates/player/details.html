@@ -26,15 +26,27 @@
                 {% trans 'Place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})
             </p>
 
-            <h4>{% trans 'Rating changes' %}</h4>
+            <p class="mb-2">
+                <a class="ratingCalculationCollapse" data-toggle="collapse" href="#ratingCalculation" aria-expanded="false" aria-controls="ratingCalculation">
+                    {% trans 'how we calculated rating score' %}
+                </a>
+            </p>
+
+            <div class="collapse" id="ratingCalculation">
+                <div class="card card-body">
+                    score = {{ rating_result.rating_calculation }}
+                </div>
+            </div>
+
+            <h4 class="mt-4">{% trans 'Rating changes' %}</h4>
 
             <table class="table table-hover table-responsive-sm">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{% trans 'Delta' %}</th>
+                    <th scope="col">{% trans 'Base rank' %}</th>
                     <th scope="col">{% trans 'Date' %}</th>
-                    <th scope="col">{% trans 'Rank' %}</th>
+                    <th scope="col">{% trans 'Place' %}</th>
                     <th scope="col">{% trans 'Tournament' %}</th>
                 </tr>
                 </thead>
