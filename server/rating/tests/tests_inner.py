@@ -30,8 +30,17 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         tournament = self.create_tournament(players=120)
         self.assertEqual(calculator.players_coefficient(tournament), 2.5)
 
-        tournament = self.create_tournament(players=150)
-        self.assertEqual(calculator.players_coefficient(tournament), 2.5)
+        tournament = self.create_tournament(players=160)
+        self.assertEqual(calculator.players_coefficient(tournament), 3)
+
+        tournament = self.create_tournament(players=240)
+        self.assertEqual(calculator.players_coefficient(tournament), 3.4)
+
+        tournament = self.create_tournament(players=320)
+        self.assertEqual(calculator.players_coefficient(tournament), 3.6)
+
+        tournament = self.create_tournament(players=350)
+        self.assertEqual(calculator.players_coefficient(tournament), 3.6)
 
     def test_tournament_coefficient_and_number_of_sessions(self):
         calculator = InnerRatingCalculation()
@@ -237,7 +246,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 
-        self.assertEqual(float(delta_object.score), 375)
+        self.assertEqual(float(delta_object.score), 363.89)
         self.assertEqual(delta_object.place, 1)
 
     def test_calculate_players_rating_rank_and_not_enough_tournaments(self):

@@ -1,9 +1,6 @@
 import csv
-import io
-import re
-import requests
-from bs4 import BeautifulSoup
 from datetime import datetime
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.text import slugify
@@ -18,20 +15,89 @@ def get_date_string():
 
 
 class Command(BaseCommand):
-    countries = [
-        'RUS', 'DEN', 'NED', 'FRA', 'POL', 'GER', 'GBR', 'AUT', 'SVK', 'FIN',
-        'UKR', 'SWE', 'CZE', 'ITA', 'BLR', 'SUI', 'BEL', 'HUN'
-    ]
-
     tournaments_file = 'tournaments.csv'
     results_file = 'results.csv'
+
+    def add_arguments(self, parser):
+        parser.add_argument('csv_path', type=str)
+        parser.add_argument('tournament_id', type=int)
+        parser.add_argument('--create_results', type=bool, default=False)
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
-        # self.download_tournaments_list()
-        self.download_tournaments_results()
-        # self.import_data()
+        with open(options['csv_path'], 'r') as f:
+            reader = csv.DictReader(f, delimiter=',')
+
+            missed_countries = []
+            missed_players = []
+
+            tournament = Tournament.objects.get(id=options['tournament_id'])
+            TournamentResult.objects.filter(tournament=tournament).delete()
+
+            for row in reader:
+                country = row['country'].strip().upper()
+                ema_id = row['ema_id'].strip()
+                place = row['place'].strip()
+                first_name = row['first_name'].strip()
+                last_name = row['last_name'].strip()
+                scores = int(row['scores'].strip())
+
+                if country and country not in missed_countries:
+                    try:
+                        Country.objects.get(code=country)
+                    except Country.DoesNotExist:
+                        missed_countries.append(country)
+
+                player = None
+
+                if 'player' in first_name.lower() or 'player' in last_name.lower():
+                    player = Player.all_objects.get(is_replacement=True)
+
+                if ema_id:
+                    try:
+                        player = Player.objects.get(ema_id=ema_id)
+                    except Player.DoesNotExist:
+                        pass
+
+                if not player:
+                    try:
+                        player = Player.objects.get(last_name_en=last_name, first_name_en=first_name)
+                    except Player.DoesNotExist:
+                        pass
+
+                if not player:
+                    missed_players.append([last_name, first_name, country, ema_id])
+
+                if options['create_results']:
+                    if not player:
+                        country = Country.objects.get(code=country)
+
+                        player = Player.objects.create(
+                            first_name_ru=first_name,
+                            first_name_en=first_name,
+                            last_name_ru=last_name,
+                            last_name_en=last_name,
+                            country=country,
+                            slug=slugify('{} {}'.format(last_name, first_name))
+                        )
+
+                    TournamentResult.objects.create(
+                        tournament=tournament,
+                        player=player,
+                        place=place,
+                        scores=scores
+                    )
+
+            if missed_countries:
+                print('Missed countries:')
+                for item in missed_countries:
+                    print(item)
+
+            if missed_players:
+                print('Missed players:')
+                for item in missed_players:
+                    print(item)
 
         print('{0}: End'.format(get_date_string()))
 
@@ -243,165 +309,3 @@ class Command(BaseCommand):
                     place=tournament_result['place'],
                     scores=tournament_result['scores'] and int(tournament_result['scores']) or 0,
                 )
-
-    def download_tournaments_results(self):
-        with open(self.tournaments_file, 'r') as f:
-            reader = csv.DictReader(f, delimiter=',')
-
-            writer = csv.writer(open(self.results_file, 'w+'))
-            writer.writerow(['tournament_id', 'place', 'first_name', 'last_name', 'scores', 'country', 'ema_id'])
-
-            for row in reader:
-                print('Processing {}...'.format(row['tournament_id']))
-
-                tournament_id = row['tournament_id']
-
-                url = 'http://mahjong-europe.org/ranking/Tournament/TR_RCR_{}.html'.format(tournament_id)
-                page = requests.get(url)
-                soup = BeautifulSoup(page.content, 'html.parser')
-
-                # table = soup.find_all('table')[0]
-                # rows = table.findAll('tr')
-                # text = rows[-2].findAll('td')[1].text
-                # print(tournament_id, text)
-
-                table = soup.findAll('div', {'class': 'TCTT_lignes'})[0]
-                # skip first row because it is a header
-                results = table.findAll('div')[1:]
-                for result in results:
-                    data = result.findAll('p')
-
-                    place = data[0].text.strip()
-                    player_ema_id = data[1].text.strip().replace('-', '')
-                    last_name = data[2].text.strip().title()
-                    first_name = data[3].text.strip().title()
-                    scores = data[6].text.strip().title()
-
-                    if first_name == 'Masahiko Takahashi':
-                        first_name = 'Masahiko'
-                        last_name = 'Takahashi'
-
-                    if last_name == '-':
-                        t = first_name.split(' ')
-                        first_name = ' '.join(t[0:-1])
-                        last_name = t[-1]
-
-                    if scores == '1' or scores == 'N/A' or scores == '0':
-                        scores = ''
-
-                    if data[4].a:
-                        country = data[4].a.attrs.get('href').replace('../Country/', '').replace('_Information.html', '')
-                    elif data[4].img:
-                        country = data[4].img.attrs.get('src').replace('../Img/flag/16/', '').replace('.png', '')
-                    else:
-                        country = None
-
-                    if country == '-':
-                        country = None
-
-                    writer.writerow([
-                        tournament_id,
-                        place,
-                        first_name,
-                        last_name,
-                        scores,
-                        country or '',
-                        player_ema_id
-                    ])
-
-    def download_tournaments_list(self):
-        # first number is ema id
-        # second number is our tournament id
-        already_added_tournaments = {
-            '180': '87',
-            '177': '76',
-            '171': '62',
-            '168': '43',
-            '160': '57',
-            '158': '24',
-            '146': '74',
-            '137': '44',
-            '120': '25',
-            '113': '8',
-            '106': '52',
-            '96': '45',
-            '92': '46',
-            '95': '77',
-            '67': '78',
-            '87': '13',
-            '73': '49',
-            '68': '48',
-            '51': '75',
-        }
-
-        writer = csv.writer(open(self.tournaments_file, 'w+'))
-        writer.writerow(['tournament_id', 'current_id', 'start_date', 'end_date', 'city', 'country', 'name'])
-
-        for country in self.countries:
-            print('Processing {}...'.format(country))
-
-            url = 'http://mahjong-europe.org/ranking/Country/{}_Information.html'.format(country)
-
-            page = requests.get(url)
-            soup = BeautifulSoup(page.content, 'html.parser')
-
-            results = soup.findAll('div', {'class': 'TCTT_ligneRiichi'})
-            for result in results:
-                data = result.findAll('p')
-
-                date = data[1].text.strip()
-                city = data[2].text.strip().title()
-                name = data[3].text.strip()
-
-                url = data[3].a.attrs.get('href')
-                ema_id = re.findall(r'\d+', url)[0]
-
-                date_format = '%d %b %Y'
-
-                # source dates have different formats,
-                # so let's unify dates string
-                date = date.replace('.', '')
-                date = date.replace('Sept', 'Sep')
-                date = date.replace('sept', 'Sep')
-                date = date.replace('April', 'Apr')
-                date = date.replace('april', 'Apr')
-                date = date.replace('August', 'Aug')
-                date = date.replace('June', 'Jun')
-                date = date.replace('July', 'Jul')
-                date = date.replace('March', 'Mar')
-
-                if date == '31 Jan 1 Feb 2015':
-                    start_date = datetime.strptime('31 Jan 2015', date_format)
-                    end_date = datetime.strptime('1 Feb 2015', date_format)
-                elif date == '28 feb - 1 mar 2015':
-                    start_date = datetime.strptime('28 Feb 2015', date_format)
-                    end_date = datetime.strptime('1 Mar 2015', date_format)
-                elif date == '25/10/2014':
-                    start_date = datetime.strptime(date, '%d/%m/%Y')
-                    end_date = start_date
-                elif date == '17-mars-13':
-                    start_date = datetime.strptime('17 Mar 2013', date_format)
-                    end_date = start_date
-                elif '-' in date:
-                    # 2-3 Nov 2013
-                    temp = date.split('-')
-                    end_date_temp = temp[1].split(' ')
-
-                    start_date = ' '.join([temp[0]] + end_date_temp[1:])
-                    end_date = ' '.join(end_date_temp)
-
-                    start_date = datetime.strptime(start_date, date_format)
-                    end_date = datetime.strptime(end_date, date_format)
-                else:
-                    start_date = datetime.strptime(date, date_format)
-                    end_date = start_date
-
-                writer.writerow([
-                    ema_id,
-                    already_added_tournaments.get(ema_id) or '',
-                    start_date.strftime('%m/%d/%Y'),
-                    end_date.strftime('%m/%d/%Y'),
-                    city,
-                    country,
-                    name,
-                ])

@@ -30,22 +30,21 @@ class Command(BaseCommand):
         else:
             tournaments = Tournament.objects.all().order_by('end_date')
 
-        with transaction.atomic():
-            if erase_scores:
-                RatingDelta.objects.filter(rating=rating).delete()
-                RatingResult.objects.filter(rating=rating).delete()
+        if erase_scores:
+            RatingDelta.objects.filter(rating=rating).delete()
+            RatingResult.objects.filter(rating=rating).delete()
 
-            calculator = InnerRatingCalculation()
+        calculator = InnerRatingCalculation()
 
-            processed = 1
-            total = tournaments.count()
-            for tournament in tournaments:
-                print('Process {}/{}'.format(processed, total))
+        processed = 1
+        total = tournaments.count()
+        for tournament in tournaments:
+            print('Process {}/{}'.format(processed, total))
 
-                calculator.calculate_players_deltas(tournament, rating)
+            calculator.calculate_players_deltas(tournament, rating)
 
-                processed += 1
+            processed += 1
 
-            calculator.calculate_players_rating_rank(rating)
+        calculator.calculate_players_rating_rank(rating)
 
         print('{0}: End'.format(get_date_string()))

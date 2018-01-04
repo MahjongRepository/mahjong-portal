@@ -29,11 +29,13 @@ class TournamentType(BaseModel):
     CLUB = 'club'
     EMA = 'ema'
     FOREIGN_EMA = 'fema'
+    OTHER = 'other'
 
     TYPES = [
         [CLUB, 'club'],
         [EMA, 'ema'],
-        [FOREIGN_EMA, 'fema']
+        [FOREIGN_EMA, 'fema'],
+        [OTHER, 'other']
     ]
 
     name = models.CharField(max_length=255)
