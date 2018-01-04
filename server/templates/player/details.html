@@ -66,7 +66,9 @@
                                 <span class="badge badge-secondary">{{ delta.base_rank }}</span>
                             {% endif %}
                         </td>
-                        <td><nobr>{{ delta.tournament.end_date|date:'d-m-Y' }}</nobr></td>
+                        <td>
+                            <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                        </td>
                         <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
                         <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
                     </tr>
