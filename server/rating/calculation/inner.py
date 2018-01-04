@@ -6,14 +6,16 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from player.models import Player
-from rating.calculation.base import BaseRating
-from rating.models import RatingDelta, RatingResult
+from rating.models import RatingDelta, RatingResult, TournamentCoefficients
 from settings.models import TournamentType
 from tournament.models import TournamentResult
 
 
-class InnerRatingCalculation(BaseRating):
+class InnerRatingCalculation(object):
     players = None
+
+    def __init__(self):
+        self.players = self.get_players()
 
     def get_players(self):
         """
@@ -39,7 +41,7 @@ class InnerRatingCalculation(BaseRating):
         #     'расчет второй части',
         # ])
 
-        rows = []
+        # rows = []
         results = []
         two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
 
@@ -48,21 +50,23 @@ class InnerRatingCalculation(BaseRating):
         first_part_weight = 50
         second_part_weight = 50
 
-        max_k = 0.0
+        max_coefficient = 0.0
         coefficient_temp = (RatingDelta.objects
-            .filter(rating=rating)
-            .exclude(tournament__tournament_type__slug=TournamentType.FOREIGN_EMA)
-            .filter(tournament__end_date__gte=two_years_ago))
+                                       .filter(rating=rating)
+                                       .exclude(tournament__tournament_type__slug=TournamentType.FOREIGN_EMA)
+                                       .filter(tournament__end_date__gte=two_years_ago))
 
         for item in coefficient_temp:
-            c = self._calculate_percentage(float(item.tournament.tournament_coefficient), item.tournament.tournament_age)
-            if c > max_k:
-                max_k = c
+            coefficient = TournamentCoefficients.objects.get(rating=rating, tournament=item.tournament)
+
+            c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
+            if c > max_coefficient:
+                max_coefficient = c
 
         RatingResult.objects.filter(rating=rating).delete()
 
         for player in self.players:
-            row = []
+            # row = []
 
             first_part_numerator_calculation = []
             first_part_denominator_calculation = []
@@ -83,11 +87,11 @@ class InnerRatingCalculation(BaseRating):
 
             if total_tournaments <= first_part_min_tournaments:
                 tournaments_results = deltas
-                tournaments_in_rating = total_tournaments
+                # tournaments_in_rating = total_tournaments
             else:
                 limit = self._determine_tournaments_number(deltas.count())
                 tournaments_results = deltas.order_by('-base_rank')[:limit]
-                tournaments_in_rating = limit
+                # tournaments_in_rating = limit
 
             deltas.update(is_active=False)
             for result in tournaments_results:
@@ -98,11 +102,13 @@ class InnerRatingCalculation(BaseRating):
             first_part_denominator = 0
 
             for result in tournaments_results:
-                first_part_numerator += float(result.delta)
-                first_part_denominator += float(self._calculate_percentage(float(result.tournament.tournament_coefficient), result.tournament.tournament_age))
+                coefficient = TournamentCoefficients.objects.get(rating=rating, tournament=result.tournament)
 
-                first_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, result.tournament.tournament_coefficient, result.tournament.tournament_age / 100))
-                first_part_denominator_calculation.append('{} * {}'.format(result.tournament.tournament_coefficient, result.tournament.tournament_age / 100))
+                first_part_numerator += float(result.delta)
+                first_part_denominator += float(self._calculate_percentage(float(coefficient.coefficient), coefficient.age))
+
+                first_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
+                first_part_denominator_calculation.append('{} * {}'.format(coefficient.coefficient, coefficient.age / 100))
 
             if len(tournaments_results) < first_part_min_tournaments:
                 fill_missed_data = first_part_min_tournaments - len(tournaments_results)
@@ -115,15 +121,17 @@ class InnerRatingCalculation(BaseRating):
             first_part = first_part_numerator / first_part_denominator
 
             second_part_numerator = 0
-            second_part_denominator = second_part_min_tournaments * max_k
+            second_part_denominator = second_part_min_tournaments * max_coefficient
 
-            second_part_denominator_calculation.append('{} * {}'.format(second_part_min_tournaments, max_k))
+            second_part_denominator_calculation.append('{} * {}'.format(second_part_min_tournaments, max_coefficient))
 
             best_results = deltas.order_by('-delta')[:second_part_min_tournaments]
             for result in best_results:
+                coefficient = TournamentCoefficients.objects.get(rating=rating, tournament=result.tournament)
+
                 second_part_numerator += float(result.delta)
 
-                second_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, result.tournament.tournament_coefficient, result.tournament.tournament_age / 100))
+                second_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
 
             second_part = second_part_numerator / second_part_denominator
 
@@ -174,9 +182,10 @@ class InnerRatingCalculation(BaseRating):
         :return:
         """
 
-        tournament.tournament_coefficient = self.tournament_coefficient(tournament)
-        tournament.tournament_age = self.tournament_age(tournament)
-        tournament.save()
+        coefficient_obj, _ = TournamentCoefficients.objects.get_or_create(rating=rating, tournament=tournament)
+        coefficient_obj.coefficient = self.tournament_coefficient(tournament)
+        coefficient_obj.age = self.tournament_age(tournament)
+        coefficient_obj.save()
 
         results = (TournamentResult.objects
                                    .filter(tournament=tournament)
@@ -193,7 +202,7 @@ class InnerRatingCalculation(BaseRating):
             if not player:
                 continue
 
-            delta, base_rank, players_coefficient, sessions_coefficient, tournament_age = self.calculate_rating_delta(result)
+            delta, base_rank = self.calculate_rating_delta(result)
 
             RatingDelta.objects.create(tournament=result.tournament,
                                        tournament_place=result.place,
@@ -231,10 +240,7 @@ class InnerRatingCalculation(BaseRating):
         Determine player delta and tournament properties
         """
         tournament = tournament_result.tournament
-
-        players_coefficient = self.players_coefficient(tournament)
-        sessions_coefficient = self.sessions_coefficient(tournament)
-        tournament_coefficient = players_coefficient + sessions_coefficient
+        tournament_coefficient = self.tournament_coefficient(tournament)
 
         base_rank = self.calculate_base_rank(tournament_result)
 
@@ -243,7 +249,7 @@ class InnerRatingCalculation(BaseRating):
         delta = tournament_coefficient * base_rank
         delta = self._calculate_percentage(delta, tournament_age)
 
-        return delta, base_rank, players_coefficient, sessions_coefficient, tournament_age
+        return delta, base_rank
 
     def players_coefficient(self, tournament):
         """
@@ -288,15 +294,34 @@ class InnerRatingCalculation(BaseRating):
 
             # need to find a better way to do it
             if sessions <= 8:
-                calculated += tournament.number_of_sessions * first_value
-            elif 8 < tournament.number_of_sessions <= 12:
-                calculated += 8 * first_value + (tournament.number_of_sessions - 8) * second_value
-            elif 12 < tournament.number_of_sessions <= 16:
-                calculated += 8 * first_value + 4 * second_value + (tournament.number_of_sessions - 12) * third_value
-            elif 16 < tournament.number_of_sessions <= 20:
-                calculated += 8 * first_value + 4 * second_value + 4 * third_value + (tournament.number_of_sessions - 16) * fourth_value
+                calculated += sessions * first_value
+            elif 8 < sessions <= 12:
+                calculated += 8 * first_value + (sessions - 8) * second_value
+            elif 12 < sessions <= 16:
+                calculated += 8 * first_value + 4 * second_value + (sessions - 12) * third_value
+            elif 16 < sessions <= 20:
+                calculated += 8 * first_value + 4 * second_value + 4 * third_value + (sessions - 16) * fourth_value
 
         return float(calculated / 100)
+
+    def tournament_age(self, tournament):
+        """
+        Check about page for detailed description
+        """
+
+        today = timezone.now().date()
+        end_date = tournament.end_date
+        diff = relativedelta(today, end_date)
+        months = diff.years * 12 + diff.months + diff.days / 30
+
+        if months <= 12:
+            return 100
+        elif 12 < months <= 18:
+            return 66
+        elif 18 < months <= 24:
+            return 33
+        else:
+            return 0
 
     def _assume_number_of_sessions(self, tournament):
         """
@@ -329,25 +354,6 @@ class InnerRatingCalculation(BaseRating):
         n = number_of_tournaments - 5
 
         return 5 + math.ceil(self._calculate_percentage(n, 80))
-
-    def tournament_age(self, tournament):
-        """
-        Check about page for detailed description
-        """
-
-        today = timezone.now().date()
-        end_date = tournament.end_date
-        diff = relativedelta(today, end_date)
-        months = diff.years * 12 + diff.months + diff.days / 30
-
-        if months <= 12:
-            return 100
-        elif 12 < months <= 18:
-            return 66
-        elif 18 < months <= 24:
-            return 33
-        else:
-            return 0
 
     def _calculate_percentage(self, number, percentage):
         if percentage == 100:

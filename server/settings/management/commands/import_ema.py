@@ -30,8 +30,8 @@ class Command(BaseCommand):
         print('{0}: Start'.format(get_date_string()))
 
         # self.download_tournaments_list()
-        # self.download_tournaments_results()
-        self.import_data()
+        self.download_tournaments_results()
+        # self.import_data()
 
         print('{0}: End'.format(get_date_string()))
 
@@ -260,44 +260,51 @@ class Command(BaseCommand):
                 page = requests.get(url)
                 soup = BeautifulSoup(page.content, 'html.parser')
 
-                table = soup.findAll('div', {'class': 'TCTT_lignes'})[0]
-                # skip first row because it is a header
-                results = table.findAll('div')[1:]
-                for result in results:
-                    data = result.findAll('p')
+                table = soup.find_all('table')[0]
+                rows = table.findAll('tr')
+                text = rows[-2].findAll('td')[1].text
+                print(tournament_id, text)
 
-                    place = data[0].text.strip()
-                    player_ema_id = data[1].text.strip().replace('-', '')
-                    last_name = data[2].text.strip().title()
-                    first_name = data[3].text.strip().title()
-                    scores = data[6].text.strip().title()
+                # 139 6(Days=3, Countries=1, Players=1, Extra=1)
 
-                    if first_name == 'Masahiko Takahashi':
-                        first_name = 'Masahiko'
-                        last_name = 'Takahashi'
-
-                    if scores == '1' or scores == 'N/A' or scores == '0':
-                        scores = ''
-
-                    if data[4].a:
-                        country = data[4].a.attrs.get('href').replace('../Country/', '').replace('_Information.html', '')
-                    elif data[4].img:
-                        country = data[4].img.attrs.get('src').replace('../Img/flag/16/', '').replace('.png', '')
-                    else:
-                        country = None
-
-                    if country == '-':
-                        country = None
-
-                    writer.writerow([
-                        tournament_id,
-                        place,
-                        first_name,
-                        last_name,
-                        scores,
-                        country or '',
-                        player_ema_id
-                    ])
+                # table = soup.findAll('div', {'class': 'TCTT_lignes'})[0]
+                # # skip first row because it is a header
+                # results = table.findAll('div')[1:]
+                # for result in results:
+                #     data = result.findAll('p')
+                #
+                #     place = data[0].text.strip()
+                #     player_ema_id = data[1].text.strip().replace('-', '')
+                #     last_name = data[2].text.strip().title()
+                #     first_name = data[3].text.strip().title()
+                #     scores = data[6].text.strip().title()
+                #
+                #     if first_name == 'Masahiko Takahashi':
+                #         first_name = 'Masahiko'
+                #         last_name = 'Takahashi'
+                #
+                #     if scores == '1' or scores == 'N/A' or scores == '0':
+                #         scores = ''
+                #
+                #     if data[4].a:
+                #         country = data[4].a.attrs.get('href').replace('../Country/', '').replace('_Information.html', '')
+                #     elif data[4].img:
+                #         country = data[4].img.attrs.get('src').replace('../Img/flag/16/', '').replace('.png', '')
+                #     else:
+                #         country = None
+                #
+                #     if country == '-':
+                #         country = None
+                #
+                #     writer.writerow([
+                #         tournament_id,
+                #         place,
+                #         first_name,
+                #         last_name,
+                #         scores,
+                #         country or '',
+                #         player_ema_id
+                #     ])
 
     def download_tournaments_list(self):
         # first number is ema id

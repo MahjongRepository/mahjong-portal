@@ -20,7 +20,7 @@
         </p>
 
         {% for rating_result in rating_results %}
-            <h4 class="mt-4"><a href="">{{ rating_result.rating.name }}</a></h4>
+            <h4 class="mt-4"><a href="{% url 'rating' rating_result.rating.slug %}">{{ rating_result.rating.name }}</a></h4>
 
             <p>
                 {% trans 'Place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})

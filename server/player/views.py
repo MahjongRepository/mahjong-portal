@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 
 from player.models import Player
-from rating.models import RatingDelta, Rating, RatingResult
 
 
 def player_details(request, slug):

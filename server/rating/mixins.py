@@ -17,7 +17,7 @@ class RatingTestMixin(object):
         self.player = self.create_player()
         self.tournament_type = TournamentType.objects.create(name='ema')
 
-    def create_tournament(self, players=1, sessions=1, start_date=None, end_date=None):
+    def create_tournament(self, players=1, sessions=1, start_date=None, end_date=None, need_qualification=False):
         start_date = start_date or timezone.now().date()
         end_date = end_date or timezone.now().date()
         return Tournament.objects.create(
@@ -29,16 +29,20 @@ class RatingTestMixin(object):
             tournament_type=self.tournament_type,
             number_of_players=players,
             number_of_sessions=sessions,
-            tournament_coefficient=2,
-            tournament_age=100
+            need_qualification=need_qualification
         )
 
-    def create_player(self):
+    def create_player(self, country_code=None):
+        if country_code:
+            country, _ = Country.objects.get_or_create(code=country_code, name=country_code)
+        else:
+            country = self.country
+
         return Player.objects.create(
             first_name='test',
             last_name='test',
             slug=make_random_letters_and_digit_string(),
-            country=self.country
+            country=country
         )
 
     def create_tournament_result(self, tournament, place, player=None):

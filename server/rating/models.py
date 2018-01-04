@@ -55,3 +55,11 @@ class RatingResult(BaseModel):
 
     def get_deltas(self):
         return RatingDelta.objects.filter(player=self.player, rating=self.rating).order_by('-tournament__end_date')
+
+
+class TournamentCoefficients(BaseModel):
+    rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
+    tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name='rating_results')
+
+    coefficient = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)

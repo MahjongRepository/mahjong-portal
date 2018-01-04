@@ -34,10 +34,9 @@ class Tournament(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
 
-    ema_id = models.CharField(max_length=20, null=True, blank=True)
+    need_qualification = models.BooleanField(default=False)
 
-    tournament_coefficient = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-    tournament_age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    ema_id = models.CharField(max_length=20, null=True, blank=True)
 
     def __unicode__(self):
         return self.name

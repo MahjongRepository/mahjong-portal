@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
+from player.models import Player
 from rating.calculation.ema import EmaRatingCalculation
 from rating.models import Rating, RatingDelta, RatingResult
 from settings.models import TournamentType
@@ -23,6 +24,7 @@ class Command(BaseCommand):
         erase_scores = True
 
         rating = Rating.objects.get(type=Rating.EMA)
+
         if options['tournament_id']:
             erase_scores = False
             tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('end_date')
@@ -44,5 +46,7 @@ class Command(BaseCommand):
                 calculator.calculate_players_deltas(tournament, rating)
 
                 processed += 1
+
+            calculator.calculate_players_rating_rank(rating)
 
         print('{0}: End'.format(get_date_string()))

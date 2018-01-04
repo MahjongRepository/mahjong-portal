@@ -17,10 +17,6 @@
             {% endif %}
         </p>
 
-        {% if tournament.tournament_coefficient %}
-            <p>{% trans 'Tournament coefficient is' %} {{ tournament.tournament_coefficient|floatformat:2 }}.</p>
-        {% endif %}
-
         {% include 'tournament/_tournament_header.html' %}
 
         <table class="table table-hover table-responsive-sm">

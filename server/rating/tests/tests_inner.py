@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from rating.calculation.inner import InnerRatingCalculation
 from rating.mixins import RatingTestMixin
-from rating.models import Rating, RatingDelta, RatingResult
+from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
 
 
 class InnerRatingTestCase(TestCase, RatingTestMixin):
@@ -15,56 +15,56 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
     def test_tournament_coefficient_and_number_of_players(self):
         calculator = InnerRatingCalculation()
 
-        tournament = self.create_tournament(players=20, sessions=0)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 0.5)
+        tournament = self.create_tournament(players=20)
+        self.assertEqual(calculator.players_coefficient(tournament), 0.5)
 
-        tournament = self.create_tournament(players=40, sessions=0)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 1)
+        tournament = self.create_tournament(players=40)
+        self.assertEqual(calculator.players_coefficient(tournament), 1)
 
-        tournament = self.create_tournament(players=80, sessions=0)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2)
+        tournament = self.create_tournament(players=80)
+        self.assertEqual(calculator.players_coefficient(tournament), 2)
 
-        tournament = self.create_tournament(players=92, sessions=0)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.15)
+        tournament = self.create_tournament(players=92)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.15)
 
-        tournament = self.create_tournament(players=120, sessions=0)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.5)
+        tournament = self.create_tournament(players=120)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.5)
 
-        tournament = self.create_tournament(players=150, sessions=0)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.5)
+        tournament = self.create_tournament(players=150)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.5)
 
     def test_tournament_coefficient_and_number_of_sessions(self):
         calculator = InnerRatingCalculation()
 
-        tournament = self.create_tournament(players=0, sessions=4)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 0.8)
+        tournament = self.create_tournament(sessions=4)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 0.8)
 
-        tournament = self.create_tournament(players=0, sessions=5)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 1)
+        tournament = self.create_tournament(sessions=5)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 1)
 
-        tournament = self.create_tournament(players=0, sessions=8)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 1.6)
+        tournament = self.create_tournament(sessions=8)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 1.6)
 
-        tournament = self.create_tournament(players=0, sessions=9)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 1.75)
+        tournament = self.create_tournament(sessions=9)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 1.75)
 
-        tournament = self.create_tournament(players=0, sessions=12)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.2)
+        tournament = self.create_tournament(sessions=12)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 2.2)
 
-        tournament = self.create_tournament(players=0, sessions=14)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.4)
+        tournament = self.create_tournament(sessions=14)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 2.4)
 
-        tournament = self.create_tournament(players=0, sessions=16)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.6)
+        tournament = self.create_tournament(sessions=16)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 2.6)
 
-        tournament = self.create_tournament(players=0, sessions=17)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.65)
+        tournament = self.create_tournament(sessions=17)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 2.65)
 
-        tournament = self.create_tournament(players=0, sessions=20)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.8)
+        tournament = self.create_tournament(sessions=20)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 2.8)
 
-        tournament = self.create_tournament(players=0, sessions=25)
-        self.assertEqual(calculator.tournament_coefficient(tournament), 2.8)
+        tournament = self.create_tournament(sessions=25)
+        self.assertEqual(calculator.sessions_coefficient(tournament), 2.8)
 
     def test_calculate_player_base_rank(self):
         calculator = InnerRatingCalculation()
@@ -232,6 +232,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         for delta in deltas:
             self.create_rating_delta(rating, tournament, self.player, delta)
 
+        TournamentCoefficients.objects.create(rating=rating, tournament=tournament, coefficient=2, age=100)
         calculator.calculate_players_rating_rank(rating)
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
@@ -250,6 +251,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         for delta in deltas:
             self.create_rating_delta(rating, tournament, self.player, delta)
 
+        TournamentCoefficients.objects.create(rating=rating, tournament=tournament, coefficient=2, age=100)
         calculator.calculate_players_rating_rank(rating)
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
