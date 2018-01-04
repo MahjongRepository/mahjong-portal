@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph %}
+{% load i18n russian_words_morph meta_tags_helper %}
 
 {% block title %}
     {{ player.full_name }}
@@ -16,7 +16,6 @@
             {% else %}
                 {{ player.country.name|genitive|title }}
             {% endif %}
-
         </p>
 
         {% for rating_result in rating_results %}
@@ -79,13 +78,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="
-    {% trans 'Riichi mahjong player' %} {{ player.full_name }}
-    {% trans 'from' %}
-    {% if player.city %}
-        {{ player.city.name|genitive|title }}, {{ player.country }}
-    {% else %}
-        {{ player.country.name|genitive|title }}
-    {% endif %}
-">
+    <meta name="description" content="{% player_page_description player %}">
+    <meta property="og:description" content="{% player_page_description player %}">
 {% endblock %}

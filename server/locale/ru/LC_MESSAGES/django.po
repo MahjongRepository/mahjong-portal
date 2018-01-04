@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 07:49+0000\n"
+"POT-Creation-Date: 2018-01-04 12:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,40 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:13
+#, python-format
+msgid "EMA tournaments tournaments during %d"
+msgstr "ЕМА турниры за %d"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:15
+#, python-format
+msgid "Tournaments tournaments during %d"
+msgstr "Турниры за %d"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:21
+#, python-format
+msgid "List of EMA riichi mahjong tournaments during %d"
+msgstr "Список риичи маджонг ЕМА турниров за %d"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:23
+#, python-format
+msgid "List of riichi mahjong tournaments during %d"
+msgstr "Список риичи маджонг турниров за %d"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:33
+#, python-format
+msgid "Riichi mahjong tournament \"%(name)s\" held %(date)s in %(place)s"
+msgstr "Турнир по риичи маджонгу \"%(name)s\" прошел %(date)s в %(place)s"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:47
+msgid "Riichi mahjong club \"%(name)s\" in %(place)s"
+msgstr "Риичи маджонг клуб \"%(name)s\" в %(place)s"
+
+#: mahjong_portal/templatetags/meta_tags_helper.py:60
+#, python-format
+msgid "Riichi mahjong player %(name)s from %(place)s"
+msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
 #: player/models.py:55
 msgid "Hidden name"
@@ -65,7 +99,6 @@ msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
 #: templates/base.html:75 templates/base.html:88 templates/club/details.html:23
-#: templates/tournament/list.html:9 templates/tournament/list.html:21
 #: templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
@@ -95,7 +128,7 @@ msgstr "Поиск"
 msgid "Riichi mahjong club"
 msgstr "Клуб риичи маджонга"
 
-#: templates/club/details.html:31 templates/tournament/details.html:63
+#: templates/club/details.html:31
 msgid "in"
 msgstr "в"
 
@@ -105,7 +138,7 @@ msgstr "Российские риичи маджонг клубы"
 
 #: templates/club/list.html:18 templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/details.html:30 templates/website/search.html:15
+#: templates/tournament/details.html:26 templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
 
@@ -123,42 +156,34 @@ msgstr "Список и карта всех российских риичи ма
 msgid "From"
 msgstr "Из"
 
-#: templates/player/details.html:26 templates/player/details.html:49
+#: templates/player/details.html:25 templates/player/details.html:48
 msgid "Place"
 msgstr "Место"
 
-#: templates/player/details.html:26
+#: templates/player/details.html:25
 msgid "scores"
 msgstr "очков"
 
-#: templates/player/details.html:31
+#: templates/player/details.html:30
 msgid "how we calculated rating score"
 msgstr "как расчитывается рейтинг"
 
-#: templates/player/details.html:41
+#: templates/player/details.html:40
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/details.html:47
+#: templates/player/details.html:46
 msgid "Base rank"
 msgstr "Ранк"
 
-#: templates/player/details.html:48
+#: templates/player/details.html:47
 #: templates/tournament/_tournaments_table.html:8
 msgid "Date"
 msgstr "Дата"
 
-#: templates/player/details.html:50
+#: templates/player/details.html:49
 msgid "Tournament"
 msgstr "Турнир"
-
-#: templates/player/details.html:83
-msgid "Riichi mahjong player"
-msgstr "Игрок в риичи маджонг"
-
-#: templates/player/details.html:84
-msgid "from"
-msgstr "из"
 
 #: templates/rating/_pagination.html:8 templates/rating/_pagination.html:12
 msgid "Previous"
@@ -190,7 +215,7 @@ msgid "Will be held"
 msgstr "Пройдет"
 
 #: templates/tournament/announcement.html:15
-#: templates/tournament/details.html:13 templates/tournament/details.html:62
+#: templates/tournament/details.html:13
 msgid "Held"
 msgstr "Прошел"
 
@@ -218,31 +243,9 @@ msgstr "и"
 msgid "sessions"
 msgstr "игр"
 
-#: templates/tournament/details.html:21
-msgid "Tournament coefficient is"
-msgstr "Коэффициент турнира"
-
-#: templates/tournament/details.html:31
+#: templates/tournament/details.html:27
 msgid "Scores"
 msgstr "Очки"
-
-#: templates/tournament/list.html:7 templates/tournament/list.html:19
-#: templates/tournament/list.html:50
-msgid "tournaments"
-msgstr "турниры"
-
-#: templates/tournament/list.html:11 templates/tournament/list.html:23
-#: templates/tournament/list.html:51
-msgid "during"
-msgstr "за"
-
-#: templates/tournament/list.html:46
-msgid "Riichi mahjong"
-msgstr "Риичи маджонг"
-
-#: templates/tournament/list.html:51
-msgid "year"
-msgstr "год"
 
 #: templates/website/city.html:16
 msgctxt "list of players"
@@ -277,6 +280,27 @@ msgstr "Страна"
 #: templates/website/search.html:37
 msgid "nothing found"
 msgstr "ничего не нашлось"
+
+#~ msgid "Riichi mahjong player"
+#~ msgstr "Игрок в риичи маджонг"
+
+#~ msgid "from"
+#~ msgstr "из"
+
+#~ msgid "during"
+#~ msgstr "за"
+
+#~ msgid "Tournament coefficient is"
+#~ msgstr "Коэффициент турнира"
+
+#~ msgid "tournaments"
+#~ msgstr "турниры"
+
+#~ msgid "Riichi mahjong"
+#~ msgstr "Риичи маджонг"
+
+#~ msgid "year"
+#~ msgstr "год"
 
 #~ msgid "Delta"
 #~ msgstr "Дельта"

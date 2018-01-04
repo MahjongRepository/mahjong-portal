@@ -15,6 +15,9 @@ def genitive(source_word):
     word = morph.parse(source_word)[0]
     word = word.inflect({'gent'})
 
+    if not word:
+        return source_word
+
     return word.word
 
 
@@ -27,5 +30,8 @@ def prepositional(source_word):
 
     word = morph.parse(source_word)[0]
     word = word.inflect({'loct'})
+
+    if not word:
+        return source_word
 
     return word.word

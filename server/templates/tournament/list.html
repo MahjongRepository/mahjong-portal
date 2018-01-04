@@ -1,27 +1,13 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n meta_tags_helper %}
 
 {% block title %}
-    {% if tournament_type %}
-        EMA
-        {% trans 'tournaments' %}
-    {% else %}
-        {% trans 'Tournaments' %}
-    {% endif %}
-    {% trans 'during' %} {{ current_year }}
+    {% tournaments_list_title tournament_type current_year %}
 {% endblock %}
 
 {% block content %}
     <div>
-        <h1>
-            {% if tournament_type %}
-                EMA
-                {% trans 'tournaments' %}
-            {% else %}
-                {% trans 'Tournaments' %}
-            {% endif %}
-            {% trans 'during' %} {{ current_year }}
-        </h1>
+        <h1>{% tournaments_list_title tournament_type current_year %}</h1>
 
         <div class="filters">
             {% for year in years %}
@@ -42,12 +28,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="
-    {% trans 'Riichi mahjong' %}
-    {% if tournament_type %}
-        EMA
-    {% endif %}
-    {% trans 'tournaments' %}
-    {% trans 'during' %} {{ current_year }} {% trans 'year' %}
-    ">
+    <meta name="description" content="{% tournaments_list_description tournament_type current_year %}">
+    <meta property="og:description" content="{% tournaments_list_description tournament_type current_year %}">
 {% endblock %}

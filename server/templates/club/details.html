@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize russian_words_morph %}
+{% load i18n humanize russian_words_morph meta_tags_helper %}
 
 {% block title %}
     {{ club.name }}
@@ -27,8 +27,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="
-    {% trans 'Riichi mahjong club' %} “{{ club.name }}” {% trans 'in' %}
-    {% if club.city %}{{ club.city.name|prepositional|title }},{% endif %} {{ club.country }}
-    ">
+    <meta name="description" content="{% club_page_description club %}">
+    <meta property="og:description" content="{% club_page_description club %}" />
 {% endblock %}

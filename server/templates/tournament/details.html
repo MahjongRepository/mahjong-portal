@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize %}
+{% load i18n humanize meta_tags_helper %}
 
 {% block title %}
     {{ tournament.name }}
@@ -53,9 +53,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="
-    {{ tournament.name }}
-    {% trans 'Held' %} {{ tournament.end_date }}
-    {% trans 'in' %} {% if tournament.city %}{{ tournament.city }},{% endif %} {{ tournament.country }}
-">
+    <meta name="description" content="{% tournament_page_description tournament %}">
+    <meta property="og:description" content="{% tournament_page_description tournament %}">
 {% endblock %}
