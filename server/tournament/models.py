@@ -37,6 +37,8 @@ class Tournament(BaseModel):
     need_qualification = models.BooleanField(default=False)
     has_accreditation = models.BooleanField(default=True)
 
+    pantheon_id = models.CharField(max_length=20, null=True, blank=True)
+
     ema_id = models.CharField(max_length=20, null=True, blank=True)
 
     def __unicode__(self):

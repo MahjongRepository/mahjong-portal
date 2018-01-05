@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-05 11:18+0000\n"
+"POT-Creation-Date: 2018-01-05 12:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,7 @@ msgstr "Российские риичи маджонг клубы"
 
 #: templates/club/list.html:18 templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/details.html:26 templates/website/search.html:15
+#: templates/tournament/details.html:35 templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
 
@@ -199,11 +199,11 @@ msgctxt "location"
 msgid "From"
 msgstr "Откуда"
 
-#: templates/rating/details.html:17
+#: templates/rating/details.html:18
 msgid "of"
 msgstr "из"
 
-#: templates/rating/details.html:21
+#: templates/rating/details.html:23
 msgid "show all results on one page"
 msgstr "показать все результаты на одной странице"
 
@@ -254,7 +254,11 @@ msgstr "и"
 msgid "sessions"
 msgstr "игр"
 
-#: templates/tournament/details.html:27
+#: templates/tournament/details.html:23
+msgid "Detailed tournament statistics"
+msgstr "Детальная статистика по турниру"
+
+#: templates/tournament/details.html:36
 msgid "Scores"
 msgstr "Очки"
 
