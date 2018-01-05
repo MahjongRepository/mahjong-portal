@@ -62,8 +62,8 @@ class RatingResult(BaseModel):
 
 
 class TournamentCoefficients(BaseModel):
-    rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
-    tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name='rating_results')
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='rating_results')
 
     coefficient = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
