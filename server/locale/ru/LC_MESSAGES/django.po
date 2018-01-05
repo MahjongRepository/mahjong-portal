@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-05 03:48+0000\n"
+"POT-Creation-Date: 2018-01-05 10:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,8 +140,7 @@ msgstr "Российские риичи маджонг клубы"
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/list.html:19 templates/rating/_results_table.html:9
-#: templates/tournament/_tournaments_table.html:9
+#: templates/club/list.html:19 templates/tournament/_tournaments_table.html:9
 #: templates/website/search.html:16
 msgid "City"
 msgstr "Город"
@@ -191,9 +190,14 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Вперед"
 
-#: templates/rating/_results_table.html:10
+#: templates/rating/_results_table.html:9
 msgid "Points"
 msgstr "Очки"
+
+#: templates/rating/_results_table.html:10
+msgctxt "location"
+msgid "From"
+msgstr "Откуда"
 
 #: templates/rating/details.html:15
 msgid "of"
@@ -271,7 +275,9 @@ msgstr "Лучшие 15 игроков"
 msgid ""
 "Website for russian mahjong community. Upcoming tournaments, players ratings "
 "and etc."
-msgstr "Портал для российского маджонгового сообщества. Предстоящие турниры, рейтинги игроков и т.д."
+msgstr ""
+"Портал для российского маджонгового сообщества. Предстоящие турниры, "
+"рейтинги игроков и т.д."
 
 #: templates/website/search.html:5 templates/website/search.html:9
 #: templates/website/search.html:42 templates/website/search.html:43
