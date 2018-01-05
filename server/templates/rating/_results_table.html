@@ -19,7 +19,7 @@
                 {% if rating_result.player.city %}
                     <a href="{% url 'city_page' rating_result.player.city.slug %}">{{ rating_result.player.city.name }}</a>
                 {% else %}
-                    -
+                    {{ rating_result.player.country }}
                 {% endif %}
             </td>
             <td>{{ rating_result.score|default_if_none:'-' }}</td>
