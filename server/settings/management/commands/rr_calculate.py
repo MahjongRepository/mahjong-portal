@@ -3,7 +3,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from player.models import Player
-from rating.calculation.ema import EmaRatingCalculation
+from rating.calculation.inner import InnerRatingCalculation
 from rating.models import Rating, RatingDelta, RatingResult
 from settings.models import TournamentType
 from tournament.models import Tournament
@@ -21,22 +21,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
+        rating = Rating.objects.get(type=Rating.RR)
+
         erase_scores = True
 
-        rating = Rating.objects.get(type=Rating.EMA)
-
-        if options['tournament_id']:
-            erase_scores = False
-            tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('end_date')
-        else:
-            tournaments = Tournament.objects.exclude(tournament_type__slug=TournamentType.CLUB).order_by('end_date')
-
         with transaction.atomic():
+            if options['tournament_id']:
+                erase_scores = False
+                tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('end_date')
+            else:
+                tournaments = Tournament.objects.filter(has_accreditation=True).order_by('end_date')
+
             if erase_scores:
                 RatingDelta.objects.filter(rating=rating).delete()
                 RatingResult.objects.filter(rating=rating).delete()
 
-            calculator = EmaRatingCalculation()
+            calculator = InnerRatingCalculation()
 
             processed = 1
             total = tournaments.count()

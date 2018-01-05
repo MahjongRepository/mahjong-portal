@@ -71,6 +71,9 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if page == 'rating' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'rating_list' %}">{% trans 'Ratings' %}</a>
+            </li>
             <li class="nav-item {% if page == 'tournament' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'tournament_list' 2018 %}">{% trans 'Tournaments' %}</a>
             </li>

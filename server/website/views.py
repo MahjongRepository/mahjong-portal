@@ -9,7 +9,7 @@ from tournament.models import Tournament
 
 
 def home(request):
-    rating = Rating.objects.get(type=Rating.INNER)
+    rating = Rating.objects.get(type=Rating.RR)
     rating_results = RatingResult.objects.filter(rating=rating).order_by('place')[:15]
 
     upcoming_tournaments = (Tournament.objects
@@ -52,8 +52,10 @@ def search(request):
 
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
+
     tournaments = Tournament.objects.filter(city=city).order_by('-end_date')
-    rating_results = RatingResult.objects.filter(player__city=city).order_by('place')
+    rating_results = RatingResult.objects.filter(player__city=city, rating__type=Rating.RR).order_by('place')
+
     return render(request, 'website/city.html', {
         'city': city,
         'rating_results': rating_results,

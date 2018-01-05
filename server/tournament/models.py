@@ -35,6 +35,7 @@ class Tournament(BaseModel):
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
 
     need_qualification = models.BooleanField(default=False)
+    has_accreditation = models.BooleanField(default=True)
 
     ema_id = models.CharField(max_length=20, null=True, blank=True)
 

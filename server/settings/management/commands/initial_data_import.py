@@ -284,7 +284,7 @@ class Command(BaseCommand):
         }
 
         with transaction.atomic():
-            Rating.objects.create(type=Rating.INNER,
+            Rating.objects.create(type=Rating.RR,
                                   name_ru='Внутренний рейтинг',
                                   name_en='Inner rating',
                                   slug='inner')

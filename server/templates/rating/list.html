@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Ratings' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans 'Ratings' %}</h1>
+        {% for rating in ratings %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ rating.name }}</h5>
+                    <p class="card-text">{{ rating.description }}</p>
+                    <a href="{% url 'rating' rating.slug %}" class="card-link">{% trans 'all results' %}</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'All available ratings' %}">
+    <meta property="og:description" content="{% trans 'All available ratings' %}">
+{% endblock %}

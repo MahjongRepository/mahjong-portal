@@ -21,10 +21,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
+        rating = Rating.objects.get(type=Rating.CRR)
+
         erase_scores = True
 
         with transaction.atomic():
-            rating = Rating.objects.get(type=Rating.RR)
             if options['tournament_id']:
                 erase_scores = False
                 tournaments = Tournament.objects.filter(id=options['tournament_id']).order_by('end_date')

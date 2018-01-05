@@ -6,7 +6,7 @@ from player.models import Player
 def player_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
 
-    rating_results = player.rating_results.all().order_by('id')
+    rating_results = player.rating_results.all().order_by('rating__order')
 
     return render(request, 'player/details.html', {
         'player': player,

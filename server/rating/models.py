@@ -6,16 +6,20 @@ from tournament.models import Tournament
 
 
 class Rating(BaseModel):
-    INNER = 0
+    RR = 0
     EMA = 1
+    CRR = 2
+
     TYPES = [
-        [INNER, 'Inner'],
+        [RR, 'RR'],
+        [CRR, 'CRR'],
         [EMA, 'EMA']
     ]
 
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     description = models.TextField(null=True, blank=True, default='')
+    order = models.PositiveIntegerField(default=0)
 
     type = models.PositiveSmallIntegerField(choices=TYPES)
 

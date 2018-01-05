@@ -26,12 +26,12 @@
             </p>
 
             <p class="mb-2">
-                <a class="ratingCalculationCollapse" data-toggle="collapse" href="#ratingCalculation" aria-expanded="false" aria-controls="ratingCalculation">
+                <a class="ratingCalculationCollapse" data-toggle="collapse" href="#ratingCalculation{{ rating_result.id }}" aria-expanded="false">
                     {% trans 'how we calculated rating score' %}
                 </a>
             </p>
 
-            <div class="collapse" id="ratingCalculation">
+            <div class="collapse" id="ratingCalculation{{ rating_result.id }}">
                 <div class="card card-body">
                     score = {{ rating_result.rating_calculation }}
                 </div>

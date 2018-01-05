@@ -1,4 +1,3 @@
-import csv
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
@@ -8,7 +7,7 @@ from player.models import Player
 from rating.calculation.inner import InnerRatingCalculation
 from rating.models import RatingDelta, RatingResult, TournamentCoefficients
 from settings.models import TournamentType
-from tournament.models import Tournament, TournamentResult
+from tournament.models import TournamentResult
 
 
 class EmaRatingCalculation(InnerRatingCalculation):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 12:20+0000\n"
+"POT-Creation-Date: 2018-01-05 03:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,6 +46,7 @@ msgid "Riichi mahjong tournament \"%(name)s\" held %(date)s in %(place)s"
 msgstr "Турнир по риичи маджонгу \"%(name)s\" прошел %(date)s в %(place)s"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:47
+#, python-format
 msgid "Riichi mahjong club \"%(name)s\" in %(place)s"
 msgstr "Риичи маджонг клуб \"%(name)s\" в %(place)s"
 
@@ -61,7 +62,7 @@ msgstr "Имя скрыто"
 #: system/templates/system_index.html:5
 #: system/templates/tournament_admin/new_tournaments.html:5
 #: system/templates/tournament_admin/upload_results.html:5
-#: templates/base.html:99
+#: templates/base.html:102
 msgid "Admin page"
 msgstr "Админка"
 
@@ -98,39 +99,36 @@ msgstr "Что-то пошло не так."
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
-#: templates/base.html:75 templates/base.html:88 templates/club/details.html:23
+#: templates/base.html:75 templates/rating/list.html:5
+#: templates/rating/list.html:10
+msgid "Ratings"
+msgstr "Рейтинги"
+
+#: templates/base.html:78 templates/base.html:91 templates/club/details.html:23
 #: templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:78 templates/club/list.html:10
+#: templates/base.html:81 templates/club/list.html:10
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:81 templates/website/about_en.html:5
+#: templates/base.html:84 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтинге"
 
-#: templates/base.html:89
+#: templates/base.html:92
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: templates/base.html:98
+#: templates/base.html:101
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:106 templates/base.html:107
+#: templates/base.html:109 templates/base.html:110
 msgid "Search"
 msgstr "Поиск"
-
-#: templates/club/details.html:31
-msgid "Riichi mahjong club"
-msgstr "Клуб риичи маджонга"
-
-#: templates/club/details.html:31
-msgid "in"
-msgstr "в"
 
 #: templates/club/list.html:5
 msgid "Riichi mahjong russian clubs"
@@ -148,7 +146,7 @@ msgstr "Имя"
 msgid "City"
 msgstr "Город"
 
-#: templates/club/list.html:42
+#: templates/club/list.html:42 templates/club/list.html:43
 msgid "List with map of all russian riichi mahjong clubs"
 msgstr "Список и карта всех российских риичи маджонг клубов"
 
@@ -201,6 +199,15 @@ msgstr "Очки"
 msgid "of"
 msgstr "из"
 
+#: templates/rating/list.html:16 templates/tournament/announcement.html:15
+#: templates/website/home.html:18
+msgid "all results"
+msgstr "все результаты"
+
+#: templates/rating/list.html:24 templates/rating/list.html:25
+msgid "All available ratings"
+msgstr "Все доступные рейтинги"
+
 #: templates/tournament/_tournaments_table.html:10
 msgctxt "number of players"
 msgid "Players"
@@ -218,10 +225,6 @@ msgstr "Пройдет"
 #: templates/tournament/details.html:13
 msgid "Held"
 msgstr "Прошел"
-
-#: templates/tournament/announcement.html:15 templates/website/home.html:18
-msgid "all results"
-msgstr "все результаты"
 
 #: templates/tournament/announcement.html:21
 msgid "Registration"
@@ -252,7 +255,7 @@ msgctxt "list of players"
 msgid "Players"
 msgstr "Игроки"
 
-#: templates/website/city.html:23
+#: templates/website/city.html:23 templates/website/city.html:24
 msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 
@@ -264,12 +267,14 @@ msgstr "Ближайшие турниры"
 msgid "Top 15 players"
 msgstr "Лучшие 15 игроков"
 
-#: templates/website/home.html:24
-msgid "Website with riichi mahjong tournaments"
-msgstr "Сайт с информацией про риичи маджонг турниры"
+#: templates/website/home.html:24 templates/website/home.html:25
+msgid ""
+"Website for russian mahjong community. Upcoming tournaments, players ratings "
+"and etc."
+msgstr "Портал для российского маджонгового сообщества. Предстоящие турниры, рейтинги игроков и т.д."
 
 #: templates/website/search.html:5 templates/website/search.html:9
-#: templates/website/search.html:42
+#: templates/website/search.html:42 templates/website/search.html:43
 msgid "Search results for"
 msgstr "Результаты поиска"
 
@@ -280,30 +285,3 @@ msgstr "Страна"
 #: templates/website/search.html:37
 msgid "nothing found"
 msgstr "ничего не нашлось"
-
-#~ msgid "Riichi mahjong player"
-#~ msgstr "Игрок в риичи маджонг"
-
-#~ msgid "from"
-#~ msgstr "из"
-
-#~ msgid "during"
-#~ msgstr "за"
-
-#~ msgid "Tournament coefficient is"
-#~ msgstr "Коэффициент турнира"
-
-#~ msgid "tournaments"
-#~ msgstr "турниры"
-
-#~ msgid "Riichi mahjong"
-#~ msgstr "Риичи маджонг"
-
-#~ msgid "year"
-#~ msgstr "год"
-
-#~ msgid "Delta"
-#~ msgstr "Дельта"
-
-#~ msgid "Rank"
-#~ msgstr "Ранг"
