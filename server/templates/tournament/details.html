@@ -32,7 +32,7 @@
                 <tr>
                     <th scope="row">{{ result.place }}</th>
                     <td>
-                        {% if result.player.is_replacement %}
+                        {% if result.player.is_replacement or result.player.is_hide %}
                             {{ result.player.full_name }}
                         {% else %}
                             <a href="{% url 'player_details' result.player.slug %}">{{ result.player.full_name }}</a>
