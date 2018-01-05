@@ -38,10 +38,10 @@ def upload_results(request, tournament_id):
             lines = file_data.split('\n')
             filtered_results = []
             for line in lines:
-                fields = line.split(';')
+                fields = line.split(',')
 
-                # first row
-                if fields[0] == 'place':
+                # first row or empty row
+                if fields[0] == 'place' or len(fields) <= 1:
                     continue
 
                 place = fields[0].strip().lower()
