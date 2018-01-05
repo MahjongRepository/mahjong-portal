@@ -8,11 +8,22 @@
 {% block content %}
     <div>
         <h1>{{ rating.name }}</h1>
+
         {% if rating.description %}
             <p>{{ rating.description }}</p>
         {% endif %}
 
-        <p>{{ rating_results.start_index }} &ndash; {{ rating_results.end_index }} {% trans 'of' %} {{ rating_results.paginator.count }}</p>
+        {% if not one_page %}
+            <p>
+                {{ rating_results.start_index }} &ndash; {{ rating_results.end_index }} {% trans 'of' %} {{ rating_results.paginator.count }}
+            </p>
+
+            <p>
+                <a href="{% url 'rating' rating.slug %}?results=all" style="margin-left: 5px">
+                    <span class="badge badge-primary">{% trans 'show all results on one page' %}</span>
+                </a>
+            </p>
+        {% endif %}
 
         {% include 'rating/_results_table.html' %}
         {% include 'rating/_pagination.html' %}
