@@ -6,8 +6,8 @@
     <tr>
         <th scope="col">#</th>
         <th scope="col">{% trans 'Name' %}</th>
-        <th scope="col">{% trans 'City' %}</th>
         <th scope="col">{% trans 'Points' %}</th>
+        <th scope="col">{% trans 'City' %}</th>
     </tr>
     </thead>
     <tbody>
@@ -15,6 +15,7 @@
         <tr>
             <th scope="row">{{ rating_result.place }}</th>
             <td><a href="{% url 'player_details' rating_result.player.slug %}">{{ rating_result.player.full_name }}</a></td>
+            <td>{{ rating_result.score|default_if_none:'-' }}</td>
             <td>
                 {% if rating_result.player.city %}
                     <a href="{% url 'city_page' rating_result.player.city.slug %}">{{ rating_result.player.city.name }}</a>
@@ -22,7 +23,6 @@
                     {{ rating_result.player.country }}
                 {% endif %}
             </td>
-            <td>{{ rating_result.score|default_if_none:'-' }}</td>
         </tr>
     {% endfor %}
     </tbody>
