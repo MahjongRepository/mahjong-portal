@@ -189,7 +189,7 @@ msgstr "Остальные турниры"
 
 #: templates/player/details.html:82
 msgid "Tournaments not counted in ratings, but where they took part"
-msgstr "Турниры не учитываемые в рейтинге"
+msgstr "Турниры не учитываемые в рейтингах"
 
 #: templates/rating/_pagination.html:8 templates/rating/_pagination.html:12
 msgid "Previous"
