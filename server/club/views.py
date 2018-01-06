@@ -5,7 +5,7 @@ from club.models import Club
 
 
 def club_list(request):
-    clubs = Club.objects.all().order_by('city__name')
+    clubs = Club.objects.all().order_by('city__name').prefetch_related('city')
 
     map_language = 'en_US'
     if get_language() == 'ru':

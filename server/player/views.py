@@ -19,6 +19,7 @@ def player_details(request, slug):
     other_tournaments = (TournamentResult.objects
                                          .filter(player=player)
                                          .exclude(tournament_id__in=used_tournaments)
+                                         .prefetch_related('tournament')
                                          .order_by('-tournament__end_date'))
 
     return render(request, 'player/details.html', {

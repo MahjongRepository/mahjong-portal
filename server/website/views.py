@@ -53,8 +53,12 @@ def search(request):
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
-    tournaments = Tournament.objects.filter(city=city).order_by('-end_date')
-    rating_results = RatingResult.objects.filter(player__city=city, rating__type=Rating.RR).order_by('place')
+    tournaments = Tournament.objects.filter(city=city).order_by('-end_date').prefetch_related('city')
+    rating_results = (RatingResult.objects
+                                  .filter(player__city=city, rating__type=Rating.RR)
+                                  .prefetch_related('player')
+                                  .prefetch_related('player__city')
+                                  .order_by('place'))
 
     return render(request, 'website/city.html', {
         'city': city,

@@ -29,7 +29,7 @@ def tournament_list(request, tournament_type=None, year=None):
     else:
         tournaments = tournaments.exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
 
-    tournaments = tournaments.order_by('-end_date')
+    tournaments = tournaments.order_by('-end_date').prefetch_related('city')
 
     return render(request, 'tournament/list.html', {
         'tournaments': tournaments,
@@ -42,7 +42,7 @@ def tournament_list(request, tournament_type=None, year=None):
 
 def tournament_details(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
-    results = TournamentResult.objects.filter(tournament=tournament).order_by('place')
+    results = TournamentResult.objects.filter(tournament=tournament).order_by('place').prefetch_related('player')
 
     return render(request, 'tournament/details.html', {
         'tournament': tournament,

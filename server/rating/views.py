@@ -15,7 +15,11 @@ def rating_list(request):
 def rating_details(request, slug, page=None):
     rating = get_object_or_404(Rating, slug=slug)
 
-    rating_results = RatingResult.objects.filter(rating=rating).order_by('place')
+    rating_results = (RatingResult.objects
+                                  .filter(rating=rating)
+                                  .prefetch_related('player')
+                                  .prefetch_related('player__city')
+                                  .order_by('place'))
 
     page = page or 1
     one_page = True
