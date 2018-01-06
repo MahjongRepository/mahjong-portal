@@ -54,14 +54,21 @@ def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
     tournaments = Tournament.objects.filter(city=city).order_by('-end_date').prefetch_related('city')
-    rating_results = (RatingResult.objects
-                                  .filter(player__city=city, rating__type=Rating.RR)
-                                  .prefetch_related('player')
-                                  .prefetch_related('player__city')
-                                  .order_by('place'))
+
+    # small queries optimizations
+    rating_results = RatingResult.objects.filter(player__city=city, rating__type=Rating.RR)
+    players = Player.objects.filter(city=city).prefetch_related('city')
+    for player in players:
+        player.rating_result = None
+
+        for rating_result in rating_results:
+            if rating_result.player_id == player.id:
+                player.rating_result = rating_result
+
+    players = sorted(players, key=lambda x: (x.rating_result and -x.rating_result.score or 0, x.full_name))
 
     return render(request, 'website/city.html', {
         'city': city,
-        'rating_results': rating_results,
+        'players': players,
         'tournaments': tournaments
     })

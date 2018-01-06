@@ -12,9 +12,27 @@
             {% include 'tournament/_tournaments_table.html' %}
         {% endif %}
 
-        {% if rating_results %}
-            <h1>{% trans 'Players' context 'list of players' %} {% if rating_results|length > 1 %}({{ rating_results|length }}){% endif %}</h1>
-            {% include 'rating/_results_table.html' %}
+        {% if players %}
+            <h1>{% trans 'Players' context 'list of players' %} {% if players|length > 1 %}({{ players|length }}){% endif %}</h1>
+
+            <table class="table table-hover table-responsive-sm mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'Points' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for player in players %}
+                    <tr>
+                        <th scope="row">{{ player.rating_result.place|default:'-' }}</th>
+                        <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
+                        <td>{{ player.rating_result.score|default_if_none:'-' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 {% endblock %}
