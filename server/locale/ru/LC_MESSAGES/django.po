@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-06 10:11+0000\n"
+"POT-Creation-Date: 2018-01-06 10:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,8 +56,8 @@ msgid "Riichi mahjong player %(name)s from %(place)s"
 msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
 #: player/models.py:55
-msgid "Hidden name"
-msgstr "Имя скрыто"
+msgid "Substitution player"
+msgstr "Игрок замены"
 
 #: system/templates/system_index.html:5
 #: system/templates/tournament_admin/new_tournaments.html:5
@@ -308,3 +308,6 @@ msgstr "Страна"
 #: templates/website/search.html:37
 msgid "nothing found"
 msgstr "ничего не нашлось"
+
+#~ msgid "Hidden name"
+#~ msgstr "Имя скрыто"

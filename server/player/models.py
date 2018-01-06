@@ -52,6 +52,6 @@ class Player(BaseModel):
     @property
     def full_name(self):
         if self.is_hide:
-            return _('Hidden name')
+            return _('Substitution player')
         
         return ' '.join([self.last_name, self.first_name])
