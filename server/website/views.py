@@ -10,11 +10,16 @@ from tournament.models import Tournament
 
 def home(request):
     rating = Rating.objects.get(type=Rating.RR)
-    rating_results = RatingResult.objects.filter(rating=rating).order_by('place')[:15]
+    rating_results = (RatingResult.objects
+                                  .filter(rating=rating)
+                                  .prefetch_related('player')
+                                  .prefetch_related('player__city')
+                                  .order_by('place'))[:15]
 
     upcoming_tournaments = (Tournament.objects
                                       .filter(is_upcoming=True)
                                       .exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+                                      .prefetch_related('city')
                                       .order_by('start_date'))
 
     return render(request, 'website/home.html', {
