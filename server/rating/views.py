@@ -20,7 +20,7 @@ def rating_details(request, slug, page=None):
     page = page or 1
     one_page = True
 
-    if request.GET.get('results') != 'all':
+    if page != 'all':
         one_page = False
 
         paginator = Paginator(rating_results, 25)

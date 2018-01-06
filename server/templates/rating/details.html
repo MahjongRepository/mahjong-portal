@@ -19,7 +19,7 @@
             </p>
 
             <p>
-                <a href="{% url 'rating' rating.slug %}?results=all" style="margin-left: 5px">
+                <a href="{% url 'rating' rating.slug 'all' %}" style="margin-left: 5px">
                     <span class="badge badge-primary">{% trans 'show all results on one page' %}</span>
                 </a>
             </p>
