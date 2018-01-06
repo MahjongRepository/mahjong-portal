@@ -229,7 +229,8 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         rating, _ = Rating.objects.get_or_create(type=Rating.RR)
 
         tournament = self.create_tournament(
-            end_date=timezone.now().date() - timedelta(days=100)
+            end_date=timezone.now().date() - timedelta(days=100),
+            players=12
         )
 
         calculator = InnerRatingCalculation()
@@ -249,7 +250,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
     def test_calculate_players_rating_rank_and_not_enough_tournaments(self):
         rating, _ = Rating.objects.get_or_create(type=Rating.RR)
 
-        tournament = self.create_tournament(end_date=timezone.now().date() - timedelta(days=100))
+        tournament = self.create_tournament(end_date=timezone.now().date() - timedelta(days=100), players=12)
 
         calculator = InnerRatingCalculation()
 

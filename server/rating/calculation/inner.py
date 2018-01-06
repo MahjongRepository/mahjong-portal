@@ -46,6 +46,7 @@ class InnerRatingCalculation(object):
 
         base_query = (RatingDelta.objects
                                  .filter(rating=rating)
+                                 .filter(tournament__number_of_players__gte=12)
                                  .filter(tournament__need_qualification=False)
                                  .filter(tournament__end_date__gte=two_years_ago))
 
