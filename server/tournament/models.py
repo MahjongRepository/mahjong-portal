@@ -62,3 +62,17 @@ class TournamentResult(BaseModel):
 
     def __unicode__(self):
         return self.tournament.name
+
+    @property
+    def base_rank(self):
+        number_of_players = self.tournament.number_of_players
+        place = self.place
+
+        # first place
+        if place == 1:
+            return 1000
+
+        if place == number_of_players:
+            return 0
+
+        return round(((number_of_players - place) / (number_of_players - 1)) * 1000, 2)

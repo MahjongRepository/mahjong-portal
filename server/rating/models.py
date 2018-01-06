@@ -58,7 +58,7 @@ class RatingResult(BaseModel):
         return self.rating.name
 
     def get_deltas(self):
-        return RatingDelta.objects.filter(player=self.player, rating=self.rating).order_by('-tournament__end_date')
+        return RatingDelta.objects.filter(player=self.player, rating=self.rating, is_active=True).order_by('-tournament__end_date')
 
 
 class TournamentCoefficients(BaseModel):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-05 12:01+0000\n"
+"POT-Creation-Date: 2018-01-06 10:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,6 +154,7 @@ msgid "From"
 msgstr "Из"
 
 #: templates/player/details.html:25 templates/player/details.html:48
+#: templates/player/details.html:89
 msgid "Place"
 msgstr "Место"
 
@@ -169,18 +170,26 @@ msgstr "как расчитывается рейтинг"
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/details.html:46
+#: templates/player/details.html:46 templates/player/details.html:87
 msgid "Base rank"
 msgstr "Ранк"
 
-#: templates/player/details.html:47
+#: templates/player/details.html:47 templates/player/details.html:88
 #: templates/tournament/_tournaments_table.html:8
 msgid "Date"
 msgstr "Дата"
 
-#: templates/player/details.html:49
+#: templates/player/details.html:49 templates/player/details.html:90
 msgid "Tournament"
 msgstr "Турнир"
+
+#: templates/player/details.html:81
+msgid "Other tournaments"
+msgstr "Остальные турниры"
+
+#: templates/player/details.html:82
+msgid "Tournaments not counted in ratings, but where they took part."
+msgstr "Турниры не учитываемые в рейтинге."
 
 #: templates/rating/_pagination.html:8 templates/rating/_pagination.html:12
 msgid "Previous"
