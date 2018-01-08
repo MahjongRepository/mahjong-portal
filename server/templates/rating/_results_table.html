@@ -12,7 +12,7 @@
     </thead>
     <tbody>
     {% for rating_result in rating_results %}
-        <tr>
+        <tr id="{{ rating_result.player.slug }}">
             <th scope="row">{{ rating_result.place }}</th>
             <td><a href="{% url 'player_details' rating_result.player.slug %}">{{ rating_result.player.full_name }}</a></td>
             <td>{{ rating_result.score|default_if_none:'-' }}</td>
