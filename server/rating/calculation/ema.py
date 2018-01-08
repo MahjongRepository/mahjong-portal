@@ -37,6 +37,10 @@ class EmaRatingCalculation(InnerRatingCalculation):
         results = []
         two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
 
+        # it is important to save rating updates time
+        rating.updated_on = timezone.now()
+        rating.save()
+
         first_part_min_tournaments = 5
         second_part_min_tournaments = 4
         first_part_weight = 50

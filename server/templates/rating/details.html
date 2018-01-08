@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n tz %}
 
 {% block title %}
     {{ rating.name }}
@@ -12,6 +12,10 @@
         {% if rating.description %}
             <p>{{ rating.description }}</p>
         {% endif %}
+
+        {% timezone 'Europe/Moscow' %}
+            <p>{% trans 'Latest update: ' %}{{ rating.updated_on }} (UTC+3)</p>
+        {% endtimezone %}
 
         {% if not one_page %}
             <p>

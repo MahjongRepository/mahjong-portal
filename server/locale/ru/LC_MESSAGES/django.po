@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-06 10:32+0000\n"
+"POT-Creation-Date: 2018-01-08 14:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,7 +136,8 @@ msgstr "Российские риичи маджонг клубы"
 
 #: templates/club/list.html:18 templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/details.html:35 templates/website/search.html:15
+#: templates/tournament/details.html:35 templates/website/city.html:22
+#: templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
 
@@ -199,7 +200,7 @@ msgstr "Назад"
 msgid "Next"
 msgstr "Вперед"
 
-#: templates/rating/_results_table.html:9
+#: templates/rating/_results_table.html:9 templates/website/city.html:23
 msgid "Points"
 msgstr "Очки"
 
@@ -208,11 +209,15 @@ msgctxt "location"
 msgid "From"
 msgstr "Откуда"
 
-#: templates/rating/details.html:18
+#: templates/rating/details.html:16
+msgid "Latest update: "
+msgstr "Время обновления: "
+
+#: templates/rating/details.html:20
 msgid "of"
 msgstr "из"
 
-#: templates/rating/details.html:23
+#: templates/rating/details.html:25
 msgid "show all results on one page"
 msgstr "показать все результаты на одной странице"
 
@@ -276,7 +281,7 @@ msgctxt "list of players"
 msgid "Players"
 msgstr "Игроки"
 
-#: templates/website/city.html:23 templates/website/city.html:24
+#: templates/website/city.html:41 templates/website/city.html:42
 msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 

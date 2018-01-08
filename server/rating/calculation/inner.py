@@ -44,6 +44,10 @@ class InnerRatingCalculation(object):
 
         two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
 
+        # it is important to save rating updates time
+        rating.updated_on = timezone.now()
+        rating.save()
+
         base_query = (RatingDelta.objects
                                  .filter(rating=rating)
                                  .filter(tournament__number_of_players__gte=12)
