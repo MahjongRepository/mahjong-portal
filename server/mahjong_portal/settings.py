@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-APP_VERSION = 'v0.1.1'
+APP_VERSION = 'v0.1.2-dev'
 
 SCHEME = 'https'
 

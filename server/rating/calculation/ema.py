@@ -13,8 +13,7 @@ from tournament.models import TournamentResult
 class EmaRatingCalculation(InnerRatingCalculation):
 
     def get_players(self):
-        results = TournamentResult.objects.exclude(tournament__tournament_type__slug=TournamentType.CLUB)
-        return list(Player.objects.filter(id__in=results.values_list('player_id', flat=True)))
+        return list(Player.objects.exclude(ema_id=''))
 
     def calculate_players_rating_rank(self, rating):
         # f = open('players.csv', 'w')
