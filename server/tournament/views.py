@@ -1,7 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
+from django.utils.translation import gettext as _
 
-from settings.models import TournamentType
-from tournament.models import Tournament, TournamentResult
+from player.models import Player
+from settings.models import TournamentType, City
+from tournament.forms import TournamentRegistrationForm
+from tournament.models import Tournament, TournamentResult, TournamentRegistration
 
 
 def tournament_list(request, tournament_type=None, year=None):
@@ -53,8 +58,45 @@ def tournament_details(request, slug):
 
 def tournament_announcement(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
-
+    form = TournamentRegistrationForm(initial={'city': tournament.city.name_ru})
+    registration_results = (TournamentRegistration.objects
+                                                  .filter(tournament=tournament)
+                                                  .prefetch_related('player')
+                                                  .prefetch_related('city_object')
+                                                  .order_by('created_on'))
     return render(request, 'tournament/announcement.html', {
         'tournament': tournament,
-        'page': 'tournament'
+        'page': 'tournament',
+        'form': form,
+        'registration_results': registration_results
     })
+
+
+@require_POST
+def tournament_registration(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    
+    form = TournamentRegistrationForm(request.POST)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.tournament = tournament
+        
+        # it supports auto load objects only for Russian tournaments right now
+        
+        try:
+            instance.player = Player.objects.get(first_name_ru=instance.first_name.title(), 
+                                                 last_name_ru=instance.last_name.title())
+        except (Player.DoesNotExist, Player.MultipleObjectsReturned):
+            # TODO if multiple players are here, let's try to filter by city
+            pass
+        
+        try:
+            instance.city_object = City.objects.get(name_ru=instance.city)
+        except City.DoesNotExist:
+            pass
+        
+        instance.save()
+        
+        messages.success(request, _('Your registration was accepted!'))
+    
+    return redirect(tournament.get_url())

@@ -54,4 +54,4 @@ class Player(BaseModel):
         if self.is_hide:
             return _('Substitution player')
         
-        return ' '.join([self.last_name, self.first_name])
+        return u'{} {}'.format(self.last_name, self.first_name)

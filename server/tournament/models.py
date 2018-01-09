@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from club.models import Club
 from mahjong_portal.models import BaseModel
@@ -25,7 +26,6 @@ class Tournament(BaseModel):
     number_of_players = models.PositiveSmallIntegerField(default=0, blank=True)
     game_type = models.PositiveSmallIntegerField(choices=GAME_TYPES, default=RIICHI)
 
-    is_upcoming = models.BooleanField(default=False)
     registration_description = models.TextField(null=True, blank=True, default='')
     registration_link = models.URLField(null=True, blank=True, default='')
 
@@ -34,8 +34,10 @@ class Tournament(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
 
+    is_upcoming = models.BooleanField(default=False)
     need_qualification = models.BooleanField(default=False)
     has_accreditation = models.BooleanField(default=True)
+    opened_registration = models.BooleanField(default=False)
 
     pantheon_id = models.CharField(max_length=20, null=True, blank=True)
 
@@ -76,3 +78,23 @@ class TournamentResult(BaseModel):
             return 0
 
         return round(((number_of_players - place) / (number_of_players - 1)) * 1000, 2)
+
+
+class TournamentRegistration(BaseModel):
+    tournament = models.ForeignKey(Tournament, related_name='tournament_registrations', on_delete=models.PROTECT)
+
+    first_name = models.CharField(max_length=255, verbose_name=_('First name'))
+    last_name = models.CharField(max_length=255, verbose_name=_('Last name'))
+    city = models.CharField(max_length=255, verbose_name=_('City'))
+    phone = models.CharField(max_length=255, verbose_name=_('Phone'),
+                             help_text=_('It will be visible only to the tournament administrator'))
+
+    player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
+    city_object = models.ForeignKey(City, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.full_name
+
+    @property
+    def full_name(self):
+        return u'{} {}'.format(self.last_name, self.first_name)

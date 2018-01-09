@@ -17,3 +17,8 @@ body {
     text-decoration: none;
     margin-right: 10px;
 }
+
+.tournament-registration .form {
+    margin-bottom: 20px;
+    max-width: 380px;
+}
