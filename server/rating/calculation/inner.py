@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from player.models import Player
 from rating.models import RatingDelta, RatingResult, TournamentCoefficients
-from tournament.models import TournamentResult
+from tournament.models import TournamentResult, Tournament
 
 
 class InnerRatingCalculation(object):
@@ -23,6 +23,7 @@ class InnerRatingCalculation(object):
         return list(Player.objects.filter(country__code='RU'))
 
     def calculate_players_rating_rank(self, rating):
+        # import csv
         # f = open('players.csv', 'w')
         # writer = csv.writer(f)
         #
@@ -41,7 +42,7 @@ class InnerRatingCalculation(object):
         #
         # rows = []
         results = []
-
+#
         two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
 
         # it is important to save rating updates time
@@ -59,18 +60,21 @@ class InnerRatingCalculation(object):
         first_part_weight = 50
         second_part_weight = 50
 
-        max_coefficient = 0.0
-        coefficient_temp = base_query
+        tournament_ids = base_query.values_list('tournament_id', flat=True).distinct()
+        coefficient_temp = Tournament.objects.filter(id__in=tournament_ids)
 
-        coefficients = {}
+        coefficients_cache = {}
 
+        coefficients = []
         for item in coefficient_temp:
-            coefficient = TournamentCoefficients.objects.get(rating=rating, tournament=item.tournament)
-            coefficients[item.tournament.id] = coefficient
+            coefficient = TournamentCoefficients.objects.get(rating=rating, tournament=item)
+            coefficients_cache[item.id] = coefficient
 
             c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
-            if c > max_coefficient:
-                max_coefficient = c
+            coefficients.append(c)
+
+        coefficients = sorted(coefficients, reverse=True)
+        max_coefficient = sum(coefficients[:4])
 
         RatingResult.objects.filter(rating=rating).delete()
 
@@ -107,7 +111,7 @@ class InnerRatingCalculation(object):
             first_part_denominator = 0
 
             for result in tournaments_results:
-                coefficient = coefficients[result.tournament_id]
+                coefficient = coefficients_cache[result.tournament_id]
 
                 first_part_numerator += float(result.delta)
                 first_part_denominator += float(self._calculate_percentage(float(coefficient.coefficient), coefficient.age))
@@ -126,13 +130,11 @@ class InnerRatingCalculation(object):
             first_part = first_part_numerator / first_part_denominator
 
             second_part_numerator = 0
-            second_part_denominator = second_part_min_tournaments * max_coefficient
-
-            second_part_denominator_calculation.append('{} * {}'.format(second_part_min_tournaments, max_coefficient))
+            second_part_denominator = max_coefficient
 
             best_results = deltas.order_by('-delta')[:second_part_min_tournaments]
             for result in best_results:
-                coefficient = coefficients[result.tournament_id]
+                coefficient = coefficients_cache[result.tournament_id]
 
                 second_part_numerator += float(result.delta)
 
@@ -143,7 +145,7 @@ class InnerRatingCalculation(object):
             score = self._calculate_percentage(first_part, first_part_weight) + self._calculate_percentage(second_part, second_part_weight)
 
             first_part_calculation = '({}) / ({})'.format(' + '.join(first_part_numerator_calculation), ' + '.join(first_part_denominator_calculation))
-            second_part_calculation = '({}) / ({})'.format(' + '.join(second_part_numerator_calculation), ' + '.join(second_part_denominator_calculation))
+            second_part_calculation = '({}) / {}'.format(' + '.join(second_part_numerator_calculation), max_coefficient)
             rating_calculation = '({}) * {} + ({}) * {}'.format(first_part_calculation, first_part_weight / 100, second_part_calculation, second_part_weight / 100)
 
             results.append(RatingResult.objects.create(
