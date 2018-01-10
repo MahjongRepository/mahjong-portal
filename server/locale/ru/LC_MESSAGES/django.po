@@ -175,7 +175,7 @@ msgstr "Изменения рейтинга"
 
 #: templates/player/details.html:46 templates/player/details.html:87
 msgid "Base rank"
-msgstr "Ранк"
+msgstr "Ранг"
 
 #: templates/player/details.html:47 templates/player/details.html:88
 #: templates/tournament/_tournaments_table.html:8
