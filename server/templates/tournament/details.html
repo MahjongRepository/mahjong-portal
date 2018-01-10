@@ -26,14 +26,13 @@
 
         {% include 'tournament/_tournament_header.html' %}
 
-
-
         <table class="table table-hover table-responsive-sm">
             <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">{% trans 'Name' %}</th>
                 <th scope="col">{% trans 'Scores' %}</th>
+                <th scope="col">{% trans 'From' context 'location' %}</th>
             </tr>
             </thead>
             <tbody>
@@ -42,9 +41,23 @@
                     <th scope="row">{{ result.place }}</th>
                     <td>
                         {% if result.player.is_replacement or result.player.is_hide %}
-                            {{ result.player.full_name }}
+                            <span class="d-none d-md-block">
+                                {{ result.player.full_name }}
+                            </span>
+                            <span class="d-block d-md-none">
+                                <nobr>{% trans 'Substitution' %}</nobr>
+                            </span>
                         {% else %}
-                            <a href="{% url 'player_details' result.player.slug %}">{{ result.player.full_name }}</a>
+                            <a href="{% url 'player_details' result.player.slug %}">
+                                {# on large screns show full name #}
+                                <span class="d-none d-md-block">
+                                    {{ result.player.full_name }}
+                                </span>
+                                {# on small screens show shorten first name #}
+                                <span class="d-block d-md-none">
+                                    <nobr>{{ result.player.last_name }} {{ result.player.first_name.0 }}.</nobr>
+                                </span>
+                            </a>
                         {% endif %}
                     </td>
                     <td>
@@ -52,6 +65,17 @@
                             {{ result.scores|floatformat:0|intcomma }}
                         {% else %}
                             -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if result.player.city %}
+                            <a href="{% url 'city_page' result.player.city.slug %}">{{ result.player.city.name }}</a>
+                        {% else %}
+                            {% if result.player.is_replacement or result.player.is_hide %}
+                                -
+                            {% else %}
+                                {{ result.player.country }}
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

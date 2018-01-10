@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 02:44+0000\n"
+"POT-Creation-Date: 2018-01-10 03:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:18 templates/rating/_results_table.html:7
 #: templates/tournament/_tournaments_table.html:7
 #: templates/tournament/announcement.html:38
-#: templates/tournament/details.html:35 templates/website/city.html:22
+#: templates/tournament/details.html:33 templates/website/city.html:22
 #: templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
@@ -194,19 +194,11 @@ msgstr "Остальные турниры"
 msgid "Tournaments not counted in ratings, but where they took part"
 msgstr "Турниры не учитываемые в рейтингах"
 
-#: templates/rating/_pagination.html:8 templates/rating/_pagination.html:12
-msgid "Previous"
-msgstr "Назад"
-
-#: templates/rating/_pagination.html:19 templates/rating/_pagination.html:23
-msgid "Next"
-msgstr "Вперед"
-
 #: templates/rating/_results_table.html:8 templates/website/city.html:23
 msgid "Points"
 msgstr "Очки"
 
-#: templates/rating/_results_table.html:9
+#: templates/rating/_results_table.html:9 templates/tournament/details.html:35
 msgctxt "location"
 msgid "From"
 msgstr "Откуда"
@@ -214,14 +206,6 @@ msgstr "Откуда"
 #: templates/rating/details.html:17
 msgid "Latest update: "
 msgstr "Время обновления: "
-
-#: templates/rating/details.html:22
-msgid "of"
-msgstr "из"
-
-#: templates/rating/details.html:27
-msgid "show all results on one page"
-msgstr "показать все результаты на одной странице"
 
 #: templates/rating/list.html:16 templates/tournament/announcement.html:21
 #: templates/website/home.html:18
@@ -283,9 +267,13 @@ msgstr "игр"
 msgid "Detailed tournament statistics"
 msgstr "Детальная статистика по турниру"
 
-#: templates/tournament/details.html:36
+#: templates/tournament/details.html:34
 msgid "Scores"
 msgstr "Очки"
+
+#: templates/tournament/details.html:48
+msgid "Substitution"
+msgstr "Замена"
 
 #: templates/website/city.html:16
 msgctxt "list of players"
@@ -341,6 +329,6 @@ msgstr "Телефон"
 msgid "It will be visible only to the tournament administrator"
 msgstr "Он будет показан только администратору турнира"
 
-#: tournament/views.py:106
+#: tournament/views.py:110
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"

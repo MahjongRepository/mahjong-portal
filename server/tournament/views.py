@@ -11,7 +11,6 @@ from tournament.models import Tournament, TournamentResult, TournamentRegistrati
 
 
 def tournament_list(request, tournament_type=None, year=None):
-
     default_year_filter = 'all'
     try:
         current_year = year or default_year_filter
@@ -48,7 +47,12 @@ def tournament_list(request, tournament_type=None, year=None):
 
 def tournament_details(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
-    results = TournamentResult.objects.filter(tournament=tournament).order_by('place').prefetch_related('player')
+    results = (TournamentResult.objects
+                               .filter(tournament=tournament)
+                               .order_by('place')
+                               .prefetch_related('player__city')
+                               .prefetch_related('player__country')
+                               .prefetch_related('player'))
 
     return render(request, 'tournament/details.html', {
         'tournament': tournament,
