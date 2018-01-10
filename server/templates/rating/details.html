@@ -17,20 +17,7 @@
             <p>{% trans 'Latest update: ' %}{{ rating.updated_on }} (UTC+3)</p>
         {% endtimezone %}
 
-        {% if not one_page %}
-            <p>
-                {{ rating_results.start_index }} &ndash; {{ rating_results.end_index }} {% trans 'of' %} {{ rating_results.paginator.count }}
-            </p>
-
-            <p>
-                <a href="{% url 'rating' rating.slug 'all' %}" style="margin-left: 5px">
-                    <span class="badge badge-primary">{% trans 'show all results on one page' %}</span>
-                </a>
-            </p>
-        {% endif %}
-
         {% include 'rating/_results_table.html' %}
-        {% include 'rating/_pagination.html' %}
     </div>
 {% endblock %}
 
