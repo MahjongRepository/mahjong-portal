@@ -105,7 +105,7 @@
             {% endif %}
         </ul>
 
-        <form class="form-inline my-2 my-lg-0" action="{% url 'search' %}">
+        <form class="form-inline my-2 my-lg-0 d-md-none d-lg-block" action="{% url 'search' %}">
             <input class="form-control mr-sm-2" type="text" name="q" placeholder="{% trans 'Search' %}" aria-label="{% trans 'Search' %}" {% if search_query %}value="{{ search_query }}"{% endif %} required="required">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans 'Search' %}</button>
         </form>
