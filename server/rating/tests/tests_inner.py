@@ -244,7 +244,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 
-        self.assertEqual(float(delta_object.score), 375)
+        self.assertEqual(float(delta_object.score), 510)
         self.assertEqual(delta_object.place, 1)
 
     def test_calculate_players_rating_rank_and_not_enough_tournaments(self):
@@ -263,4 +263,4 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 
-        self.assertEqual(float(delta_object.score), 267.86)
+        self.assertEqual(float(delta_object.score), 342.86)

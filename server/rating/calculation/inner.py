@@ -74,7 +74,10 @@ class InnerRatingCalculation(object):
             coefficients.append(c)
 
         coefficients = sorted(coefficients, reverse=True)
-        max_coefficient = sum(coefficients[:4])
+        max_coefficient = sum(coefficients[:second_part_min_tournaments])
+
+        if len(coefficients) < second_part_min_tournaments:
+            max_coefficient += second_part_min_tournaments - len(coefficients)
 
         RatingResult.objects.filter(rating=rating).delete()
 
