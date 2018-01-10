@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.translation import gettext as _
 
@@ -73,7 +74,12 @@ def tournament_announcement(request, slug):
 
 
 @require_POST
+@csrf_exempt
 def tournament_registration(request, tournament_id):
+    """
+    csrf validation didn't work on the mobile safari, not sure why.
+    Let's disable it for now, because it is not really important action
+    """
     tournament = get_object_or_404(Tournament, id=tournament_id)
     
     form = TournamentRegistrationForm(request.POST)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-09 14:33+0000\n"
+"POT-Creation-Date: 2018-01-10 02:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,14 +136,14 @@ msgstr "Российские риичи маджонг клубы"
 
 #: templates/club/list.html:18 templates/rating/_results_table.html:7
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/announcement.html:33
+#: templates/tournament/announcement.html:38
 #: templates/tournament/details.html:35 templates/website/city.html:22
 #: templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
 
 #: templates/club/list.html:19 templates/tournament/_tournaments_table.html:9
-#: templates/tournament/announcement.html:34 templates/website/search.html:16
+#: templates/tournament/announcement.html:39 templates/website/search.html:16
 #: tournament/models.py:88
 msgid "City"
 msgstr "Город"
@@ -250,22 +250,22 @@ msgstr "Пройдет"
 msgid "Held"
 msgstr "Прошел"
 
-#: templates/tournament/announcement.html:28
-msgid "Already registered players"
-msgstr "Зарегистрированные игроки"
+#: templates/tournament/announcement.html:27
+msgid "Description"
+msgstr "Описание"
 
-#: templates/tournament/announcement.html:57
+#: templates/tournament/announcement.html:33
+msgid "Registered players"
+msgstr "Участники"
+
 #: templates/tournament/announcement.html:68
+#: templates/tournament/announcement.html:81
 msgid "Registration"
 msgstr "Регистрация"
 
-#: templates/tournament/announcement.html:63
+#: templates/tournament/announcement.html:75
 msgid "Submit"
 msgstr "Записаться"
-
-#: templates/tournament/announcement.html:73
-msgid "Description"
-msgstr "Описание"
 
 #: templates/tournament/details.html:14
 msgid "players"
@@ -341,6 +341,6 @@ msgstr "Телефон"
 msgid "It will be visible only to the tournament administrator"
 msgstr "Он будет показан только администратору турнира"
 
-#: tournament/views.py:89
+#: tournament/views.py:106
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
