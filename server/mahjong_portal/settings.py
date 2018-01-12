@@ -14,6 +14,8 @@ APP_VERSION = 'v0.1.2-dev'
 
 SCHEME = 'https'
 
+AUTH_USER_MODEL = 'account.User'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -57,7 +59,8 @@ INSTALLED_APPS = [
     'tournament',
     'rating',
     'system',
-    'system.tournament_admin'
+    'system.tournament_admin',
+    'account',
 ]
 
 MIDDLEWARE = [
