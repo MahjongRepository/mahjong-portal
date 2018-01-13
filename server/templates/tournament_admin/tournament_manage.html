@@ -85,8 +85,10 @@
                            </nobr>
                         </td>
                         <td>
-                            {% if registration_item.city_object %}
-                                <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
+                            {% if registration_item.player %}
+                                {{ registration_item.player.city.name }}
+                            {% elif registration_item.city_object %}
+                                {{ registration_item.city_object.name }}
                             {% else %}
                                 {{ registration_item.city }}
                             {% endif %}
