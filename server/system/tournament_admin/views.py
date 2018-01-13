@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from player.models import Player
-from system.tournament_admin.forms import UploadResultsForm
+from system.decorators import tournament_manager_auth_required
+from system.tournament_admin.forms import UploadResultsForm, TournamentForm
 from tournament.models import Tournament, TournamentResult
 
 
@@ -93,3 +94,56 @@ def upload_results(request, tournament_id):
         'file_was_uploaded': file_was_uploaded,
         'success': success
     })
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.is_tournament_manager)
+def managed_tournaments(request):
+    tournaments = request.user.managed_tournaments.all().order_by('-start_date')
+    return render(request, 'tournament_admin/managed_tournaments.html', {
+        'tournaments': tournaments
+    })
+
+
+@login_required
+@tournament_manager_auth_required
+def tournament_manage(request, tournament_id, **kwargs):
+    tournament = kwargs['tournament']
+
+    return render(request, 'tournament_admin/tournament_manage.html', {
+        'tournament': tournament
+    })
+
+
+@login_required
+@tournament_manager_auth_required
+def tournament_edit(request, tournament_id, **kwargs):
+    tournament = kwargs['tournament']
+    form = TournamentForm(instance=tournament)
+    if request.POST:
+        form = TournamentForm(request.POST, instance=tournament)
+        if form.is_valid():
+            form.save()
+            return redirect(tournament_manage, tournament.id)
+    return render(request, 'tournament_admin/tournament_edit.html', {
+        'tournament': tournament,
+        'form': form
+    })
+
+
+@login_required
+@tournament_manager_auth_required
+def toggle_registration(request, tournament_id, **kwargs):
+    tournament = kwargs['tournament']
+    tournament.opened_registration = not tournament.opened_registration
+    tournament.save()
+    return redirect(tournament_manage, tournament.id)
+
+
+@login_required
+@tournament_manager_auth_required
+def toggle_premoderation(request, tournament_id, **kwargs):
+    tournament = kwargs['tournament']
+    tournament.registrations_pre_moderation = not tournament.registrations_pre_moderation
+    tournament.save()
+    return redirect(tournament_manage, tournament.id)

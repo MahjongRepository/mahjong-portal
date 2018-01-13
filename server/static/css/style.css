@@ -22,3 +22,19 @@ body {
     margin-bottom: 20px;
     max-width: 380px;
 }
+
+.settings-table tr:first-child td {
+    border-top: none;
+}
+
+.settings-table {
+    margin-bottom: 0;
+}
+
+.settings-table td {
+    vertical-align: middle;
+}
+
+.edit-tournament-form {
+    max-width: 700px;
+}

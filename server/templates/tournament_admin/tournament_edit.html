@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap4 %}
+
+{% block title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ tournament.name }}</h1>
+        <form action="{% url 'tournament_edit' tournament.id %}" method="POST" class="form edit-tournament-form">
+            {% csrf_token %}
+
+            {% bootstrap_form form %}
+
+            {% buttons %}
+                <div class="text-right">
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}

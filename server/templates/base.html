@@ -92,14 +92,20 @@
                     <a class="dropdown-item" href="{% url 'rating' 'ema' %}">{% trans 'Rating' %}</a>
                 </div>
             </li>
-            {% if user.is_superuser %}
+            {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans 'Django admin' %}</a>
-                        <a class="dropdown-item" href="{% url 'system_index' %}">{% trans 'Admin page' %}</a>
+                        {% if user.is_superuser %}
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans 'Django admin' %}</a>
+                            <a class="dropdown-item" href="{% url 'system_index' %}">{% trans 'Admin page' %}</a>
+                        {% endif %}
+                        {% if user.is_tournament_manager %}
+                            <a class="dropdown-item" href="{% url 'managed_tournaments' %}">{% trans 'Tournaments' %}</a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'logout' %}">{% trans 'Logout' %}</a>
                     </div>
                 </li>
             {% endif %}

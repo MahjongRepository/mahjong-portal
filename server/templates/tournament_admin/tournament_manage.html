@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ tournament.name }}</h1>
+
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light">{% trans 'Settings' %}</li>
+            <li class="list-group-item">
+                <table class="table settings-table table-responsive-sm pb-2">
+                    {% if tournament.opened_registration %}
+                        <tr>
+                            <td>{% trans 'Opened registration' %}</td>
+                            <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-danger">{% trans 'Close registration'%}</a></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{% trans 'Closed registration' %}</td>
+                            <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-success">{% trans 'Open registration'%}</a></td>
+                        </tr>
+                    {% endif %}
+                    {% if tournament.registrations_pre_moderation %}
+                        <tr>
+                            <td>{% trans 'Premoderation of participants' %}</td>
+                            <td><a href="{% url 'toggle_premoderation' tournament.id %}" class="btn btn-primary">{% trans 'Switch to postmoderation'%}</a></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{% trans 'Postmoderation of participants' %}</td>
+                            <td><a href="{% url 'toggle_premoderation' tournament.id %}" class="btn btn-primary">{% trans 'Switch to premoderation'%}</a></td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>{% trans 'Edit tournament information' %}</td>
+                        <td><a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">{% trans 'Edit' %}</a></td>
+                    </tr>
+                </table>
+            </li>
+        </ul>
+
+        <h2 class="mt-4">{% trans 'Participants' %}</h2>
+        {% if tournament_registrations %}
+        {% else %}
+            <p>{% trans 'There is no registrations yet' %}</p>
+        {% endif %}
+
+    </div>
+{% endblock %}

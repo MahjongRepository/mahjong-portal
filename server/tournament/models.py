@@ -37,7 +37,9 @@ class Tournament(BaseModel):
     is_upcoming = models.BooleanField(default=False)
     need_qualification = models.BooleanField(default=False)
     has_accreditation = models.BooleanField(default=True)
+
     opened_registration = models.BooleanField(default=False)
+    registrations_pre_moderation = models.BooleanField(default=False)
 
     pantheon_id = models.CharField(max_length=20, null=True, blank=True)
 
@@ -88,6 +90,9 @@ class TournamentRegistration(BaseModel):
     city = models.CharField(max_length=255, verbose_name=_('City'))
     phone = models.CharField(max_length=255, verbose_name=_('Phone'),
                              help_text=_('It will be visible only to the tournament administrator'))
+    additional_contact = models.CharField(max_length=255, verbose_name=_('Additional contact. Optional'),
+                                          help_text=_('It will be visible only to the tournament administrator'),
+                                          default='', null=True, blank=True)
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n bootstrap4 %}
+
+{% block content %}
+    <div class="col-lg-6">
+        <h2>{% trans 'Login' %}</h2>
+
+        <form action="{% url 'login' %}" method="post" class="form-horizontal" role="form">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+
+            {% bootstrap_form form %}
+
+            {% buttons %}
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">{% trans 'Login' context 'action' %}</button>
+                </div>
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}

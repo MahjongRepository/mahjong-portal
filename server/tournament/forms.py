@@ -7,4 +7,4 @@ class TournamentRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = TournamentRegistration
-        fields = ['last_name', 'first_name', 'city', 'phone']
+        fields = ['last_name', 'first_name', 'city', 'phone', 'additional_contact']
