@@ -255,7 +255,7 @@ msgstr "Игр"
 
 #: templates/tournament/announcement.html:19
 msgid "Will be held"
-msgstr "Пройдет"
+msgstr "Начнётся"
 
 #: templates/tournament/announcement.html:21
 #: templates/tournament/details.html:13
