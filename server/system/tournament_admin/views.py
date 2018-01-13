@@ -109,7 +109,7 @@ def managed_tournaments(request):
 @tournament_manager_auth_required
 def tournament_manage(request, tournament_id, **kwargs):
     tournament = kwargs['tournament']
-    tournament_registrations = TournamentRegistration.objects.filter(tournament=tournament).order_by('created_on')
+    tournament_registrations = TournamentRegistration.objects.filter(tournament=tournament).order_by('-created_on')
     return render(request, 'tournament_admin/tournament_manage.html', {
         'tournament': tournament,
         'tournament_registrations': tournament_registrations

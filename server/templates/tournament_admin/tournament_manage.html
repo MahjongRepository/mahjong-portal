@@ -59,7 +59,6 @@
             <table class="table table-hover table-responsive-sm mt-4">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
                     <th scope="col">{% trans 'Name' %}</th>
                     <th scope="col">{% trans 'City' %}</th>
                     <th scope="col">{% trans 'Registered at' %}</th>
@@ -72,7 +71,6 @@
                 <tbody>
                 {% for registration_item in tournament_registrations %}
                     <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
                         <td>
                            <nobr>
                                {% if registration_item.player %}
