@@ -20,6 +20,10 @@
             <li class="list-group-item list-group-item-light">{% trans 'Settings' %}</li>
             <li class="list-group-item">
                 <table class="table settings-table table-responsive-sm pb-2">
+                    <tr>
+                        <td><a href="{{ tournament.get_url }}" target="_blank">{% trans 'Tournament public link' %}</a></td>
+                        <td></td>
+                    </tr>
                     {% if tournament.opened_registration %}
                         <tr>
                             <td>{% trans 'Registration opened' %}</td>

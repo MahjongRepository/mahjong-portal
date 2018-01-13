@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-13 12:38+0000\n"
+"POT-Creation-Date: 2018-01-13 13:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,17 +154,17 @@ msgstr "Российские риичи маджонг клубы"
 
 #: templates/club/list.html:18 templates/rating/_results_table.html:7
 #: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/announcement.html:38
+#: templates/tournament/announcement.html:37
 #: templates/tournament/details.html:33
 #: templates/tournament_admin/managed_tournaments.html:22
-#: templates/tournament_admin/tournament_manage.html:59
+#: templates/tournament_admin/tournament_manage.html:63
 #: templates/website/city.html:22 templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
 
 #: templates/club/list.html:19 templates/tournament/_tournaments_table.html:9
-#: templates/tournament/announcement.html:39
-#: templates/tournament_admin/tournament_manage.html:60
+#: templates/tournament/announcement.html:38
+#: templates/tournament_admin/tournament_manage.html:64
 #: templates/website/search.html:16 tournament/models.py:91
 msgid "City"
 msgstr "Город"
@@ -266,13 +266,13 @@ msgstr "Прошел"
 msgid "Description"
 msgstr "Описание"
 
-#: templates/tournament/announcement.html:33
-#: templates/tournament_admin/tournament_manage.html:53
+#: templates/tournament/announcement.html:32
+#: templates/tournament_admin/tournament_manage.html:57
 msgid "Participants"
 msgstr "Участники"
 
 #: templates/tournament/announcement.html:68
-#: templates/tournament/announcement.html:81
+#: templates/tournament/announcement.html:80
 msgid "Registration"
 msgstr "Регистрация"
 
@@ -317,7 +317,7 @@ msgid "End Date"
 msgstr "Дата окончания"
 
 #: templates/tournament_admin/managed_tournaments.html:27
-#: templates/tournament_admin/tournament_manage.html:65
+#: templates/tournament_admin/tournament_manage.html:69
 msgid "Action"
 msgstr "Действие"
 
@@ -337,75 +337,79 @@ msgstr "Редактирование турнира"
 msgid "Settings"
 msgstr "Настройки"
 
-#: templates/tournament_admin/tournament_manage.html:25
+#: templates/tournament_admin/tournament_manage.html:24
+msgid "Tournament public link"
+msgstr "Публичная ссылка на турнир"
+
+#: templates/tournament_admin/tournament_manage.html:29
 msgid "Registration opened"
 msgstr "Регистрация открыта"
 
-#: templates/tournament_admin/tournament_manage.html:26
+#: templates/tournament_admin/tournament_manage.html:30
 msgid "Close registration"
 msgstr "Закрыть регистрацию"
 
-#: templates/tournament_admin/tournament_manage.html:30
+#: templates/tournament_admin/tournament_manage.html:34
 msgid "Registration closed"
 msgstr "Регистрация закрыта"
 
-#: templates/tournament_admin/tournament_manage.html:31
+#: templates/tournament_admin/tournament_manage.html:35
 msgid "Open registration"
 msgstr "Открыть регистрацию"
 
-#: templates/tournament_admin/tournament_manage.html:36
+#: templates/tournament_admin/tournament_manage.html:40
 msgid "Premoderation of participants"
 msgstr "Премодерация заявок"
 
-#: templates/tournament_admin/tournament_manage.html:37
+#: templates/tournament_admin/tournament_manage.html:41
 msgid "Switch to postmoderation"
 msgstr "Переключиться на постмодерацию"
 
-#: templates/tournament_admin/tournament_manage.html:41
+#: templates/tournament_admin/tournament_manage.html:45
 msgid "Postmoderation of participants"
 msgstr "Постмодерация заявок"
 
-#: templates/tournament_admin/tournament_manage.html:42
+#: templates/tournament_admin/tournament_manage.html:46
 msgid "Switch to premoderation"
 msgstr "Переключиться на премодерацию"
 
-#: templates/tournament_admin/tournament_manage.html:46
+#: templates/tournament_admin/tournament_manage.html:50
 msgid "Edit tournament information"
 msgstr "Редактирование информации о турнире"
 
-#: templates/tournament_admin/tournament_manage.html:47
+#: templates/tournament_admin/tournament_manage.html:51
 msgid "Edit"
 msgstr "Редактировать"
 
-#: templates/tournament_admin/tournament_manage.html:61
+#: templates/tournament_admin/tournament_manage.html:65
 msgid "Registered at"
 msgstr "Дата регистрации"
 
-#: templates/tournament_admin/tournament_manage.html:62 tournament/models.py:92
+#: templates/tournament_admin/tournament_manage.html:66 tournament/models.py:92
 msgid "Phone"
 msgstr "Телефон"
 
-#: templates/tournament_admin/tournament_manage.html:63
+#: templates/tournament_admin/tournament_manage.html:67
 msgid "Additional contact"
 msgstr "Альтернативный контакт"
 
-#: templates/tournament_admin/tournament_manage.html:64
+#: templates/tournament_admin/tournament_manage.html:68
 msgid "Approved"
 msgstr "Одобрено"
 
-#: templates/tournament_admin/tournament_manage.html:93
+#: templates/tournament_admin/tournament_manage.html:106
 msgid "Yes"
 msgstr "Да"
 
-#: templates/tournament_admin/tournament_manage.html:96
+#: templates/tournament_admin/tournament_manage.html:109
 msgid "Approve"
 msgstr "Одобрить"
 
-#: templates/tournament_admin/tournament_manage.html:102
+#: templates/tournament_admin/tournament_manage.html:115
 msgid "Delete"
 msgstr "Удалить"
 
-#: templates/tournament_admin/tournament_manage.html:110
+#: templates/tournament_admin/tournament_manage.html:123
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
@@ -475,7 +479,9 @@ msgstr "Альтернативный способ связи. Опциональ
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
-msgstr "Регистрация принята! Она появится на странице после одобрения администратором."
+msgstr ""
+"Регистрация принята! Она появится на странице после одобрения "
+"администратором."
 
 #: tournament/views.py:114
 msgid "Your registration was accepted!"
