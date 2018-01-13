@@ -28,43 +28,43 @@
             <p>{{ tournament.registration_description|linebreaksbr }}</p>
         {% endif %}
 
-        {% if tournament.opened_registration %}
-            {% if registration_results %}
-                <h3 id="players">{% trans 'Participants' %}</h3>
-                <table class="table table-hover table-responsive-sm mt-4">
-                    <thead>
+        {% if registration_results %}
+            <h3 id="players">{% trans 'Participants' %}</h3>
+            <table class="table table-hover table-responsive-sm mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'City' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for registration_item in registration_results %}
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{% trans 'Name' %}</th>
-                        <th scope="col">{% trans 'City' %}</th>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>
+                            {% if registration_item.player %}
+                                <a href="{% url 'player_details' registration_item.player.slug %}">
+                                    {{ registration_item.player.full_name }}
+                                </a>
+                            {% else %}
+                                {{ registration_item.full_name }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registration_item.city_object %}
+                                <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
+                            {% else %}
+                                {{ registration_item.city }}
+                            {% endif %}
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for registration_item in registration_results %}
-                        <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>
-                                {% if registration_item.player %}
-                                    <a href="{% url 'player_details' registration_item.player.slug %}">
-                                        {{ registration_item.player.full_name }}
-                                    </a>
-                                {% else %}
-                                    {{ registration_item.full_name }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if registration_item.city_object %}
-                                    <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
-                                {% else %}
-                                    {{ registration_item.city }}
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
+        {% if tournament.opened_registration %}
             <h3 id="registration">{% trans 'Registration' %}</h3>
             <form class="form" action="{% url 'tournament_registration' tournament.id %}" method="POST">
                 {% csrf_token %}
@@ -76,7 +76,6 @@
                     </div>
                 {% endbuttons %}
             </form>
-
         {% elif tournament.registration_link %}
             <h3>{% trans 'Registration' %}</h3>
             <p><a href="{{ tournament.registration_link }}" target="_blank">{{ tournament.registration_link }}</a></p>
