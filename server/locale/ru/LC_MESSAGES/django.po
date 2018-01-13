@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 03:50+0000\n"
+"POT-Creation-Date: 2018-01-13 12:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: account/admin.py:11
+msgid "Personal info"
+msgstr "Информация"
+
+#: account/admin.py:12
+msgid "Permissions"
+msgstr "Права"
+
+#: account/admin.py:13
+msgid "Important dates"
+msgstr "Важные даты"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:13
 #, python-format
@@ -59,26 +71,6 @@ msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: system/templates/system_index.html:5
-#: system/templates/tournament_admin/new_tournaments.html:5
-#: system/templates/tournament_admin/upload_results.html:5
-#: templates/base.html:102
-msgid "Admin page"
-msgstr "Админка"
-
-#: system/templates/system_index.html:10
-#: system/templates/tournament_admin/new_tournaments.html:10
-msgid "New tournaments"
-msgstr "Новые турниры"
-
-#: system/templates/tournament_admin/upload_results.html:18
-msgid "Upload results"
-msgstr "Загрузить результаты"
-
-#: system/templates/tournament_admin/upload_results.html:22
-msgid "Success!"
-msgstr "Успех!"
-
 #: templates/404.html:5 templates/404.html:10
 msgid "404 Page Not Found"
 msgstr "404 ошибка"
@@ -95,6 +87,15 @@ msgstr "500 ошибка"
 msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
+#: templates/account/login.html:6
+msgid "Login"
+msgstr "Вход"
+
+#: templates/account/login.html:16
+msgctxt "action"
+msgid "Login"
+msgstr "Войти"
+
 #: templates/base.html:67 templates/website/home.html:5
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
@@ -104,7 +105,11 @@ msgstr "Маджонг портал"
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:78 templates/base.html:91 templates/club/details.html:23
+#: templates/base.html:78 templates/base.html:91 templates/base.html:106
+#: templates/club/details.html:23
+#: templates/tournament_admin/managed_tournaments.html:12
+#: templates/tournament_admin/tournament_edit.html:12
+#: templates/tournament_admin/tournament_manage.html:12
 #: templates/website/city.html:11
 msgid "Tournaments"
 msgstr "Турниры"
@@ -122,11 +127,24 @@ msgstr "О рейтинге"
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: templates/base.html:101
+#: templates/base.html:102
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:109 templates/base.html:110
+#: templates/base.html:103 templates/system_index.html:5
+#: templates/tournament_admin/managed_tournaments.html:5
+#: templates/tournament_admin/new_tournaments.html:5
+#: templates/tournament_admin/tournament_edit.html:5
+#: templates/tournament_admin/tournament_manage.html:5
+#: templates/tournament_admin/upload_results.html:5
+msgid "Admin page"
+msgstr "Админка"
+
+#: templates/base.html:108
+msgid "Logout"
+msgstr "Выйти"
+
+#: templates/base.html:115 templates/base.html:116
 msgid "Search"
 msgstr "Поиск"
 
@@ -137,14 +155,17 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:18 templates/rating/_results_table.html:7
 #: templates/tournament/_tournaments_table.html:7
 #: templates/tournament/announcement.html:38
-#: templates/tournament/details.html:33 templates/website/city.html:22
-#: templates/website/search.html:15
+#: templates/tournament/details.html:33
+#: templates/tournament_admin/managed_tournaments.html:22
+#: templates/tournament_admin/tournament_manage.html:59
+#: templates/website/city.html:22 templates/website/search.html:15
 msgid "Name"
 msgstr "Имя"
 
 #: templates/club/list.html:19 templates/tournament/_tournaments_table.html:9
-#: templates/tournament/announcement.html:39 templates/website/search.html:16
-#: tournament/models.py:88
+#: templates/tournament/announcement.html:39
+#: templates/tournament_admin/tournament_manage.html:60
+#: templates/website/search.html:16 tournament/models.py:91
 msgid "City"
 msgstr "Город"
 
@@ -216,12 +237,19 @@ msgstr "все результаты"
 msgid "All available ratings"
 msgstr "Все доступные рейтинги"
 
+#: templates/system_index.html:10
+#: templates/tournament_admin/new_tournaments.html:10
+msgid "New tournaments"
+msgstr "Новые турниры"
+
 #: templates/tournament/_tournaments_table.html:10
+#: templates/tournament_admin/managed_tournaments.html:25
 msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
 #: templates/tournament/_tournaments_table.html:11
+#: templates/tournament_admin/managed_tournaments.html:26
 msgid "Sessions"
 msgstr "Игр"
 
@@ -239,7 +267,8 @@ msgid "Description"
 msgstr "Описание"
 
 #: templates/tournament/announcement.html:33
-msgid "Registered players"
+#: templates/tournament_admin/tournament_manage.html:53
+msgid "Participants"
 msgstr "Участники"
 
 #: templates/tournament/announcement.html:68
@@ -274,6 +303,119 @@ msgstr "Очки"
 #: templates/tournament/details.html:48
 msgid "Substitution"
 msgstr "Замена"
+
+#: templates/tournament_admin/managed_tournaments.html:16
+msgid "Managed tournaments"
+msgstr "Турниры"
+
+#: templates/tournament_admin/managed_tournaments.html:23
+msgid "Start Date"
+msgstr "Дата начала"
+
+#: templates/tournament_admin/managed_tournaments.html:24
+msgid "End Date"
+msgstr "Дата окончания"
+
+#: templates/tournament_admin/managed_tournaments.html:27
+#: templates/tournament_admin/tournament_manage.html:65
+msgid "Action"
+msgstr "Действие"
+
+#: templates/tournament_admin/managed_tournaments.html:44
+msgid "Manage"
+msgstr "Управлять"
+
+#: templates/tournament_admin/managed_tournaments.html:51
+msgid "Nothing here"
+msgstr "Ничего нет"
+
+#: templates/tournament_admin/tournament_edit.html:14
+msgid "Edit tournament"
+msgstr "Редактирование турнира"
+
+#: templates/tournament_admin/tournament_manage.html:20
+msgid "Settings"
+msgstr "Настройки"
+
+#: templates/tournament_admin/tournament_manage.html:25
+msgid "Registration opened"
+msgstr "Регистрация открыта"
+
+#: templates/tournament_admin/tournament_manage.html:26
+msgid "Close registration"
+msgstr "Закрыть регистрацию"
+
+#: templates/tournament_admin/tournament_manage.html:30
+msgid "Registration closed"
+msgstr "Регистрация закрыта"
+
+#: templates/tournament_admin/tournament_manage.html:31
+msgid "Open registration"
+msgstr "Открыть регистрацию"
+
+#: templates/tournament_admin/tournament_manage.html:36
+msgid "Premoderation of participants"
+msgstr "Премодерация заявок"
+
+#: templates/tournament_admin/tournament_manage.html:37
+msgid "Switch to postmoderation"
+msgstr "Переключиться на постмодерацию"
+
+#: templates/tournament_admin/tournament_manage.html:41
+msgid "Postmoderation of participants"
+msgstr "Постмодерация заявок"
+
+#: templates/tournament_admin/tournament_manage.html:42
+msgid "Switch to premoderation"
+msgstr "Переключиться на премодерацию"
+
+#: templates/tournament_admin/tournament_manage.html:46
+msgid "Edit tournament information"
+msgstr "Редактирование информации о турнире"
+
+#: templates/tournament_admin/tournament_manage.html:47
+msgid "Edit"
+msgstr "Редактировать"
+
+#: templates/tournament_admin/tournament_manage.html:61
+msgid "Registered at"
+msgstr "Дата регистрации"
+
+#: templates/tournament_admin/tournament_manage.html:62 tournament/models.py:92
+msgid "Phone"
+msgstr "Телефон"
+
+#: templates/tournament_admin/tournament_manage.html:63
+msgid "Additional contact"
+msgstr "Альтернативный контакт"
+
+#: templates/tournament_admin/tournament_manage.html:64
+msgid "Approved"
+msgstr "Одобрено"
+
+#: templates/tournament_admin/tournament_manage.html:93
+msgid "Yes"
+msgstr "Да"
+
+#: templates/tournament_admin/tournament_manage.html:96
+msgid "Approve"
+msgstr "Одобрить"
+
+#: templates/tournament_admin/tournament_manage.html:102
+msgid "Delete"
+msgstr "Удалить"
+
+#: templates/tournament_admin/tournament_manage.html:110
+msgid "There is no registrations yet."
+msgstr "Пока нет регистраций"
+
+#: templates/tournament_admin/upload_results.html:18
+msgid "Upload results"
+msgstr "Загрузить результаты"
+
+#: templates/tournament_admin/upload_results.html:22
+msgid "Success!"
+msgstr "Успех!"
 
 #: templates/website/city.html:16
 msgctxt "list of players"
@@ -313,22 +455,28 @@ msgstr "Страна"
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: tournament/models.py:86
+#: tournament/models.py:89
 msgid "First name"
 msgstr "Имя"
 
-#: tournament/models.py:87
+#: tournament/models.py:90
 msgid "Last name"
 msgstr "Фамилия"
 
-#: tournament/models.py:89
-msgid "Phone"
-msgstr "Телефон"
-
-#: tournament/models.py:90
+#: tournament/models.py:93 tournament/models.py:95
 msgid "It will be visible only to the tournament administrator"
 msgstr "Он будет показан только администратору турнира"
 
-#: tournament/views.py:110
+#: tournament/models.py:94
+msgid "Additional contact. Optional"
+msgstr "Альтернативный способ связи. Опционально"
+
+#: tournament/views.py:111
+msgid ""
+"Your registration was accepted! It will be visible on the page after "
+"administrator approvement."
+msgstr "Регистрация принята! Она появится на странице после одобрения администратором."
+
+#: tournament/views.py:114
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"

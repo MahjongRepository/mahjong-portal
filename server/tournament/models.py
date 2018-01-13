@@ -84,6 +84,7 @@ class TournamentResult(BaseModel):
 
 class TournamentRegistration(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='tournament_registrations', on_delete=models.PROTECT)
+    is_approved = models.BooleanField(default=True)
 
     first_name = models.CharField(max_length=255, verbose_name=_('First name'))
     last_name = models.CharField(max_length=255, verbose_name=_('Last name'))

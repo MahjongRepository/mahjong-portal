@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n tz %}
 
 {% block title %}
     {% trans 'Admin page' %}
@@ -7,6 +7,13 @@
 
 {% block content %}
     <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'managed_tournaments' %}">{% trans 'Tournaments' %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ tournament.name }}</li>
+            </ol>
+        </nav>
+
         <h1>{{ tournament.name }}</h1>
 
         <ul class="list-group">
@@ -15,12 +22,12 @@
                 <table class="table settings-table table-responsive-sm pb-2">
                     {% if tournament.opened_registration %}
                         <tr>
-                            <td>{% trans 'Opened registration' %}</td>
+                            <td>{% trans 'Registration opened' %}</td>
                             <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-danger">{% trans 'Close registration'%}</a></td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td>{% trans 'Closed registration' %}</td>
+                            <td>{% trans 'Registration closed' %}</td>
                             <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-success">{% trans 'Open registration'%}</a></td>
                         </tr>
                     {% endif %}
@@ -45,9 +52,71 @@
 
         <h2 class="mt-4">{% trans 'Participants' %}</h2>
         {% if tournament_registrations %}
+            <table class="table table-hover table-responsive-sm mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'City' %}</th>
+                    <th scope="col">{% trans 'Registered at' %}</th>
+                    <th scope="col">{% trans 'Phone' %}</th>
+                    <th scope="col">{% trans 'Additional contact' %}</th>
+                    <th scope="col">{% trans 'Approved' %}</th>
+                    <th scope="col">{% trans 'Action' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for registration_item in tournament_registrations %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>
+                           <nobr>
+                               {% if registration_item.player %}
+                                   <a href="{% url 'player_details' registration_item.player.slug %}">
+                                       {{ registration_item.player.full_name }}
+                                   </a>
+                               {% else %}
+                                   {{ registration_item.full_name }}
+                               {% endif %}
+                           </nobr>
+                        </td>
+                        <td>
+                            {% if registration_item.city_object %}
+                                <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
+                            {% else %}
+                                {{ registration_item.city }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <nobr>
+                                {{ registration_item.created_on|date:SHORT_DATE_FORMAT }}
+                                {% timezone 'Europe/Moscow' %}
+                                    {{ registration_item.created_on|time }}
+                                {% endtimezone %}
+                            </nobr>
+                        </td>
+                        <td>{{ registration_item.phone }}</td>
+                        <td>{{ registration_item.additional_contact|default:'-' }}</td>
+                        <td>
+                            {% if registration_item.is_approved %}
+                                {% trans 'Yes' %}
+                            {% else %}
+                                <a href="{% url 'approve_registration' tournament.id registration_item.id %}" class="btn btn-success">
+                                    {% trans 'Approve' %}
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'remove_registration' tournament.id registration_item.id %}" class="btn btn-danger">
+                                {% trans 'Delete' %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-            <p>{% trans 'There is no registrations yet' %}</p>
+            <p>{% trans 'There is no registrations yet.' %}</p>
         {% endif %}
-
     </div>
 {% endblock %}

@@ -66,6 +66,7 @@ def tournament_announcement(request, slug):
     form = TournamentRegistrationForm(initial={'city': tournament.city.name_ru})
     registration_results = (TournamentRegistration.objects
                                                   .filter(tournament=tournament)
+                                                  .filter(is_approved=True)
                                                   .prefetch_related('player')
                                                   .prefetch_related('city_object')
                                                   .order_by('created_on'))
@@ -104,9 +105,16 @@ def tournament_registration(request, tournament_id):
             instance.city_object = City.objects.get(name_ru=instance.city)
         except City.DoesNotExist:
             pass
-        
+
+        if tournament.registrations_pre_moderation:
+            instance.is_approved = False
+            message = _('Your registration was accepted! It will be visible on the page after administrator approvement.')
+        else:
+            instance.is_approved = True
+            message = _('Your registration was accepted!')
+
         instance.save()
         
-        messages.success(request, _('Your registration was accepted!'))
+        messages.success(request, message)
     
     return redirect(tournament.get_url())

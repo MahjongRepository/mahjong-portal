@@ -7,6 +7,14 @@
 
 {% block content %}
     <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'managed_tournaments' %}">{% trans 'Tournaments' %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'tournament_manage' tournament.id %}">{{ tournament.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans 'Edit tournament' %}</li>
+            </ol>
+        </nav>
+
         <h1>{{ tournament.name }}</h1>
         <form action="{% url 'tournament_edit' tournament.id %}" method="POST" class="form edit-tournament-form">
             {% csrf_token %}
