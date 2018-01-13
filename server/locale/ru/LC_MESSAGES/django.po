@@ -323,7 +323,7 @@ msgstr "Действие"
 
 #: templates/tournament_admin/managed_tournaments.html:44
 msgid "Manage"
-msgstr "Управлять"
+msgstr "Управление"
 
 #: templates/tournament_admin/managed_tournaments.html:51
 msgid "Nothing here"
