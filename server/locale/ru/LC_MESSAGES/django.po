@@ -121,7 +121,7 @@ msgstr "Клубы"
 #: templates/base.html:84 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
-msgstr "О рейтинге"
+msgstr "О рейтингах"
 
 #: templates/base.html:92
 msgid "Rating"
