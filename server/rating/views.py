@@ -9,6 +9,7 @@ def rating_list(request):
 
     return render(request, 'rating/list.html', {
         'ratings': ratings,
+        'page': 'rating'
     })
 
 
@@ -25,4 +26,5 @@ def rating_details(request, slug):
     return render(request, 'rating/details.html', {
         'rating': rating,
         'rating_results': rating_results,
+        'page': 'rating'
     })
