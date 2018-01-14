@@ -9,8 +9,16 @@ from rating.models import RatingDelta, RatingResult, TournamentCoefficients
 from tournament.models import TournamentResult, Tournament
 
 
-class InnerRatingCalculation(object):
+class RatingRRCalculation(object):
     players = None
+
+    FIRST_PART_MIN_TOURNAMENTS = 5
+    SECOND_PART_MIN_TOURNAMENTS = 4
+    FIRST_PART_WEIGHT = 50
+    SECOND_PART_WEIGHT = 50
+    MIN_PLAYERS_REQUIREMENTS = 16
+    NEED_QUALIFICATION = False
+    HAS_ACCREDITATION = True
 
     def __init__(self):
         self.players = self.get_players()
@@ -23,26 +31,7 @@ class InnerRatingCalculation(object):
         return list(Player.objects.filter(country__code='RU'))
 
     def calculate_players_rating_rank(self, rating):
-        # import csv
-        # f = open('players.csv', 'w')
-        # writer = csv.writer(f)
-        #
-        # writer.writerow([
-        #     'игрок',
-        #     'итоговые очки',
-        #     'всего турниров',
-        #     'учитываемых турниров',
-        #     'турнирный base rank',
-        #     'первая часть',
-        #     'вторая часть',
-        #     'расчет рейтинга',
-        #     'расчет первой части',
-        #     'расчет второй части',
-        # ])
-        #
-        # rows = []
         results = []
-#
         two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
 
         # it is important to save rating updates time
@@ -51,14 +40,12 @@ class InnerRatingCalculation(object):
 
         base_query = (RatingDelta.objects
                                  .filter(rating=rating)
-                                 .filter(tournament__number_of_players__gte=12)
-                                 .filter(tournament__need_qualification=False)
+                                 .filter(tournament__number_of_players__gte=self.MIN_PLAYERS_REQUIREMENTS)
+                                 .filter(tournament__need_qualification=self.NEED_QUALIFICATION)
                                  .filter(tournament__end_date__gte=two_years_ago))
 
-        first_part_min_tournaments = 5
-        second_part_min_tournaments = 4
-        first_part_weight = 50
-        second_part_weight = 50
+        if self.HAS_ACCREDITATION:
+            base_query = base_query.filter(tournament__has_accreditation=self.HAS_ACCREDITATION)
 
         tournament_ids = base_query.values_list('tournament_id', flat=True).distinct()
         coefficient_temp = Tournament.objects.filter(id__in=tournament_ids)
@@ -74,21 +61,19 @@ class InnerRatingCalculation(object):
             coefficients.append(c)
 
         coefficients = sorted(coefficients, reverse=True)
-        max_coefficient = sum(coefficients[:second_part_min_tournaments])
+        max_coefficient = sum(coefficients[:self.SECOND_PART_MIN_TOURNAMENTS])
 
-        if len(coefficients) < second_part_min_tournaments:
-            max_coefficient += second_part_min_tournaments - len(coefficients)
+        if len(coefficients) < self.SECOND_PART_MIN_TOURNAMENTS:
+            max_coefficient += self.SECOND_PART_MIN_TOURNAMENTS - len(coefficients)
 
         RatingResult.objects.filter(rating=rating).delete()
 
         for player in self.players:
-            # row = []
 
             first_part_numerator_calculation = []
             first_part_denominator_calculation = []
 
             second_part_numerator_calculation = []
-            second_part_denominator_calculation = []
 
             deltas = base_query.filter(player=player)
             total_tournaments = deltas.count()
@@ -96,16 +81,11 @@ class InnerRatingCalculation(object):
             if total_tournaments < 2:
                 continue
 
-            # tournaments_results = deltas
-            # tournaments_in_rating = total_tournaments
-
-            if total_tournaments <= first_part_min_tournaments:
+            if total_tournaments <= self.FIRST_PART_MIN_TOURNAMENTS:
                 tournaments_results = deltas
-                # tournaments_in_rating = total_tournaments
             else:
                 limit = self._determine_tournaments_number(deltas.count())
                 tournaments_results = deltas.order_by('-base_rank')[:limit]
-                # tournaments_in_rating = limit
 
             RatingDelta.objects.filter(id__in=[x.id for x in deltas]).update(is_active=False)
             RatingDelta.objects.filter(id__in=[x.id for x in tournaments_results]).update(is_active=True)
@@ -122,8 +102,8 @@ class InnerRatingCalculation(object):
                 first_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
                 first_part_denominator_calculation.append('{} * {}'.format(coefficient.coefficient, coefficient.age / 100))
 
-            if len(tournaments_results) < first_part_min_tournaments:
-                fill_missed_data = first_part_min_tournaments - len(tournaments_results)
+            if len(tournaments_results) < self.FIRST_PART_MIN_TOURNAMENTS:
+                fill_missed_data = self.FIRST_PART_MIN_TOURNAMENTS - len(tournaments_results)
                 first_part_denominator += fill_missed_data
 
                 for x in range(0, fill_missed_data):
@@ -135,7 +115,7 @@ class InnerRatingCalculation(object):
             second_part_numerator = 0
             second_part_denominator = max_coefficient
 
-            best_results = deltas.order_by('-delta')[:second_part_min_tournaments]
+            best_results = deltas.order_by('-delta')[:self.SECOND_PART_MIN_TOURNAMENTS]
             for result in best_results:
                 coefficient = coefficients_cache[result.tournament_id]
 
@@ -145,11 +125,11 @@ class InnerRatingCalculation(object):
 
             second_part = second_part_numerator / second_part_denominator
 
-            score = self._calculate_percentage(first_part, first_part_weight) + self._calculate_percentage(second_part, second_part_weight)
+            score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(second_part, self.SECOND_PART_WEIGHT)
 
             first_part_calculation = '({}) / ({})'.format(' + '.join(first_part_numerator_calculation), ' + '.join(first_part_denominator_calculation))
             second_part_calculation = '({}) / {}'.format(' + '.join(second_part_numerator_calculation), max_coefficient)
-            rating_calculation = '({}) * {} + ({}) * {}'.format(first_part_calculation, first_part_weight / 100, second_part_calculation, second_part_weight / 100)
+            rating_calculation = '({}) * {} + ({}) * {}'.format(first_part_calculation, self.FIRST_PART_WEIGHT / 100, second_part_calculation, self.SECOND_PART_WEIGHT / 100)
 
             results.append(RatingResult.objects.create(
                 rating=rating,
@@ -158,23 +138,6 @@ class InnerRatingCalculation(object):
                 place=0,
                 rating_calculation=rating_calculation
             ))
-
-        #     row.append('{} {}'.format(player.last_name_ru, player.first_name_ru))
-        #     row.append(round(score, 2))
-        #     row.append(total_tournaments)
-        #     row.append(tournaments_in_rating)
-        #     row.append(sorted([float(x.base_rank) for x in tournaments_results], reverse=True))
-        #     row.append(round(first_part, 2))
-        #     row.append(round(second_part, 2))
-        #     row.append('{} * {} + {} * {}'.format(round(first_part, 2), first_part_weight / 100, round(second_part, 2), second_part_weight / 100))
-        #     row.append('({}) / ({})'.format(' + '.join(first_part_numerator_calculation), ' + '.join(first_part_denominator_calculation)))
-        #     row.append('({}) / ({})'.format(' + '.join(second_part_numerator_calculation), ' + '.join(second_part_denominator_calculation)))
-        #
-        #     rows.append(row)
-        #
-        # rows = sorted(rows, key=lambda x: x[1], reverse=True)
-        # writer.writerows(rows)
-        # f.close()
 
         place = 1
         results = sorted(results, key=lambda x: x.score, reverse=True)

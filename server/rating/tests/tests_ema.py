@@ -1,11 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
+
 from django.test import TestCase
-from django.utils import timezone
 
 from rating.calculation.ema import EmaRatingCalculation
-from rating.calculation.inner import InnerRatingCalculation
 from rating.mixins import RatingTestMixin
-from rating.models import Rating, RatingDelta, RatingResult
 
 
 class EMARatingTestCase(TestCase, RatingTestMixin):
