@@ -61,10 +61,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if result.scores %}
-                            {{ result.scores|floatformat:0|intcomma }}
-                        {% else %}
+                        {% if result.scores == None %}
                             -
+                        {% else %}
+                            {{ result.scores|floatformat:0|intcomma }}
                         {% endif %}
                     </td>
                     <td>
