@@ -14,7 +14,7 @@ def home(request):
                                   .filter(rating=rating)
                                   .prefetch_related('player')
                                   .prefetch_related('player__city')
-                                  .order_by('place'))[:15]
+                                  .order_by('place'))[:16]
 
     upcoming_tournaments = (Tournament.objects
                                       .filter(is_upcoming=True)

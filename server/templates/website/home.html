@@ -14,7 +14,7 @@
             {% endwith %}
         {% endif %}
 
-        <h1>{% trans 'Top 15 players' %}</h1>
+        <h1>{% trans 'Top 16 players' %}</h1>
         <p>{{ rating.name }}, <a href="{% url 'rating' rating.slug %}">{% trans 'all results' %}</a></p>
         {% include 'rating/_results_table.html' %}
     </div>

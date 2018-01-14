@@ -435,8 +435,8 @@ msgid "Upcoming tournaments"
 msgstr "Ближайшие турниры"
 
 #: templates/website/home.html:17
-msgid "Top 15 players"
-msgstr "Лучшие 15 игроков"
+msgid "Top 16 players"
+msgstr "Лучшие 16 игроков"
 
 #: templates/website/home.html:24 templates/website/home.html:25
 msgid ""
