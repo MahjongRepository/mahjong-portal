@@ -23,8 +23,7 @@
                         <th scope="col">{% trans 'Name' %}</th>
                         <th scope="col">{% trans 'Start Date' %}</th>
                         <th scope="col">{% trans 'End Date' %}</th>
-                        <th scope="col">{% trans 'Players' context 'number of players' %}</th>
-                        <th scope="col">{% trans 'Sessions' %}</th>
+                        <th scope="col">{% trans 'Participants' context 'Number of players' %}</th>
                         <th scope="col">{% trans 'Action' %}</th>
                     </tr>
                     </thead>
@@ -32,15 +31,14 @@
                     {% for tournament in tournaments %}
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
-                            <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
+                            <td>{{ tournament.name }}</td>
                             <td>
                                 <nobr>{{ tournament.start_date|date:SHORT_DATE_FORMAT }}</nobr>
                             </td>
                             <td>
                                 <nobr>{{ tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                             </td>
-                            <td>{{ tournament.number_of_players|default:'-' }}</td>
-                            <td>{{ tournament.number_of_sessions|default:'-' }}</td>
+                            <td>{{ tournament.tournament_registrations.all.count }}</td>
                             <td>
                                 <a href="{% url 'tournament_manage' tournament.id %}" class="btn btn-primary">{% trans 'Manage' %}</a>
                             </td>

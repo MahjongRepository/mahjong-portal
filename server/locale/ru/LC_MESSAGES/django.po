@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-13 13:01+0000\n"
+"POT-Creation-Date: 2018-01-16 05:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,24 +152,24 @@ msgstr "Поиск"
 msgid "Riichi mahjong russian clubs"
 msgstr "Российские риичи маджонг клубы"
 
-#: templates/club/list.html:18 templates/rating/_results_table.html:7
-#: templates/tournament/_tournaments_table.html:7
-#: templates/tournament/announcement.html:37
-#: templates/tournament/details.html:33
-#: templates/tournament_admin/managed_tournaments.html:22
-#: templates/tournament_admin/tournament_manage.html:63
-#: templates/website/city.html:22 templates/website/search.html:15
+#: templates/club/list.html:19 templates/rating/_results_table.html:8
+#: templates/tournament/_tournaments_table.html:8
+#: templates/tournament/announcement.html:55
+#: templates/tournament/details.html:34
+#: templates/tournament_admin/managed_tournaments.html:23
+#: templates/tournament_admin/tournament_manage.html:65
+#: templates/website/city.html:23 templates/website/search.html:16
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/list.html:19 templates/tournament/_tournaments_table.html:9
-#: templates/tournament/announcement.html:38
-#: templates/tournament_admin/tournament_manage.html:64
-#: templates/website/search.html:16 tournament/models.py:91
+#: templates/club/list.html:20 templates/tournament/_tournaments_table.html:10
+#: templates/tournament/announcement.html:56
+#: templates/tournament_admin/tournament_manage.html:66
+#: templates/website/search.html:17 tournament/models.py:91
 msgid "City"
 msgstr "Город"
 
-#: templates/club/list.html:42 templates/club/list.html:43
+#: templates/club/list.html:44 templates/club/list.html:45
 msgid "List with map of all russian riichi mahjong clubs"
 msgstr "Список и карта всех российских риичи маджонг клубов"
 
@@ -177,8 +177,8 @@ msgstr "Список и карта всех российских риичи ма
 msgid "From"
 msgstr "Из"
 
-#: templates/player/details.html:25 templates/player/details.html:48
-#: templates/player/details.html:89
+#: templates/player/details.html:25 templates/player/details.html:49
+#: templates/player/details.html:92
 msgid "Place"
 msgstr "Место"
 
@@ -194,32 +194,32 @@ msgstr "как расчитывается рейтинг"
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/details.html:46 templates/player/details.html:87
+#: templates/player/details.html:47 templates/player/details.html:90
 msgid "Base rank"
 msgstr "Ранг"
 
-#: templates/player/details.html:47 templates/player/details.html:88
-#: templates/tournament/_tournaments_table.html:8
+#: templates/player/details.html:48 templates/player/details.html:91
+#: templates/tournament/_tournaments_table.html:9
 msgid "Date"
 msgstr "Дата"
 
-#: templates/player/details.html:49 templates/player/details.html:90
+#: templates/player/details.html:50 templates/player/details.html:93
 msgid "Tournament"
 msgstr "Турнир"
 
-#: templates/player/details.html:81
+#: templates/player/details.html:83
 msgid "Other tournaments"
 msgstr "Остальные турниры"
 
-#: templates/player/details.html:82
+#: templates/player/details.html:84
 msgid "Tournaments not counted in ratings, but where they took part"
 msgstr "Турниры не учитываемые в рейтингах"
 
-#: templates/rating/_results_table.html:8 templates/website/city.html:23
+#: templates/rating/_results_table.html:9 templates/website/city.html:24
 msgid "Points"
 msgstr "Очки"
 
-#: templates/rating/_results_table.html:9 templates/tournament/details.html:35
+#: templates/rating/_results_table.html:10 templates/tournament/details.html:36
 msgctxt "location"
 msgid "From"
 msgstr "Откуда"
@@ -242,14 +242,12 @@ msgstr "Все доступные рейтинги"
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/tournament/_tournaments_table.html:10
-#: templates/tournament_admin/managed_tournaments.html:25
+#: templates/tournament/_tournaments_table.html:11
 msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
-#: templates/tournament/_tournaments_table.html:11
-#: templates/tournament_admin/managed_tournaments.html:26
+#: templates/tournament/_tournaments_table.html:12
 msgid "Sessions"
 msgstr "Игр"
 
@@ -267,18 +265,18 @@ msgid "Description"
 msgstr "Описание"
 
 #: templates/tournament/announcement.html:32
-#: templates/tournament_admin/tournament_manage.html:57
-msgid "Participants"
-msgstr "Участники"
-
-#: templates/tournament/announcement.html:68
-#: templates/tournament/announcement.html:80
+#: templates/tournament/announcement.html:44
 msgid "Registration"
 msgstr "Регистрация"
 
-#: templates/tournament/announcement.html:75
+#: templates/tournament/announcement.html:39
 msgid "Submit"
 msgstr "Записаться"
+
+#: templates/tournament/announcement.html:49
+#: templates/tournament_admin/tournament_manage.html:59
+msgid "Participants"
+msgstr "Участники"
 
 #: templates/tournament/details.html:14
 msgid "players"
@@ -296,11 +294,11 @@ msgstr "игр"
 msgid "Detailed tournament statistics"
 msgstr "Детальная статистика по турниру"
 
-#: templates/tournament/details.html:34
+#: templates/tournament/details.html:35
 msgid "Scores"
 msgstr "Очки"
 
-#: templates/tournament/details.html:48
+#: templates/tournament/details.html:49
 msgid "Substitution"
 msgstr "Замена"
 
@@ -308,20 +306,25 @@ msgstr "Замена"
 msgid "Managed tournaments"
 msgstr "Турниры"
 
-#: templates/tournament_admin/managed_tournaments.html:23
+#: templates/tournament_admin/managed_tournaments.html:24
 msgid "Start Date"
 msgstr "Дата начала"
 
-#: templates/tournament_admin/managed_tournaments.html:24
+#: templates/tournament_admin/managed_tournaments.html:25
 msgid "End Date"
 msgstr "Дата окончания"
 
+#: templates/tournament_admin/managed_tournaments.html:26
+msgctxt "Number of players"
+msgid "Participants"
+msgstr "Участников"
+
 #: templates/tournament_admin/managed_tournaments.html:27
-#: templates/tournament_admin/tournament_manage.html:69
+#: templates/tournament_admin/tournament_manage.html:71
 msgid "Action"
 msgstr "Действие"
 
-#: templates/tournament_admin/managed_tournaments.html:44
+#: templates/tournament_admin/managed_tournaments.html:43
 msgid "Manage"
 msgstr "Управление"
 
@@ -337,79 +340,79 @@ msgstr "Редактирование турнира"
 msgid "Settings"
 msgstr "Настройки"
 
-#: templates/tournament_admin/tournament_manage.html:24
+#: templates/tournament_admin/tournament_manage.html:25
 msgid "Tournament public link"
 msgstr "Публичная ссылка на турнир"
 
-#: templates/tournament_admin/tournament_manage.html:29
+#: templates/tournament_admin/tournament_manage.html:30
 msgid "Registration opened"
 msgstr "Регистрация открыта"
 
-#: templates/tournament_admin/tournament_manage.html:30
+#: templates/tournament_admin/tournament_manage.html:31
 msgid "Close registration"
 msgstr "Закрыть регистрацию"
 
-#: templates/tournament_admin/tournament_manage.html:34
+#: templates/tournament_admin/tournament_manage.html:35
 msgid "Registration closed"
 msgstr "Регистрация закрыта"
 
-#: templates/tournament_admin/tournament_manage.html:35
+#: templates/tournament_admin/tournament_manage.html:36
 msgid "Open registration"
 msgstr "Открыть регистрацию"
 
-#: templates/tournament_admin/tournament_manage.html:40
+#: templates/tournament_admin/tournament_manage.html:41
 msgid "Premoderation of participants"
 msgstr "Премодерация заявок"
 
-#: templates/tournament_admin/tournament_manage.html:41
+#: templates/tournament_admin/tournament_manage.html:42
 msgid "Switch to postmoderation"
 msgstr "Переключиться на постмодерацию"
 
-#: templates/tournament_admin/tournament_manage.html:45
+#: templates/tournament_admin/tournament_manage.html:46
 msgid "Postmoderation of participants"
 msgstr "Постмодерация заявок"
 
-#: templates/tournament_admin/tournament_manage.html:46
+#: templates/tournament_admin/tournament_manage.html:47
 msgid "Switch to premoderation"
 msgstr "Переключиться на премодерацию"
 
-#: templates/tournament_admin/tournament_manage.html:50
+#: templates/tournament_admin/tournament_manage.html:51
 msgid "Edit tournament information"
 msgstr "Редактирование информации о турнире"
 
-#: templates/tournament_admin/tournament_manage.html:51
+#: templates/tournament_admin/tournament_manage.html:52
 msgid "Edit"
 msgstr "Редактировать"
 
-#: templates/tournament_admin/tournament_manage.html:65
+#: templates/tournament_admin/tournament_manage.html:67
 msgid "Registered at"
 msgstr "Дата регистрации"
 
-#: templates/tournament_admin/tournament_manage.html:66 tournament/models.py:92
+#: templates/tournament_admin/tournament_manage.html:68 tournament/models.py:92
 msgid "Phone"
 msgstr "Телефон"
 
-#: templates/tournament_admin/tournament_manage.html:67
+#: templates/tournament_admin/tournament_manage.html:69
 msgid "Additional contact"
 msgstr "Альтернативный контакт"
 
-#: templates/tournament_admin/tournament_manage.html:68
+#: templates/tournament_admin/tournament_manage.html:70
 msgid "Approved"
 msgstr "Одобрено"
 
-#: templates/tournament_admin/tournament_manage.html:106
+#: templates/tournament_admin/tournament_manage.html:109
 msgid "Yes"
 msgstr "Да"
 
-#: templates/tournament_admin/tournament_manage.html:109
+#: templates/tournament_admin/tournament_manage.html:112
 msgid "Approve"
 msgstr "Одобрить"
 
-#: templates/tournament_admin/tournament_manage.html:115
+#: templates/tournament_admin/tournament_manage.html:118
 msgid "Delete"
 msgstr "Удалить"
 
-#: templates/tournament_admin/tournament_manage.html:123
+#: templates/tournament_admin/tournament_manage.html:127
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
@@ -426,7 +429,7 @@ msgctxt "list of players"
 msgid "Players"
 msgstr "Игроки"
 
-#: templates/website/city.html:41 templates/website/city.html:42
+#: templates/website/city.html:43 templates/website/city.html:44
 msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 
@@ -447,15 +450,15 @@ msgstr ""
 "рейтинги игроков и т.д."
 
 #: templates/website/search.html:5 templates/website/search.html:9
-#: templates/website/search.html:42 templates/website/search.html:43
+#: templates/website/search.html:44 templates/website/search.html:45
 msgid "Search results for"
 msgstr "Результаты поиска"
 
-#: templates/website/search.html:17
+#: templates/website/search.html:18
 msgid "Country"
 msgstr "Страна"
 
-#: templates/website/search.html:37
+#: templates/website/search.html:39
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
