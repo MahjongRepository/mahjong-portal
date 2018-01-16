@@ -2,6 +2,18 @@ body {
     margin-top: 80px;
 }
 
+@media print {
+    body {
+        margin-top: 0;
+    }
+
+    .rating-details a {
+        color: #212529;
+        cursor: text;
+        text-decoration: none;
+    }
+}
+
 .languageChange select {
     width: 150px;
     margin-top: 40px;

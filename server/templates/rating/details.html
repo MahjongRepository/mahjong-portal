@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block content %}
-    <div>
+    <div class="rating-details">
         <h1>{{ rating.name }}</h1>
 
         {% if rating.description %}
-            <p>{{ rating.description }}</p>
+            <p class="d-print-none">{{ rating.description }}</p>
         {% endif %}
 
         {% timezone 'Europe/Moscow' %}
