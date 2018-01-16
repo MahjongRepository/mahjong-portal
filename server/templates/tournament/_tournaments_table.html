@@ -1,38 +1,40 @@
 {% load i18n %}
 
-<table class="table table-hover table-responsive-sm mt-4">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">{% trans 'Name' %}</th>
-        <th scope="col">{% trans 'Date' %}</th>
-        <th scope="col">{% trans 'City' %}</th>
-        <th scope="col">{% trans 'Players' context 'number of players' %}</th>
-        <th scope="col">{% trans 'Sessions' %}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for tournament in tournaments %}
+<div class="table-responsive-sm">
+    <table class="table table-hover mt-4">
+        <thead>
         <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
-            <td>
-                {% if tournament.is_upcoming %}
-                    <nobr>{{ tournament.start_date|date:SHORT_DATE_FORMAT }}</nobr>
-                {% else %}
-                    <nobr>{{ tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
-                {% endif %}
-            </td>
-            <td>
-                {% if tournament.city %}
-                    <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-            <td>{{ tournament.number_of_players|default:'-' }}</td>
-            <td>{{ tournament.number_of_sessions|default:'-' }}</td>
+            <th scope="col">#</th>
+            <th scope="col">{% trans 'Name' %}</th>
+            <th scope="col">{% trans 'Date' %}</th>
+            <th scope="col">{% trans 'City' %}</th>
+            <th scope="col">{% trans 'Players' context 'number of players' %}</th>
+            <th scope="col">{% trans 'Sessions' %}</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for tournament in tournaments %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
+                <td>
+                    {% if tournament.is_upcoming %}
+                        <nobr>{{ tournament.start_date|date:SHORT_DATE_FORMAT }}</nobr>
+                    {% else %}
+                        <nobr>{{ tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if tournament.city %}
+                        <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ tournament.number_of_players|default:'-' }}</td>
+                <td>{{ tournament.number_of_sessions|default:'-' }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

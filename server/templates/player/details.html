@@ -39,22 +39,65 @@
 
             <h4 class="mt-4">{% trans 'Rating changes' %}</h4>
 
-            <table class="table table-hover table-responsive-sm">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{% trans 'Base rank' %}</th>
-                    <th scope="col">{% trans 'Date' %}</th>
-                    <th scope="col">{% trans 'Place' %}</th>
-                    <th scope="col">{% trans 'Tournament' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for delta in rating_result.get_deltas %}
-                    <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>
-                            {% if delta.is_active %}
+            <div class="table-responsive-sm">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Base rank' %}</th>
+                        <th scope="col">{% trans 'Date' %}</th>
+                        <th scope="col">{% trans 'Place' %}</th>
+                        <th scope="col">{% trans 'Tournament' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for delta in rating_result.get_deltas %}
+                        <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>
+                                {% if delta.is_active %}
+                                    {% if delta.base_rank > 500 %}
+                                        <span class="badge badge-success">{{ delta.base_rank }}</span>
+                                    {% elif delta.base_rank == 0 %}
+                                        <span class="badge badge-primary">{{ delta.base_rank }}</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">{{ delta.base_rank }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge badge-secondary">{{ delta.base_rank }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                            </td>
+                            <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
+                            <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+
+        {% if other_tournaments %}
+            <h4>{% trans 'Other tournaments' %}</h4>
+            <p>{% trans 'Tournaments not counted in ratings, but where they took part' %}</p>
+            <div class="table-responsive-sm">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Base rank' %}</th>
+                        <th scope="col">{% trans 'Date' %}</th>
+                        <th scope="col">{% trans 'Place' %}</th>
+                        <th scope="col">{% trans 'Tournament' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for delta in other_tournaments %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>
                                 {% if delta.base_rank > 500 %}
                                     <span class="badge badge-success">{{ delta.base_rank }}</span>
                                 {% elif delta.base_rank == 0 %}
@@ -62,56 +105,17 @@
                                 {% else %}
                                     <span class="badge badge-danger">{{ delta.base_rank }}</span>
                                 {% endif %}
-                            {% else %}
-                                <span class="badge badge-secondary">{{ delta.base_rank }}</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
-                        </td>
-                        <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
-                        <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endfor %}
-
-        {% if other_tournaments %}
-            <h4>{% trans 'Other tournaments' %}</h4>
-            <p>{% trans 'Tournaments not counted in ratings, but where they took part' %}</p>
-            <table class="table table-hover table-responsive-sm">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{% trans 'Base rank' %}</th>
-                    <th scope="col">{% trans 'Date' %}</th>
-                    <th scope="col">{% trans 'Place' %}</th>
-                    <th scope="col">{% trans 'Tournament' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for delta in other_tournaments %}
-                    <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>
-                            {% if delta.base_rank > 500 %}
-                                <span class="badge badge-success">{{ delta.base_rank }}</span>
-                            {% elif delta.base_rank == 0 %}
-                                <span class="badge badge-primary">{{ delta.base_rank }}</span>
-                            {% else %}
-                                <span class="badge badge-danger">{{ delta.base_rank }}</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
-                        </td>
-                        <td>{{ delta.place }}/{{ delta.tournament.number_of_players }}</td>
-                        <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            </td>
+                            <td>
+                                <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                            </td>
+                            <td>{{ delta.place }}/{{ delta.tournament.number_of_players }}</td>
+                            <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

@@ -26,62 +26,64 @@
 
         {% include 'tournament/_tournament_header.html' %}
 
-        <table class="table table-hover table-responsive-sm">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">{% trans 'Name' %}</th>
-                <th scope="col">{% trans 'Scores' %}</th>
-                <th scope="col">{% trans 'From' context 'location' %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for result in results %}
+        <div class="table-responsive-sm">
+            <table class="table table-hover">
+                <thead>
                 <tr>
-                    <th scope="row">{{ result.place }}</th>
-                    <td>
-                        {% if result.player.is_replacement or result.player.is_hide %}
-                            <span class="d-none d-md-block">
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'Scores' %}</th>
+                    <th scope="col">{% trans 'From' context 'location' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for result in results %}
+                    <tr>
+                        <th scope="row">{{ result.place }}</th>
+                        <td>
+                            {% if result.player.is_replacement or result.player.is_hide %}
+                                <span class="d-none d-md-block">
                                 {{ result.player.full_name }}
                             </span>
-                            <span class="d-block d-md-none">
+                                <span class="d-block d-md-none">
                                 <nobr>{% trans 'Substitution' %}</nobr>
                             </span>
-                        {% else %}
-                            <a href="{% url 'player_details' result.player.slug %}">
-                                {# on large screns show full name #}
-                                <span class="d-none d-md-block">
+                            {% else %}
+                                <a href="{% url 'player_details' result.player.slug %}">
+                                    {# on large screns show full name #}
+                                    <span class="d-none d-md-block">
                                     {{ result.player.full_name }}
                                 </span>
-                                {# on small screens show shorten first name #}
-                                <span class="d-block d-md-none">
+                                    {# on small screens show shorten first name #}
+                                    <span class="d-block d-md-none">
                                     <nobr>{{ result.player.last_name }} {{ result.player.first_name.0 }}.</nobr>
                                 </span>
-                            </a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if result.scores == None %}
-                            -
-                        {% else %}
-                            {{ result.scores|floatformat:0|intcomma }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if result.player.city %}
-                            <a href="{% url 'city_page' result.player.city.slug %}">{{ result.player.city.name }}</a>
-                        {% else %}
-                            {% if result.player.is_replacement or result.player.is_hide %}
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if result.scores == None %}
                                 -
                             {% else %}
-                                {{ result.player.country }}
+                                {{ result.scores|floatformat:0|intcomma }}
                             {% endif %}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                        <td>
+                            {% if result.player.city %}
+                                <a href="{% url 'city_page' result.player.city.slug %}">{{ result.player.city.name }}</a>
+                            {% else %}
+                                {% if result.player.is_replacement or result.player.is_hide %}
+                                    -
+                                {% else %}
+                                    {{ result.player.country }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 

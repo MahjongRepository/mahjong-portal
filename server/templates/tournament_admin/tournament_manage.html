@@ -19,106 +19,110 @@
         <ul class="list-group">
             <li class="list-group-item list-group-item-light">{% trans 'Settings' %}</li>
             <li class="list-group-item">
-                <table class="table settings-table table-responsive-sm pb-2">
-                    <tr>
-                        <td><a href="{{ tournament.get_url }}" target="_blank">{% trans 'Tournament public link' %}</a></td>
-                        <td></td>
-                    </tr>
-                    {% if tournament.opened_registration %}
+                <div class="table-responsive-sm">
+                    <table class="table settings-table pb-2">
                         <tr>
-                            <td>{% trans 'Registration opened' %}</td>
-                            <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-danger">{% trans 'Close registration'%}</a></td>
+                            <td><a href="{{ tournament.get_url }}" target="_blank">{% trans 'Tournament public link' %}</a></td>
+                            <td></td>
                         </tr>
-                    {% else %}
+                        {% if tournament.opened_registration %}
+                            <tr>
+                                <td>{% trans 'Registration opened' %}</td>
+                                <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-danger">{% trans 'Close registration'%}</a></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{% trans 'Registration closed' %}</td>
+                                <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-success">{% trans 'Open registration'%}</a></td>
+                            </tr>
+                        {% endif %}
+                        {% if tournament.registrations_pre_moderation %}
+                            <tr>
+                                <td>{% trans 'Premoderation of participants' %}</td>
+                                <td><a href="{% url 'toggle_premoderation' tournament.id %}" class="btn btn-primary">{% trans 'Switch to postmoderation'%}</a></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{% trans 'Postmoderation of participants' %}</td>
+                                <td><a href="{% url 'toggle_premoderation' tournament.id %}" class="btn btn-primary">{% trans 'Switch to premoderation'%}</a></td>
+                            </tr>
+                        {% endif %}
                         <tr>
-                            <td>{% trans 'Registration closed' %}</td>
-                            <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-success">{% trans 'Open registration'%}</a></td>
+                            <td>{% trans 'Edit tournament information' %}</td>
+                            <td><a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">{% trans 'Edit' %}</a></td>
                         </tr>
-                    {% endif %}
-                    {% if tournament.registrations_pre_moderation %}
-                        <tr>
-                            <td>{% trans 'Premoderation of participants' %}</td>
-                            <td><a href="{% url 'toggle_premoderation' tournament.id %}" class="btn btn-primary">{% trans 'Switch to postmoderation'%}</a></td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td>{% trans 'Postmoderation of participants' %}</td>
-                            <td><a href="{% url 'toggle_premoderation' tournament.id %}" class="btn btn-primary">{% trans 'Switch to premoderation'%}</a></td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td>{% trans 'Edit tournament information' %}</td>
-                        <td><a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">{% trans 'Edit' %}</a></td>
-                    </tr>
-                </table>
+                    </table>
+                </div>
             </li>
         </ul>
 
         <h2 class="mt-4">{% trans 'Participants' %}</h2>
         {% if tournament_registrations %}
-            <table class="table table-hover table-responsive-sm mt-4">
-                <thead>
-                <tr>
-                    <th scope="col">{% trans 'Name' %}</th>
-                    <th scope="col">{% trans 'City' %}</th>
-                    <th scope="col">{% trans 'Registered at' %}</th>
-                    <th scope="col">{% trans 'Phone' %}</th>
-                    <th scope="col">{% trans 'Additional contact' %}</th>
-                    <th scope="col">{% trans 'Approved' %}</th>
-                    <th scope="col">{% trans 'Action' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for registration_item in tournament_registrations %}
+            <div class="table-responsive-sm">
+                <table class="table table-hover mt-4">
+                    <thead>
                     <tr>
-                        <td>
-                           <nobr>
-                               {% if registration_item.player %}
-                                   <a href="{% url 'player_details' registration_item.player.slug %}">
-                                       {{ registration_item.player.full_name }}
-                                   </a>
-                               {% else %}
-                                   {{ registration_item.full_name }}
-                               {% endif %}
-                           </nobr>
-                        </td>
-                        <td>
-                            {% if registration_item.player %}
-                                {{ registration_item.player.city.name }}
-                            {% elif registration_item.city_object %}
-                                {{ registration_item.city_object.name }}
-                            {% else %}
-                                {{ registration_item.city }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            <nobr>
-                                {{ registration_item.created_on|date:SHORT_DATE_FORMAT }}
-                                {% timezone 'Europe/Moscow' %}
-                                    {{ registration_item.created_on|time }}
-                                {% endtimezone %}
-                            </nobr>
-                        </td>
-                        <td>{{ registration_item.phone }}</td>
-                        <td>{{ registration_item.additional_contact|default:'-' }}</td>
-                        <td>
-                            {% if registration_item.is_approved %}
-                                {% trans 'Yes' %}
-                            {% else %}
-                                <a href="{% url 'approve_registration' tournament.id registration_item.id %}" class="btn btn-success">
-                                    {% trans 'Approve' %}
-                                </a>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{% url 'remove_registration' tournament.id registration_item.id %}" class="btn btn-danger">
-                                {% trans 'Delete' %}
-                            </a>
-                        </td>
+                        <th scope="col">{% trans 'Name' %}</th>
+                        <th scope="col">{% trans 'City' %}</th>
+                        <th scope="col">{% trans 'Registered at' %}</th>
+                        <th scope="col">{% trans 'Phone' %}</th>
+                        <th scope="col">{% trans 'Additional contact' %}</th>
+                        <th scope="col">{% trans 'Approved' %}</th>
+                        <th scope="col">{% trans 'Action' %}</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for registration_item in tournament_registrations %}
+                        <tr>
+                            <td>
+                                <nobr>
+                                    {% if registration_item.player %}
+                                        <a href="{% url 'player_details' registration_item.player.slug %}">
+                                            {{ registration_item.player.full_name }}
+                                        </a>
+                                    {% else %}
+                                        {{ registration_item.full_name }}
+                                    {% endif %}
+                                </nobr>
+                            </td>
+                            <td>
+                                {% if registration_item.player %}
+                                    {{ registration_item.player.city.name }}
+                                {% elif registration_item.city_object %}
+                                    {{ registration_item.city_object.name }}
+                                {% else %}
+                                    {{ registration_item.city }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <nobr>
+                                    {{ registration_item.created_on|date:SHORT_DATE_FORMAT }}
+                                    {% timezone 'Europe/Moscow' %}
+                                        {{ registration_item.created_on|time }}
+                                    {% endtimezone %}
+                                </nobr>
+                            </td>
+                            <td>{{ registration_item.phone }}</td>
+                            <td>{{ registration_item.additional_contact|default:'-' }}</td>
+                            <td>
+                                {% if registration_item.is_approved %}
+                                    {% trans 'Yes' %}
+                                {% else %}
+                                    <a href="{% url 'approve_registration' tournament.id registration_item.id %}" class="btn btn-success">
+                                        {% trans 'Approve' %}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'remove_registration' tournament.id registration_item.id %}" class="btn btn-danger">
+                                    {% trans 'Delete' %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <p>{% trans 'There is no registrations yet.' %}</p>
         {% endif %}

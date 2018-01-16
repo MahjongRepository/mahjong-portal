@@ -15,24 +15,26 @@
         {% if players %}
             <h1>{% trans 'Players' context 'list of players' %} {% if players|length > 1 %}({{ players|length }}){% endif %}</h1>
 
-            <table class="table table-hover table-responsive-sm mt-4">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{% trans 'Name' %}</th>
-                    <th scope="col">{% trans 'Points' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for player in players %}
+            <div class="table-responsive-sm">
+                <table class="table table-hover mt-4">
+                    <thead>
                     <tr>
-                        <th scope="row">{{ player.rating_result.place|default:'-' }}</th>
-                        <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
-                        <td>{{ player.rating_result.score|default_if_none:'-' }}</td>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Name' %}</th>
+                        <th scope="col">{% trans 'Points' %}</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for player in players %}
+                        <tr>
+                            <th scope="row">{{ player.rating_result.place|default:'-' }}</th>
+                            <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
+                            <td>{{ player.rating_result.score|default_if_none:'-' }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

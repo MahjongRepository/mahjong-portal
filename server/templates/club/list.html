@@ -11,30 +11,32 @@
         <div >
             <div id="map" style="width: 100%; height: 300px;"></div>
         </div>
-        <table class="table table-hover table-responsive-sm mt-4">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">{% trans 'Name' %}</th>
-                <th scope="col">{% trans 'City' %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for club in clubs %}
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
                 <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td><a href="{% url 'club_details' club.slug %}">{{ club.name }}</a></td>
-                    <td>
-                        {% if club.city %}
-                            <a href="{% url 'city_page' club.city.slug %}">{{ club.city.name }}</a>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'City' %}</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for club in clubs %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td><a href="{% url 'club_details' club.slug %}">{{ club.name }}</a></td>
+                        <td>
+                            {% if club.city %}
+                                <a href="{% url 'city_page' club.city.slug %}">{{ club.city.name }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 

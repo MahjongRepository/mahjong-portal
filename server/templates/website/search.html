@@ -9,30 +9,32 @@
     <h2>{% trans 'Search results for' %} "{{ search_query }}"</h2>
 
     {% if players %}
-        <table class="table table-hover table-responsive-sm mt-4">
-            <thead>
-            <tr>
-                <th scope="col">{% trans 'Name' %}</th>
-                <th scope="col">{% trans 'City' %}</th>
-                <th scope="col">{% trans 'Country' %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for player in players %}
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
                 <tr>
-                    <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
-                    <td>
-                        {% if player.city %}
-                            <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name }}</a>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>{{ player.country|default:'-' }}</td>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'City' %}</th>
+                    <th scope="col">{% trans 'Country' %}</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for player in players %}
+                    <tr>
+                        <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
+                        <td>
+                            {% if player.city %}
+                                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ player.country|default:'-' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <p>{% trans 'nothing found' %}</p>
     {% endif %}

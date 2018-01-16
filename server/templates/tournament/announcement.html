@@ -47,40 +47,42 @@
 
         {% if registration_results %}
             <h3 id="players">{% trans 'Participants' %}</h3>
-            <table class="table table-hover table-responsive-sm mt-4">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{% trans 'Name' %}</th>
-                    <th scope="col">{% trans 'City' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for registration_item in registration_results %}
+            <div class="table-responsive-sm">
+                <table class="table table-hover mt-4">
+                    <thead>
                     <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>
-                            {% if registration_item.player %}
-                                <a href="{% url 'player_details' registration_item.player.slug %}">
-                                    {{ registration_item.player.full_name }}
-                                </a>
-                            {% else %}
-                                {{ registration_item.full_name }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if registration_item.player %}
-                                <a href="{% url 'city_page' registration_item.player.city.slug %}">{{ registration_item.player.city.name }}</a>
-                            {% elif registration_item.city_object %}
-                                <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
-                            {% else %}
-                                {{ registration_item.city }}
-                            {% endif %}
-                        </td>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Name' %}</th>
+                        <th scope="col">{% trans 'City' %}</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for registration_item in registration_results %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>
+                                {% if registration_item.player %}
+                                    <a href="{% url 'player_details' registration_item.player.slug %}">
+                                        {{ registration_item.player.full_name }}
+                                    </a>
+                                {% else %}
+                                    {{ registration_item.full_name }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if registration_item.player %}
+                                    <a href="{% url 'city_page' registration_item.player.city.slug %}">{{ registration_item.player.city.name }}</a>
+                                {% elif registration_item.city_object %}
+                                    <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
+                                {% else %}
+                                    {{ registration_item.city }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
     </div>
 {% endblock %}
