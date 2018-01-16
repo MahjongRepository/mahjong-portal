@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from tournament.models import Tournament
+from tournament.models import Tournament, TournamentRegistration
 
 
 class TournamentForm(forms.ModelForm):
@@ -24,4 +24,11 @@ class TournamentAdmin(admin.ModelAdmin):
     filter_horizontal = ['clubs']
 
 
+class TournamentRegistrationAdmin(admin.ModelAdmin):
+    list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'phone', 'player', 'city_object']
+
+    raw_id_fields = ['tournament', 'player', 'city_object']
+
+
 admin.site.register(Tournament, TournamentAdmin)
+admin.site.register(TournamentRegistration, TournamentRegistrationAdmin)
