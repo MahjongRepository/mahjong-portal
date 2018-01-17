@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-16 05:43+0000\n"
+"POT-Creation-Date: 2018-01-17 07:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -243,11 +243,15 @@ msgid "New tournaments"
 msgstr "Новые турниры"
 
 #: templates/tournament/_tournaments_table.html:11
+msgid "Type"
+msgstr "Тип"
+
+#: templates/tournament/_tournaments_table.html:12
 msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
-#: templates/tournament/_tournaments_table.html:12
+#: templates/tournament/_tournaments_table.html:13
 msgid "Sessions"
 msgstr "Игр"
 
@@ -435,7 +439,7 @@ msgstr "Турниры и игроки в риичи маджонг из"
 
 #: templates/website/home.html:11
 msgid "Upcoming tournaments"
-msgstr "Ближайшие турниры"
+msgstr "Предстоящие турниры"
 
 #: templates/website/home.html:17
 msgid "Top 16 players"
@@ -478,7 +482,7 @@ msgstr "Он будет показан только администратору
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: tournament/views.py:111
+#: tournament/views.py:115
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -486,6 +490,6 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:114
+#: tournament/views.py:118
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"

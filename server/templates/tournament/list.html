@@ -7,6 +7,13 @@
 
 {% block content %}
     <div>
+        {% if upcoming_tournaments %}
+            <h1>{% trans 'Upcoming tournaments' %}</h1>
+            {% with upcoming_tournaments as tournaments %}
+                {% include 'tournament/_tournaments_table.html' %}
+            {% endwith %}
+        {% endif %}
+
         <h1>{% tournaments_list_title tournament_type current_year %}</h1>
 
         <div class="filters">
@@ -20,10 +27,13 @@
                         <span class="badge badge-{% if current_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
                     </a>
                 {% endif %}
-
             {% endfor %}
         </div>
-        {% include 'tournament/_tournaments_table.html' %}
+        {% if tournaments %}
+            {% include 'tournament/_tournaments_table.html' %}
+        {% else %}
+            <p class="mt-4">{% trans 'Nothing here' %}</p>
+        {% endif %}
     </div>
 {% endblock %}
 

@@ -16,9 +16,7 @@
 {% endwith %}
 
 <p>
-    {% if tournament.is_official_ema %}
-        <span class="badge badge-success">{{ tournament.tournament_type.name }}</span>
-    {% else %}
-        <span class="badge badge-primary">{{ tournament.tournament_type.name }}</span>
-    {% endif %}
+    {% with tournament_type=tournament.tournament_type %}
+        {% include 'tournament/_tournament_type.html' %}
+    {% endwith %}
 </p>

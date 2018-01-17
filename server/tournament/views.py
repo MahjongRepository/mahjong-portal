@@ -30,14 +30,22 @@ def tournament_list(request, tournament_type=None, year=None):
         tournaments = tournaments.filter(end_date__year=current_year)
 
     if tournament_type == 'ema':
-        tournaments = tournaments.exclude(tournament_type__slug=TournamentType.CLUB)
+        tournaments = (tournaments
+                       .exclude(tournament_type__slug=TournamentType.RR)
+                       .exclude(tournament_type__slug=TournamentType.CRR))
     else:
-        tournaments = tournaments.exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+        tournaments = (tournaments
+                       .exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+                       .exclude(tournament_type__slug=TournamentType.OTHER))
 
-    tournaments = tournaments.order_by('-end_date').prefetch_related('city')
+    tournaments = tournaments.order_by('-end_date').prefetch_related('city').prefetch_related('tournament_type')
+
+    upcoming_tournaments = tournaments.filter(is_upcoming=True).order_by('end_date')
+    tournaments = tournaments.filter(is_upcoming=False)
 
     return render(request, 'tournament/list.html', {
         'tournaments': tournaments,
+        'upcoming_tournaments': upcoming_tournaments,
         'tournament_type': tournament_type,
         'years': years,
         'current_year': current_year,
