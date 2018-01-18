@@ -48,7 +48,7 @@ class Tournament(BaseModel):
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
-    tournament_type_new = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR)
+    tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR)
 
     is_upcoming = models.BooleanField(default=False)
     need_qualification = models.BooleanField(default=False)
@@ -98,19 +98,19 @@ class Tournament(BaseModel):
 
     @property
     def type_display(self):
-        if self.tournament_type_new == self.FOREIGN_EMA:
+        if self.tournament_type == self.FOREIGN_EMA:
             return 'EMA'
         else:
-            return self.get_tournament_type_new_display()
+            return self.get_tournament_type_display()
 
     def is_ema(self):
-        return self.tournament_type_new == self.EMA or self.tournament_type_new == self.FOREIGN_EMA
+        return self.tournament_type == self.EMA or self.tournament_type == self.FOREIGN_EMA
 
     def is_rr(self):
-        return self.tournament_type_new == self.RR
+        return self.tournament_type == self.RR
 
     def is_crr(self):
-        return self.tournament_type_new == self.CRR
+        return self.tournament_type == self.CRR
 
 
 class TournamentResult(BaseModel):

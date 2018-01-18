@@ -16,7 +16,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
     prepopulated_fields = {'slug': ['name_en']}
     list_display = ['name', 'country', 'end_date', 'is_upcoming']
-    list_filter = ['tournament_type_new','need_qualification', 'country']
+    list_filter = ['tournament_type','need_qualification', 'country']
     search_fields = ['name_ru', 'name_en']
 
     ordering = ['-end_date']

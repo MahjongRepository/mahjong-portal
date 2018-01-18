@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
         tournaments = Tournament.objects.all()
         for tournament in tournaments:
-            tournament.tournament_type_new = tournament.tournament_type.slug
+            tournament.tournament_type = tournament.tournament_type.slug
             tournament.save()
 
         print('{0}: End'.format(get_date_string()))

@@ -24,7 +24,7 @@ class RatingTestMixin(object):
             start_date=start_date,
             end_date=end_date,
             country=self.country,
-            tournament_type_new=Tournament.EMA,
+            tournament_type=Tournament.EMA,
             number_of_players=players,
             number_of_sessions=sessions,
             need_qualification=need_qualification

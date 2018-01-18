@@ -325,7 +325,7 @@ class Command(BaseCommand):
                     name_ru=tournament_dict['name_ru'],
                     number_of_sessions=tournament_dict['sessions'],
                     end_date=tournament_dict['date'],
-                    tournament_type_new=tournament_types[tournament_dict['type']],
+                    tournament_type=tournament_types[tournament_dict['type']],
                     city=tournament_dict['city'] and cities_objects[tournament_dict['city']] or None,
                     country=country_objects['RUS'],
                     number_of_players=len(tournament_dict['results'])

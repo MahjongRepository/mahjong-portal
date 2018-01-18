@@ -31,12 +31,12 @@ def tournament_list(request, tournament_type=None, year=None):
 
     if tournament_type == 'ema':
         tournaments = (tournaments
-                       .exclude(tournament_type_new=Tournament.RR)
-                       .exclude(tournament_type_new=Tournament.CRR))
+                       .exclude(tournament_type=Tournament.RR)
+                       .exclude(tournament_type=Tournament.CRR))
     else:
         tournaments = (tournaments
-                       .exclude(tournament_type_new=Tournament.FOREIGN_EMA)
-                       .exclude(tournament_type_new=Tournament.OTHER))
+                       .exclude(tournament_type=Tournament.FOREIGN_EMA)
+                       .exclude(tournament_type=Tournament.OTHER))
 
     tournaments = tournaments.order_by('-end_date').prefetch_related('city')
 

@@ -228,7 +228,7 @@ class Command(BaseCommand):
                 ema_id=tournament['tournament_id'],
                 start_date=datetime.strptime(tournament['start_date'], '%m/%d/%Y'),
                 end_date=datetime.strptime(tournament['end_date'], '%m/%d/%Y'),
-                tournament_type_new=Tournament.FOREIGN_EMA,
+                tournament_type=Tournament.FOREIGN_EMA,
                 city=tournament['city'] and cities_objects[tournament['city']] or None,
                 country=country_objects[tournament['country']],
                 number_of_players=len(tournament['results'])

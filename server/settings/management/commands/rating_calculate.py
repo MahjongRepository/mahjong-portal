@@ -48,7 +48,7 @@ class Command(BaseCommand):
             calculator = EmaRatingCalculation()
             rating = Rating.objects.get(type=Rating.EMA)
             tournaments = (Tournament.objects
-                                     .filter(Q(tournament_type_new=Tournament.EMA) | Q(tournament_type_new=Tournament.FOREIGN_EMA))
+                                     .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
                                      .order_by('end_date'))
 
         erase_scores = True
