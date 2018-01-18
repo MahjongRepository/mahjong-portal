@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from player.models import Player
 from system.decorators import tournament_manager_auth_required
 from system.tournament_admin.forms import UploadResultsForm, TournamentForm
-from tournament.models import Tournament, TournamentResult, TournamentRegistration
+from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
 
 
 @login_required
@@ -109,7 +109,12 @@ def managed_tournaments(request):
 @tournament_manager_auth_required
 def tournament_manage(request, tournament_id, **kwargs):
     tournament = kwargs['tournament']
-    tournament_registrations = TournamentRegistration.objects.filter(tournament=tournament).order_by('-created_on')
+
+    if tournament.is_online():
+        tournament_registrations = OnlineTournamentRegistration.objects.filter(tournament=tournament).order_by('-created_on')
+    else:
+        tournament_registrations = TournamentRegistration.objects.filter(tournament=tournament).order_by('-created_on')
+
     return render(request, 'tournament_admin/tournament_manage.html', {
         'tournament': tournament,
         'tournament_registrations': tournament_registrations
@@ -154,7 +159,12 @@ def toggle_premoderation(request, tournament_id, **kwargs):
 @tournament_manager_auth_required
 def remove_registration(request, tournament_id, registration_id, **kwargs):
     tournament = kwargs['tournament']
-    registration = get_object_or_404(TournamentRegistration, tournament=tournament, id=registration_id)
+
+    item_class = TournamentRegistration
+    if tournament.is_online():
+        item_class = OnlineTournamentRegistration
+
+    registration = get_object_or_404(item_class, tournament=tournament, id=registration_id)
     registration.delete()
     return redirect(tournament_manage, tournament.id)
 
@@ -163,7 +173,12 @@ def remove_registration(request, tournament_id, registration_id, **kwargs):
 @tournament_manager_auth_required
 def approve_registration(request, tournament_id, registration_id, **kwargs):
     tournament = kwargs['tournament']
-    registration = get_object_or_404(TournamentRegistration, tournament=tournament, id=registration_id)
+
+    item_class = TournamentRegistration
+    if tournament.is_online():
+        item_class = OnlineTournamentRegistration
+
+    registration = get_object_or_404(item_class, tournament=tournament, id=registration_id)
     registration.is_approved = True
     registration.save()
     return redirect(tournament_manage, tournament.id)

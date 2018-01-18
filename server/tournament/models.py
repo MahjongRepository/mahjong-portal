@@ -17,6 +17,7 @@ class Tournament(BaseModel):
     EMA = 'ema'
     FOREIGN_EMA = 'fema'
     OTHER = 'other'
+    ONLINE = 'online'
 
     GAME_TYPES = [
         [RIICHI, 'Riichi'],
@@ -28,7 +29,8 @@ class Tournament(BaseModel):
         [CRR, 'crr'],
         [EMA, 'ema'],
         [FOREIGN_EMA, 'fema'],
-        [OTHER, 'other']
+        [OTHER, 'other'],
+        [ONLINE, 'online'],
     ]
 
     name = models.CharField(max_length=255)
@@ -81,6 +83,9 @@ class Tournament(BaseModel):
         if self.is_crr():
             return 'info'
 
+        if self.is_online():
+            return 'warning'
+
         return 'info'
 
     @property
@@ -93,6 +98,9 @@ class Tournament(BaseModel):
 
         if self.is_crr():
             return 'CRR'
+
+        if self.is_online():
+            return 'Online'
 
         return ''
 
@@ -111,6 +119,9 @@ class Tournament(BaseModel):
 
     def is_crr(self):
         return self.tournament_type == self.CRR
+
+    def is_online(self):
+        return self.tournament_type == self.ONLINE
 
 
 class TournamentResult(BaseModel):
@@ -151,6 +162,28 @@ class TournamentRegistration(BaseModel):
                                           default='', null=True, blank=True)
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
+    city_object = models.ForeignKey(City, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.full_name
+
+    @property
+    def full_name(self):
+        return u'{} {}'.format(self.last_name, self.first_name)
+
+
+class OnlineTournamentRegistration(BaseModel):
+    tournament = models.ForeignKey(Tournament, related_name='online_tournament_registrations', on_delete=models.PROTECT)
+    is_approved = models.BooleanField(default=True)
+
+    first_name = models.CharField(max_length=255, verbose_name=_('First name'))
+    last_name = models.CharField(max_length=255, verbose_name=_('Last name'))
+    city = models.CharField(max_length=255, verbose_name=_('City'))
+    tenhou_nickname = models.CharField(max_length=255, verbose_name=_('Tenhou.net nickname'))
+    contact = models.CharField(max_length=255, verbose_name=_('Your contact (email, phone, etc.)'),
+                               help_text=_('It will be visible only to the tournament administrator'))
+
+    player = models.ForeignKey(Player, null=True, blank=True, related_name='online_tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)
 
     def __unicode__(self):

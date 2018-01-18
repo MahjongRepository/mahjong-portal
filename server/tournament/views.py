@@ -6,8 +6,8 @@ from django.utils.translation import gettext as _
 
 from player.models import Player
 from settings.models import City
-from tournament.forms import TournamentRegistrationForm
-from tournament.models import Tournament, TournamentResult, TournamentRegistration
+from tournament.forms import TournamentRegistrationForm, OnlineTournamentRegistrationForm
+from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
 
 
 def tournament_list(request, tournament_type=None, year=None):
@@ -71,13 +71,31 @@ def tournament_details(request, slug):
 
 def tournament_announcement(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
-    form = TournamentRegistrationForm(initial={'city': tournament.city.name_ru})
-    registration_results = (TournamentRegistration.objects
-                                                  .filter(tournament=tournament)
-                                                  .filter(is_approved=True)
-                                                  .prefetch_related('player')
-                                                  .prefetch_related('city_object')
-                                                  .order_by('created_on'))
+
+    initial = {}
+    if tournament.city:
+        initial = {'city': tournament.city.name_ru}
+
+    if tournament.is_online():
+        form = OnlineTournamentRegistrationForm()
+    else:
+        form = TournamentRegistrationForm(initial=initial)
+
+    if tournament.is_online():
+        registration_results = (OnlineTournamentRegistration.objects
+                                                            .filter(tournament=tournament)
+                                                            .filter(is_approved=True)
+                                                            .prefetch_related('player')
+                                                            .prefetch_related('city_object')
+                                                            .order_by('created_on'))
+    else:
+        registration_results = (TournamentRegistration.objects
+                                                      .filter(tournament=tournament)
+                                                      .filter(is_approved=True)
+                                                      .prefetch_related('player')
+                                                      .prefetch_related('city_object')
+                                                      .order_by('created_on'))
+
     return render(request, 'tournament/announcement.html', {
         'tournament': tournament,
         'page': 'tournament',
@@ -95,7 +113,11 @@ def tournament_registration(request, tournament_id):
     """
     tournament = get_object_or_404(Tournament, id=tournament_id)
     
-    form = TournamentRegistrationForm(request.POST)
+    if tournament.is_online():
+        form = OnlineTournamentRegistrationForm(request.POST)
+    else:
+        form = TournamentRegistrationForm(request.POST)
+
     if form.is_valid():
         instance = form.save(commit=False)
         instance.tournament = tournament
