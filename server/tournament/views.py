@@ -38,7 +38,7 @@ def tournament_list(request, tournament_type=None, year=None):
                        .exclude(tournament_type_new=Tournament.FOREIGN_EMA)
                        .exclude(tournament_type_new=Tournament.OTHER))
 
-    tournaments = tournaments.order_by('-end_date').prefetch_related('city').prefetch_related('tournament_type')
+    tournaments = tournaments.order_by('-end_date').prefetch_related('city')
 
     upcoming_tournaments = tournaments.filter(is_upcoming=True).order_by('end_date')
     tournaments = tournaments.filter(is_upcoming=False)
