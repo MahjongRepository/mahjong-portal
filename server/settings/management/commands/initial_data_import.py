@@ -10,7 +10,7 @@ from club.models import Club
 from player.models import Player
 from rating.models import Rating, RatingDelta
 from rating.utils import transliterate_name
-from settings.models import Country, City, TournamentType
+from settings.models import Country, City
 from tournament.models import Tournament, TournamentResult
 
 
@@ -33,7 +33,6 @@ class Command(BaseCommand):
 
         Country.objects.all().delete()
         City.objects.all().delete()
-        TournamentType.objects.all().delete()
 
         csv_dir = options.get('dir')
 
@@ -279,8 +278,8 @@ class Command(BaseCommand):
         player_objects = {}
 
         tournament_types = {
-            'club': TournamentType.RR,
-            'ema': TournamentType.EMA
+            'club': Tournament.RR,
+            'ema': Tournament.EMA
         }
 
         with transaction.atomic():
@@ -326,7 +325,7 @@ class Command(BaseCommand):
                     name_ru=tournament_dict['name_ru'],
                     number_of_sessions=tournament_dict['sessions'],
                     end_date=tournament_dict['date'],
-                    tournament_type=tournament_types[tournament_dict['type']],
+                    tournament_type_new=tournament_types[tournament_dict['type']],
                     city=tournament_dict['city'] and cities_objects[tournament_dict['city']] or None,
                     country=country_objects['RUS'],
                     number_of_players=len(tournament_dict['results'])

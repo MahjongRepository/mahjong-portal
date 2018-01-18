@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.utils.translation import gettext as _
 
 from player.models import Player
-from settings.models import TournamentType, City
+from settings.models import City
 from tournament.forms import TournamentRegistrationForm
 from tournament.models import Tournament, TournamentResult, TournamentRegistration
 

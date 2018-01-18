@@ -4,7 +4,7 @@ from haystack.forms import ModelSearchForm
 
 from player.models import Player
 from rating.models import Rating, RatingResult
-from settings.models import City, TournamentType
+from settings.models import City
 from tournament.models import Tournament
 
 

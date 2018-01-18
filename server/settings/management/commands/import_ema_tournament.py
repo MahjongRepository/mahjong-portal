@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from player.models import Player
-from settings.models import Country, City, TournamentType
+from settings.models import Country, City
 from tournament.models import Tournament, TournamentResult
 
 
@@ -294,7 +294,7 @@ class Command(BaseCommand):
                 ema_id=tournament['tournament_id'],
                 start_date=datetime.strptime(tournament['start_date'], '%m/%d/%Y'),
                 end_date=datetime.strptime(tournament['end_date'], '%m/%d/%Y'),
-                tournament_type=Tournament.FOREIGN_EMA,
+                tournament_type_new=Tournament.FOREIGN_EMA,
                 city=tournament['city'] and cities_objects[tournament['city']] or None,
                 country=country_objects[tournament['country']],
                 number_of_players=len(tournament['results'])

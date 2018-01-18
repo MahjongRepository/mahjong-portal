@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from club.models import Club
 from mahjong_portal.models import BaseModel
 from player.models import Player
-from settings.models import TournamentType, City, Country
+from settings.models import City, Country
 
 
 class Tournament(BaseModel):
@@ -48,7 +48,6 @@ class Tournament(BaseModel):
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
-    tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
     tournament_type_new = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR)
 
     is_upcoming = models.BooleanField(default=False)
@@ -64,9 +63,6 @@ class Tournament(BaseModel):
 
     def __unicode__(self):
         return self.name
-
-    def is_official_ema(self):
-        return self.tournament_type.slug != TournamentType.CLUB
 
     def get_url(self):
         if self.is_upcoming:

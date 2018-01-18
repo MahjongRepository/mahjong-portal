@@ -7,7 +7,6 @@ from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.ema import EmaRatingCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingDelta, RatingResult
-from settings.models import TournamentType
 from tournament.models import Tournament
 
 
@@ -49,7 +48,7 @@ class Command(BaseCommand):
             calculator = EmaRatingCalculation()
             rating = Rating.objects.get(type=Rating.EMA)
             tournaments = (Tournament.objects
-                                     .filter(Q(tournament_type_new=TournamentType.EMA) | Q(tournament_type_new=TournamentType.FOREIGN_EMA))
+                                     .filter(Q(tournament_type_new=Tournament.EMA) | Q(tournament_type_new=Tournament.FOREIGN_EMA))
                                      .order_by('end_date'))
 
         erase_scores = True

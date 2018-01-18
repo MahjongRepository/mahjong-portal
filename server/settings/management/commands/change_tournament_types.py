@@ -1,14 +1,7 @@
 from django.core.management.base import BaseCommand
-from django.db import transaction
-from django.db.models import Q
 from django.utils import timezone
 
-from rating.calculation.crr import RatingCRRCalculation
-from rating.calculation.ema import EmaRatingCalculation
-from rating.calculation.rr import RatingRRCalculation
-from rating.models import Rating, RatingDelta, RatingResult
-from settings.models import TournamentType
-from tournament.models import Tournament, TournamentResult
+from tournament.models import Tournament
 
 
 def get_date_string():

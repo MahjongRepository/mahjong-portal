@@ -3,7 +3,7 @@ from django.utils import timezone
 from player.models import Player
 from rating.models import RatingDelta, Rating
 from rating.utils import make_random_letters_and_digit_string
-from settings.models import TournamentType, Country
+from settings.models import Country
 from tournament.models import Tournament, TournamentResult
 
 
@@ -24,7 +24,7 @@ class RatingTestMixin(object):
             start_date=start_date,
             end_date=end_date,
             country=self.country,
-            tournament_type=Tournament.EMA,
+            tournament_type_new=Tournament.EMA,
             number_of_players=players,
             number_of_sessions=sessions,
             need_qualification=need_qualification
