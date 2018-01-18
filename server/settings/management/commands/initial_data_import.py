@@ -279,8 +279,8 @@ class Command(BaseCommand):
         player_objects = {}
 
         tournament_types = {
-            'club': TournamentType.objects.create(name_ru='Клубный турнир', name_en='Club tournament', slug='club'),
-            'ema': TournamentType.objects.create(name_ru='Официальный EMA', name_en='Official EMA', slug='ema')
+            'club': TournamentType.RR,
+            'ema': TournamentType.EMA
         }
 
         with transaction.atomic():

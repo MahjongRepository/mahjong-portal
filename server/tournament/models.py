@@ -11,9 +11,24 @@ from settings.models import TournamentType, City, Country
 class Tournament(BaseModel):
     RIICHI = 0
     MCR = 1
+
+    RR = 'rr'
+    CRR = 'crr'
+    EMA = 'ema'
+    FOREIGN_EMA = 'fema'
+    OTHER = 'other'
+
     GAME_TYPES = [
         [RIICHI, 'Riichi'],
         [MCR, 'MCR']
+    ]
+
+    TOURNAMENT_TYPES = [
+        [RR, 'rr'],
+        [CRR, 'crr'],
+        [EMA, 'ema'],
+        [FOREIGN_EMA, 'fema'],
+        [OTHER, 'other']
     ]
 
     name = models.CharField(max_length=255)
@@ -32,7 +47,9 @@ class Tournament(BaseModel):
     clubs = models.ManyToManyField(Club, blank=True)
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
+
     tournament_type = models.ForeignKey(TournamentType, on_delete=models.PROTECT)
+    tournament_type_new = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR)
 
     is_upcoming = models.BooleanField(default=False)
     need_qualification = models.BooleanField(default=False)
@@ -56,6 +73,48 @@ class Tournament(BaseModel):
             return reverse('tournament_announcement', kwargs={'slug': self.slug})
         else:
             return reverse('tournament_details', kwargs={'slug': self.slug})
+
+    @property
+    def type_badge_class(self):
+        if self.is_ema():
+            return 'success'
+
+        if self.is_rr():
+            return 'primary'
+
+        if self.is_crr():
+            return 'info'
+
+        return 'info'
+
+    @property
+    def type_help_text(self):
+        if self.is_ema():
+            return 'EMA, RR, CRR'
+
+        if self.is_rr():
+            return 'RR, CRR'
+
+        if self.is_crr():
+            return 'CRR'
+
+        return ''
+
+    @property
+    def type_display(self):
+        if self.tournament_type_new == self.FOREIGN_EMA:
+            return 'EMA'
+        else:
+            return self.get_tournament_type_new_display()
+
+    def is_ema(self):
+        return self.tournament_type_new == self.EMA or self.tournament_type_new == self.FOREIGN_EMA
+
+    def is_rr(self):
+        return self.tournament_type_new == self.RR
+
+    def is_crr(self):
+        return self.tournament_type_new == self.CRR
 
 
 class TournamentResult(BaseModel):

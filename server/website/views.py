@@ -18,7 +18,7 @@ def home(request):
 
     upcoming_tournaments = (Tournament.objects
                                       .filter(is_upcoming=True)
-                                      .exclude(tournament_type__slug=TournamentType.FOREIGN_EMA)
+                                      .exclude(tournament_type_new=Tournament.FOREIGN_EMA)
                                       .prefetch_related('city')
                                       .order_by('start_date'))
 

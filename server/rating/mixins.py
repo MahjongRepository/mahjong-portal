@@ -10,12 +10,10 @@ from tournament.models import Tournament, TournamentResult
 class RatingTestMixin(object):
     country = None
     player = None
-    tournament_type = None
 
     def set_up_initial_objects(self):
         self.country = Country.objects.create(code='RU', name='Russia')
         self.player = self.create_player()
-        self.tournament_type = TournamentType.objects.create(name='ema')
 
     def create_tournament(self, players=1, sessions=1, start_date=None, end_date=None, need_qualification=False):
         start_date = start_date or timezone.now().date()
@@ -26,7 +24,7 @@ class RatingTestMixin(object):
             start_date=start_date,
             end_date=end_date,
             country=self.country,
-            tournament_type=self.tournament_type,
+            tournament_type=Tournament.EMA,
             number_of_players=players,
             number_of_sessions=sessions,
             need_qualification=need_qualification
