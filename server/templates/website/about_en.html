@@ -12,6 +12,105 @@
 
 {% block content %}
     <div>
-        <p>Detailed description under development.</p>
+        <p>We are supporting three ratings:</p>
+        <ol>
+            <li><a href="#rr">Internal rating (RR)</a></li>
+            <li><a href="#crr">Common russian riichi rating (CRR)</a></li>
+            <li><a href="#ema">EMA rating</a></li>
+        </ol>
+
+        <h1 id="rr">Internal rating (RR)</h1>
+        <p>Internal rating for top Russian Riichi Mahjong players (Russian Rating - hereinafter RR).</p>
+        <p>This rating is for tournaments, which have passed over the last two years. Until 2018 all tournaments which have gathered 16 + participants count towards rating, starting with the year 2018 count towards rating only tournaments, accredited by the Russian Mahjong Federation.</p>
+
+        <h2>Calculation formula</h2>
+        <p>RR calculation formula based on EMA 2018 ranking formula, but has some differences, which helps to eradicate EMA-rating defects and make rating more suitable for Russian realities.</p>
+        <p>Rating calculations consist of two parts.  </p>
+
+        <h3>First part</h3>
+        <p>Formula for the calculation of the first part:</p>
+        <p><code>A = (W1*R1*A1 + …) / (W1*A1 + …)</code></p>
+        <p>Where W = tournament weight, R = player’s base rank based on tournament results, A = tournament obsolescence coefficient.</p>
+        <p>Scheme for calculating the coefficients W, R and A are presented next.</p>
+        <p>If a player has played less than 5 tournaments, all missing tournaments in formula substitutes for zero values in the numerator and for one in the denominator. Thus, the player gets maximum results in the first part of the formula, when he has played 5 and more tournaments.</p>
+        <p>If a player has played more than 5 tournaments, in the first part enter 5 + 80% remaining of his best (on basic rank) tournaments with rounding up. This allows you to ignore the worst results for players actively participating in tournaments.</p>
+        <ul>
+            <li>5 or less tournaments. All results count towards rating.</li>
+            <li>10 tournaments. 9 best results count towards rating (5 + 5 * 80% = 9)</li>
+            <li>11 tournaments. 10 best results count towards rating (5 + 6 * 80% = 10)</li>
+            <li>15 tournaments. 13 best results count towards rating (5 + 10 * 80% = 13)</li>
+            <li>20 tournaments. 17 best results count towards rating (5 + 15 * 80% = 17)</li>
+            <li>25 tournaments. 21 best results count towards rating (5 + 20 * 80% = 21)</li>
+        </ul>
+
+        <h3>Second part</h3>
+        <p>Second part of the formula is the four best player’s tournament over the past two years (the best after multiplying of player’s base rank in the tournament, tournament coefficient and tournament obsolescence coefficient), calculated according to the formula:</p>
+        <p><code>B = (W1*R1*A1 + W2*R2*A2 + W3*R3*A3 + W4*R4*A4) / [MAXK1 + MAXK2 + MAXK3 + MAXK4]) </code></p>
+        <p>Where MAXK1..4 - four maximum tournaments coefficient, selected from all tournaments held over the past 2 years (with tournament obsolescence coefficient). These coefficients are the same for all players.</p>
+
+        <h3>Final Result</h3>
+        <p>Both parts A and B are multiplied by 0.5 and summed up. </p>
+        <p><code>rating = A * 0.5 + B * 0.5</code></p>
+
+        <h2>Requirements for rating tournaments</h2>
+        <p>All 16 + people tournaments over the past years count towards rating. </p>
+        <p>Starting with the year 2018, only tournaments with official accreditation of the Russian Mahjong Federation count towards rating. Official accreditation of the Russian Mahjong Federation can only get open tournament. Open tournament is the tournament where at least half of the seats available for free registration.</p>
+        <p>EMA official foreign tournaments count towards rating if they involved a player from Russia.   </p>
+        <p>Abroad club tournaments (without EMA accreditation) are not count towards rating.</p>
+
+        <h2>Requirements for players</h2>
+        <p>Rating includes players with two or more tournaments. </p>
+
+        <h2>Player's base rank</h2>
+        <p>In the rating calculation formula, rank is defined as R.</p>
+        <p>Player’s tournament results are always between 0 and 1000 and they are calculated according to next algorithm:</p>
+        <ol>
+            <li>Number of participants minus player’s final place</li>
+            <li>Divided by (the number of players - 1)</li>
+            <li>Multiple by 1000</li>
+        </ol>
+        <p>In particular: for the first place player gets 1000, and 0 for the last place. </p>
+        <p>For example, in a tournament with 100 participants player took 25 place.</p>
+        <p><code>base rank = ((100 - 25) / (100 - 1)) * 1000 = 757</code></p>
+
+        <h2>Tournament coefficient</h2>
+        <p>In the rating calculation formula, the tournament coefficient is defined as W.</p>
+        <p>The tournament coefficient is increased due to the following factors:</p>
+        <ol>
+            <li>The number of tournament hanchans.</li>
+            <li>The number of participants in the tournament.</li>
+        </ol>
+        <p>The RR rating does not take into account non-game factors such as the number of nonresident players and the availability of EMA accreditation.</p>
+        <p><code>K<sub>tournament</sub> = K<sub>number of hanchans</sub> + K<sub>number of participants</sub></code></p>
+
+        <h3>Number of hanchans</h3>
+        <p>Base coefficient is 0.</p>
+        <p>The greater the distance of the tournament, the less influence on the tournament results of randomness elements and the greater influence of the player's strength. In this regard, the coefficient of the tournament grows depending on the number of hanchans in this tournament.</p>
+        <p>First 8 hanchans increase the coefficient by 0.20 each hanchan.</p>
+        <p>From 9 to 12 hanchan inclusive, the coefficient increases by 0.15 for each hanchan.</p>
+        <p>From 13 to 16 hanchan inclusive, the coefficient increases by 0.10 for each hanchan.</p>
+        <p>From 17 to 20 hanchan inclusive, the coefficient increases by 0.05 for each hanchan.</p>
+        <p>After 20 hanchans the coefficient is fixed and equal to 2.8.</p>
+        <p>For example, a tournament with 10 hanschans will receive an additional coefficient 8 * 0.20 for the first 8 hanchans and 2 * 0.15 for the remaining 2 hanchans.</p>
+        <p><code>K<sub>number of hanchans</sub> = 8 * 0.2 + 2 * 0.15 = 1.9</code></p>
+
+        <h3>Number of participants</h3>
+        <p>Base coefficient is 0.</p>
+        <p>Big tournaments attract strong players and therefore, the larger the tournament, the more valuable good result in such tournament. In this regard, the coefficient of the tournament grows depending on the number of participants.</p>
+        <p>For the first 80 participants of the tournament, the coefficient increases by 0.1 for every 4 participants.</p>
+        <p>From 81 to 160 participants of the tournament, the coefficient increases by 0.05 for every 4 participants.</p>
+        <p>After 160 participants, the coefficient is fixed and equal to 3.</p>
+        <p>For example, a tournament with 100 participants will receive an additional coefficient (80 / 4) * 0.1 for the first 80 participants and (20 / 4) * 0.05 for the remaining 20 participants.</p>
+        <p><code>K<sub>number of participants</sub> = (80 / 4) * 0.1 + (20 / 4) * 0.05 = 20 * 0.1 + 5 * 0.05 = 2.25</code></p>
+
+        <h2>Results extinction</h2>
+        <p>In the rating calculation formula, the age of the tournament is defined as A.</p>
+        <p>The results of tournaments held over the past 12 months are considered relevant and taken into account in full. Further, the tournament is obsolete by 33% every 6 months. Thus, only tournaments played in the last 2 years count towards rating.</p>
+
+        <h1 id="crr">Common russian riichi rating (CRR)</h1>
+        <p>All calculations are equal to RR. Difference is only in tournaments that were added to the rating. It contains all tournaments with 12+ players and 3+ sessions.</p>
+
+        <h1 id="ema">EMA rating</h1>
+        <p>Simulated EMA rating.</p>
     </div>
 {% endblock %}
