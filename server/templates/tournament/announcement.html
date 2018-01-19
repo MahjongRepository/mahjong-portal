@@ -54,6 +54,9 @@
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Name' %}</th>
                         <th scope="col">{% trans 'City' %}</th>
+                        {% if tournament.is_online %}
+                            <th scope="col">{% trans 'Tenhou.net nickname' %}</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -78,6 +81,9 @@
                                     {{ registration_item.city }}
                                 {% endif %}
                             </td>
+                            {% if tournament.is_online %}
+                                <td>{{ registration_item.tenhou_nickname }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
