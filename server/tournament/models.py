@@ -192,3 +192,11 @@ class OnlineTournamentRegistration(BaseModel):
     @property
     def full_name(self):
         return u'{} {}'.format(self.last_name, self.first_name)
+
+
+class TournamentApplication(BaseModel):
+    text = models.TextField(verbose_name=_('Tell us about your tournament'),
+                            help_text=_('We would like to know tournament date, place and your contacts'))
+
+    def __unicode__(self):
+        return ''

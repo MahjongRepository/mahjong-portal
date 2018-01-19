@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n humanize bootstrap4 %}
+
+{% block title %}
+    {% trans 'Tournament application' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans 'Tournament application' %}</h1>
+
+        {% if success %}
+            <div class="alert alert-success">{% trans 'Your application was saved! We will contact with you for further details.' %}</div>
+        {% endif %}
+
+        <form class="form" action="{% url 'tournament_application' %}" method="POST">
+            {% csrf_token %}
+
+            {% bootstrap_form form %}
+            {% buttons %}
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">{% trans 'Submit' context 'new tournament' %}</button>
+                </div>
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Tournament application' %}">
+    <meta property="og:description" content="{% trans 'Tournament application' %}">
+{% endblock %}

@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 
 from player.models import Player
 from settings.models import City
-from tournament.forms import TournamentRegistrationForm, OnlineTournamentRegistrationForm
+from tournament.forms import TournamentRegistrationForm, OnlineTournamentRegistrationForm, TournamentApplicationForm
 from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
 
 
@@ -148,3 +148,19 @@ def tournament_registration(request, tournament_id):
         messages.success(request, message)
     
     return redirect(tournament.get_url())
+
+
+def tournament_application(request):
+    success = False
+    form = TournamentApplicationForm()
+
+    if request.POST:
+        form = TournamentApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            success = True
+
+    return render(request, 'tournament/application.html', {
+        'form': form,
+        'success': success
+    })
