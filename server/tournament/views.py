@@ -40,7 +40,7 @@ def tournament_list(request, tournament_type=None, year=None):
 
     tournaments = tournaments.order_by('-end_date').prefetch_related('city')
 
-    upcoming_tournaments = tournaments.filter(is_upcoming=True).order_by('end_date')
+    upcoming_tournaments = tournaments.filter(is_upcoming=True).order_by('start_date')
     tournaments = tournaments.filter(is_upcoming=False)
 
     return render(request, 'tournament/list.html', {
