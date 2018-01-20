@@ -1,0 +1,155 @@
+import datetime
+import logging
+import os
+import sys
+from threading import Thread
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from telegram.error import Unauthorized, BadRequest, TimedOut, NetworkError, ChatMigrated, TelegramError
+from telegram.ext import CommandHandler
+from telegram.ext import MessageHandler, Filters
+from telegram.ext import Updater
+
+from online.handler import TournamentHandler
+
+logger = logging.getLogger()
+tournament_handler = None
+
+
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        set_up_logging()
+
+        tournament = None
+        global tournament_handler
+        tournament_handler = TournamentHandler(tournament)
+
+        updater = Updater(token=settings.TELEGRAM_TOKEN)
+        dispatcher = updater.dispatcher
+
+        def stop_and_restart():
+            """Gracefully stop the Updater and replace the current process with a new one"""
+            updater.stop()
+            os.execl(sys.executable, sys.executable, *sys.argv)
+
+        def restart(bot, update):
+            message = 'Bot is restarting...'
+            logger.info(message)
+            update.message.reply_text(message)
+            Thread(target=stop_and_restart).start()
+
+        start_handler = CommandHandler('me', set_tenhou_nickname, pass_args=True)
+        log_handler = CommandHandler('log', set_game_log, pass_args=True)
+        status_handler = CommandHandler('status', get_tournament_status)
+
+        dispatcher.add_handler(CommandHandler('restart', restart, filters=Filters.user(username='@Nihisil')))
+
+        dispatcher.add_handler(start_handler)
+        dispatcher.add_handler(log_handler)
+        dispatcher.add_handler(status_handler)
+        dispatcher.add_error_handler(error_callback)
+        dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_chat_member))
+
+        logger.info('Starting the bot...')
+        updater.start_polling()
+
+        updater.idle()
+
+
+def set_up_logging():
+    logs_directory = os.path.join(settings.BASE_DIR, '..', 'logs')
+    if not os.path.exists(logs_directory):
+        os.mkdir(logs_directory)
+
+    logger.setLevel(logging.NOTSET)
+
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+
+    file_name = '{}.log'.format(datetime.datetime.now().strftime('%Y-%m-%d_%H_%M_%S'))
+    fh = logging.FileHandler(os.path.join(logs_directory, file_name))
+    fh.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    ch.setFormatter(formatter)
+    fh.setFormatter(formatter)
+
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+
+def set_game_log(bot, update, args):
+    logger.info('Set game log command. {}, {}'.format(update.message.from_user.username, args))
+
+    if not len(args):
+        bot.send_message(chat_id=update.message.chat_id, text=u'Укажите ссылку на ханчан после команды.')
+        return
+
+    message = tournament_handler.add_game_log(args[0])
+    update.message.reply_text(message)
+
+
+def get_tournament_status(bot, update):
+    logger.info('Get tournament status command')
+
+    message = tournament_handler.get_tournament_status()
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def set_tenhou_nickname(bot, update, args):
+    logger.info('Nickname command. {}, {}'.format(update.message.from_user.username, args))
+
+    if not len(args):
+        bot.send_message(chat_id=update.message.chat_id, text=u'Укажите ваш тенхо ник после команды.')
+        return
+
+    username = update.message.from_user.username
+    if not username:
+        bot.send_message(chat_id=update.message.chat_id,
+                         text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма.')
+        return
+
+    tenhou_nickname = args[0]
+    message = tournament_handler.link_username_and_tenhou_nick(username, tenhou_nickname)
+    update.message.reply_text(message)
+
+
+def new_chat_member(bot, update):
+    username = update.message.from_user.username
+    logger.info('New member. {}'.format(username))
+
+    message = 'Добро пожаловать в чат онлайн турнира! \n'
+    if not username:
+        message += u'Для начала установите username в настройках телеграма (Settings -> Username) \n'
+        message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
+    else:
+        message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
+
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def error_callback(bot, update, error):
+    logger.error(error)
+
+    try:
+        raise error
+    except Unauthorized as e:
+        # remove update.message.chat_id from conversation list
+        pass
+    except BadRequest as e:
+        # handle malformed requests - read more below!
+        pass
+    except TimedOut as e:
+        # handle slow connection problems
+        pass
+    except NetworkError as e:
+        # handle other connection problems
+        pass
+    except ChatMigrated as e:
+        # the chat_id of a group has changed, use e.new_chat_id instead
+        pass
+    except TelegramError as e:
+        # handle all other telegram related errors
+        pass

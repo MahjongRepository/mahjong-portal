@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'system',
     'system.tournament_admin',
     'account',
+    'online'
 ]
 
 MIDDLEWARE = [
@@ -176,6 +177,8 @@ HAYSTACK_CONNECTIONS = {
 YANDEX_METRIKA_ID = ''
 GOOGLE_VERIFICATION_CODE = ''
 YANDEX_VERIFICATION_CODE = ''
+
+TELEGRAM_TOKEN = ''
 
 try:
     from .settings_local import *
