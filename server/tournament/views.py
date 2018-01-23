@@ -31,6 +31,7 @@ def tournament_list(request, tournament_type=None, year=None):
 
     if tournament_type == 'ema':
         tournaments = (tournaments
+                       .exclude(tournament_type=Tournament.ONLINE)
                        .exclude(tournament_type=Tournament.RR)
                        .exclude(tournament_type=Tournament.CRR))
     else:
