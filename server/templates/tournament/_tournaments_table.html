@@ -26,10 +26,15 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if tournament.city %}
-                        <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
+                    {% if tournament_type %}
+                        {# let's display country, bot city for ema page #}
+                        {{ tournament.country.name }}
                     {% else %}
-                        -
+                        {% if tournament.city %}
+                            <a href="{% url 'city_page' tournament.city.slug %}">{{ tournament.city.name }}</a>
+                        {% else %}
+                            {{ tournament.country.name }}
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td>
