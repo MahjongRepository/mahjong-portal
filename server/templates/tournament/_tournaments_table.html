@@ -7,7 +7,13 @@
             <th scope="col">#</th>
             <th scope="col">{% trans 'Name' %}</th>
             <th scope="col">{% trans 'Date' %}</th>
-            <th scope="col">{% trans 'City' %}</th>
+            <th scope="col">
+                {% if tournament_type %}
+                    {% trans 'City' %}
+                {% else %}
+                    {% trans 'Country' %}
+                {% endif %}
+            </th>
             <th scope="col">{% trans 'Type' %}</th>
             <th scope="col">{% trans 'Players' context 'number of players' %}</th>
             <th scope="col">{% trans 'Sessions' %}</th>
