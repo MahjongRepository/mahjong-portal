@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 from random import randint
+from urllib.parse import urlencode, quote, unquote
 
+import requests
 from django.db import transaction
 from django.db.models import Q
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 
 BOT_NICKNAMES = [
-    u'あげる',
-    u'くれる',
-    u'寂しい'
+    u'おねえさん',
+    u"<('o'<)",
+    u'нани'
 ]
+
+LOBBY = 'C4423490725207837'
 
 
 class TournamentHandler(object):
@@ -30,7 +34,7 @@ class TournamentHandler(object):
 
     def add_game_log(self, log):
         log = log.strip()
-        if not log.strartwith('http://tenhou.net/'):
+        if not log.strartswith('http://tenhou.net/'):
             return 'Отправленная ссылка не выглядит как ссыдка на лог игры.'
 
         return 'Игра была добавлена. Спасибо.'
@@ -49,6 +53,10 @@ class TournamentHandler(object):
         return message
 
     def start_next_round(self):
+        """
+        Increment round number, add bots (if needed) and make games
+        """
+        
         if not self.status.current_round:
             self.status.current_round = 0
 
@@ -99,6 +107,10 @@ class TournamentHandler(object):
         return games, 'Тур {}. Запускаю игры...'.format(self.status.current_round)
 
     def make_sortition(self, player_ids):
+        """
+        For now let's just use random sortition.
+        This method prepared list of games with players.
+        """
         number_of_players = len(player_ids)
 
         if number_of_players % 4 != 0:
@@ -136,7 +148,54 @@ class TournamentHandler(object):
         return sortition
 
     def start_game(self, game):
+        """
+        Send request to tenhou.net and start a new game in lobby
+        """
+        
         players = game.game_players.all().order_by('wind')
-        message = 'Стол: {} запущен.'.format(u', '.join([x.player.tenhou_username for x in players]))
-        return message
+        
+        player_names = [x.player.tenhou_username for x in players]
 
+        url = 'http://tenhou.net/cs/edit/start.cgi'
+        data = {
+            'L': LOBBY,
+            'R2': '0001',
+            'RND': 'default',
+            'WG': 1,
+            'M': '\r\n'.join([x for x in player_names])
+        }
+        
+        headers = {
+            'Origin': 'http://tenhou.net',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Referer': 'http://tenhou.net/cs/edit/?{}'.format(LOBBY),
+        }
+        
+        response = requests.post(url, data=data, headers=headers, allow_redirects=False)
+        location = unquote(response.headers['location'])
+        result = location.split('{}&'.format(LOBBY))[1]
+        
+        if result.startswith('FAILED'):
+            game.status = TournamentGame.FAILED_TO_START
+            
+            message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
+            message += ' Стол был отодвинут в конец очереди.'
+        elif result.startswith('MEMBER NOT FOUND'):
+            game.status = TournamentGame.FAILED_TO_START
+            
+            message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
+            missed_players = [x for x in result.split('\r\n')[1:] if x]
+            
+            tg_usernames = TournamentPlayers.objects.filter(tenhou_username__in=missed_players).values_list('telegram_username', flat=True)
+            tg_usernames = ['@' + x for x in tg_usernames]
+            
+            message += ' Отсутствующие игроки: {}'.format(', '.join(tg_usernames))
+            message += ' Стол был отодвинут в конец очереди.'
+        else:
+            game.status = TournamentGame.STARTED
+            
+            message = 'Стол: {} запущен.'.format(u', '.join(player_names))
+        
+        game.save()
+        
+        return message

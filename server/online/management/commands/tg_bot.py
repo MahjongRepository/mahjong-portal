@@ -23,7 +23,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         set_up_logging()
 
-        tournament_id = 281
+        # tournament_id = 281
+        tournament_id = 13
         tournament = Tournament.objects.get(id=tournament_id)
 
         global tournament_handler

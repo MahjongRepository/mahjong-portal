@@ -9,11 +9,14 @@ class TournamentStatus(BaseModel):
 
     current_round = models.PositiveSmallIntegerField(null=True, blank=True)
 
+    def __unicode__(self):
+        return self.current_round
+
 
 class TournamentPlayers(BaseModel):
     tournament = models.ForeignKey(Tournament)
 
-    telegram_username = models.CharField(max_length=32, unique=True)
+    telegram_username = models.CharField(max_length=32)
     tenhou_username = models.CharField(max_length=8)
 
     def __unicode__(self):
@@ -38,6 +41,9 @@ class TournamentGame(BaseModel):
     log_link = models.URLField(null=True, blank=True)
 
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
+
+    def __unicode__(self):
+        return '{}, {}'.format(self.tournament, self.tournament_round)
 
 
 class TournamentGamePlayer(BaseModel):

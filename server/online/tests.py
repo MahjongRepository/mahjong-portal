@@ -42,7 +42,7 @@ class OnlineTournamentTestCase(TestCase, RatingTestMixin):
                                              telegram_username=make_random_letters_and_digit_string(),
                                              tenhou_username=make_random_letters_and_digit_string(8))
 
-        games = handler.start_next_round()
+        games, _ = handler.start_next_round()
         self.assertEqual(len(games), 2)
 
         for game in games:
