@@ -12,6 +12,7 @@ from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
 from online.handler import TournamentHandler
+from tournament.models import Tournament
 
 logger = logging.getLogger()
 tournament_handler = None
@@ -22,7 +23,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         set_up_logging()
 
-        tournament = None
+        tournament_id = 281
+        tournament = Tournament.objects.get(id=tournament_id)
+
         global tournament_handler
         tournament_handler = TournamentHandler(tournament)
 
@@ -44,7 +47,11 @@ class Command(BaseCommand):
         log_handler = CommandHandler('log', set_game_log, pass_args=True)
         status_handler = CommandHandler('status', get_tournament_status)
 
-        dispatcher.add_handler(CommandHandler('restart', restart, filters=Filters.user(username='@Nihisil')))
+        # admin commands
+        dispatcher.add_handler(CommandHandler('restart', restart,
+                                              filters=Filters.user(username='@Nihisil')))
+        dispatcher.add_handler(CommandHandler('start_next_round', start_next_round,
+                                              filters=Filters.user(username='@Nihisil')))
 
         dispatcher.add_handler(start_handler)
         dispatcher.add_handler(log_handler)
@@ -128,6 +135,17 @@ def new_chat_member(bot, update):
         message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
 
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def start_next_round(bot, update):
+    logger.info('Start next round')
+
+    games, message = tournament_handler.start_next_round()
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+
+    for game in games:
+        message = tournament_handler.start_game(game)
+        bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
 def error_callback(bot, update, error):
