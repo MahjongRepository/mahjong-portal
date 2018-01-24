@@ -8,6 +8,7 @@ class TournamentStatus(BaseModel):
     tournament = models.ForeignKey(Tournament)
 
     current_round = models.PositiveSmallIntegerField(null=True, blank=True)
+    end_break_time = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return self.current_round
@@ -38,7 +39,7 @@ class TournamentGame(BaseModel):
 
     tournament = models.ForeignKey(Tournament)
     tournament_round = models.PositiveSmallIntegerField(null=True, blank=True)
-    log_link = models.URLField(null=True, blank=True)
+    log_id = models.CharField(max_length=32, null=True, blank=True)
 
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
 

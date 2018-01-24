@@ -4,6 +4,7 @@ import os
 import sys
 from threading import Thread
 
+import telegram
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from telegram.error import Unauthorized, BadRequest, TimedOut, NetworkError, ChatMigrated, TelegramError
@@ -20,15 +21,20 @@ tournament_handler = None
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument('tournament_id', type=int)
+        parser.add_argument('lobby', type=int)
+
     def handle(self, *args, **options):
         set_up_logging()
 
-        # tournament_id = 281
-        tournament_id = 13
+        tournament_id = options.get('tournament_id')
+        lobby = options.get('lobby')
+
         tournament = Tournament.objects.get(id=tournament_id)
 
         global tournament_handler
-        tournament_handler = TournamentHandler(tournament)
+        tournament_handler = TournamentHandler(tournament, lobby)
 
         updater = Updater(token=settings.TELEGRAM_TOKEN)
         dispatcher = updater.dispatcher
@@ -92,11 +98,18 @@ def set_game_log(bot, update, args):
     logger.info('Set game log command. {}, {}'.format(update.message.from_user.username, args))
 
     if not len(args):
-        bot.send_message(chat_id=update.message.chat_id, text=u'Укажите ссылку на ханчан после команды.')
+        update.message.reply_text(u'Укажите ссылку на ханчан после команды.')
         return
+
+    # it can take some time to add log, so lets show typing notification
+    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 
     message = tournament_handler.add_game_log(args[0])
     update.message.reply_text(message)
+
+    message = tournament_handler.check_round_was_finished()
+    if message:
+        bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
 def get_tournament_status(bot, update):

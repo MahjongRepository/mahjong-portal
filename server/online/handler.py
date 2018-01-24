@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
+import logging
+from datetime import timedelta
 from random import randint
-from urllib.parse import urlencode, quote, unquote
+from urllib.parse import urlencode, quote, unquote, urlparse, parse_qs
 
 import requests
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, timezone
+from django.conf import settings
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
+from online.parser import TenhouParser
+from rating.utils import make_random_letters_and_digit_string
+
+logger = logging.getLogger()
 
 BOT_NICKNAMES = [
     u'おねえさん',
@@ -14,13 +21,12 @@ BOT_NICKNAMES = [
     u'нани'
 ]
 
-LOBBY = 'C4423490725207837'
-
 
 class TournamentHandler(object):
 
-    def __init__(self, tournament):
+    def __init__(self, tournament, lobby):
         self.tournament = tournament
+        self.lobby = lobby
         self.status, _ = TournamentStatus.objects.get_or_create(tournament=self.tournament)
 
     def get_tournament_status(self):
@@ -28,14 +34,75 @@ class TournamentHandler(object):
             confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
             return 'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
 
+        if self.status.end_break_time:
+            delta = self.status.end_break_time - timezone.now()
+            if delta.seconds > 60:
+                minutes = round(delta.seconds // 60.0, 2)
+            else:
+                minutes = round(delta.seconds * 0.0166, 2)
+            return 'Перерыв. Следующий тур {} начнётся через {} минут'.format(self.status.current_round + 1, minutes)
+
         active_games_count = TournamentGame.objects.filter(tournament=self.tournament).exclude(status=TournamentGame.FINISHED).count()
+        if active_games_count:
+            return 'Тур {}. Активных игр на данный момент: {}. Ждём пока они закончатся.'.format(
+                self.status.current_round,
+                active_games_count
+            )
 
-        return 'Тур {}. Активных игр на данный момент: {}. Ждём пока они закончатся.'.format(self.status.current_round, active_games_count)
+    def add_game_log(self, log_link):
+        error_message = 'Это не похоже на лог игры.'
+        
+        log_link = log_link.strip()
+        if not log_link.startswith('http://tenhou.net/'):
+            return error_message
 
-    def add_game_log(self, log):
-        log = log.strip()
-        if not log.strartswith('http://tenhou.net/'):
-            return 'Отправленная ссылка не выглядит как ссыдка на лог игры.'
+        attributes = parse_qs(urlparse(log_link).query)
+        
+        if 'log' not in attributes:
+            return error_message
+
+        log_id = attributes['log'][0]
+        print(log_id)
+        
+        parser = TenhouParser()
+        players = parser.get_player_names(log_id)
+        
+        if TournamentGame.objects.filter(log_id=log_id).exists():
+            return 'Игра уже была добавлена в систему другим игроком. Спасибо.'
+        
+        games = (TournamentGame.objects
+                               .filter(tournament=self.tournament)
+                               .filter(game_players__player__tenhou_username__in=players)
+                               .filter(tournament_round=self.status.current_round)
+                               .distinct())
+        if games.count() >= 2:
+            logger.error('Log add. Too much games.')
+            return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
+        
+        game = games.first()
+        
+        data = {
+            'jsonrpc': '2.0',
+            'method': 'addOnlineReplay',
+            'params': {
+                'eventId': settings.PANTHEON_EVENT_ID,
+                'link': log_link
+            },
+            'id': make_random_letters_and_digit_string()
+        }
+        
+        response = requests.post(settings.PANTHEON_URL, json=data)
+        if response.status_code == 500:
+            logger.error('Log add. Pantheon 500.')
+            return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
+        
+        content = response.json()
+        if content.get('error'):
+            logger.error('Log add. Pantheon error. {}'.format(content.get('error')))
+            return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
+
+        game.log_id = log_id
+        game.save()
 
         return 'Игра была добавлена. Спасибо.'
 
@@ -86,6 +153,7 @@ class TournamentHandler(object):
                 confirmed_players.append(bot_replacement)
 
             self.status.current_round += 1
+            self.status.end_break_time = None
             self.status.save()
 
             player_ids = [x.id for x in confirmed_players]
@@ -158,7 +226,7 @@ class TournamentHandler(object):
 
         url = 'http://tenhou.net/cs/edit/start.cgi'
         data = {
-            'L': LOBBY,
+            'L': self.lobby,
             'R2': '0001',
             'RND': 'default',
             'WG': 1,
@@ -168,12 +236,12 @@ class TournamentHandler(object):
         headers = {
             'Origin': 'http://tenhou.net',
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Referer': 'http://tenhou.net/cs/edit/?{}'.format(LOBBY),
+            'Referer': 'http://tenhou.net/cs/edit/?{}'.format(self.lobby),
         }
         
         response = requests.post(url, data=data, headers=headers, allow_redirects=False)
         location = unquote(response.headers['location'])
-        result = location.split('{}&'.format(LOBBY))[1]
+        result = location.split('{}&'.format(self.lobby))[1]
         
         if result.startswith('FAILED'):
             game.status = TournamentGame.FAILED_TO_START
@@ -199,3 +267,20 @@ class TournamentHandler(object):
         game.save()
         
         return message
+
+    def check_round_was_finished(self):
+        finished_games = (TournamentGame.objects
+                                        .filter(tournament=self.tournament)
+                                        .filter(status=TournamentGame.FINISHED)
+                                        .filter(tournament_round=self.status.current_round))
+        games = (TournamentGame.objects
+                               .filter(tournament=self.tournament)
+                               .filter(tournament_round=self.status.current_round))
+
+        if finished_games.count() == games.count():
+            break_minutes = 5
+            self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
+            self.status.save()
+            return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.'.format(break_minutes)
+        else:
+            return None
