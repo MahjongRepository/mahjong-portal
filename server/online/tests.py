@@ -13,7 +13,7 @@ class OnlineTournamentTestCase(TestCase, RatingTestMixin):
 
     def test_start_new_round(self):
         tournament = self.create_tournament(sessions=2)
-        handler = TournamentHandler(tournament=tournament)
+        handler = TournamentHandler(tournament=tournament, lobby='')
 
         status = TournamentStatus.objects.get(tournament=tournament)
         self.assertEqual(status.current_round, None)
@@ -35,7 +35,7 @@ class OnlineTournamentTestCase(TestCase, RatingTestMixin):
 
     def test_start_new_round_and_prepare_games(self):
         tournament = self.create_tournament(sessions=3)
-        handler = TournamentHandler(tournament=tournament)
+        handler = TournamentHandler(tournament=tournament, lobby='')
 
         for x in range(0, 5):
             TournamentPlayers.objects.create(tournament=tournament,

@@ -6,8 +6,9 @@ from urllib.parse import urlencode, quote, unquote, urlparse, parse_qs
 
 import requests
 from django.db import transaction
-from django.db.models import Q, timezone
+from django.db.models import Q
 from django.conf import settings
+from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
