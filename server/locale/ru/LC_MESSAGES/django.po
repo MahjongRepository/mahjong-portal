@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-19 13:47+0000\n"
+"POT-Creation-Date: 2018-01-26 16:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +67,7 @@ msgstr "Риичи маджонг клуб \"%(name)s\" в %(place)s"
 msgid "Riichi mahjong player %(name)s from %(place)s"
 msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
-#: player/models.py:55
+#: player/models.py:56
 msgid "Substitution player"
 msgstr "Игрок замены"
 
@@ -106,7 +106,7 @@ msgid "Ratings"
 msgstr "Рейтинги"
 
 #: templates/base.html:78 templates/base.html:91 templates/base.html:106
-#: templates/club/details.html:23
+#: templates/club/details.html:71
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
 #: templates/tournament_admin/tournament_manage.html:12
@@ -148,11 +148,16 @@ msgstr "Выйти"
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/club/list.html:5
-msgid "Riichi mahjong russian clubs"
-msgstr "Российские риичи маджонг клубы"
+#: templates/club/details.html:23
+msgid "Club members statistics"
+msgstr "Клубная статистика"
 
-#: templates/club/list.html:19 templates/rating/_results_table.html:8
+#: templates/club/details.html:24
+msgid "We are displaying here players with 5+ club games."
+msgstr "Статистика для игроков с 5+ играми."
+
+#: templates/club/details.html:31 templates/club/list.html:19
+#: templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:8
 #: templates/tournament/announcement.html:55
 #: templates/tournament/details.html:34
@@ -162,7 +167,31 @@ msgstr "Российские риичи маджонг клубы"
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/list.html:20 templates/tournament/_tournaments_table.html:10
+#: templates/club/details.html:32
+msgid "Average place"
+msgstr "Среднее место"
+
+#: templates/club/details.html:33
+msgid "Games count"
+msgstr "Количество игр"
+
+#: templates/club/details.html:34
+msgid "Ippatsu chance"
+msgstr "Шанс иппацу"
+
+#: templates/club/details.html:35
+msgid "Average dora number"
+msgstr "Число дор в руке"
+
+#: templates/club/details.html:76
+msgid "Latest 10 club games"
+msgstr "Последние 10 клубных игр"
+
+#: templates/club/list.html:5
+msgid "Riichi mahjong russian clubs"
+msgstr "Российские риичи маджонг клубы"
+
+#: templates/club/list.html:20 templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:56
 #: templates/tournament_admin/tournament_manage.html:66
 #: templates/website/search.html:17 tournament/models.py:157
@@ -243,16 +272,21 @@ msgstr "Все доступные рейтинги"
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/tournament/_tournaments_table.html:11
+#: templates/tournament/_tournaments_table.html:12
+#: templates/website/search.html:18
+msgid "Country"
+msgstr "Страна"
+
+#: templates/tournament/_tournaments_table.html:17
 msgid "Type"
 msgstr "Тип"
 
-#: templates/tournament/_tournaments_table.html:12
+#: templates/tournament/_tournaments_table.html:18
 msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
-#: templates/tournament/_tournaments_table.html:13
+#: templates/tournament/_tournaments_table.html:19
 msgid "Sessions"
 msgstr "Игр"
 
@@ -482,10 +516,6 @@ msgstr ""
 msgid "Search results for"
 msgstr "Результаты поиска"
 
-#: templates/website/search.html:18
-msgid "Country"
-msgstr "Страна"
-
 #: templates/website/search.html:39
 msgid "nothing found"
 msgstr "ничего не нашлось"
@@ -518,7 +548,7 @@ msgstr "Расскажите нам про ваш турнир"
 msgid "We would like to know tournament date, place and your contacts"
 msgstr "Ваши контакты, место и дата проведения"
 
-#: tournament/views.py:141
+#: tournament/views.py:142
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -526,6 +556,6 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:144
+#: tournament/views.py:145
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"

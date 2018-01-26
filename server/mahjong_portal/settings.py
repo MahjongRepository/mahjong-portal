@@ -56,6 +56,8 @@ INSTALLED_APPS = [
 
     'mahjong_portal',
     'club',
+    'club.pantheon_games',
+    'club.club_games',
     'settings',
     'player',
     'tournament',
@@ -63,7 +65,7 @@ INSTALLED_APPS = [
     'system',
     'system.tournament_admin',
     'account',
-    'online'
+    'online',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +133,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+DATABASE_ROUTERS = ['club.pantheon_games.db_router.PantheonRouter']
 
 
 # Internationalization
