@@ -28,7 +28,7 @@ class TournamentGame(BaseModel):
     NEW = 0
     STARTED = 1
     FAILED_TO_START = 2
-    FINISHED = 2
+    FINISHED = 3
 
     STATUSES = [
         [NEW, 'New'],

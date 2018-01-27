@@ -23,18 +23,20 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('tournament_id', type=int)
-        parser.add_argument('lobby', type=int)
+        parser.add_argument('lobby', type=str)
+        parser.add_argument('game_type', type=str)
 
     def handle(self, *args, **options):
         set_up_logging()
 
         tournament_id = options.get('tournament_id')
         lobby = options.get('lobby')
+        game_type = options.get('game_type')
 
         tournament = Tournament.objects.get(id=tournament_id)
 
         global tournament_handler
-        tournament_handler = TournamentHandler(tournament, lobby)
+        tournament_handler = TournamentHandler(tournament, lobby, game_type)
 
         updater = Updater(token=settings.TELEGRAM_TOKEN)
         dispatcher = updater.dispatcher

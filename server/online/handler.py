@@ -25,9 +25,10 @@ BOT_NICKNAMES = [
 
 class TournamentHandler(object):
 
-    def __init__(self, tournament, lobby):
+    def __init__(self, tournament, lobby, game_type='0001'):
         self.tournament = tournament
         self.lobby = lobby
+        self.game_type = game_type
         self.status, _ = TournamentStatus.objects.get_or_create(tournament=self.tournament)
 
     def get_tournament_status(self):
@@ -43,7 +44,12 @@ class TournamentHandler(object):
                 minutes = round(delta.seconds * 0.0166, 2)
             return 'Перерыв. Следующий тур {} начнётся через {} минут'.format(self.status.current_round + 1, minutes)
 
-        active_games_count = TournamentGame.objects.filter(tournament=self.tournament).exclude(status=TournamentGame.FINISHED).count()
+        active_games_count = (TournamentGame.objects
+                              .filter(tournament=self.tournament)
+                              .filter(tournament_round=self.status.current_round)
+                              .exclude(status=TournamentGame.FINISHED)
+                              .count())
+
         if active_games_count:
             return 'Тур {}. Активных игр на данный момент: {}. Ждём пока они закончатся.'.format(
                 self.status.current_round,
@@ -63,8 +69,7 @@ class TournamentHandler(object):
             return error_message
 
         log_id = attributes['log'][0]
-        print(log_id)
-        
+
         parser = TenhouParser()
         players = parser.get_player_names(log_id)
         
@@ -103,6 +108,7 @@ class TournamentHandler(object):
             return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
 
         game.log_id = log_id
+        game.status = TournamentGame.FINISHED
         game.save()
 
         return 'Игра была добавлена. Спасибо.'
@@ -133,7 +139,7 @@ class TournamentHandler(object):
 
         current_games = (TournamentGame.objects
                                        .filter(tournament=self.tournament)
-                                       .filter(Q(status=TournamentGame.NEW) | Q(status=TournamentGame.FAILED_TO_START)))
+                                       .exclude(status=TournamentGame.FINISHED))
 
         if current_games.exists():
             return [], 'Невозможно запустить новые игры. Старые игры ещё не завершились.'
@@ -228,7 +234,7 @@ class TournamentHandler(object):
         url = 'http://tenhou.net/cs/edit/start.cgi'
         data = {
             'L': self.lobby,
-            'R2': '0001',
+            'R2': self.game_type,
             'RND': 'default',
             'WG': 1,
             'M': '\r\n'.join([x for x in player_names])
