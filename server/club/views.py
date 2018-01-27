@@ -24,16 +24,17 @@ def club_details(request, slug):
     tournaments = club.tournament_set.all().order_by('-end_date')
 
     club_sessions = club.club_sessions.all().order_by('-date')[:10]
+    total_sessions = club.club_sessions.all().count()
 
     default_sort = 'avg'
     sort = request.GET.get('sort', default_sort)
     sorting = {
         'avg': 'average_place',
-        'games': '-games_count',
         'ippatsu': '-ippatsu_chance',
         'dora': '-average_dora_in_hand',
+        'ron': 'feed_percentage',
     }
-    sort = sorting.get(sort, default_sort)
+    sort = sorting.get(sort, 'average_place')
 
     club_rating = club.rating.filter(games_count__gte=5).order_by(sort)
 
@@ -42,5 +43,6 @@ def club_details(request, slug):
         'tournaments': tournaments,
         'page': 'club',
         'club_sessions': club_sessions,
-        'club_rating': club_rating
+        'club_rating': club_rating,
+        'total_sessions': total_sessions
     })

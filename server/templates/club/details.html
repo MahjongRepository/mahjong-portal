@@ -19,6 +19,11 @@
             {{ club.country }}
         </p>
 
+        {% if tournaments %}
+            <h2>{% trans 'Tournaments' %}</h2>
+            {% include 'tournament/_tournaments_table.html' %}
+        {% endif %}
+
         {% if club_rating %}
             <h2>{% trans 'Club members statistics' %}</h2>
             <p>{% trans 'We are displaying here players with 5+ club games.' %}</p>
@@ -30,23 +35,41 @@
                             <th scope="col">#</th>
                             <th scope="col">{% trans 'Name' %}</th>
                             <th scope="col">
+                                {% trans 'Tenhou' %}
+                            </th>
+                            <th scope="col">
                                 <a href="{% url 'club_details' club.slug %}?sort=avg">
-                                    {% trans 'Average place' %}
+                                    {% trans 'Avg. place' %}
                                 </a>
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=games">
-                                    {% trans 'Games count' %}
+                                {% trans 'Games' %}
+                            </th>
+                            <th scope="col">
+                                {% trans '1st' %}
+                            </th>
+                            <th scope="col">
+                                {% trans '2nd' %}
+                            </th>
+                            <th scope="col">
+                                {% trans '3rd' %}
+                            </th>
+                            <th scope="col">
+                                {% trans '4th' %}
+                            </th>
+                            <th scope="col">
+                                <a href="{% url 'club_details' club.slug %}?sort=ron">
+                                    {% trans '% feeds' %}
                                 </a>
                             </th>
                             <th scope="col">
                                 <a href="{% url 'club_details' club.slug %}?sort=ippatsu">
-                                    {% trans 'Ippatsu chance' %}
+                                    {% trans '% ippatsu' %}
                                 </a>
                             </th>
                             <th scope="col">
                                 <a href="{% url 'club_details' club.slug %}?sort=dora">
-                                    {% trans 'Average dora number' %}
+                                    {% trans 'Avg. dora' %}
                                 </a>
                             </th>
                         </tr>
@@ -65,13 +88,38 @@
                                     {% endif %}
                                 </td>
                                 <td>
+                                    {% with tenhou_object=item.player.tenhou_object %}
+                                        {% if tenhou_object %}
+                                            <a class="not-colored-link" href="http://arcturus.su/tenhou/ranking/ranking.pl?name={{ tenhou_object.tenhou_username }}&d1={{ tenhou_object.username_created_at|date:'Ymd' }}" target="_blank">
+                                                {{ tenhou_object.get_rank_display }}
+                                            </a>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
                                     {{ item.average_place|floatformat:2 }}
                                 </td>
                                 <td>
                                     {{ item.games_count }}
                                 </td>
                                 <td>
-                                    {{ item.ippatsu_chance|floatformat:2 }}%
+                                    {{ item.first_place|floatformat:2 }}
+                                </td>
+                                <td>
+                                    {{ item.second_place|floatformat:2 }}
+                                </td>
+                                <td>
+                                    {{ item.third_place|floatformat:2 }}
+                                </td>
+                                <td>
+                                    {{ item.fourth_place|floatformat:2 }}
+                                </td>
+
+                                <td>
+                                    {{ item.feed_percentage|floatformat:2 }}
+                                </td>
+                                <td>
+                                    {{ item.ippatsu_chance|floatformat:2 }}
                                 </td>
                                 <td>
                                     {{ item.average_dora_in_hand|floatformat:2 }}
@@ -83,13 +131,14 @@
             </div>
         {% endif %}
 
-        {% if tournaments %}
-            <h2>{% trans 'Tournaments' %}</h2>
-            {% include 'tournament/_tournaments_table.html' %}
-        {% endif %}
-
         {% if club_sessions %}
             <h2>{% trans 'Latest 10 club games' %}</h2>
+            {% timezone club.timezone %}
+                <p>
+                    {% trans 'Total games: ' %} {{ total_sessions }}.
+                    {% trans 'Last updated ' %} {{ club.sync_info.updated_on }}
+                </p>
+            {% endtimezone %}
 
             <div class="table-responsive-sm">
                 <table class="table mt-4 table-bordered table-striped">
@@ -127,7 +176,6 @@
                     </tbody>
                 </table>
             </div>
-
         {% endif %}
     </div>
 {% endblock %}

@@ -5,6 +5,11 @@ from mahjong_portal.models import BaseModel
 from player.models import Player
 
 
+class ClubSessionSyncData(BaseModel):
+    club = models.OneToOneField(Club, related_name='sync_info')
+    last_session_id = models.PositiveIntegerField(null=True, blank=True)
+
+
 class ClubSession(BaseModel):
     club = models.ForeignKey(Club, related_name='club_sessions')
     date = models.DateTimeField()
@@ -37,5 +42,11 @@ class ClubRating(BaseModel):
 
     games_count = models.PositiveIntegerField()
     average_place = models.DecimalField(decimal_places=2, max_digits=10)
+    first_place = models.DecimalField(decimal_places=2, max_digits=10)
+    second_place = models.DecimalField(decimal_places=2, max_digits=10)
+    third_place = models.DecimalField(decimal_places=2, max_digits=10)
+    fourth_place = models.DecimalField(decimal_places=2, max_digits=10)
+
     ippatsu_chance = models.DecimalField(decimal_places=2, max_digits=10)
     average_dora_in_hand = models.DecimalField(decimal_places=2, max_digits=10)
+    feed_percentage = models.DecimalField(decimal_places=2, max_digits=10)

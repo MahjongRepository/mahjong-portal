@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from player.models import Player
+from player.models import Player, TenhouNickname
 
 
 class PlayerForm(forms.ModelForm):
@@ -11,8 +11,16 @@ class PlayerForm(forms.ModelForm):
         exclude = ['first_name', 'last_name']
 
 
+class TenhouNicknameInline(admin.TabularInline):
+    model = TenhouNickname
+    extra = 1
+
+
 class PlayerAdmin(admin.ModelAdmin):
     form = PlayerForm
+    inlines = [
+        TenhouNicknameInline
+    ]
 
     prepopulated_fields = {'slug': ['last_name_en', 'first_name_en']}
 

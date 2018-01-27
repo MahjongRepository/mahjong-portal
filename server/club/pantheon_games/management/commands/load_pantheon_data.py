@@ -4,7 +4,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.utils.timezone import make_aware
 
-from club.club_games.models import ClubSession, ClubSessionResult, ClubRating
+from club.club_games.models import ClubSession, ClubSessionResult, ClubRating, ClubSessionSyncData
 from club.pantheon_games.models import PantheonEvent, PantheonSession, PantheonSessionResult, PantheonPlayer, \
     PantheonRound
 from club.models import Club
@@ -27,9 +27,9 @@ class Command(BaseCommand):
         # club.timezone = 'Asia/Irkutsk'
         # club.save()
 
-        self.calculate_club_rating(club, pantheon_event_ids)
         # self.associate_players(club, pantheon_event_ids)
         # self.download_game_results(club, pantheon_event_ids)
+        self.calculate_club_rating(club, pantheon_event_ids)
 
         print('{0}: End'.format(get_date_string()))
 
@@ -67,18 +67,37 @@ class Command(BaseCommand):
 
             average_place = (first_place + second_place * 2 + third_place * 3 + fourth_place * 4) / games_count
 
+            first_place = (first_place / games_count) * 100
+            second_place = (second_place / games_count) * 100
+            third_place = (third_place / games_count) * 100
+            fourth_place = (fourth_place / games_count) * 100
+
             ippatsu_chance = 0
             average_dora_in_hand = 0
+            feed_percentage = 0
 
             if player and player.pantheon_id:
-                pantheon_rounds = PantheonRound.objects.filter(winner=player.pantheon_id, event__id__in=event_ids)
-                dora_count = pantheon_rounds.aggregate(Sum('dora'))['dora__sum']
-                rounds_count = pantheon_rounds.count()
+                total_rounds = (PantheonRound.objects
+                                      .filter(event__id__in=event_ids)
+                                      .filter(session__players__player_id=player.pantheon_id))
 
+                total_rounds_count = self._calculate_rounds_count(total_rounds)
+
+                win_rounds = PantheonRound.objects.filter(winner=player.pantheon_id, event__id__in=event_ids)
+
+                lose_rounds = PantheonRound.objects.filter(loser=player.pantheon_id,
+                                                           event__id__in=event_ids,
+                                                           outcome=PantheonRound.RON)
+                lose_rounds_count = self._calculate_rounds_count(lose_rounds)
+
+                feed_percentage = (lose_rounds_count / total_rounds_count) * 100
+
+                dora_count = win_rounds.aggregate(Sum('dora'))['dora__sum']
+                rounds_count = win_rounds.count()
                 average_dora_in_hand = dora_count / rounds_count
 
                 total_yaku = []
-                for round_item in pantheon_rounds:
+                for round_item in win_rounds:
                     total_yaku.extend(round_item.yaku.split(','))
 
                 riichi_count = total_yaku.count('33')
@@ -94,11 +113,38 @@ class Command(BaseCommand):
                 average_place=average_place,
                 ippatsu_chance=ippatsu_chance,
                 average_dora_in_hand=average_dora_in_hand,
+                first_place=first_place,
+                second_place=second_place,
+                third_place=third_place,
+                fourth_place=fourth_place,
+                feed_percentage=feed_percentage,
             )
+
+    def _calculate_rounds_count(self, rounds):
+        """
+        All of this because of multi ron format in pantheon
+        """
+        total_rounds_count = 0
+
+        counted_multi_ron = {}
+        for item in rounds:
+            if item.multi_ron:
+                key = '{}_{}'.format(item.session_id, item.round)
+                # we had to count multi ron only once for our start
+                if key in counted_multi_ron:
+                    continue
+                else:
+                    counted_multi_ron[key] = 1
+
+            total_rounds_count += 1
+
+        return total_rounds_count
 
     def download_game_results(self, club, event_ids):
         ClubSessionResult.objects.all().delete()
         ClubSession.objects.all().delete()
+
+        sync_data, _ = ClubSessionSyncData.objects.get_or_create(club=club)
 
         # prepare players
         players = Player.objects.filter(pantheon_id__isnull=False)
@@ -150,6 +196,13 @@ class Command(BaseCommand):
                         score=prepared_result['score'],
                         order=prepared_result['order'],
                     )
+
+        session = (PantheonSession.objects
+                   .filter(event__id__in=event_ids, status=PantheonSession.FINISHED)
+                   .order_by('id')).last()
+
+        sync_data.last_session_id = session.id
+        sync_data.save()
 
     def associate_players(self, club, event_ids):
         club.players.clear()

@@ -59,11 +59,16 @@ class PantheonSessionPlayer(models.Model):
 
 
 class PantheonRound(models.Model):
+    RON = 'ron'
+
     session = models.ForeignKey(PantheonSession, related_name='rounds')
-    winner = models.ForeignKey(PantheonPlayer)
+    winner = models.ForeignKey(PantheonPlayer, related_name='win_rounds')
+    loser = models.ForeignKey(PantheonPlayer, related_name='lose_rounds')
     event = models.ForeignKey(PantheonEvent)
     dora = models.PositiveIntegerField()
-
+    multi_ron = models.PositiveIntegerField()
+    round = models.PositiveIntegerField()
+    outcome = models.CharField(max_length=255)
     yaku = models.CharField(max_length=255)
 
     class Meta:

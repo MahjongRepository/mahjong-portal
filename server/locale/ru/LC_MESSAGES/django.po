@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-26 16:28+0000\n"
+"POT-Creation-Date: 2018-01-27 05:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,7 @@ msgid "Ratings"
 msgstr "Рейтинги"
 
 #: templates/base.html:78 templates/base.html:91 templates/base.html:106
-#: templates/club/details.html:71
+#: templates/club/details.html:23
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
 #: templates/tournament_admin/tournament_manage.html:12
@@ -148,15 +148,15 @@ msgstr "Выйти"
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/club/details.html:23
+#: templates/club/details.html:28
 msgid "Club members statistics"
 msgstr "Клубная статистика"
 
-#: templates/club/details.html:24
+#: templates/club/details.html:29
 msgid "We are displaying here players with 5+ club games."
 msgstr "Статистика для игроков с 5+ играми."
 
-#: templates/club/details.html:31 templates/club/list.html:19
+#: templates/club/details.html:36 templates/club/list.html:19
 #: templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:8
 #: templates/tournament/announcement.html:55
@@ -167,25 +167,59 @@ msgstr "Статистика для игроков с 5+ играми."
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/details.html:32
-msgid "Average place"
-msgstr "Среднее место"
+#: templates/club/details.html:38
+msgid "Tenhou"
+msgstr "Tenhou"
 
-#: templates/club/details.html:33
-msgid "Games count"
-msgstr "Количество игр"
+#: templates/club/details.html:42
+msgid "Avg. place"
+msgstr "Ср. место"
 
-#: templates/club/details.html:34
-msgid "Ippatsu chance"
-msgstr "Шанс иппацу"
+#: templates/club/details.html:46
+msgid "Games"
+msgstr "Игр"
 
-#: templates/club/details.html:35
-msgid "Average dora number"
-msgstr "Число дор в руке"
+#: templates/club/details.html:49
+msgid "1st"
+msgstr "1-e"
 
-#: templates/club/details.html:76
+#: templates/club/details.html:52
+msgid "2nd"
+msgstr "2-е"
+
+#: templates/club/details.html:55
+msgid "3rd"
+msgstr "3-е"
+
+#: templates/club/details.html:58
+msgid "4th"
+msgstr "4-е"
+
+#: templates/club/details.html:62
+#, python-format
+msgid "%% feeds"
+msgstr "%% набросов"
+
+#: templates/club/details.html:67
+#, python-format
+msgid "%% ippatsu"
+msgstr "%% иппацу"
+
+#: templates/club/details.html:72
+msgid "Avg. dora"
+msgstr "Дор"
+
+#: templates/club/details.html:135
 msgid "Latest 10 club games"
 msgstr "Последние 10 клубных игр"
+
+#: templates/club/details.html:138
+msgid "Total games: "
+msgstr "Всего игр:"
+
+#: templates/club/details.html:139
+msgid "Last updated "
+msgstr "Обновлялось"
 
 #: templates/club/list.html:5
 msgid "Riichi mahjong russian clubs"

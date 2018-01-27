@@ -56,3 +56,43 @@ class Player(BaseModel):
             return _('Substitution player')
         
         return u'{} {}'.format(self.last_name, self.first_name)
+
+    @property
+    def tenhou_object(self):
+        tenhou = self.tenhou.all().order_by('-rank').first()
+        return tenhou
+
+
+class TenhouNickname(BaseModel):
+    RANKS = [
+        [0, u'新人'],
+        [1, u'9級'],
+        [2, u'8級'],
+        [3, u'7級'],
+        [4, u'6級'],
+        [5, u'5級'],
+        [6, u'4級'],
+        [7, u'3級'],
+        [8, u'2級'],
+        [9, u'1級'],
+        [10, u'初段'],
+        [11, u'二段'],
+        [12, u'三段'],
+        [13, u'四段'],
+        [14, u'五段'],
+        [15, u'六段'],
+        [16, u'七段'],
+        [17, u'八段'],
+        [18, u'九段'],
+        [19, u'十段'],
+        [20, u'天鳳位']
+    ]
+
+    player = models.ForeignKey(Player, related_name='tenhou')
+
+    tenhou_username = models.CharField(max_length=8)
+    username_created_at = models.DateField()
+    rank = models.PositiveSmallIntegerField(choices=RANKS)
+
+    def __unicode__(self):
+        return self.tenhou_username
