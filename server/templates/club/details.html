@@ -19,13 +19,17 @@
             {{ club.country }}
         </p>
 
+        {% if club.description %}
+            <p>{{ club.description|linebreaksbr }}</p>
+        {% endif %}
+
         {% if tournaments %}
             <h2>{% trans 'Tournaments' %}</h2>
             {% include 'tournament/_tournaments_table.html' %}
         {% endif %}
 
         {% if club_rating %}
-            <h2>{% trans 'Club members statistics' %}</h2>
+            <h2 id="stat">{% trans 'Club members statistics' %}</h2>
             <p>{% trans 'We are displaying here players with 5+ club games.' %}</p>
 
             <div class="table-responsive-sm">

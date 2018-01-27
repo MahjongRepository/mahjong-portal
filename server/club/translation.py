@@ -4,7 +4,7 @@ from club.models import Club
 
 
 class ClubTranslationOptions(TranslationOptions):
-    fields = ['name']
+    fields = ['name', 'description']
 
 
 translator.register(Club, ClubTranslationOptions)
