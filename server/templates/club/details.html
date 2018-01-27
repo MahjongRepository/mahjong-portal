@@ -58,17 +58,17 @@
                                 {% trans '4th' %}
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=ron">
+                                <a href="{% url 'club_details' club.slug %}?sort=ron" title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom">
                                     {% trans '% feeds' %}
                                 </a>
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=ippatsu">
+                                <a href="{% url 'club_details' club.slug %}?sort=ippatsu" title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom">
                                     {% trans '% ippatsu' %}
                                 </a>
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=dora">
+                                <a href="{% url 'club_details' club.slug %}?sort=dora" title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom">
                                     {% trans 'Avg. dora' %}
                                 </a>
                             </th>

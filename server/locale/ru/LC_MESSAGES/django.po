@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-27 05:04+0000\n"
+"POT-Creation-Date: 2018-01-27 05:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -195,15 +195,27 @@ msgstr "3-е"
 msgid "4th"
 msgstr "4-е"
 
+#: templates/club/details.html:61
+msgid "How often player feed to other hand"
+msgstr "Как часто игрок накидывает в другие руки"
+
 #: templates/club/details.html:62
 #, python-format
 msgid "%% feeds"
 msgstr "%% набросов"
 
+#: templates/club/details.html:66
+msgid "How often riichi was ended with ippatsu"
+msgstr "Как часто риичи игрока заканчивалось с иппацу"
+
 #: templates/club/details.html:67
 #, python-format
 msgid "%% ippatsu"
 msgstr "%% иппацу"
+
+#: templates/club/details.html:71
+msgid "Average dora number in win hands"
+msgstr "Среднее количество дор в собранных руках"
 
 #: templates/club/details.html:72
 msgid "Avg. dora"
