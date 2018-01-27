@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=255, verbose_name='First name')),
                 ('last_name', models.CharField(max_length=255, verbose_name='Last name')),
                 ('city', models.CharField(max_length=255, verbose_name='City')),
-                ('phone', models.CharField(help_text='It will be visible only to the tournament administrator', max_length=255, verbose_name='Phone')),
+                ('phone', models.CharField(help_text='It will be visible only to the administrator', max_length=255, verbose_name='Phone')),
                 ('city_object', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='settings.City')),
                 ('player', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tournament_registrations', to='player.Player')),
                 ('tournament', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='tournament_registrations', to='tournament.Tournament')),

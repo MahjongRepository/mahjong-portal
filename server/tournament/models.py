@@ -113,7 +113,7 @@ class Tournament(BaseModel):
 
     @property
     def rating_link(self):
-        if self.is_online():
+        if self.is_online() or self.is_other():
             return '#'
 
         return reverse('rating', kwargs={'slug': self.tournament_type})
@@ -129,6 +129,9 @@ class Tournament(BaseModel):
 
     def is_online(self):
         return self.tournament_type == self.ONLINE
+
+    def is_other(self):
+        return self.tournament_type == self.OTHER
 
 
 class TournamentResult(BaseModel):
@@ -163,9 +166,9 @@ class TournamentRegistration(BaseModel):
     last_name = models.CharField(max_length=255, verbose_name=_('Last name'))
     city = models.CharField(max_length=255, verbose_name=_('City'))
     phone = models.CharField(max_length=255, verbose_name=_('Phone'),
-                             help_text=_('It will be visible only to the tournament administrator'))
+                             help_text=_('It will be visible only to the administrator'))
     additional_contact = models.CharField(max_length=255, verbose_name=_('Additional contact. Optional'),
-                                          help_text=_('It will be visible only to the tournament administrator'),
+                                          help_text=_('It will be visible only to the administrator'),
                                           default='', null=True, blank=True)
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
@@ -188,7 +191,7 @@ class OnlineTournamentRegistration(BaseModel):
     city = models.CharField(max_length=255, verbose_name=_('City'))
     tenhou_nickname = models.CharField(max_length=255, verbose_name=_('Tenhou.net nickname'))
     contact = models.CharField(max_length=255, verbose_name=_('Your contact (email, phone, etc.)'),
-                               help_text=_('It will be visible only to the tournament administrator'))
+                               help_text=_('It will be visible only to the administrator'))
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='online_tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)

@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(max_length=255, verbose_name='Last name')),
                 ('city', models.CharField(max_length=255, verbose_name='City')),
                 ('tenhou_nickname', models.CharField(max_length=255, verbose_name='Tenhou.net nickname')),
-                ('contact', models.CharField(help_text='It will be visible only to the tournament administrator', max_length=255, verbose_name='Your contact (email, phone, etc.)')),
+                ('contact', models.CharField(help_text='It will be visible only to the administrator', max_length=255, verbose_name='Your contact (email, phone, etc.)')),
                 ('city_object', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='settings.City')),
                 ('player', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='online_tournament_registrations', to='player.Player')),
             ],

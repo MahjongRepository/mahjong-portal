@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tournamentregistration',
             name='additional_contact',
-            field=models.CharField(blank=True, default='', help_text='It will be visible only to the tournament administrator', max_length=255, null=True, verbose_name='Additional contact. Optional'),
+            field=models.CharField(blank=True, default='', help_text='It will be visible only to the administrator', max_length=255, null=True, verbose_name='Additional contact. Optional'),
         ),
     ]

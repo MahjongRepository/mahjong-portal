@@ -575,8 +575,8 @@ msgid "Last name"
 msgstr "Фамилия"
 
 #: tournament/models.py:159 tournament/models.py:161 tournament/models.py:184
-msgid "It will be visible only to the tournament administrator"
-msgstr "Он будет показан только администратору турнира"
+msgid "It will be visible only to the administrator"
+msgstr "Он будет показан только администратору"
 
 #: tournament/models.py:160
 msgid "Additional contact. Optional"
