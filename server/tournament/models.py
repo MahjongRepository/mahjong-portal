@@ -111,6 +111,13 @@ class Tournament(BaseModel):
         else:
             return self.get_tournament_type_display()
 
+    @property
+    def rating_link(self):
+        if self.is_online():
+            return '#'
+
+        return reverse('rating', kwargs={'slug': self.tournament_type})
+
     def is_ema(self):
         return self.tournament_type == self.EMA or self.tournament_type == self.FOREIGN_EMA
 
