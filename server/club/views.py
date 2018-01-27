@@ -21,9 +21,14 @@ def club_list(request):
 
 def club_details(request, slug):
     club = get_object_or_404(Club, slug=slug)
-    tournaments = club.tournament_set.all().order_by('-end_date')
+    tournaments = club.tournament_set.all().order_by('-end_date').prefetch_related('city')
 
-    club_sessions = club.club_sessions.all().order_by('-date')[:10]
+    club_sessions = (club.club_sessions
+                     .all()
+                     .order_by('-date')
+                     .prefetch_related('results')
+                     .prefetch_related('results__player')
+                     )[:10]
     total_sessions = club.club_sessions.all().count()
 
     default_sort = 'avg'
@@ -36,7 +41,10 @@ def club_details(request, slug):
     }
     sort = sorting.get(sort, 'average_place')
 
-    club_rating = club.rating.filter(games_count__gte=5).order_by(sort)
+    club_rating = (club.rating
+                   .filter(games_count__gte=5)
+                   .order_by(sort)
+                   .prefetch_related('player'))
 
     return render(request, 'club/details.html', {
         'club': club,
