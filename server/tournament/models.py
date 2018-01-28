@@ -55,6 +55,7 @@ class Tournament(BaseModel):
     is_upcoming = models.BooleanField(default=False)
     need_qualification = models.BooleanField(default=False)
     has_accreditation = models.BooleanField(default=True)
+    fill_city_in_registration = models.BooleanField(default=True)
 
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)

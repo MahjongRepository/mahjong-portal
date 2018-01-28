@@ -74,7 +74,7 @@ def tournament_announcement(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
 
     initial = {}
-    if tournament.city:
+    if tournament.city and tournament.fill_city_in_registration:
         initial = {'city': tournament.city.name_ru}
 
     if tournament.is_online():
