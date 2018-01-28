@@ -73,7 +73,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if registration_item.player %}
+                                {% if registration_item.player and registration_item.player.city %}
                                     <a href="{% url 'city_page' registration_item.player.city.slug %}">{{ registration_item.player.city.name }}</a>
                                 {% elif registration_item.city_object %}
                                     <a href="{% url 'city_page' registration_item.city_object.slug %}">{{ registration_item.city_object.name }}</a>
