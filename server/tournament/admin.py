@@ -25,13 +25,15 @@ class TournamentAdmin(admin.ModelAdmin):
 
 
 class TournamentRegistrationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'phone', 'player', 'city_object']
+    list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'phone', 'player',
+                    'city_object', 'allow_to_save_data']
 
     raw_id_fields = ['tournament', 'player', 'city_object']
 
 
 class OnlineTournamentRegistrationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'tenhou_nickname', 'contact', 'player', 'city_object']
+    list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'tenhou_nickname',
+                    'contact', 'player', 'city_object', 'allow_to_save_data']
 
     raw_id_fields = ['tournament', 'player', 'city_object']
 

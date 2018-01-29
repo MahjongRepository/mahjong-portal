@@ -175,6 +175,8 @@ class TournamentRegistration(BaseModel):
     player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)
 
+    allow_to_save_data = models.BooleanField(default=False, verbose_name=_('I allow to store my personal data'))
+
     def __unicode__(self):
         return self.full_name
 
@@ -196,6 +198,8 @@ class OnlineTournamentRegistration(BaseModel):
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='online_tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)
+
+    allow_to_save_data = models.BooleanField(default=False, verbose_name=_('I allow to store my personal data'))
 
     def __unicode__(self):
         return self.full_name

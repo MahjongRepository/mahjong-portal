@@ -147,7 +147,9 @@ def tournament_registration(request, tournament_id):
         instance.save()
         
         messages.success(request, message)
-    
+    else:
+        messages.success(request, _('Please, allow to store personal data'))
+
     return redirect(tournament.get_url())
 
 
