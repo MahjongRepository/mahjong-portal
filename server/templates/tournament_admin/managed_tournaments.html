@@ -38,7 +38,13 @@
                             <td>
                                 <nobr>{{ tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                             </td>
-                            <td>{{ tournament.tournament_registrations.all.count }}</td>
+                            <td>
+                                {% if tournament.is_online %}
+                                    {{ tournament.online_tournament_registrations.all.count }}
+                                {% else %}
+                                    {{ tournament.tournament_registrations.all.count }}
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="{% url 'tournament_manage' tournament.id %}" class="btn btn-primary">{% trans 'Manage' %}</a>
                             </td>
