@@ -569,7 +569,7 @@ msgstr "ничего не нашлось"
 #: tournament/forms.py:17 tournament/forms.py:30 tournament/models.py:178
 #: tournament/models.py:202
 msgid "I allow to store my personal data"
-msgstr "Я разрешаю сбор моих персональных данных, их хранение и обратобку"
+msgstr "Я разрешаю сбор моих персональных данных, их хранение и обработку"
 
 #: tournament/models.py:166 tournament/models.py:192
 msgid "First name"
