@@ -42,7 +42,7 @@
                                 {% trans 'Tenhou' %}
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=avg">
+                                <a href="{% url 'club_details' club.slug %}?sort=avg#stat">
                                     {% trans 'Avg. place' %}
                                 </a>
                             </th>
@@ -62,17 +62,17 @@
                                 {% trans '4th' %}
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=ron" title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom">
+                                <a href="{% url 'club_details' club.slug %}?sort=ron#stat" title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom">
                                     {% trans '% feeds' %}
                                 </a>
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=ippatsu" title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom">
+                                <a href="{% url 'club_details' club.slug %}?sort=ippatsu#stat" title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom">
                                     {% trans '% ippatsu' %}
                                 </a>
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=dora" title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom">
+                                <a href="{% url 'club_details' club.slug %}?sort=dora#stat" title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom">
                                     {% trans 'Avg. dora' %}
                                 </a>
                             </th>
