@@ -117,7 +117,11 @@ class Tournament(BaseModel):
         if self.is_online() or self.is_other():
             return '#'
 
-        return reverse('rating', kwargs={'slug': self.tournament_type})
+        tournament_type = self.tournament_type
+        if tournament_type == self.FOREIGN_EMA:
+            tournament_type = self.EMA
+
+        return reverse('rating', kwargs={'slug': tournament_type})
 
     def is_ema(self):
         return self.tournament_type == self.EMA or self.tournament_type == self.FOREIGN_EMA
