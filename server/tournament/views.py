@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -31,9 +32,7 @@ def tournament_list(request, tournament_type=None, year=None):
 
     if tournament_type == 'ema':
         tournaments = (tournaments
-                       .exclude(tournament_type=Tournament.ONLINE)
-                       .exclude(tournament_type=Tournament.RR)
-                       .exclude(tournament_type=Tournament.CRR))
+                       .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA)))
     else:
         tournaments = (tournaments
                        .exclude(tournament_type=Tournament.FOREIGN_EMA)
