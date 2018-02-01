@@ -28,13 +28,15 @@ class Command(BaseCommand):
 
         clubs = Club.objects.exclude(pantheon_ids__isnull=True)
         for club in clubs:
+            print('Processing: {}'.format(club.name))
+
+            event_ids = club.pantheon_ids.split(',')
+
             # we had to run for the first time
             # to set pantheon ids to users
-            # self.associate_players(club, pantheon_event_ids)
+            # self.associate_players(club, event_ids)
             
             with transaction.atomic():
-                event_ids = club.pantheon_ids.split(',')
-                
                 self.download_game_results(club, event_ids, rebuild_from_zero)
                 self.calculate_club_rating(club, event_ids)
 
@@ -186,8 +188,8 @@ class Command(BaseCommand):
         
         if rebuild_from_zero:
             last_session_id = 0
-            ClubSessionResult.objects.all().delete()
-            ClubSession.objects.all().delete()
+            ClubSessionResult.objects.filter(club_session__club=club).delete()
+            ClubSession.objects.filter(club=club).delete()
         else:
             # we had to download only new sessions
             last_session_id = sync_data.last_session_id or 0
@@ -200,54 +202,56 @@ class Command(BaseCommand):
             
         missed_players = {}
 
-        events = PantheonEvent.objects.filter(id__in=event_ids)
-        for event in events:
-            sessions = (PantheonSession.objects
-                        .filter(event=event)
-                        .filter(status=PantheonSession.FINISHED)
-                        .filter(id__gt=last_session_id)
-                        .prefetch_related('players')
-                        .prefetch_related('results'))
+        sessions = (PantheonSession.objects
+                    .filter(event_id__in=event_ids)
+                    .filter(status=PantheonSession.FINISHED)
+                    .filter(id__gt=last_session_id)
+                    .order_by('id')
+                    .prefetch_related('players')
+                    .prefetch_related('results'))
 
-            for session in sessions:
-                results = session.results.all()
+        print('Games to add: {}'.format(sessions.count()))
 
-                prepared_results = {}
-                for item in results:
-                    prepared_results[item.player_id] = {
-                        'score': item.score,
-                        'place': item.place,
-                        'player_id': item.player_id,
-                        'display_name': item.player.display_name,
-                    }
+        for session in sessions:
+            results = session.results.all()
 
-                for item in session.players.all():
-                    prepared_results[item.player_id]['order'] = item.order
+            prepared_results = {}
+            for item in results:
+                prepared_results[item.player_id] = {
+                    'score': item.score,
+                    'place': item.place,
+                    'player_id': item.player_id,
+                    'display_name': item.player.display_name,
+                }
 
-                prepared_results = [x[1] for x in prepared_results.items()]
+            for item in session.players.all():
+                prepared_results[item.player_id]['order'] = item.order
 
-                club_session = ClubSession.objects.create(
-                    club=club,
-                    date=make_aware(session.end_date, pytz.timezone('CET')),
-                    pantheon_id=session.representational_hash
+            prepared_results = [x[1] for x in prepared_results.items()]
+
+            club_session = ClubSession.objects.create(
+                club=club,
+                date=make_aware(session.end_date, pytz.timezone('CET')),
+                pantheon_id=session.representational_hash,
+                pantheon_event_id=session.event_id
+            )
+
+            for prepared_result in prepared_results:
+                player_string = ''
+                player = prepared_result['player_id'] in players_dict and players_dict[prepared_result['player_id']] or None
+                if not player:
+                    player_string = prepared_result['display_name']
+                    # we need to display to the admin
+                    missed_players[prepared_result['player_id']] = prepared_result['display_name']
+
+                ClubSessionResult.objects.create(
+                    club_session=club_session,
+                    player=player,
+                    player_string=player_string,
+                    place=prepared_result['place'],
+                    score=prepared_result['score'],
+                    order=prepared_result['order'],
                 )
-
-                for prepared_result in prepared_results:
-                    player_string = ''
-                    player = prepared_result['player_id'] in players_dict and players_dict[prepared_result['player_id']] or None
-                    if not player:
-                        player_string = prepared_result['display_name']
-                        # we need to display to the admin
-                        missed_players[prepared_result['player_id']] = prepared_result['display_name']
-
-                    ClubSessionResult.objects.create(
-                        club_session=club_session,
-                        player=player,
-                        player_string=player_string,
-                        place=prepared_result['place'],
-                        score=prepared_result['score'],
-                        order=prepared_result['order'],
-                    )
 
         session = (PantheonSession.objects
                    .filter(event__id__in=event_ids, status=PantheonSession.FINISHED)
@@ -282,9 +286,6 @@ class Command(BaseCommand):
             last_name = temp[0].title()
             first_name = temp[1].title()
 
-            if first_name == 'Петр':
-                first_name = 'Пётр'
-
             try:
                 player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 player.pantheon_id = pantheon_player.id
@@ -292,4 +293,5 @@ class Command(BaseCommand):
 
                 club.players.add(player)
             except Player.DoesNotExist:
-                print('Missed player: '.format(pantheon_player.display_name))
+                games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
+                print('Missed player: {}. Games: {}. ID: {}'.format(pantheon_player.display_name, games, pantheon_player.id))

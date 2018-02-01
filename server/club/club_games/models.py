@@ -15,6 +15,7 @@ class ClubSession(BaseModel):
     date = models.DateTimeField()
 
     pantheon_id = models.CharField(max_length=255, null=True, blank=True)
+    pantheon_event_id = models.PositiveIntegerField(null=True, blank=True)
 
 
 class ClubSessionResult(BaseModel):

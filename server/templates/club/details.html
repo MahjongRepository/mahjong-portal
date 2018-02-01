@@ -159,8 +159,8 @@
                             <tr class="">
                                 <td colspan="8">
                                     {% timezone club.timezone %}
-                                        {% if club_session.pantheon_id %}
-                                            <a href="https://gui.mjtop.net/eid61/game/{{ club_session.pantheon_id }}" target="_blank">
+                                        {% if club_session.pantheon_id and club_session.pantheon_event_id %}
+                                            <a href="https://gui.mjtop.net/eid{{ club_session.pantheon_event_id }}/game/{{ club_session.pantheon_id }}" target="_blank">
                                                 {{ club_session.date }}
                                             </a>
                                         {% else %}
