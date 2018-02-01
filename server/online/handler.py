@@ -22,6 +22,15 @@ BOT_NICKNAMES = [
     u'нани'
 ]
 
+# in minutes
+TOURNAMENT_BREAKS_TIME = [
+    5,
+    5,
+    15,
+    5,
+    5,
+]
+
 
 class TournamentHandler(object):
 
@@ -37,12 +46,18 @@ class TournamentHandler(object):
             return 'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
 
         if self.status.end_break_time:
-            delta = self.status.end_break_time - timezone.now()
+            now = timezone.now()
+
+            if now > self.status.end_break_time:
+                return 'Ждём начала нового тура.'
+
+            delta = self.status.end_break_time - now
             if delta.seconds > 60:
-                minutes = round(delta.seconds // 60.0, 2)
+                minutes = round(delta.seconds / 60.0, 2)
             else:
                 minutes = round(delta.seconds * 0.0166, 2)
-            return 'Перерыв. Следующий тур {} начнётся через {} минут'.format(self.status.current_round + 1, minutes)
+
+            return 'Перерыв. Следующий тур начнётся через {} минут.'.format(minutes)
 
         active_games_count = (TournamentGame.objects
                               .filter(tournament=self.tournament)
@@ -55,6 +70,11 @@ class TournamentHandler(object):
                 self.status.current_round,
                 active_games_count
             )
+
+        if self.status.current_round == self.tournament.number_of_sessions:
+            return 'Турнир завершён. Спасибо за участие!'
+
+        return ''
 
     def add_game_log(self, log_link):
         error_message = 'Это не похоже на лог игры.'
@@ -152,6 +172,9 @@ class TournamentHandler(object):
         confirmed_players = list(confirmed_players)
 
         with transaction.atomic():
+            self.status.current_round += 1
+            self.status.end_break_time = None
+
             # add bots to the tournament
             for x in range(0, missed_players):
                 bot_replacement = TournamentPlayers.objects.create(telegram_username=BOT_NICKNAMES[x],
@@ -159,67 +182,65 @@ class TournamentHandler(object):
                                                                    tournament=self.tournament)
                 confirmed_players.append(bot_replacement)
 
-            self.status.current_round += 1
-            self.status.end_break_time = None
-            self.status.save()
+            sortition = self.make_sortition()
 
-            player_ids = [x.id for x in confirmed_players]
-            sortition = self.make_sortition(player_ids)
+            pantheon_ids = {}
+            for confirmed_player in confirmed_players:
+                pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
             games = []
             for item in sortition:
-                game = TournamentGame.objects.create(
-                    tournament=self.tournament,
-                    tournament_round=self.status.current_round
-                )
+                try:
+                    game = TournamentGame.objects.create(
+                        tournament=self.tournament,
+                        tournament_round=self.status.current_round
+                    )
 
-                for wind in range(0, len(item)):
-                    TournamentGamePlayer.objects.create(game=game,
-                                                        player_id=item[wind],
-                                                        wind=wind)
-                games.append(game)
+                    for wind in range(0, len(item)):
+                        player_id = pantheon_ids[item[wind]].id
 
-        return games, 'Тур {}. Запускаю игры...'.format(self.status.current_round)
+                        TournamentGamePlayer.objects.create(game=game,
+                                                            player_id=player_id,
+                                                            wind=wind)
+                    games.append(game)
+                except Exception as e:
+                    logger.error('Failed to start a game. Pantheon ids={}'.format(item), exc_info=1)
 
-    def make_sortition(self, player_ids):
-        """
-        For now let's just use random sortition.
-        This method prepared list of games with players.
-        """
-        number_of_players = len(player_ids)
+            # we was able to generate games
+            if games:
+                self.status.save()
 
-        if number_of_players % 4 != 0:
-            raise ValueError('Not correct number of players for sortition. It had to be multiples of 4')
+                message = 'Тур {}. Запускаю игры...'.format(self.status.current_round)
+            else:
+                message = 'Игры не запустились. Требуется вмешательство администратора.'
 
-        def shuffle_wall(rand_seeds):
-            # for better shuffling we had to do it manually
-            # shuffle() didn't make results to be really random
-            for x in range(0, number_of_players):
-                src = x
-                dst = rand_seeds[x]
+        return games, message
 
-                swap = results[x]
-                results[src] = results[dst]
-                results[dst] = swap
+    def make_sortition(self):
+        data = {
+            'jsonrpc': '2.0',
+            'method': 'generateSwissSeating',
+            'params': {
+                'eventId': settings.PANTHEON_EVENT_ID,
+            },
+            'id': make_random_letters_and_digit_string()
+        }
 
-        results = [i for i in range(0, number_of_players)]
-        rand_one = [randint(0, number_of_players - 1) for _ in range(0, number_of_players)]
-        rand_two = [randint(0, number_of_players - 1) for _ in range(0, number_of_players)]
+        headers = {
+            'X-Auth-Token': settings.PANTHEON_ADMIN_TOKEN,
+        }
 
-        shuffle_wall(rand_one)
-        shuffle_wall(rand_two)
+        response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+        if response.status_code == 500:
+            logger.error('Make sortition. Pantheon 500.')
+            return []
 
-        number_of_games = number_of_players // 4
-        sortition = []
-        for x in range(0, number_of_games):
-            position = x * 4
-            sortition.append([
-                player_ids[position],
-                player_ids[position + 1],
-                player_ids[position + 2],
-                player_ids[position + 3],
-            ])
+        content = response.json()
+        if content.get('error'):
+            logger.error('Make sortition. Pantheon error. {}'.format(content.get('error')))
+            return []
 
+        sortition = content['result']
         return sortition
 
     def start_game(self, game):
@@ -285,9 +306,13 @@ class TournamentHandler(object):
                                .filter(tournament_round=self.status.current_round))
 
         if finished_games.count() == games.count():
-            break_minutes = 5
-            self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
-            self.status.save()
-            return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.'.format(break_minutes)
+            if self.status.current_round == self.tournament.number_of_sessions:
+                return 'Все туры были завершены. Спасибо за участие!'
+            else:
+                index = self.status.current_round - 1
+                break_minutes = TOURNAMENT_BREAKS_TIME[index]
+                self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
+                self.status.save()
+                return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.'.format(break_minutes)
         else:
             return None

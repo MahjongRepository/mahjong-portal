@@ -11,7 +11,7 @@ class TournamentStatus(BaseModel):
     end_break_time = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
-        return self.current_round
+        return self.tournament.name
 
 
 class TournamentPlayers(BaseModel):
@@ -19,6 +19,8 @@ class TournamentPlayers(BaseModel):
 
     telegram_username = models.CharField(max_length=32)
     tenhou_username = models.CharField(max_length=8)
+
+    pantheon_id = models.PositiveIntegerField(null=True, blank=True)
 
     def __unicode__(self):
         return self.tenhou_username

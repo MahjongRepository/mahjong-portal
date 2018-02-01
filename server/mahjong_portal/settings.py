@@ -185,6 +185,7 @@ YANDEX_VERIFICATION_CODE = None
 TELEGRAM_TOKEN = None
 PANTHEON_URL = None
 PANTHEON_EVENT_ID = None
+PANTHEON_ADMIN_TOKEN = None
 
 try:
     from .settings_local import *
