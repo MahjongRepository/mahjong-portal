@@ -31,9 +31,15 @@
         {% if club_rating %}
             <h2 id="stat">{% trans 'Club members statistics' %}</h2>
             <p>{% trans 'We are displaying here players with 5+ club games.' %}</p>
-
-            <div class="table-responsive-sm">
-                <table class="table mt-4 table-bordered table-striped">
+            <p> {% trans 'Sorting:' %}
+                <select name="" id="" class="form-control d-inline" style="width: 150px; ">
+                    {% for key, value in sorting.items %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            <div class="table-responsive">
+                <table class="table mt-2 table-bordered table-striped">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -42,9 +48,7 @@
                                 {% trans 'Tenhou' %}
                             </th>
                             <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=avg#stat">
-                                    {% trans 'Avg. place' %}
-                                </a>
+                                <nobr>{% trans 'Avg. place' %}</nobr>
                             </th>
                             <th scope="col">
                                 {% trans 'Games' %}
@@ -61,21 +65,6 @@
                             <th scope="col">
                                 {% trans '4th' %}
                             </th>
-                            <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=ron#stat" title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom">
-                                    {% trans '% feeds' %}
-                                </a>
-                            </th>
-                            <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=ippatsu#stat" title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom">
-                                    {% trans '% ippatsu' %}
-                                </a>
-                            </th>
-                            <th scope="col">
-                                <a href="{% url 'club_details' club.slug %}?sort=dora#stat" title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom">
-                                    {% trans 'Avg. dora' %}
-                                </a>
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,10 +74,10 @@
                                 <td>
                                     {% if item.player %}
                                         <a href="{% url 'player_details' item.player.slug %}">
-                                            {{ item.player }}
+                                            <nobr>{{ item.player }}</nobr>
                                         </a>
                                     {% else %}
-                                        {{ item.player_string }}
+                                        <nobr>{{ item.player_string }}</nobr>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -118,14 +107,33 @@
                                 <td>
                                     {{ item.fourth_place|floatformat:2 }}
                                 </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="8">
+                                    <span title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
+                                        <nobr>{% trans 'feeds' %}</nobr>
+                                    </span>
+                                    {{ item.feed_percentage|floatformat:2 }}%,
 
-                                <td>
-                                    {{ item.feed_percentage|floatformat:2 }}
-                                </td>
-                                <td>
-                                    {{ item.ippatsu_chance|floatformat:2 }}
-                                </td>
-                                <td>
+                                    <span title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
+                                        <nobr>{% trans 'ippatsu' %}</nobr>
+                                    </span>
+                                    {{ item.ippatsu_chance|floatformat:2 }}%,
+
+                                    <span title="{% trans 'How many win hands were opened' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
+                                        <nobr>{% trans 'open hands' %}</nobr>
+                                    </span>
+                                    {{ item.open_hand|floatformat:2 }}%,
+
+                                    <span title="{% trans 'How often riichi was ended with win' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
+                                        <nobr>{% trans 'successful riichi' %}</nobr>
+                                    </span>
+                                    {{ item.successful_riichi|floatformat:2 }}%,
+
+                                    <span title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
+                                        <nobr>{% trans 'avg. dora' %}</nobr>
+                                    </span>
                                     {{ item.average_dora_in_hand|floatformat:2 }}
                                 </td>
                             </tr>

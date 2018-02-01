@@ -50,3 +50,5 @@ class ClubRating(BaseModel):
     ippatsu_chance = models.DecimalField(decimal_places=2, max_digits=10)
     average_dora_in_hand = models.DecimalField(decimal_places=2, max_digits=10)
     feed_percentage = models.DecimalField(decimal_places=2, max_digits=10)
+    open_hand = models.DecimalField(decimal_places=2, max_digits=10)
+    successful_riichi = models.DecimalField(decimal_places=2, max_digits=10)

@@ -60,6 +60,7 @@ class PantheonSessionPlayer(models.Model):
 
 class PantheonRound(models.Model):
     RON = 'ron'
+    MULTI_RON = 'multiron'
 
     session = models.ForeignKey(PantheonSession, related_name='rounds')
     winner = models.ForeignKey(PantheonPlayer, related_name='win_rounds')
@@ -68,8 +69,10 @@ class PantheonRound(models.Model):
     dora = models.PositiveIntegerField()
     multi_ron = models.PositiveIntegerField()
     round = models.PositiveIntegerField()
+    open_hand = models.PositiveIntegerField()
     outcome = models.CharField(max_length=255)
     yaku = models.CharField(max_length=255)
+    riichi = models.CharField(max_length=255)
 
     class Meta:
         managed = False

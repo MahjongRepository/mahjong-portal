@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import get_language
 
-from club.club_games.models import ClubSession
+from django.utils.translation import gettext as _
 from club.models import Club
 
 
@@ -31,15 +31,16 @@ def club_details(request, slug):
                      )[:10]
     total_sessions = club.club_sessions.all().count()
 
-    default_sort = 'avg'
+    default_sort = 'average_place'
     sort = request.GET.get('sort', default_sort)
     sorting = {
-        'avg': 'average_place',
-        'ippatsu': '-ippatsu_chance',
-        'dora': '-average_dora_in_hand',
-        'ron': 'feed_percentage',
+        'average_place': _('Average place (ascending)'),
+        '-average_place': _('Average place (descending)'),
     }
-    sort = sorting.get(sort, 'average_place')
+
+    # check that given sorting in allowed options
+    if sort not in sorting:
+        sort = default_sort
 
     club_rating = (club.rating
                    .filter(games_count__gte=5)
@@ -52,5 +53,6 @@ def club_details(request, slug):
         'page': 'club',
         'club_sessions': club_sessions,
         'club_rating': club_rating,
-        'total_sessions': total_sessions
+        'total_sessions': total_sessions,
+        'sorting': sorting
     })
