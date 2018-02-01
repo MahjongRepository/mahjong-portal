@@ -36,6 +36,16 @@ def club_details(request, slug):
     sorting = {
         'average_place': _('Average place (ascending)'),
         '-average_place': _('Average place (descending)'),
+        'feed_percentage': _('Feeds (ascending)'),
+        '-feed_percentage': _('Feeds (descending)'),
+        'ippatsu_chance': _('Ippatsu (ascending)'),
+        '-ippatsu_chance': _('Ippatsu (descending)'),
+        'open_hand': _('Open hands (ascending)'),
+        '-open_hand': _('Open hands (descending)'),
+        'successful_riichi': _('Successful riichi (ascending)'),
+        '-successful_riichi': _('Successful riichi (descending)'),
+        'average_dora_in_hand': _('Average dora (ascending)'),
+        '-average_dora_in_hand': _('Average dora (descending)'),
     }
 
     # check that given sorting in allowed options
@@ -54,5 +64,6 @@ def club_details(request, slug):
         'club_sessions': club_sessions,
         'club_rating': club_rating,
         'total_sessions': total_sessions,
-        'sorting': sorting
+        'sorting': sorting,
+        'sort': sort
     })

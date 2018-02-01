@@ -32,9 +32,9 @@
             <h2 id="stat">{% trans 'Club members statistics' %}</h2>
             <p>{% trans 'We are displaying here players with 5+ club games.' %}</p>
             <p> {% trans 'Sorting:' %}
-                <select name="" id="" class="form-control d-inline" style="width: 150px; ">
+                <select id="sortingSelect" class="form-control d-inline" style="width: 300px; ">
                     {% for key, value in sorting.items %}
-                        <option value="{{ key }}">{{ value }}</option>
+                        <option value="{{ key }}" {% if sort == key %}selected="selected"{% endif %}>{{ value }}</option>
                     {% endfor %}
                 </select>
             </p>
@@ -112,27 +112,27 @@
                                 <td></td>
                                 <td colspan="8">
                                     <span title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <nobr>{% trans 'feeds' %}</nobr>
+                                        <b>{% trans 'feeds' %}</b>
                                     </span>
                                     {{ item.feed_percentage|floatformat:2 }}%,
 
                                     <span title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <nobr>{% trans 'ippatsu' %}</nobr>
+                                        <b>{% trans 'ippatsu' %}</b>
                                     </span>
                                     {{ item.ippatsu_chance|floatformat:2 }}%,
 
                                     <span title="{% trans 'How many win hands were opened' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <nobr>{% trans 'open hands' %}</nobr>
+                                        <b>{% trans 'open hands' %}</b>
                                     </span>
                                     {{ item.open_hand|floatformat:2 }}%,
 
                                     <span title="{% trans 'How often riichi was ended with win' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <nobr>{% trans 'successful riichi' %}</nobr>
+                                        <b>{% trans 'successful riichi' %}</b>
                                     </span>
                                     {{ item.successful_riichi|floatformat:2 }}%,
 
                                     <span title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <nobr>{% trans 'avg. dora' %}</nobr>
+                                        <b>{% trans 'avg. dora' %}</b>
                                     </span>
                                     {{ item.average_dora_in_hand|floatformat:2 }}
                                 </td>
@@ -195,4 +195,14 @@
 {% block meta_tags %}
     <meta name="description" content="{% club_page_description club %}">
     <meta property="og:description" content="{% club_page_description club %}" />
+{% endblock %}
+
+{% block additional_js %}
+    <script>
+        $(document).ready(function () {
+            $('#sortingSelect').change(function () {
+                window.location.href = window.location.pathname + '?sort=' + $(this).val() + '#stat';
+            });
+        });
+    </script>
 {% endblock %}

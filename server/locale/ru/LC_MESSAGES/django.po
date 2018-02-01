@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 03:53+0000\n"
+"POT-Creation-Date: 2018-02-01 02:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,54 @@ msgstr "Права"
 #: account/admin.py:13
 msgid "Important dates"
 msgstr "Важные даты"
+
+#: club/views.py:37
+msgid "Average place (ascending)"
+msgstr "Среднее место (по возрастанию)"
+
+#: club/views.py:38
+msgid "Average place (descending)"
+msgstr "Среднее место (по убыванию)"
+
+#: club/views.py:39
+msgid "Feeds (ascending)"
+msgstr "Набросы (по возрастанию)"
+
+#: club/views.py:40
+msgid "Feeds (descending)"
+msgstr "Набросы (по убыванию)"
+
+#: club/views.py:41
+msgid "Ippatsu (ascending)"
+msgstr "Иппацу (по возрастанию)"
+
+#: club/views.py:42
+msgid "Ippatsu (descending)"
+msgstr "Иппацу (по убыванию)"
+
+#: club/views.py:43
+msgid "Open hands (ascending)"
+msgstr "Открытые руки (по возрастанию)"
+
+#: club/views.py:44
+msgid "Open hands (descending)"
+msgstr "Открытые руки (по убыванию)"
+
+#: club/views.py:45
+msgid "Successful riichi (ascending)"
+msgstr "Успешные риичи (по возрастанию)"
+
+#: club/views.py:46
+msgid "Successful riichi (descending)"
+msgstr "Успешные риичи (по убыванию)"
+
+#: club/views.py:47
+msgid "Average dora (ascending)"
+msgstr "Доры (по возрастанию)"
+
+#: club/views.py:48
+msgid "Average dora (descending)"
+msgstr "Доры (по убыванию)"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:13
 #, python-format
@@ -156,7 +204,11 @@ msgstr "Клубная статистика"
 msgid "We are displaying here players with 5+ club games."
 msgstr "Статистика для игроков с 5+ играми."
 
-#: templates/club/details.html:40 templates/club/list.html:19
+#: templates/club/details.html:34
+msgid "Sorting:"
+msgstr "Сортировка:"
+
+#: templates/club/details.html:46 templates/club/list.html:19
 #: templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:8
 #: templates/tournament/announcement.html:55
@@ -167,69 +219,83 @@ msgstr "Статистика для игроков с 5+ играми."
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/details.html:42
+#: templates/club/details.html:48
 msgid "Tenhou"
 msgstr "Tenhou"
 
-#: templates/club/details.html:46
+#: templates/club/details.html:51
 msgid "Avg. place"
 msgstr "Ср. место"
 
-#: templates/club/details.html:50
+#: templates/club/details.html:54
 msgid "Games"
 msgstr "Игр"
 
-#: templates/club/details.html:53
+#: templates/club/details.html:57
 msgid "1st"
 msgstr "1-e"
 
-#: templates/club/details.html:56
+#: templates/club/details.html:60
 msgid "2nd"
 msgstr "2-е"
 
-#: templates/club/details.html:59
+#: templates/club/details.html:63
 msgid "3rd"
 msgstr "3-е"
 
-#: templates/club/details.html:62
+#: templates/club/details.html:66
 msgid "4th"
 msgstr "4-е"
 
-#: templates/club/details.html:65
+#: templates/club/details.html:114
 msgid "How often player feed to other hand"
 msgstr "Как часто игрок накидывает в другие руки"
 
-#: templates/club/details.html:66
-#, python-format
-msgid "%% feeds"
-msgstr "%% набросов"
+#: templates/club/details.html:115
+msgid "feeds"
+msgstr "набросов"
 
-#: templates/club/details.html:70
+#: templates/club/details.html:119
 msgid "How often riichi was ended with ippatsu"
 msgstr "Как часто риичи игрока заканчивалось с иппацу"
 
-#: templates/club/details.html:71
-#, python-format
-msgid "%% ippatsu"
-msgstr "%% иппацу"
+#: templates/club/details.html:120
+msgid "ippatsu"
+msgstr "иппацу"
 
-#: templates/club/details.html:75
+#: templates/club/details.html:124
+msgid "How many win hands were opened"
+msgstr "Как много победных рук были открытыми"
+
+#: templates/club/details.html:125
+msgid "open hands"
+msgstr "открытых рук"
+
+#: templates/club/details.html:129
+msgid "How often riichi was ended with win"
+msgstr "Как часто риичи игрока заканчивалось победой"
+
+#: templates/club/details.html:130
+msgid "successful riichi"
+msgstr "успешных риичи"
+
+#: templates/club/details.html:134
 msgid "Average dora number in win hands"
 msgstr "Среднее количество дор в собранных руках"
 
-#: templates/club/details.html:76
-msgid "Avg. dora"
-msgstr "Дор"
+#: templates/club/details.html:135
+msgid "avg. dora"
+msgstr "дор"
 
-#: templates/club/details.html:139
+#: templates/club/details.html:147
 msgid "Latest 10 club games"
 msgstr "Последние 10 клубных игр"
 
-#: templates/club/details.html:142
+#: templates/club/details.html:150
 msgid "Total games: "
 msgstr "Всего игр:"
 
-#: templates/club/details.html:143
+#: templates/club/details.html:151
 msgid "Last updated "
 msgstr "Обновлялось"
 
@@ -240,8 +306,8 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:20 templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:56
 #: templates/tournament_admin/tournament_manage.html:66
-#: templates/website/search.html:17 tournament/models.py:168
-#: tournament/models.py:194
+#: templates/website/search.html:17 tournament/models.py:172
+#: tournament/models.py:198
 msgid "City"
 msgstr "Город"
 
@@ -363,7 +429,7 @@ msgstr "Записаться"
 msgid "Participants"
 msgstr "Участники"
 
-#: templates/tournament/announcement.html:58 tournament/models.py:195
+#: templates/tournament/announcement.html:58 tournament/models.py:199
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
@@ -413,7 +479,7 @@ msgid "Upcoming tournaments"
 msgstr "Предстоящие турниры"
 
 #: templates/tournament/list.html:35
-#: templates/tournament_admin/managed_tournaments.html:51
+#: templates/tournament_admin/managed_tournaments.html:57
 msgid "Nothing here"
 msgstr "Ничего нет"
 
@@ -439,7 +505,7 @@ msgstr "Участников"
 msgid "Action"
 msgstr "Действие"
 
-#: templates/tournament_admin/managed_tournaments.html:43
+#: templates/tournament_admin/managed_tournaments.html:49
 msgid "Manage"
 msgstr "Управление"
 
@@ -500,7 +566,7 @@ msgid "Registered at"
 msgstr "Дата регистрации"
 
 #: templates/tournament_admin/tournament_manage.html:68
-#: tournament/models.py:169
+#: tournament/models.py:173
 msgid "Phone"
 msgstr "Телефон"
 
@@ -566,40 +632,40 @@ msgstr "Результаты поиска"
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: tournament/forms.py:17 tournament/forms.py:30 tournament/models.py:178
-#: tournament/models.py:202
+#: tournament/forms.py:17 tournament/forms.py:30 tournament/models.py:182
+#: tournament/models.py:206
 msgid "I allow to store my personal data"
 msgstr "Я разрешаю сбор моих персональных данных, их хранение и обработку"
 
-#: tournament/models.py:166 tournament/models.py:192
+#: tournament/models.py:170 tournament/models.py:196
 msgid "First name"
 msgstr "Имя"
 
-#: tournament/models.py:167 tournament/models.py:193
+#: tournament/models.py:171 tournament/models.py:197
 msgid "Last name"
 msgstr "Фамилия"
 
-#: tournament/models.py:170 tournament/models.py:172 tournament/models.py:197
+#: tournament/models.py:174 tournament/models.py:176 tournament/models.py:201
 msgid "It will be visible only to the administrator"
 msgstr "Он будет показан только администратору"
 
-#: tournament/models.py:171
+#: tournament/models.py:175
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: tournament/models.py:196
+#: tournament/models.py:200
 msgid "Your contact (email, phone, etc.)"
 msgstr "Контактные данные (почта, телефон, т.п.)"
 
-#: tournament/models.py:213
+#: tournament/models.py:217
 msgid "Tell us about your tournament"
 msgstr "Расскажите нам про ваш турнир"
 
-#: tournament/models.py:214
+#: tournament/models.py:218
 msgid "We would like to know tournament date, place and your contacts"
 msgstr "Ваши контакты, место и дата проведения"
 
-#: tournament/views.py:142
+#: tournament/views.py:141
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -607,10 +673,10 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:145
+#: tournament/views.py:144
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:151
+#: tournament/views.py:150
 msgid "Please, allow to store personal data"
-msgstr ""
+msgstr "Пожалуйста, разрешите сохранять персональные данные"
