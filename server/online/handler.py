@@ -63,13 +63,25 @@ class TournamentHandler(object):
                               .filter(tournament=self.tournament)
                               .filter(tournament_round=self.status.current_round)
                               .exclude(status=TournamentGame.FINISHED)
+                              .exclude(status=TournamentGame.FAILED_TO_START)
                               .count())
 
-        if active_games_count:
-            return 'Тур {}. Активных игр на данный момент: {}. Ждём пока они закончатся.'.format(
-                self.status.current_round,
-                active_games_count
-            )
+        failed_games_count = (TournamentGame.objects
+                              .filter(tournament=self.tournament)
+                              .filter(tournament_round=self.status.current_round)
+                              .filter(status=TournamentGame.FAILED_TO_START)
+                              .count())
+
+        if active_games_count or failed_games_count:
+            message = 'Тур {}. '.format(self.status.current_round)
+
+            if active_games_count:
+                message += 'Активных игр на данный момент: {}. Ждём пока они закончатся.'.format(active_games_count)
+
+            if failed_games_count:
+                message += 'Несколько игр не смогли запуститься. Администратор скоро это исправит.'
+
+            return message
 
         if self.status.current_round == self.tournament.number_of_sessions:
             return 'Турнир завершён. Спасибо за участие!'
@@ -267,30 +279,36 @@ class TournamentHandler(object):
             'Referer': 'http://tenhou.net/cs/edit/?{}'.format(self.lobby),
         }
         
-        response = requests.post(url, data=data, headers=headers, allow_redirects=False)
-        location = unquote(response.headers['location'])
-        result = location.split('{}&'.format(self.lobby))[1]
-        
-        if result.startswith('FAILED'):
+        try:
+            response = requests.post(url, data=data, headers=headers, allow_redirects=False)
+            location = unquote(response.headers['location'])
+            result = location.split('{}&'.format(self.lobby))[1]
+
+            if result.startswith('FAILED'):
+                game.status = TournamentGame.FAILED_TO_START
+
+                message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
+                message += ' Стол был отодвинут в конец очереди.'
+            elif result.startswith('MEMBER NOT FOUND'):
+                game.status = TournamentGame.FAILED_TO_START
+
+                message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
+                missed_players = [x for x in result.split('\r\n')[1:] if x]
+
+                tg_usernames = TournamentPlayers.objects.filter(tenhou_username__in=missed_players).values_list('telegram_username', flat=True)
+                tg_usernames = ['@' + x for x in tg_usernames]
+
+                message += ' Отсутствующие игроки: {}'.format(', '.join(tg_usernames))
+                message += ' Стол был отодвинут в конец очереди.'
+            else:
+                game.status = TournamentGame.STARTED
+
+                message = 'Стол: {} запущен.'.format(u', '.join(player_names))
+        except:
+            message = 'Стол: {} не получилось запустить. Требуется вмешательство администратора.'.format(
+                u', '.join(player_names)
+            )
             game.status = TournamentGame.FAILED_TO_START
-            
-            message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
-            message += ' Стол был отодвинут в конец очереди.'
-        elif result.startswith('MEMBER NOT FOUND'):
-            game.status = TournamentGame.FAILED_TO_START
-            
-            message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
-            missed_players = [x for x in result.split('\r\n')[1:] if x]
-            
-            tg_usernames = TournamentPlayers.objects.filter(tenhou_username__in=missed_players).values_list('telegram_username', flat=True)
-            tg_usernames = ['@' + x for x in tg_usernames]
-            
-            message += ' Отсутствующие игроки: {}'.format(', '.join(tg_usernames))
-            message += ' Стол был отодвинут в конец очереди.'
-        else:
-            game.status = TournamentGame.STARTED
-            
-            message = 'Стол: {} запущен.'.format(u', '.join(player_names))
         
         game.save()
         

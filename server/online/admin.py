@@ -13,6 +13,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
 class TournamentGameAdmin(admin.ModelAdmin):
     list_display = ['tournament', 'tournament_round', 'status', 'log_id']
+    list_filter = ['status']
 
 
 class TournamentGamePlayerAdmin(admin.ModelAdmin):

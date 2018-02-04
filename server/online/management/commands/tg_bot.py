@@ -13,6 +13,7 @@ from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
 
 from online.handler import TournamentHandler
+from online.models import TournamentGame
 from tournament.models import Tournament
 
 logger = logging.getLogger()
@@ -60,6 +61,8 @@ class Command(BaseCommand):
         dispatcher.add_handler(CommandHandler('restart', restart,
                                               filters=Filters.user(username='@Nihisil')))
         dispatcher.add_handler(CommandHandler('start_next_round', start_next_round,
+                                              filters=Filters.user(username='@Nihisil')))
+        dispatcher.add_handler(CommandHandler('start_failed_games', start_failed_games,
                                               filters=Filters.user(username='@Nihisil')))
 
         dispatcher.add_handler(start_handler)
@@ -158,6 +161,17 @@ def start_next_round(bot, update):
 
     games, message = tournament_handler.start_next_round()
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+    for game in games:
+        message = tournament_handler.start_game(game)
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def start_failed_games(bot, update):
+    logger.info('Start failed games')
+
+    games = TournamentGame.objects.filter(status=TournamentGame.FAILED_TO_START)
+    bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры...')
 
     for game in games:
         message = tournament_handler.start_game(game)
