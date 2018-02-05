@@ -138,6 +138,12 @@ class Tournament(BaseModel):
     def is_other(self):
         return self.tournament_type == self.OTHER
 
+    def get_tournament_registrations(self):
+        if self.is_online():
+            return self.online_tournament_registrations.filter(is_approved=True)
+        else:
+            return self.tournament_registrations.filter(is_approved=True)
+
 
 class TournamentResult(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='results', on_delete=models.PROTECT)

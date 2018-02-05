@@ -9,7 +9,7 @@
     <div>
         {% if upcoming_tournaments %}
             <h1>{% trans 'Upcoming tournaments' %}</h1>
-            {% with upcoming_tournaments as tournaments %}
+            {% with tournaments=upcoming_tournaments is_upcoming=True  %}
                 {% include 'tournament/_tournaments_table.html' %}
             {% endwith %}
         {% endif %}

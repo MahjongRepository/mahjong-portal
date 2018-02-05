@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-01 02:29+0000\n"
+"POT-Creation-Date: 2018-02-05 08:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -306,8 +306,8 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:20 templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:56
 #: templates/tournament_admin/tournament_manage.html:66
-#: templates/website/search.html:17 tournament/models.py:172
-#: tournament/models.py:198
+#: templates/website/search.html:17 tournament/models.py:178
+#: tournament/models.py:204
 msgid "City"
 msgstr "Город"
 
@@ -393,12 +393,21 @@ msgstr "Страна"
 msgid "Type"
 msgstr "Тип"
 
-#: templates/tournament/_tournaments_table.html:18
+#: templates/tournament/_tournaments_table.html:20
+msgctxt "number of players"
+msgid "Participants"
+msgstr "Участников"
+
+#: templates/tournament/_tournaments_table.html:21
+msgid "Max. players"
+msgstr "Макс. игроков"
+
+#: templates/tournament/_tournaments_table.html:23
 msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
-#: templates/tournament/_tournaments_table.html:19
+#: templates/tournament/_tournaments_table.html:26
 msgid "Sessions"
 msgstr "Игр"
 
@@ -429,7 +438,7 @@ msgstr "Записаться"
 msgid "Participants"
 msgstr "Участники"
 
-#: templates/tournament/announcement.html:58 tournament/models.py:199
+#: templates/tournament/announcement.html:58 tournament/models.py:205
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
@@ -566,7 +575,7 @@ msgid "Registered at"
 msgstr "Дата регистрации"
 
 #: templates/tournament_admin/tournament_manage.html:68
-#: tournament/models.py:173
+#: tournament/models.py:179
 msgid "Phone"
 msgstr "Телефон"
 
@@ -632,36 +641,36 @@ msgstr "Результаты поиска"
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: tournament/forms.py:17 tournament/forms.py:30 tournament/models.py:182
-#: tournament/models.py:206
+#: tournament/forms.py:17 tournament/forms.py:30 tournament/models.py:188
+#: tournament/models.py:212
 msgid "I allow to store my personal data"
 msgstr "Я разрешаю сбор моих персональных данных, их хранение и обработку"
 
-#: tournament/models.py:170 tournament/models.py:196
+#: tournament/models.py:176 tournament/models.py:202
 msgid "First name"
 msgstr "Имя"
 
-#: tournament/models.py:171 tournament/models.py:197
+#: tournament/models.py:177 tournament/models.py:203
 msgid "Last name"
 msgstr "Фамилия"
 
-#: tournament/models.py:174 tournament/models.py:176 tournament/models.py:201
+#: tournament/models.py:180 tournament/models.py:182 tournament/models.py:207
 msgid "It will be visible only to the administrator"
 msgstr "Он будет показан только администратору"
 
-#: tournament/models.py:175
+#: tournament/models.py:181
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: tournament/models.py:200
+#: tournament/models.py:206
 msgid "Your contact (email, phone, etc.)"
 msgstr "Контактные данные (почта, телефон, т.п.)"
 
-#: tournament/models.py:217
+#: tournament/models.py:223
 msgid "Tell us about your tournament"
 msgstr "Расскажите нам про ваш турнир"
 
-#: tournament/models.py:218
+#: tournament/models.py:224
 msgid "We would like to know tournament date, place and your contacts"
 msgstr "Ваши контакты, место и дата проведения"
 

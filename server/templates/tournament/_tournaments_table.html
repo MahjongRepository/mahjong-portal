@@ -15,7 +15,14 @@
                 {% endif %}
             </th>
             <th scope="col">{% trans 'Type' %}</th>
-            <th scope="col">{% trans 'Players' context 'number of players' %}</th>
+
+            {% if is_upcoming %}
+                <th scope="col">{% trans 'Participants' context 'number of players' %}</th>
+                <th scope="col">{% trans 'Max. players' %}</th>
+            {% else %}
+                <th scope="col">{% trans 'Players' context 'number of players' %}</th>
+            {% endif %}
+
             <th scope="col">{% trans 'Sessions' %}</th>
         </tr>
         </thead>
@@ -46,6 +53,13 @@
                 <td>
                     {% include 'tournament/_tournament_type.html' %}
                 </td>
+
+                {% if is_upcoming %}
+                    <td>
+                        {{ tournament.get_tournament_registrations.count|default:'-' }}
+                    </td>
+                {% endif %}
+
                 <td>{{ tournament.number_of_players|default:'-' }}</td>
                 <td>{{ tournament.number_of_sessions|default:'-' }}</td>
             </tr>
