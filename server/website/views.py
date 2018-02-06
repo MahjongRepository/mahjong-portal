@@ -1,4 +1,6 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.utils import translation
 from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
@@ -77,3 +79,18 @@ def city_page(request, slug):
         'players': players,
         'tournaments': tournaments
     })
+
+
+def players_api(request):
+    translation.activate('ru')
+
+    players = Player.objects.filter(country__code='RU').prefetch_related('city').order_by('id')
+
+    data = []
+    for player in players:
+        data.append({
+            'id': player.id,
+            'name': player.full_name,
+            'city': player.city and player.city.name or ''
+        })
+    return JsonResponse(data, safe=False)
