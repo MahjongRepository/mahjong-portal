@@ -335,7 +335,7 @@ class TournamentHandler(object):
                                .filter(tournament=self.tournament)
                                .filter(tournament_round=self.status.current_round))
 
-        if finished_games.count() == games.count():
+        if finished_games.count() == games.count() and not self.status.end_break_time:
             if self.status.current_round == self.tournament.number_of_sessions:
                 return 'Все туры были завершены. Спасибо за участие!'
             else:
