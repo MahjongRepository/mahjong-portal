@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 
 from online.models import TournamentStatus, TournamentPlayers, TournamentGame, TournamentGamePlayer
-from tournament.models import Tournament
+from tournament.models import Tournament, OnlineTournamentRegistration
 
 
 class TournamentGameForm(forms.ModelForm):
@@ -35,7 +35,16 @@ class TournamentStatusAdmin(admin.ModelAdmin):
 
 class TournamentPlayersAdmin(admin.ModelAdmin):
     form = TournamentPlayersForm
-    list_display = ['tournament', 'telegram_username', 'tenhou_username', 'pantheon_id']
+    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id']
+
+    def player(self, obj):
+        try:
+            registration = OnlineTournamentRegistration.objects.get(tenhou_nickname=obj.tenhou_username)
+            return registration.player
+        except:
+            pass
+
+        return None
 
 
 class TournamentGameAdmin(admin.ModelAdmin):
