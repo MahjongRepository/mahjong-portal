@@ -49,7 +49,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
 class TournamentGameAdmin(admin.ModelAdmin):
     form = TournamentGameForm
-    list_display = ['tournament', 'tournament_round', 'status', 'log_id', 'created_at', 'updated_at']
+    list_display = ['tournament', 'tournament_round', 'status', 'log_id', 'created_on', 'updated_on']
     list_filter = ['status', 'tournament_round']
 
 
