@@ -64,6 +64,8 @@ class Command(BaseCommand):
                                               filters=Filters.user(username='@Nihisil')))
         dispatcher.add_handler(CommandHandler('start_failed_games', start_failed_games,
                                               filters=Filters.user(username='@Nihisil')))
+        dispatcher.add_handler(CommandHandler('close_registration', close_registration,
+                                              filters=Filters.user(username='@Nihisil')))
 
         dispatcher.add_handler(start_handler)
         dispatcher.add_handler(log_handler)
@@ -176,6 +178,13 @@ def start_failed_games(bot, update):
     for game in games:
         message = tournament_handler.start_game(game)
         bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def close_registration(bot, update):
+    logger.info('Close registration')
+
+    message = tournament_handler.close_registration()
+    bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
 def error_callback(bot, update, error):

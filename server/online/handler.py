@@ -13,14 +13,9 @@ from django.utils import timezone
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
 from rating.utils import make_random_letters_and_digit_string
+from tournament.models import OnlineTournamentRegistration
 
 logger = logging.getLogger()
-
-BOT_NICKNAMES = [
-    u'おねえさん',
-    u"<('o'<)",
-    u'нани'
-]
 
 # in minutes
 TOURNAMENT_BREAKS_TIME = [
@@ -88,6 +83,11 @@ class TournamentHandler(object):
 
         return ''
 
+    def close_registration(self):
+        self.status.registration_closed = True
+        self.status.save()
+        return 'Этап подтверждения участия завершился. Игры начнутся через 5 минут.'
+
     def add_game_log(self, log_link):
         error_message = 'Это не похоже на лог игры.'
         
@@ -106,7 +106,7 @@ class TournamentHandler(object):
         players = parser.get_player_names(log_id)
         
         if TournamentGame.objects.filter(log_id=log_id).exists():
-            return 'Игра уже была добавлена в систему другим игроком. Спасибо.'
+            return 'Игра уже была добавлена в систему. Спасибо.'
         
         games = (TournamentGame.objects
                                .filter(tournament=self.tournament)
@@ -145,17 +145,37 @@ class TournamentHandler(object):
 
         return 'Игра была добавлена. Спасибо.'
 
-    def link_username_and_tenhou_nick(self, telegram_username, tenhou_username):
+    def link_username_and_tenhou_nick(self, telegram_username, tenhou_nickname):
+        if self.status.registration_closed:
+            return 'Этап подтверждения участия уже завершился. Зарегистрироваться нельзя.'
+
+        if len(tenhou_nickname) > 8:
+            return 'Ник на тенхе не должен быть больше 8 символов.'
+
         try:
-            confirmation = TournamentPlayers.objects.get(telegram_username=telegram_username,
-                                                         tournament=self.tournament)
-            confirmation.tenhou_username = tenhou_username
+            registration = OnlineTournamentRegistration.objects.get(tenhou_nickname=tenhou_nickname)
+        except OnlineTournamentRegistration.DoesNotExist:
+            return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
+
+        pantheon_id = registration.player.pantheon_id
+
+        try:
+            confirmation = TournamentPlayers.objects.get(
+                telegram_username=telegram_username,
+                tournament=self.tournament,
+            )
+            confirmation.tenhou_username = tenhou_nickname
+            confirmation.pantheon_id = pantheon_id
             confirmation.save()
         except TournamentPlayers.DoesNotExist:
-            TournamentPlayers.objects.create(telegram_username=telegram_username, tenhou_username=tenhou_username,
-                                             tournament=self.tournament)
+            confirmation = TournamentPlayers.objects.create(
+                telegram_username=telegram_username,
+                tenhou_username=tenhou_nickname,
+                tournament=self.tournament,
+                pantheon_id=pantheon_id
+            )
 
-        message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_username)
+        message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_nickname)
         return message
 
     def start_next_round(self):
@@ -177,22 +197,17 @@ class TournamentHandler(object):
             return [], 'Невозможно запустить новые игры. Старые игры ещё не завершились.'
 
         confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
-        missed_players = confirmed_players.count() % 4
-        if missed_players:
-            missed_players = 4 - missed_players
 
-        confirmed_players = list(confirmed_players)
+        if confirmed_players.count() % 4 != 0:
+            return [], 'Невозможно запустить новые игры. Количество игроков не кратно 4.'
+
+        missed_id = confirmed_players.filter(pantheon_id=None)
+        if missed_id.exists():
+            return [], 'Невозможно запустить новые игры. Не у всех игроков стоит pantheon id.'
 
         with transaction.atomic():
             self.status.current_round += 1
             self.status.end_break_time = None
-
-            # add bots to the tournament
-            for x in range(0, missed_players):
-                bot_replacement = TournamentPlayers.objects.create(telegram_username=BOT_NICKNAMES[x],
-                                                                   tenhou_username=BOT_NICKNAMES[x],
-                                                                   tournament=self.tournament)
-                confirmed_players.append(bot_replacement)
 
             sortition = self.make_sortition()
 

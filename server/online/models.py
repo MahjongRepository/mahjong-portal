@@ -9,6 +9,7 @@ class TournamentStatus(BaseModel):
 
     current_round = models.PositiveSmallIntegerField(null=True, blank=True)
     end_break_time = models.DateTimeField(null=True, blank=True)
+    registration_closed = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.tournament.name
