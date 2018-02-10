@@ -60,9 +60,11 @@ class Command(BaseCommand):
         # admin commands
         dispatcher.add_handler(CommandHandler('restart', restart,
                                               filters=Filters.user(username='@Nihisil')))
-        dispatcher.add_handler(CommandHandler('start_next_round', start_next_round,
+        dispatcher.add_handler(CommandHandler('prepare_next_round', prepare_next_round,
                                               filters=Filters.user(username='@Nihisil')))
         dispatcher.add_handler(CommandHandler('start_failed_games', start_failed_games,
+                                              filters=Filters.user(username='@Nihisil')))
+        dispatcher.add_handler(CommandHandler('start_games', start_games,
                                               filters=Filters.user(username='@Nihisil')))
         dispatcher.add_handler(CommandHandler('close_registration', close_registration,
                                               filters=Filters.user(username='@Nihisil')))
@@ -158,11 +160,18 @@ def new_chat_member(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 
-def start_next_round(bot, update):
-    logger.info('Start next round')
+def prepare_next_round(bot, update):
+    logger.info('Prepare next round')
 
-    games, message = tournament_handler.start_next_round()
+    games, message = tournament_handler.prepare_next_round()
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def start_games(bot, update):
+    logger.info('Start games')
+
+    games = TournamentGame.objects.filter(status=TournamentGame.NEW)
+    bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры...')
 
     for game in games:
         message = tournament_handler.start_game(game)

@@ -178,11 +178,7 @@ class TournamentHandler(object):
         message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_nickname)
         return message
 
-    def start_next_round(self):
-        """
-        Increment round number, add bots (if needed) and make games
-        """
-        
+    def prepare_next_round(self):
         if not self.status.current_round:
             self.status.current_round = 0
 
@@ -219,6 +215,7 @@ class TournamentHandler(object):
             for item in sortition:
                 try:
                     game = TournamentGame.objects.create(
+                        status=TournamentGame.NEW,
                         tournament=self.tournament,
                         tournament_round=self.status.current_round
                     )
@@ -231,13 +228,13 @@ class TournamentHandler(object):
                                                             wind=wind)
                     games.append(game)
                 except Exception as e:
-                    logger.error('Failed to start a game. Pantheon ids={}'.format(item), exc_info=1)
+                    logger.error('Failed to prepare a game. Pantheon ids={}'.format(item), exc_info=1)
 
             # we was able to generate games
             if games:
                 self.status.save()
 
-                message = 'Тур {}. Запускаю игры...'.format(self.status.current_round)
+                message = 'Тур {}. Игры сформированы.'.format(self.status.current_round)
             else:
                 message = 'Игры не запустились. Требуется вмешательство администратора.'
 
