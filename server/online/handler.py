@@ -21,7 +21,7 @@ logger = logging.getLogger()
 TOURNAMENT_BREAKS_TIME = [
     5,
     5,
-    15,
+    30,
     5,
     5,
 ]
