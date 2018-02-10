@@ -56,6 +56,7 @@ class Command(BaseCommand):
         start_handler = CommandHandler('me', set_tenhou_nickname, pass_args=True)
         log_handler = CommandHandler('log', set_game_log, pass_args=True)
         status_handler = CommandHandler('status', get_tournament_status)
+        help_handler = CommandHandler('help', help_bot)
 
         # admin commands
         dispatcher.add_handler(CommandHandler('restart', restart,
@@ -72,6 +73,7 @@ class Command(BaseCommand):
         dispatcher.add_handler(start_handler)
         dispatcher.add_handler(log_handler)
         dispatcher.add_handler(status_handler)
+        dispatcher.add_handler(help_handler)
         dispatcher.add_error_handler(error_callback)
         dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_chat_member))
 
@@ -126,6 +128,15 @@ def get_tournament_status(bot, update):
 
     message = tournament_handler.get_tournament_status()
     bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def help_bot(bot, update):
+    logger.info('Help')
+
+    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?C44234907 \n'
+    message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid73/stat \n'
+    message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10'
+    bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 
 def set_tenhou_nickname(bot, update, args):
