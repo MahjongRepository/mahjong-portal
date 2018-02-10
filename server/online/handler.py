@@ -157,7 +157,7 @@ class TournamentHandler(object):
         except OnlineTournamentRegistration.DoesNotExist:
             return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
 
-        pantheon_id = registration.player.pantheon_id
+        pantheon_id = registration.player and registration.player.pantheon_id or None
 
         try:
             confirmation = TournamentPlayers.objects.get(
