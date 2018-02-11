@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load i18n russian_words_morph meta_tags_helper %}
+
+{% block title %}
+    {{ player.full_name }}. {{ rating.name }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ player.full_name }}</h1>
+        <p>
+            {% trans 'From' %}
+            {% if player.city %}
+                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>,
+                {{ player.country.name }}
+            {% else %}
+                {{ player.country.name|genitive|title }}
+            {% endif %}
+        </p>
+
+        <p><a href="{% url 'player_details' player.slug %}">{% trans 'Player page' %}</a></p>
+
+        <h2>{{ rating.name }}</h2>
+
+        <p>
+            {{ rating_result.place }} {% trans 'place' %}  ({{ rating_result.score }})
+        </p>
+
+        <p class="mb-2">
+            <a class="ratingCalculationCollapse" data-toggle="collapse" href="#ratingCalculation{{ rating_result.id }}" aria-expanded="false">
+                {% trans 'how we calculated rating score' %}
+            </a>
+        </p>
+
+        <div class="collapse" id="ratingCalculation{{ rating_result.id }}">
+            <div class="card card-body">
+                score = {{ rating_result.rating_calculation }}
+            </div>
+        </div>
+
+        <h4 class="mt-4">{% trans 'Rating changes' %}</h4>
+
+        {% with rating_deltas as deltas %}
+            {% include 'player/_deltas_table.html' %}
+        {% endwith %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ player.full_name }}. {{ rating.name }}">
+    <meta property="og:description" content="{{ player.full_name }}. {{ rating.name }}">
+{% endblock %}

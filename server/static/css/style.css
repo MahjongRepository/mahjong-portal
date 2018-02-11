@@ -63,3 +63,11 @@ body {
 .tooltip-link {
     cursor: help;
 }
+
+.ratingCalculationCollapse {
+    border-bottom: 1px dashed;
+}
+
+.ratingCalculationCollapse:hover {
+    text-decoration: none;
+}

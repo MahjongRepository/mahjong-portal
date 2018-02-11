@@ -18,99 +18,33 @@
             {% endif %}
         </p>
 
-        {% for rating_result in rating_results %}
-            <h4 class="mt-4"><a href="{% url 'rating' rating_result.rating.slug %}#{{ player.slug }}">{{ rating_result.rating.name }}</a></h4>
-
-            <p>
-                {% trans 'Place' %} {{ rating_result.place }} ({% trans 'scores' %} {{ rating_result.score }})
-            </p>
-
-            <p class="mb-2">
-                <a class="ratingCalculationCollapse" data-toggle="collapse" href="#ratingCalculation{{ rating_result.id }}" aria-expanded="false">
-                    {% trans 'how we calculated rating score' %}
-                </a>
-            </p>
-
-            <div class="collapse" id="ratingCalculation{{ rating_result.id }}">
-                <div class="card card-body">
-                    score = {{ rating_result.rating_calculation }}
-                </div>
-            </div>
-
-            <h4 class="mt-4">{% trans 'Rating changes' %}</h4>
+        {% if rating_results %}
+            <h4>{% trans 'Ratings' %}</h4>
+            <p>{% trans 'Table with all ratings where player was counted' %}</p>
 
             <div class="table-responsive-sm">
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{% trans 'Base rank' %}</th>
-                        <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Place' %}</th>
-                        <th scope="col">{% trans 'Tournament' %}</th>
+                        <th scope="col">{% trans 'Scores' %}</th>
+                        <th scope="col">{% trans 'Rating' %}</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for delta in rating_result.get_deltas %}
-                        <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td>
-                                {% if delta.is_active %}
-                                    {% if delta.base_rank > 500 %}
-                                        <span class="badge badge-success">{{ delta.base_rank }}</span>
-                                    {% elif delta.base_rank == 0 %}
-                                        <span class="badge badge-primary">{{ delta.base_rank }}</span>
-                                    {% else %}
-                                        <span class="badge badge-danger">{{ delta.base_rank }}</span>
-                                    {% endif %}
-                                {% else %}
-                                    <span class="badge badge-secondary">{{ delta.base_rank }}</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
-                            </td>
-                            <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
-                            <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endfor %}
-
-        {% if other_tournaments %}
-            <h4>{% trans 'Other tournaments' %}</h4>
-            <p>{% trans 'Tournaments not counted in ratings, but where they took part' %}</p>
-            <div class="table-responsive-sm">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{% trans 'Base rank' %}</th>
-                        <th scope="col">{% trans 'Date' %}</th>
-                        <th scope="col">{% trans 'Place' %}</th>
-                        <th scope="col">{% trans 'Tournament' %}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for delta in other_tournaments %}
+                    {% for rating_result in rating_results %}
                         <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
                             <td>
-                                {% if delta.base_rank > 500 %}
-                                    <span class="badge badge-success">{{ delta.base_rank }}</span>
-                                {% elif delta.base_rank == 0 %}
-                                    <span class="badge badge-primary">{{ delta.base_rank }}</span>
-                                {% else %}
-                                    <span class="badge badge-danger">{{ delta.base_rank }}</span>
-                                {% endif %}
+                                {{ rating_result.place }}
                             </td>
                             <td>
-                                <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                                {{ rating_result.score }}
                             </td>
-                            <td>{{ delta.place }}/{{ delta.tournament.number_of_players }}</td>
-                            <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
+                            <td>
+                                <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
+                                    {{ rating_result.rating.name }}
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

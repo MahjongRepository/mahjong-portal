@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-11 03:24+0000\n"
+"POT-Creation-Date: 2018-02-11 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,12 +93,12 @@ msgstr "Турниры за %d"
 #: mahjong_portal/templatetags/meta_tags_helper.py:21
 #, python-format
 msgid "List of EMA riichi mahjong tournaments during %d"
-msgstr "Список риичи маджонг ЕМА турниров за %d"
+msgstr "Список EMA турниров по риичи маджонгу за %d"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:23
 #, python-format
 msgid "List of riichi mahjong tournaments during %d"
-msgstr "Список риичи маджонг турниров за %d"
+msgstr "Список турниров по риичи маджонгу за %d"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:33
 #, python-format
@@ -108,7 +108,7 @@ msgstr "Турнир по риичи маджонгу \"%(name)s\" прошел 
 #: mahjong_portal/templatetags/meta_tags_helper.py:47
 #, python-format
 msgid "Riichi mahjong club \"%(name)s\" in %(place)s"
-msgstr "Риичи маджонг клуб \"%(name)s\" в %(place)s"
+msgstr "Клуб \"%(name)s\" в %(place)s"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:60
 #, python-format
@@ -148,8 +148,8 @@ msgstr "Войти"
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
-#: templates/base.html:75 templates/rating/list.html:5
-#: templates/rating/list.html:10
+#: templates/base.html:75 templates/player/details.html:22
+#: templates/rating/list.html:5 templates/rating/list.html:10
 msgid "Ratings"
 msgstr "Рейтинги"
 
@@ -171,7 +171,7 @@ msgstr "Клубы"
 msgid "About"
 msgstr "О рейтингах"
 
-#: templates/base.html:92
+#: templates/base.html:92 templates/player/details.html:31
 msgid "Rating"
 msgstr "Рейтинг"
 
@@ -315,47 +315,55 @@ msgstr "Город"
 msgid "List with map of all russian riichi mahjong clubs"
 msgstr "Список и карта всех российских риичи маджонг клубов"
 
-#: templates/player/details.html:12
-msgid "From"
-msgstr "Из"
-
-#: templates/player/details.html:25 templates/player/details.html:49
-#: templates/player/details.html:92
-msgid "Place"
-msgstr "Место"
-
-#: templates/player/details.html:25
-msgid "scores"
-msgstr "очков"
-
-#: templates/player/details.html:30
-msgid "how we calculated rating score"
-msgstr "как расчитывается рейтинг"
-
-#: templates/player/details.html:40
-msgid "Rating changes"
-msgstr "Изменения рейтинга"
-
-#: templates/player/details.html:47 templates/player/details.html:90
+#: templates/player/_deltas_table.html:8
 msgid "Base rank"
 msgstr "Ранг"
 
-#: templates/player/details.html:48 templates/player/details.html:91
+#: templates/player/_deltas_table.html:9
 #: templates/tournament/_tournaments_table.html:9
 msgid "Date"
 msgstr "Дата"
 
-#: templates/player/details.html:50 templates/player/details.html:93
+#: templates/player/_deltas_table.html:10 templates/player/details.html:29
+msgid "Place"
+msgstr "Место"
+
+#: templates/player/_deltas_table.html:11
+#: templates/tournament/_tournaments_table.html:17
+msgid "Type"
+msgstr "Тип"
+
+#: templates/player/_deltas_table.html:12
 msgid "Tournament"
 msgstr "Турнир"
 
-#: templates/player/details.html:83
-msgid "Other tournaments"
-msgstr "Остальные турниры"
+#: templates/player/details.html:12 templates/player/rating_details.html:12
+msgid "From"
+msgstr "Из"
 
-#: templates/player/details.html:84
-msgid "Tournaments not counted in ratings, but where they took part"
-msgstr "Турниры не учитываемые в рейтингах"
+#: templates/player/details.html:23
+msgid "Table with all ratings where player was counted"
+msgstr "Таблица со всеми рейтингами игрока"
+
+#: templates/player/details.html:30 templates/tournament/details.html:35
+msgid "Scores"
+msgstr "Очки"
+
+#: templates/player/rating_details.html:21
+msgid "Player page"
+msgstr "Страница игрока"
+
+#: templates/player/rating_details.html:26
+msgid "place"
+msgstr "место"
+
+#: templates/player/rating_details.html:31
+msgid "how we calculated rating score"
+msgstr "как расчитывается рейтинг"
+
+#: templates/player/rating_details.html:41
+msgid "Rating changes"
+msgstr "Изменения рейтинга"
 
 #: templates/rating/_results_table.html:9 templates/website/city.html:24
 msgid "Points"
@@ -372,7 +380,7 @@ msgstr "Время обновления: "
 
 #: templates/rating/details.html:22
 msgid "What tournaments were included to the rating?"
-msgstr "Список турниров влияющих на этот рейтинг."
+msgstr "Список турниров влияющих на этот рейтинг"
 
 #: templates/rating/list.html:16 templates/tournament/announcement.html:21
 #: templates/website/home.html:18
@@ -396,7 +404,7 @@ msgstr "Предстоящие турниры"
 #: templates/rating/rating_tournaments.html:25
 #: templates/rating/rating_tournaments.html:26
 msgid "List of tournaments that were included to the rating."
-msgstr "Список турниров влияющих на рейтинг."
+msgstr "Список турниров влияющих на рейтинг"
 
 #: templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
@@ -407,10 +415,6 @@ msgstr "Новые турниры"
 #: templates/website/search.html:18
 msgid "Country"
 msgstr "Страна"
-
-#: templates/tournament/_tournaments_table.html:17
-msgid "Type"
-msgstr "Тип"
 
 #: templates/tournament/_tournaments_table.html:20
 msgctxt "number of players"
@@ -493,10 +497,6 @@ msgstr "игр"
 #: templates/tournament/details.html:23
 msgid "Detailed tournament statistics"
 msgstr "Детальная статистика по турниру"
-
-#: templates/tournament/details.html:35
-msgid "Scores"
-msgstr "Очки"
 
 #: templates/tournament/details.html:49
 msgid "Substitution"
@@ -644,8 +644,8 @@ msgid ""
 "Website for russian mahjong community. Upcoming tournaments, players ratings "
 "and etc."
 msgstr ""
-"Портал для российского маджонгового сообщества. Предстоящие турниры, "
-"рейтинги игроков и т.д."
+"Портал для российского маджонг сообщества. Предстоящие турниры, "
+"рейтинги игроков и т.п."
 
 #: templates/website/search.html:5 templates/website/search.html:9
 #: templates/website/search.html:44 templates/website/search.html:45
