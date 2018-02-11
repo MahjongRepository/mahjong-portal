@@ -18,6 +18,8 @@ class RatingRRCalculation(object):
     FIRST_PART_WEIGHT = 50
     SECOND_PART_WEIGHT = 50
 
+    MIN_TOURNAMENTS_NUMBER = 2
+
     def __init__(self):
         self.players = self.get_players()
 
@@ -69,7 +71,6 @@ class RatingRRCalculation(object):
         RatingResult.objects.filter(rating=rating).delete()
 
         for player in self.players:
-
             first_part_numerator_calculation = []
             first_part_denominator_calculation = []
 
@@ -78,7 +79,7 @@ class RatingRRCalculation(object):
             deltas = base_query.filter(player=player)
             total_tournaments = deltas.count()
 
-            if total_tournaments < 2:
+            if total_tournaments < self.MIN_TOURNAMENTS_NUMBER:
                 continue
 
             if total_tournaments <= self.FIRST_PART_MIN_TOURNAMENTS:

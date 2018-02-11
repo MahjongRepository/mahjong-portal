@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.ema import EmaRatingCalculation
+from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingDelta, RatingResult
 from tournament.models import Tournament
@@ -51,6 +52,14 @@ class Command(BaseCommand):
             rating = Rating.objects.get(type=Rating.EMA)
             tournaments = (Tournament.objects
                            .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
+                           .filter(is_upcoming=False)
+                           .order_by('end_date'))
+
+        if rating_type == 'online':
+            calculator = RatingOnlineCalculation()
+            rating = Rating.objects.get(type=Rating.ONLINE)
+            tournaments = (Tournament.objects
+                           .filter(tournament_type=Tournament.ONLINE)
                            .filter(is_upcoming=False)
                            .order_by('end_date'))
 

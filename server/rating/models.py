@@ -9,11 +9,13 @@ class Rating(BaseModel):
     RR = 0
     EMA = 1
     CRR = 2
+    ONLINE = 3
 
     TYPES = [
         [RR, 'RR'],
         [CRR, 'CRR'],
-        [EMA, 'EMA']
+        [EMA, 'EMA'],
+        [ONLINE, 'ONLINE']
     ]
 
     name = models.CharField(max_length=255)
