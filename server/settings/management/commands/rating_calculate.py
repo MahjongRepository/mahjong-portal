@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 Q(tournament_type=Tournament.RR) |
                 Q(tournament_type=Tournament.EMA) |
                 Q(tournament_type=Tournament.FOREIGN_EMA)
-            ).order_by('end_date')
+            ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'crr':
             calculator = RatingCRRCalculation()
@@ -44,13 +44,14 @@ class Command(BaseCommand):
                 Q(tournament_type=Tournament.RR) |
                 Q(tournament_type=Tournament.EMA) |
                 Q(tournament_type=Tournament.FOREIGN_EMA)
-            ).order_by('end_date')
+            ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'ema':
             calculator = EmaRatingCalculation()
             rating = Rating.objects.get(type=Rating.EMA)
             tournaments = (Tournament.objects
                            .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
+                           .filter(is_upcoming=False)
                            .order_by('end_date'))
 
         if not rating:

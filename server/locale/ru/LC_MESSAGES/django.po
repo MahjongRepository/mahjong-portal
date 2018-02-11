@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-05 08:00+0000\n"
+"POT-Creation-Date: 2018-02-11 03:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -370,6 +370,10 @@ msgstr "Откуда"
 msgid "Latest update: "
 msgstr "Время обновления: "
 
+#: templates/rating/details.html:22
+msgid "What tournaments were included to the rating?"
+msgstr "Список турниров влияющих на этот рейтинг."
+
 #: templates/rating/list.html:16 templates/tournament/announcement.html:21
 #: templates/website/home.html:18
 msgid "all results"
@@ -378,6 +382,21 @@ msgstr "все результаты"
 #: templates/rating/list.html:24 templates/rating/list.html:25
 msgid "All available ratings"
 msgstr "Все доступные рейтинги"
+
+#: templates/rating/rating_tournaments.html:5
+msgid "List of tournaments"
+msgstr "Список турниров"
+
+#: templates/rating/rating_tournaments.html:11
+#: templates/tournament/list.html:11 templates/website/home.html:11
+msgid "Upcoming tournaments"
+msgstr "Предстоящие турниры"
+
+#: templates/rating/rating_tournaments.html:18
+#: templates/rating/rating_tournaments.html:25
+#: templates/rating/rating_tournaments.html:26
+msgid "List of tournaments that were included to the rating."
+msgstr "Список турниров влияющих на рейтинг."
 
 #: templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
@@ -482,10 +501,6 @@ msgstr "Очки"
 #: templates/tournament/details.html:49
 msgid "Substitution"
 msgstr "Замена"
-
-#: templates/tournament/list.html:11 templates/website/home.html:11
-msgid "Upcoming tournaments"
-msgstr "Предстоящие турниры"
 
 #: templates/tournament/list.html:35
 #: templates/tournament_admin/managed_tournaments.html:57
@@ -666,11 +681,11 @@ msgstr "Альтернативный способ связи. Опциональ
 msgid "Your contact (email, phone, etc.)"
 msgstr "Контактные данные (почта, телефон, т.п.)"
 
-#: tournament/models.py:223
+#: tournament/models.py:226
 msgid "Tell us about your tournament"
 msgstr "Расскажите нам про ваш турнир"
 
-#: tournament/models.py:224
+#: tournament/models.py:227
 msgid "We would like to know tournament date, place and your contacts"
 msgstr "Ваши контакты, место и дата проведения"
 

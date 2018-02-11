@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from rating.models import Rating, RatingResult
+from rating.models import Rating, RatingResult, RatingDelta
+from tournament.models import Tournament
 
 
 def rating_list(request):
@@ -41,3 +42,18 @@ def rating_details(request, slug):
             'rating_results': rating_results,
             'page': 'rating'
         })
+
+
+def rating_tournaments(request, slug):
+    rating = get_object_or_404(Rating, slug=slug)
+    tournament_ids = RatingDelta.objects.filter(rating=rating).values_list('tournament_id', flat=True)
+    tournaments = (Tournament.objects
+                   .filter(id__in=tournament_ids)
+                   .prefetch_related('city')
+                   .prefetch_related('country')
+                   .order_by('-end_date'))
+    return render(request, 'rating/rating_tournaments.html', {
+        'rating': rating,
+        'tournaments': tournaments,
+        'page': 'rating'
+    })

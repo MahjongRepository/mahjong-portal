@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n meta_tags_helper %}
+
+{% block title %}
+    {{ rating.name }}. {% trans 'List of tournaments' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% if upcoming_tournaments %}
+            <h1>{% trans 'Upcoming tournaments' %}</h1>
+            {% with tournaments=upcoming_tournaments is_upcoming=True  %}
+                {% include 'tournament/_tournaments_table.html' %}
+            {% endwith %}
+        {% endif %}
+
+        <h1>{{ rating.name }}</h1>
+        <p>{% trans 'List of tournaments that were included to the rating.' %}</p>
+
+        {% include 'tournament/_tournaments_table.html' %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ rating.name }}. {% trans 'List of tournaments that were included to the rating.' %}">
+    <meta property="og:description" content="{{ rating.name }}. {% trans 'List of tournaments that were included to the rating.' %}">
+{% endblock %}
