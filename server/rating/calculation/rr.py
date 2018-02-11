@@ -2,6 +2,7 @@ import math
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
+from django.db.models import Q
 from django.utils import timezone
 
 from player.models import Player
@@ -16,9 +17,6 @@ class RatingRRCalculation(object):
     SECOND_PART_MIN_TOURNAMENTS = 4
     FIRST_PART_WEIGHT = 50
     SECOND_PART_WEIGHT = 50
-    MIN_PLAYERS_REQUIREMENTS = 16
-    NEED_QUALIFICATION = False
-    HAS_ACCREDITATION = True
 
     def __init__(self):
         self.players = self.get_players()
@@ -30,6 +28,15 @@ class RatingRRCalculation(object):
         """
         return list(Player.objects.filter(country__code='RU'))
 
+    def get_base_query(self, rating, date):
+        base_query = (RatingDelta.objects
+                      .filter(rating=rating)
+                      .filter(Q(tournament__tournament_type=Tournament.RR) |
+                              Q(tournament__tournament_type=Tournament.EMA) |
+                              Q(tournament__tournament_type=Tournament.FOREIGN_EMA))
+                      .filter(tournament__end_date__gte=date))
+        return base_query
+
     def calculate_players_rating_rank(self, rating):
         results = []
         two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
@@ -38,14 +45,7 @@ class RatingRRCalculation(object):
         rating.updated_on = timezone.now()
         rating.save()
 
-        base_query = (RatingDelta.objects
-                                 .filter(rating=rating)
-                                 .filter(tournament__number_of_players__gte=self.MIN_PLAYERS_REQUIREMENTS)
-                                 .filter(tournament__need_qualification=self.NEED_QUALIFICATION)
-                                 .filter(tournament__end_date__gte=two_years_ago))
-
-        if self.HAS_ACCREDITATION:
-            base_query = base_query.filter(tournament__has_accreditation=self.HAS_ACCREDITATION)
+        base_query = self.get_base_query(rating, two_years_ago)
 
         tournament_ids = base_query.values_list('tournament_id', flat=True).distinct()
         coefficient_temp = Tournament.objects.filter(id__in=tournament_ids)

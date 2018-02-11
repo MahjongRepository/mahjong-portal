@@ -18,18 +18,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('rating_type', type=str)
-        parser.add_argument('--tournament_id', type=int)
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
-        allowed_ratings = ['rr', 'crr', 'ema']
         rating_type = options['rating_type']
-
-        if rating_type not in allowed_ratings:
-            print('Unknown rating type: {}'.format(rating_type))
-            return
-
         rating = None
         tournaments = None
         calculator = None
@@ -37,30 +30,36 @@ class Command(BaseCommand):
         if rating_type == 'rr':
             calculator = RatingRRCalculation()
             rating = Rating.objects.get(type=Rating.RR)
-            tournaments = Tournament.objects.all().order_by('end_date')
+            tournaments = Tournament.objects.filter(
+                Q(tournament_type=Tournament.RR) |
+                Q(tournament_type=Tournament.EMA) |
+                Q(tournament_type=Tournament.FOREIGN_EMA)
+            ).order_by('end_date')
 
         if rating_type == 'crr':
             calculator = RatingCRRCalculation()
             rating = Rating.objects.get(type=Rating.CRR)
-            tournaments = Tournament.objects.all().order_by('end_date')
+            tournaments = Tournament.objects.filter(
+                Q(tournament_type=Tournament.CRR) |
+                Q(tournament_type=Tournament.RR) |
+                Q(tournament_type=Tournament.EMA) |
+                Q(tournament_type=Tournament.FOREIGN_EMA)
+            ).order_by('end_date')
 
         if rating_type == 'ema':
             calculator = EmaRatingCalculation()
             rating = Rating.objects.get(type=Rating.EMA)
             tournaments = (Tournament.objects
-                                     .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
-                                     .order_by('end_date'))
+                           .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
+                           .order_by('end_date'))
 
-        erase_scores = True
-
-        if options['tournament_id']:
-            erase_scores = False
-            tournaments = Tournament.objects.filter(id=options['tournament_id'])
+        if not rating:
+            print('Unknown rating type: {}'.format(rating_type))
+            return
 
         with transaction.atomic():
-            if erase_scores:
-                RatingDelta.objects.filter(rating=rating).delete()
-                RatingResult.objects.filter(rating=rating).delete()
+            RatingDelta.objects.filter(rating=rating).delete()
+            RatingResult.objects.filter(rating=rating).delete()
 
             processed = 1
             total = tournaments.count()
