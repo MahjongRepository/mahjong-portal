@@ -17,7 +17,7 @@
             <p>{% trans 'Latest update: ' %}{{ rating.updated_on }} (UTC+3)</p>
         {% endtimezone %}
 
-        <p>
+        <p class="d-print-none">
             <a href="{% url 'rating_tournaments' rating.slug %}">
                 {% trans 'What tournaments were included to the rating?' %}
             </a>
