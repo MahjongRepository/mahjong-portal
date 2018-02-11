@@ -46,7 +46,10 @@ def rating_details(request, slug):
 
 def rating_tournaments(request, slug):
     rating = get_object_or_404(Rating, slug=slug)
-    tournament_ids = RatingDelta.objects.filter(rating=rating).values_list('tournament_id', flat=True)
+    tournament_ids = (RatingDelta.objects
+                      .filter(rating=rating)
+                      .filter(is_active=True)
+                      .values_list('tournament_id', flat=True))
     tournaments = (Tournament.objects
                    .filter(id__in=tournament_ids)
                    .prefetch_related('city')
