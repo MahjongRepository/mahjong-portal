@@ -8,8 +8,32 @@
 {% block content %}
     <div>
         <h1>{% trans 'New tournaments' %}</h1>
-        {% for tournament in tournaments %}
-            <a href="{% url 'upload_results' tournament.id %}">{{ tournament.name }}</a> <br>
-        {% endfor %}
+
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'End Date' %}</th>
+                    <th scope="col">{% trans 'Action' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for tournament in tournaments %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ tournament.name }}</td>
+                        <td>
+                            <nobr>{{ tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                        </td>
+                        <td>
+                            <a href="{% url 'upload_results' tournament.id %}" class="btn btn-primary">{% trans 'Upload results' %}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}

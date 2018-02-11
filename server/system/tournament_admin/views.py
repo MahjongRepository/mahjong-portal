@@ -1,3 +1,6 @@
+import codecs
+import csv
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -10,7 +13,7 @@ from tournament.models import Tournament, TournamentResult, TournamentRegistrati
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new_tournaments(request):
-    tournaments = Tournament.objects.filter(is_upcoming=True)
+    tournaments = Tournament.objects.filter(is_upcoming=True).order_by('start_date')
     return render(request, 'tournament_admin/new_tournaments.html', {
         'tournaments': tournaments
     })
@@ -32,22 +35,14 @@ def upload_results(request, tournament_id):
             file_was_uploaded = True
 
             csv_file = form.cleaned_data['csv_file']
-            file_data = csv_file.read().decode("utf-8")
+            decoded_file = csv_file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
 
-            # csv.DictReader didn't want to work with InMemoryFile
-            # so, let's go with a straight way
-            lines = file_data.split('\n')
             filtered_results = []
-            for line in lines:
-                fields = line.split(',')
-
-                # first row or empty row
-                if fields[0] == 'place' or len(fields) <= 1:
-                    continue
-
-                place = fields[0].strip().lower()
-                name = fields[1].strip().lower()
-                scores = fields[2].strip().lower()
+            for row in reader:
+                place = row['place']
+                name = row['name']
+                scores = row['scores']
 
                 temp = name.split(' ')
                 first_name = temp[1].title()
@@ -99,7 +94,7 @@ def upload_results(request, tournament_id):
 @login_required
 @user_passes_test(lambda u: u.is_superuser or u.is_tournament_manager)
 def managed_tournaments(request):
-    tournaments = request.user.managed_tournaments.all().order_by('-start_date')
+    tournaments = request.user.managed_tournaments.all().order_by('-end_date')
     return render(request, 'tournament_admin/managed_tournaments.html', {
         'tournaments': tournaments
     })
