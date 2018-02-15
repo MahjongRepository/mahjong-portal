@@ -94,3 +94,7 @@ def players_api(request):
             'city': player.city and player.city.name or ''
         })
     return JsonResponse(data, safe=False)
+
+
+def online_tournament_rules(request):
+    return render(request, 'website/rules.html')
