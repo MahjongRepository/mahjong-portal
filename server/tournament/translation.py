@@ -4,7 +4,7 @@ from tournament.models import Tournament
 
 
 class TournamentTranslationOptions(TranslationOptions):
-    fields = ['name', 'registration_description']
+    fields = ['name', 'registration_description', 'results_description']
 
 
 translator.register(Tournament, TournamentTranslationOptions)

@@ -45,6 +45,7 @@ class Tournament(BaseModel):
 
     registration_description = models.TextField(null=True, blank=True, default='')
     registration_link = models.URLField(null=True, blank=True, default='')
+    results_description = models.TextField(null=True, blank=True, default='')
 
     clubs = models.ManyToManyField(Club, blank=True)
     country = models.ForeignKey(Country, on_delete=models.PROTECT)

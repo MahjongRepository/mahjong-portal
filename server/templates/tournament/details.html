@@ -26,6 +26,10 @@
 
         {% include 'tournament/_tournament_header.html' %}
 
+        {% if tournament.results_description %}
+            <p>{{ tournament.results_description|linebreaksbr }}</p>
+        {% endif %}
+
         <div class="table-responsive-sm">
             <table class="table table-hover">
                 <thead>
