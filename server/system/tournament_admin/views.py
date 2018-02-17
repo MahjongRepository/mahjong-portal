@@ -63,10 +63,10 @@ def upload_results(request, tournament_id):
                 except Player.DoesNotExist:
                     not_found_users.append(
                         '{} {} {} {}'.format(
-                            first_name,
                             transliterate_name(first_name),
-                            last_name,
+                            first_name,
                             transliterate_name(last_name),
+                            last_name,
                         )
                     )
 
