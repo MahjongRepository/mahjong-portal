@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib import admin
 
-from tournament.models import Tournament, TournamentRegistration, OnlineTournamentRegistration, TournamentApplication
+from tournament.models import Tournament, TournamentRegistration, OnlineTournamentRegistration, TournamentApplication, \
+    TournamentResult
 
 
 class TournamentForm(forms.ModelForm):
@@ -42,7 +43,14 @@ class TournamentApplicationAdmin(admin.ModelAdmin):
     list_display = ['id', 'created_on']
 
 
+class TournamentResultAdmin(admin.ModelAdmin):
+    list_display = ['tournament', 'player', 'place', 'scores']
+    search_fields = ['tournament__name']
+    raw_id_fields = ['tournament', 'player']
+
+
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(TournamentRegistration, TournamentRegistrationAdmin)
 admin.site.register(OnlineTournamentRegistration, OnlineTournamentRegistrationAdmin)
 admin.site.register(TournamentApplication, TournamentApplicationAdmin)
+admin.site.register(TournamentResult, TournamentResultAdmin)
