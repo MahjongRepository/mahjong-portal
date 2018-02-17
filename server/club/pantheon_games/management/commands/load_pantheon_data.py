@@ -20,29 +20,40 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--rebuild-from-zero', default=False, type=bool)
+        parser.add_argument('--associate-players', default=False, type=bool)
+        parser.add_argument('--club-id', type=int, default=None)
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
         
         rebuild_from_zero = options.get('rebuild_from_zero')
-
-        clubs = Club.objects.exclude(pantheon_ids__isnull=True)
+        associate_players = options.get('associate_players')
+        club_id = options.get('club_id')
+        
+        if club_id:
+            clubs = Club.objects.filter(id=club_id)
+        else:
+            clubs = Club.objects.exclude(pantheon_ids__isnull=True)
+            
         for club in clubs:
             print('Processing: {}'.format(club.name))
 
             event_ids = club.pantheon_ids.split(',')
 
-            # we had to run for the first time
-            # to set pantheon ids to users
-            # self.associate_players(club, event_ids)
+            if associate_players:
+                # we had to run for the first time
+                # to set pantheon ids to users
+                self.associate_players(club, event_ids)
+            else:
+                with transaction.atomic():
+                    self.download_game_results(club, event_ids, rebuild_from_zero)
+                    self.calculate_club_rating(club, event_ids)
             
-            with transaction.atomic():
-                self.download_game_results(club, event_ids, rebuild_from_zero)
-                self.calculate_club_rating(club, event_ids)
-
         print('{0}: End'.format(get_date_string()))
 
     def calculate_club_rating(self, club, event_ids):
+        print('Calculate club rating')
+        
         players = club.players.all()
 
         ClubRating.objects.filter(club=club).delete()
@@ -184,6 +195,8 @@ class Command(BaseCommand):
         return results
 
     def download_game_results(self, club, event_ids, rebuild_from_zero):
+        print('Download game results')
+        
         sync_data, _ = ClubSessionSyncData.objects.get_or_create(club=club)
         
         if rebuild_from_zero:
@@ -267,6 +280,8 @@ class Command(BaseCommand):
             ))
 
     def associate_players(self, club, event_ids):
+        print('Associate players')
+        
         club.players.clear()
 
         player_ids = []
@@ -294,4 +309,4 @@ class Command(BaseCommand):
                 club.players.add(player)
             except Player.DoesNotExist:
                 games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
-                print('Missed player: {}. Games: {}. ID: {}'.format(pantheon_player.display_name, games, pantheon_player.id))
+                print('Missed player: {} Games: {} ID: {}'.format(pantheon_player.display_name, games, pantheon_player.id))
