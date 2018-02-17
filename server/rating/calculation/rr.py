@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q
+from django.template.defaultfilters import floatformat
 from django.utils import timezone
 
 from player.models import Player
@@ -19,6 +20,8 @@ class RatingRRCalculation(object):
     SECOND_PART_WEIGHT = 50
 
     MIN_TOURNAMENTS_NUMBER = 2
+
+    IS_EMA = False
 
     def __init__(self):
         self.players = self.get_players()
@@ -100,8 +103,15 @@ class RatingRRCalculation(object):
                 first_part_numerator += float(result.delta)
                 first_part_denominator += float(self._calculate_percentage(float(coefficient.coefficient), coefficient.age))
 
-                first_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
-                first_part_denominator_calculation.append('{} * {}'.format(coefficient.coefficient, coefficient.age / 100))
+                first_part_numerator_calculation.append('{} * {} * {}'.format(
+                    floatformat(result.base_rank, -2),
+                    floatformat(coefficient.coefficient, -2),
+                    floatformat(coefficient.age / 100, -2)
+                ))
+                first_part_denominator_calculation.append('{} * {}'.format(
+                    floatformat(coefficient.coefficient, -2),
+                    floatformat(coefficient.age / 100, -2)
+                ))
 
             if len(tournaments_results) < self.FIRST_PART_MIN_TOURNAMENTS:
                 fill_missed_data = self.FIRST_PART_MIN_TOURNAMENTS - len(tournaments_results)
@@ -122,15 +132,28 @@ class RatingRRCalculation(object):
 
                 second_part_numerator += float(result.delta)
 
-                second_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
+                second_part_numerator_calculation.append('{} * {} * {}'.format(
+                    floatformat(result.base_rank, -2),
+                    floatformat(coefficient.coefficient, -2),
+                    floatformat(coefficient.age / 100, -2)
+                ))
 
             second_part = second_part_numerator / second_part_denominator
 
             score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(second_part, self.SECOND_PART_WEIGHT)
 
-            first_part_calculation = '({}) / ({})'.format(' + '.join(first_part_numerator_calculation), ' + '.join(first_part_denominator_calculation))
-            second_part_calculation = '({}) / {}'.format(' + '.join(second_part_numerator_calculation), max_coefficient)
-            rating_calculation = '({}) * {} + ({}) * {}'.format(first_part_calculation, self.FIRST_PART_WEIGHT / 100, second_part_calculation, self.SECOND_PART_WEIGHT / 100)
+            first_part_calculation = '({}) / ({})'.format(
+                ' + '.join(first_part_numerator_calculation), ' + '.join(first_part_denominator_calculation)
+            )
+            second_part_calculation = '({}) / {}'.format(
+                ' + '.join(second_part_numerator_calculation), max_coefficient
+            )
+            rating_calculation = '({}) * {} + ({}) * {}'.format(
+                first_part_calculation,
+                self.FIRST_PART_WEIGHT / 100,
+                second_part_calculation,
+                self.SECOND_PART_WEIGHT / 100
+            )
 
             results.append(RatingResult.objects.create(
                 rating=rating,
@@ -217,6 +240,9 @@ class RatingRRCalculation(object):
         tournament_coefficient = self.tournament_coefficient(tournament)
 
         base_rank = self.calculate_base_rank(tournament_result)
+        # for ema we had to round base rank
+        if self.IS_EMA:
+            base_rank = round(base_rank)
 
         tournament_age = self.tournament_age(tournament)
 

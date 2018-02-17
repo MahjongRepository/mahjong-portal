@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
+from django.template.defaultfilters import floatformat
 from django.utils import timezone
 
 from player.models import Player
@@ -10,6 +11,7 @@ from tournament.models import TournamentResult
 
 
 class EmaRatingCalculation(RatingRRCalculation):
+    IS_EMA = True
 
     def get_players(self):
         return list(Player.objects.exclude(ema_id=''))
@@ -64,8 +66,15 @@ class EmaRatingCalculation(RatingRRCalculation):
                 first_part_numerator += float(result.delta)
                 first_part_denominator += float(self._calculate_percentage(float(coefficient.coefficient), coefficient.age))
 
-                first_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
-                first_part_denominator_calculation.append('{} * {}'.format(coefficient.coefficient, coefficient.age / 100))
+                first_part_numerator_calculation.append('{} * {} * {}'.format(
+                    floatformat(result.base_rank),
+                    floatformat(coefficient.coefficient),
+                    floatformat(coefficient.age / 100))
+                )
+                first_part_denominator_calculation.append('{} * {}'.format(
+                    floatformat(coefficient.coefficient),
+                    floatformat(coefficient.age / 100))
+                )
 
             if len(tournaments_results) < first_part_min_tournaments:
                 fill_missed_data = first_part_min_tournaments - len(tournaments_results)
@@ -87,8 +96,15 @@ class EmaRatingCalculation(RatingRRCalculation):
                 second_part_numerator += float(result.delta)
                 second_part_denominator += float(self._calculate_percentage(float(coefficient.coefficient), coefficient.age))
 
-                second_part_numerator_calculation.append('{} * {} * {}'.format(result.base_rank, coefficient.coefficient, coefficient.age / 100))
-                second_part_denominator_calculation.append('{} * {}'.format(coefficient.coefficient, coefficient.age / 100))
+                second_part_numerator_calculation.append('{} * {} * {}'.format(
+                    floatformat(result.base_rank),
+                    floatformat(coefficient.coefficient),
+                    floatformat(coefficient.age / 100))
+                )
+                second_part_denominator_calculation.append('{} * {}'.format(
+                    floatformat(coefficient.coefficient),
+                    floatformat(coefficient.age / 100))
+                )
 
             if len(tournaments_results) < second_part_min_tournaments:
                 fill_missed_data = second_part_min_tournaments - len(best_results)

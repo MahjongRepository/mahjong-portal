@@ -19,14 +19,14 @@
                 <td>
                     {% if delta.is_active %}
                         {% if delta.base_rank > 500 %}
-                            <span class="badge badge-success">{{ delta.base_rank }}</span>
+                            <span class="badge badge-success">{{ delta.base_rank|floatformat:0 }}</span>
                         {% elif delta.base_rank == 0 %}
-                            <span class="badge badge-primary">{{ delta.base_rank }}</span>
+                            <span class="badge badge-primary">{{ delta.base_rank|floatformat:0 }}</span>
                         {% else %}
-                            <span class="badge badge-danger">{{ delta.base_rank }}</span>
+                            <span class="badge badge-danger">{{ delta.base_rank|floatformat:0 }}</span>
                         {% endif %}
                     {% else %}
-                        <span class="badge badge-secondary">{{ delta.base_rank }}</span>
+                        <span class="badge badge-secondary">{{ delta.base_rank|floatformat:0 }}</span>
                     {% endif %}
                 </td>
                 <td>
