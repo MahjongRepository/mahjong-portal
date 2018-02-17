@@ -14,7 +14,7 @@ class EmaRatingCalculation(RatingRRCalculation):
     IS_EMA = True
 
     def get_players(self):
-        return list(Player.objects.exclude(ema_id=''))
+        return list(Player.objects.exclude(ema_id='').exclude(ema_id=None))
 
     def calculate_players_rating_rank(self, rating):
         results = []
