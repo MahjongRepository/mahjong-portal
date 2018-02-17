@@ -308,5 +308,8 @@ class Command(BaseCommand):
 
                 club.players.add(player)
             except Player.DoesNotExist:
-                games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
-                print('Missed player: {} Games: {} ID: {}'.format(pantheon_player.display_name, games, pantheon_player.id))
+                try:
+                    player = Player.objects.get(pantheon_id=pantheon_player.id)
+                except Player.DoesNotExist:
+                    games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
+                    print('Missed player: {} Games: {} ID: {}'.format(pantheon_player.display_name, games, pantheon_player.id))
