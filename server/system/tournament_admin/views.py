@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 
 from player.models import Player
+from rating.utils import transliterate_name
 from system.decorators import tournament_manager_auth_required
 from system.tournament_admin.forms import UploadResultsForm, TournamentForm
 from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
@@ -61,7 +62,12 @@ def upload_results(request, tournament_id):
                     player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 except Player.DoesNotExist:
                     not_found_users.append(
-                        '{} {}'.format(last_name, first_name)
+                        '{} {} {} {}'.format(
+                            first_name,
+                            transliterate_name(first_name),
+                            last_name,
+                            transliterate_name(last_name),
+                        )
                     )
 
             # everything is fine
