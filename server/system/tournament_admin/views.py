@@ -45,8 +45,12 @@ def upload_results(request, tournament_id):
                 scores = row['scores']
 
                 temp = name.split(' ')
-                first_name = temp[1].title()
-                last_name = temp[0].title()
+                if form.cleaned_data['switch_names']:
+                    first_name = temp[0].title()
+                    last_name = temp[1].title()
+                else:
+                    first_name = temp[1].title()
+                    last_name = temp[0].title()
 
                 if first_name == 'Замены':
                     first_name = 'замены'

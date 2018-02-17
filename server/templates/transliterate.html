@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <p>{{ text }}</p>
+        <form action="{% url 'transliterate_text' %}" method="POST">
+            {% csrf_token %}
+            <textarea name="text" cols="30" rows="10"></textarea>
+            <br>
+            <button>Submit</button>
+        </form>
+    </div>
+{% endblock %}

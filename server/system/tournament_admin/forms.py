@@ -5,6 +5,7 @@ from tournament.models import Tournament
 
 class UploadResultsForm(forms.Form):
     csv_file = forms.FileField()
+    switch_names = forms.BooleanField(required=False)
 
 
 class TournamentForm(forms.ModelForm):
