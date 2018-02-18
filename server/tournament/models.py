@@ -151,6 +151,7 @@ class TournamentResult(BaseModel):
     player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results')
     place = models.PositiveSmallIntegerField()
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
+    exclude_from_rating = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.tournament.name

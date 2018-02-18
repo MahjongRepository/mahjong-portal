@@ -186,6 +186,7 @@ class RatingRRCalculation(object):
 
         results = (TournamentResult.objects
                                    .filter(tournament=tournament)
+                                   .filter(exclude_from_rating=False)
                                    .prefetch_related('tournament'))
 
         for result in results:

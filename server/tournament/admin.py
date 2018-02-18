@@ -45,7 +45,8 @@ class TournamentApplicationAdmin(admin.ModelAdmin):
 
 class TournamentResultAdmin(admin.ModelAdmin):
     list_display = ['tournament', 'player', 'place', 'scores']
-    search_fields = ['tournament__name']
+    search_fields = ['tournament__name', 'player__last_name_ru', 'player__first_name_ru', 'player__last_name_en',
+                     'player__first_name_en']
     raw_id_fields = ['tournament', 'player']
 
 
