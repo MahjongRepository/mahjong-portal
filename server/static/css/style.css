@@ -71,3 +71,7 @@ body {
 .ratingCalculationCollapse:hover {
     text-decoration: none;
 }
+
+.mw-600 {
+    max-width: 600px;
+}

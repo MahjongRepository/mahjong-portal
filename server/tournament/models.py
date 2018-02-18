@@ -224,8 +224,47 @@ class OnlineTournamentRegistration(BaseModel):
 
 
 class TournamentApplication(BaseModel):
-    text = models.TextField(verbose_name=_('Tell us about your tournament'),
-                            help_text=_('We would like to know tournament date, place and your contacts'))
+    tournament_name = models.CharField(max_length=255, verbose_name=_('Tournament name'))
+    city = models.CharField(max_length=255, verbose_name=_('City'))
+    tournament_type = models.PositiveSmallIntegerField(verbose_name=_('Tournament type'),
+                                                       choices=[[0, 'CRR'], [1, 'RR'], [2, 'EMA']], default=0)
+    start_date = models.CharField(max_length=255, verbose_name=_('Start date'))
+    end_date = models.CharField(max_length=255, verbose_name=_('End date'), null=True, blank=True,
+                                help_text=_('Leave empty if tournament has one day'))
+    address = models.TextField(verbose_name=_('Address'), help_text=_('How to reach your tournament venue'))
+    additional_info_link = models.URLField(null=True, blank=True,
+                                           verbose_name=_('Link to additional tournament information'))
+
+    organizer_name = models.CharField(max_length=255, verbose_name=_('Organizer name'))
+    organizer_phone = models.CharField(max_length=255, verbose_name=_('Organizer phone'))
+    organizer_additional_contact = models.CharField(max_length=255, verbose_name=_('Organizer additional contact'),
+                                                    null=True, blank=True,
+                                                    help_text=_('Email, link to vk or something else'))
+
+    referee_name = models.CharField(max_length=255, verbose_name=_('Referee name'))
+    referee_phone = models.CharField(max_length=255, verbose_name=_('Referee phone'))
+    referee_additional_contact = models.CharField(max_length=255, verbose_name=_('Referee additional contact'),
+                                                  null=True, blank=True,
+                                                  help_text=_('Email, link to vk or something else'))
+    referee_english = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1,
+                                                       verbose_name=_('Referee english'))
+
+    max_number_of_participants = models.PositiveSmallIntegerField(null=True, blank=True,
+                                                                  verbose_name=_('Max number of participants'))
+    entry_fee = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Entry fee'),
+                                                 help_text=_('Leave empty if it is free tournament'))
+    pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1, 
+                                                       verbose_name=_('Pantheon needed'))
+    rules = models.PositiveSmallIntegerField(
+        verbose_name=_('Tournament rules'),
+        choices=[[0, _('EMA')], [1, _('WRC')], [2, _('JPML-A')], [3, _('JPML-B')], [4, _('Other')]],
+        default=0)
+    registration_type = models.PositiveSmallIntegerField(choices=[[0, _('Open')], [1, _('Closed')], [2, _('Limited')]],
+                                                         verbose_name=_('Registration type'),
+                                                         default=0)
+    additional_info = models.TextField(verbose_name=_('Additional info'), 
+                                       help_text=_('More information about tournament'))
+    allow_to_save_data = models.BooleanField(help_text=_('I allow to store my personal data'))
 
     def __unicode__(self):
         return ''

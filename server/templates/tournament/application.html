@@ -10,16 +10,88 @@
         <h1>{% trans 'Tournament application' %}</h1>
 
         {% if success %}
-            <div class="alert alert-success">{% trans 'Your application was saved! We will contact with you for further details.' %}</div>
+            <div class="alert alert-success">
+                {% trans 'Your application was saved! We will contact with you for further details.' %}
+            </div>
         {% endif %}
 
-        <form class="form" action="{% url 'tournament_application' %}" method="POST">
+        <form class="form mw-600" action="{% url 'tournament_application' %}" method="POST">
             {% csrf_token %}
 
-            {% bootstrap_form form %}
+            <ul class="list-group mb-4 mt-4">
+                <li class="list-group-item list-group-item-info">{% trans 'Main info' %}</li>
+                <li class="list-group-item">
+                    <div class="table-responsive-sm">
+                        {% bootstrap_field form.tournament_name %}
+                        {% bootstrap_field form.tournament_type %}
+                        {% bootstrap_field form.city %}
+                        {% bootstrap_field form.address %}
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="list-group mb-4 mt-4">
+                <li class="list-group-item list-group-item-info">{% trans 'Additional info' %}</li>
+                <li class="list-group-item">
+                    <div class="table-responsive-sm">
+                        {% bootstrap_field form.additional_info_link %}
+                        {% bootstrap_field form.max_number_of_participants %}
+                        {% bootstrap_field form.entry_fee %}
+                        {% bootstrap_field form.pantheon_needed %}
+                        {% bootstrap_field form.rules %}
+                        {% bootstrap_field form.registration_type %}
+                    </div>
+                </li>
+            </ul>
+
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item list-group-item-info">{% trans 'Dates' %}</li>
+                <li class="list-group-item">
+                    <div class="table-responsive-sm">
+                        {% bootstrap_field form.start_date %}
+                        {% bootstrap_field form.end_date %}
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item list-group-item-info">{% trans 'Organizer' %}</li>
+                <li class="list-group-item">
+                    <div class="table-responsive-sm">
+                        {% bootstrap_field form.organizer_name %}
+                        {% bootstrap_field form.organizer_phone %}
+                        {% bootstrap_field form.organizer_additional_contact %}
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item list-group-item-info">{% trans 'Referee' %}</li>
+                <li class="list-group-item">
+                    <div class="table-responsive-sm">
+                        {% bootstrap_field form.referee_name %}
+                        {% bootstrap_field form.referee_phone %}
+                        {% bootstrap_field form.referee_additional_contact %}
+                        {% bootstrap_field form.referee_english %}
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="list-group mb-4">
+                <li class="list-group-item list-group-item-info">{% trans 'Other' %}</li>
+                <li class="list-group-item">
+                    <div class="table-responsive-sm">
+                        {% bootstrap_field form.additional_info %}
+                    </div>
+                </li>
+            </ul>
+
+            {% bootstrap_field form.allow_to_save_data %}
+
             {% buttons %}
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">{% trans 'Submit' context 'new tournament' %}</button>
+                    <button type="submit" class="btn btn-success">{% trans 'Submit' context 'new tournament' %}</button>
                 </div>
             {% endbuttons %}
         </form>

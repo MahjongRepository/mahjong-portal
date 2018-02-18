@@ -31,7 +31,13 @@ class OnlineTournamentRegistrationForm(forms.ModelForm):
 
 
 class TournamentApplicationForm(forms.ModelForm):
+    allow_to_save_data = forms.BooleanField(required=True)
 
     class Meta:
         model = TournamentApplication
-        fields = ['text']
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['allow_to_save_data'].label = _('I allow to store my personal data')
