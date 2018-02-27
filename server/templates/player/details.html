@@ -18,6 +18,10 @@
             {% endif %}
         </p>
 
+        {% if player.ema_id %}
+            <p>EMA: <a href="http://mahjong-europe.org/ranking/Players/{{ player.ema_id }}.html" target="_blank">{{ player.ema_id }}</a></p>
+        {% endif %}
+
         {% if rating_results %}
             <h4>{% trans 'Ratings' %}</h4>
             <p>{% trans 'Table with all ratings where player was counted' %}</p>
