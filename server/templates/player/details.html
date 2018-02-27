@@ -51,6 +51,14 @@
                 </table>
             </div>
         {% endif %}
+
+        {% if tournament_results %}
+            <h4>{% trans 'Tournaments' %}</h4>
+
+            {% with deltas=tournament_results highlight=False %}
+                {% include 'player/_deltas_table.html' %}
+            {% endwith %}
+        {% endif %}
     </div>
 {% endblock %}
 
