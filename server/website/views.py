@@ -91,7 +91,8 @@ def players_api(request):
         data.append({
             'id': player.id,
             'name': player.full_name,
-            'city': player.city and player.city.name or ''
+            'city': player.city and player.city.name or '',
+            'ema_id': player.ema_id or '',
         })
     return JsonResponse(data, safe=False)
 
