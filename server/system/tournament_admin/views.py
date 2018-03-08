@@ -36,6 +36,7 @@ def upload_results(request, tournament_id):
             file_was_uploaded = True
 
             csv_file = form.cleaned_data['csv_file']
+            is_ema = form.cleaned_data['ema']
             decoded_file = csv_file.read().decode('utf-8').splitlines()
             reader = csv.DictReader(decoded_file)
 
@@ -56,10 +57,17 @@ def upload_results(request, tournament_id):
                 if first_name == 'Замены':
                     first_name = 'замены'
 
-                filtered_results.append([place, first_name, last_name, scores])
+                data = [place, first_name, last_name, scores]
+                if is_ema:
+                    data.append(row['ema'].strip())
+
+                filtered_results.append(data)
 
                 try:
-                    player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                    if is_ema:
+                        player = Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
+                    else:
+                        player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 except Player.DoesNotExist:
                     not_found_users.append(
                         '{} {} {} {}'.format(
@@ -78,7 +86,10 @@ def upload_results(request, tournament_id):
                     last_name = result[2]
                     scores = result[3]
 
-                    player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                    if is_ema:
+                        player = Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
+                    else:
+                        player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
 
                     TournamentResult.objects.create(
                         player=player,
