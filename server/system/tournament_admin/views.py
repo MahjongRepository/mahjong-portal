@@ -69,14 +69,23 @@ def upload_results(request, tournament_id):
                     else:
                         player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 except Player.DoesNotExist:
-                    not_found_users.append(
-                        '{} {} {} {}'.format(
-                            transliterate_name(first_name),
-                            first_name,
-                            transliterate_name(last_name),
-                            last_name,
+                    if is_ema:
+                        not_found_users.append(
+                            '{} {} {}'.format(
+                                first_name,
+                                last_name,
+                                row['ema'].strip()
+                            )
                         )
-                    )
+                    else:
+                        not_found_users.append(
+                            '{} {} {} {}'.format(
+                                transliterate_name(first_name),
+                                first_name,
+                                transliterate_name(last_name),
+                                last_name,
+                            )
+                        )
 
             # everything is fine
             if not not_found_users:
