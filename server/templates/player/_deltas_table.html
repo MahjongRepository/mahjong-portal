@@ -8,6 +8,7 @@
             <th scope="col">{% trans 'Base rank' %}</th>
             <th scope="col">{% trans 'Date' %}</th>
             <th scope="col">{% trans 'Place' %}</th>
+            <th scope="col">{% trans 'Power' %}</th>
             <th scope="col">{% trans 'Type' %}</th>
             <th scope="col">{% trans 'Tournament' %}</th>
         </tr>
@@ -33,6 +34,9 @@
                     <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                 </td>
                 <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
+                <td>
+                    {{ delta.tournament_coefficient.age|floatformat:0 }}%
+                </td>
                 <td>
                     {% with delta.tournament as tournament %}
                         {% include 'tournament/_tournament_type.html' %}

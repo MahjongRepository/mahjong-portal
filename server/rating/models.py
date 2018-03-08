@@ -46,6 +46,9 @@ class RatingDelta(BaseModel):
     def __unicode__(self):
         return self.tournament.name
 
+    def tournament_coefficient(self):
+        return TournamentCoefficients.objects.get(rating=self.rating, tournament=self.tournament)
+
 
 class RatingResult(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
