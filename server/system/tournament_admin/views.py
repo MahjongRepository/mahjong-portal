@@ -49,7 +49,7 @@ def upload_results(request, tournament_id):
 
                 ema_id = row.get('ema', '').strip()
 
-                if ema_id:
+                if is_ema:
                     first_name = row['first_name'].title()
                     last_name = row['last_name'].title()
                 else:
