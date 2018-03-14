@@ -73,9 +73,12 @@ def upload_results(request, tournament_id):
 
                 try:
                     if is_ema:
-                        player = Player.all_objects.get(ema_id=ema_id)
+                        if ema_id:
+                            Player.all_objects.get(ema_id=ema_id)
+                        else:
+                            Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
                     else:
-                        player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                        Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 except Player.DoesNotExist:
                     if is_ema:
                         not_found_users.append(
