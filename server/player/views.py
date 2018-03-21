@@ -1,8 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from player.models import Player
 from rating.models import RatingDelta, Rating, RatingResult
 from tournament.models import TournamentResult
+
+
+def player_by_id_details(request, player_id):
+    player = get_object_or_404(Player, id=player_id)
+    return redirect(player_details, player.slug)
 
 
 def player_details(request, slug):
