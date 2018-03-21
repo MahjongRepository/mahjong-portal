@@ -119,6 +119,12 @@ def tournament_registration(request, tournament_id):
         form = TournamentRegistrationForm(request.POST)
 
     if form.is_valid():
+        if tournament.is_online():
+            tenhou_nickname = form.cleaned_data.get('tenhou_nickname')
+            if OnlineTournamentRegistration.objects.filter(tournament=tournament, tenhou_nickname=tenhou_nickname).exists():
+                messages.success(request, _('You already registered to the tournament!'))
+                return redirect(tournament.get_url())
+
         instance = form.save(commit=False)
         instance.tournament = tournament
         

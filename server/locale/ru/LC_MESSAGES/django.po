@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 07:00+0000\n"
+"POT-Creation-Date: 2018-03-21 08:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -216,7 +216,7 @@ msgstr "Сортировка:"
 #: templates/tournament/details.html:38
 #: templates/tournament_admin/managed_tournaments.html:23
 #: templates/tournament_admin/new_tournaments.html:17
-#: templates/tournament_admin/tournament_manage.html:77
+#: templates/tournament_admin/tournament_manage.html:78
 #: templates/website/city.html:23 templates/website/search.html:16
 msgid "Name"
 msgstr "Имя"
@@ -307,7 +307,7 @@ msgstr "Российские риичи маджонг клубы"
 
 #: templates/club/list.html:20 templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:61
-#: templates/tournament_admin/tournament_manage.html:78
+#: templates/tournament_admin/tournament_manage.html:79
 #: templates/website/search.html:17 tournament/models.py:180
 #: tournament/models.py:206 tournament/models.py:229
 msgid "City"
@@ -563,7 +563,7 @@ msgstr "Участников"
 
 #: templates/tournament_admin/managed_tournaments.html:27
 #: templates/tournament_admin/new_tournaments.html:19
-#: templates/tournament_admin/tournament_manage.html:83
+#: templates/tournament_admin/tournament_manage.html:84
 msgid "Action"
 msgstr "Действие"
 
@@ -628,37 +628,37 @@ msgstr "Редактирование информации о турнире"
 msgid "Edit"
 msgstr "Редактировать"
 
-#: templates/tournament_admin/tournament_manage.html:79
+#: templates/tournament_admin/tournament_manage.html:80
 msgid "Registered at"
 msgstr "Дата регистрации"
 
-#: templates/tournament_admin/tournament_manage.html:80
+#: templates/tournament_admin/tournament_manage.html:81
 #: tournament/models.py:181
 msgid "Phone"
 msgstr "Телефон"
 
-#: templates/tournament_admin/tournament_manage.html:81
+#: templates/tournament_admin/tournament_manage.html:82
 msgid "Additional contact"
 msgstr "Альтернативный контакт"
 
-#: templates/tournament_admin/tournament_manage.html:82
+#: templates/tournament_admin/tournament_manage.html:83
 msgid "Approved"
 msgstr "Одобрено"
 
-#: templates/tournament_admin/tournament_manage.html:121
+#: templates/tournament_admin/tournament_manage.html:123
 #: tournament/models.py:250 tournament/models.py:257
 msgid "Yes"
 msgstr "Да"
 
-#: templates/tournament_admin/tournament_manage.html:124
+#: templates/tournament_admin/tournament_manage.html:126
 msgid "Approve"
 msgstr "Одобрить"
 
-#: templates/tournament_admin/tournament_manage.html:130
+#: templates/tournament_admin/tournament_manage.html:132
 msgid "Delete"
 msgstr "Удалить"
 
-#: templates/tournament_admin/tournament_manage.html:139
+#: templates/tournament_admin/tournament_manage.html:141
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
@@ -851,7 +851,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:141
+#: tournament/views.py:125
+msgid "You already registered to the tournament!"
+msgstr "Вы ранее уже зарегистрировались на этот турнир!"
+
+#: tournament/views.py:147
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -859,10 +863,10 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:144
+#: tournament/views.py:150
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:150
+#: tournament/views.py:156
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
