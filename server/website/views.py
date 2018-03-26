@@ -42,6 +42,16 @@ def about(request):
     })
 
 
+def contacts(request):
+    template = 'contacts_en.html'
+    if get_language() == 'ru':
+        template = 'contacts_ru.html'
+
+    return render(request, 'website/{}'.format(template), {
+        'page': 'contacts'
+    })
+
+
 def search(request):
     query = request.GET.get('q', '')
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-21 08:26+0000\n"
+"POT-Creation-Date: 2018-03-26 02:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,7 +153,7 @@ msgstr "Маджонг портал"
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:78 templates/base.html:91 templates/base.html:107
+#: templates/base.html:78 templates/base.html:98 templates/base.html:114
 #: templates/club/details.html:27 templates/player/details.html:60
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
@@ -166,20 +166,36 @@ msgstr "Турниры"
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:84 templates/website/about_en.html:5
+#: templates/base.html:85 templates/tournament/application.html:84
+#: tournament/models.py:261
+msgid "Other"
+msgstr "Другое"
+
+#: templates/base.html:88 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтингах"
 
-#: templates/base.html:92 templates/player/details.html:35
+#: templates/base.html:89
+msgid "Contacts"
+msgstr "Развитие"
+
+#: templates/base.html:90 templates/tournament/application.html:5
+#: templates/tournament/application.html:10
+#: templates/tournament/application.html:104
+#: templates/tournament/application.html:105
+msgid "Tournament application"
+msgstr "Заявка на турнир"
+
+#: templates/base.html:99 templates/player/details.html:35
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: templates/base.html:102
+#: templates/base.html:109
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:103 templates/system_index.html:5
+#: templates/base.html:110 templates/system_index.html:5
 #: templates/tournament_admin/managed_tournaments.html:5
 #: templates/tournament_admin/new_tournaments.html:5
 #: templates/tournament_admin/tournament_edit.html:5
@@ -189,11 +205,11 @@ msgstr "Django админка"
 msgid "Admin page"
 msgstr "Админка"
 
-#: templates/base.html:109
+#: templates/base.html:116
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:116 templates/base.html:117
+#: templates/base.html:123 templates/base.html:124
 msgid "Search"
 msgstr "Поиск"
 
@@ -477,43 +493,38 @@ msgstr "Участники"
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
-#: templates/tournament/application.html:5
-#: templates/tournament/application.html:10
-#: templates/tournament/application.html:102
-#: templates/tournament/application.html:103
-msgid "Tournament application"
-msgstr "Заявка на турнир"
+#: templates/tournament/application.html:12
+msgid ""
+"Please tell us about your tournament. We will contact with you in 3 days "
+"after application."
+msgstr "Расскажите нам про ваш турнир и мы свяжемся с вами в течение трёх дней."
 
-#: templates/tournament/application.html:14
+#: templates/tournament/application.html:16
 msgid ""
 "Your application was saved! We will contact with you for further details."
 msgstr "Ваша заявка была сохранена! Мы свяжемся с вами в ближайшее время."
 
-#: templates/tournament/application.html:22
+#: templates/tournament/application.html:24
 msgid "Main info"
 msgstr "Основная информация"
 
-#: templates/tournament/application.html:34 tournament/models.py:266
+#: templates/tournament/application.html:36 tournament/models.py:266
 msgid "Additional info"
 msgstr "Дополнительная информация"
 
-#: templates/tournament/application.html:49
+#: templates/tournament/application.html:51
 msgid "Dates"
 msgstr "Даты"
 
-#: templates/tournament/application.html:59
+#: templates/tournament/application.html:61
 msgid "Organizer"
 msgstr "Организатор"
 
-#: templates/tournament/application.html:70
+#: templates/tournament/application.html:72
 msgid "Referee"
 msgstr "Судья"
 
-#: templates/tournament/application.html:82 tournament/models.py:261
-msgid "Other"
-msgstr "Другое"
-
-#: templates/tournament/application.html:94
+#: templates/tournament/application.html:96
 msgctxt "new tournament"
 msgid "Submit"
 msgstr "Отправить"

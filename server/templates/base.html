@@ -80,8 +80,15 @@
             <li class="nav-item {% if page == 'club' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'club_list' %}">{% trans 'Clubs' %}</a>
             </li>
-            <li class="nav-item {% if page == 'about' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'about' %}">{% trans 'About' %}</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans 'Other' %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'about' %}">{% trans 'About' %}</a>
+                    <a class="dropdown-item" href="{% url 'contacts' %}">{% trans 'Contacts' %}</a>
+                    <a class="dropdown-item" href="{% url 'tournament_application' %}">{% trans 'Tournament application' %}</a>
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

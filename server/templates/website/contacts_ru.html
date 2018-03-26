@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Contacts' %}
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="Информация про развитие маджонга">
+    <meta property="og:description" content="Информация про развитие маджонга">
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Подача заявки на аккредитацию турнира</h2>
+        <p>Для попадания турнира на портал нужно заполнить форму на странице: <a href="{% url 'tournament_application' %}">{% url 'tournament_application' %}</a></p>
+
+        <h2>Правила аккредитации</h2>
+        <p>Исчерпывающую информацию про аккредитацию турниров можно найти в документе: <a href="https://docs.google.com/document/d/1XBNocx2YkbnIF0ILFaDs3RdD4PC83Sy0Ng9rBwR-EMc/">https://docs.google.com/document/d/1XBNocx2YkbnIF0ILFaDs3RdD4PC83Sy0Ng9rBwR-EMc/</a></p>
+
+        <h2>Комитет по вопросам риичи маджонга</h2>
+        <p>В федерации маджонга был сформирован комитет из заинтересованных людей для работы с вопросами риичи маджонга.</p>
+        <p>Состав комитета:</p>
+        <ul>
+            <li><a href="https://vk.com/ramana" target="_blank">Леон Николаев</a> <br>Занимается развитием центральной части страны.</li>
+            <li><a href="https://vk.com/n1cetry" target="_blank">Алексей Леонтьев</a> <br>Как представитель центральной части помогает Леону и добавляет в комитет эксперитзу сильного игрока.</li>
+            <li><a href="https://vk.com/shalimovai" target="_blank">Елена Шалимова</a> <br>Занимается развитием EMA-зоны "Сибирь".</li>
+            <li><a href="https://vk.com/ctizen" target="_blank">Олег Клименко</a> <br>Руководитель технического направления и создатель <a href="https://github.com/MahjongPantheon/pantheon">Пантеона</a>.</li>
+            <li><a href="https://vk.com/id27490555" target="_blank">Иван Калинин</a> <br>Занимается переводами и ведением <a href="https://www.facebook.com/groups/riichirus/" target="_blank">фб</a> группы развития. Представитель зоны "Сибирь".</li>
+            <li><a href="https://vk.com/alexey.lisikhin" target="_blank">Алексей Лисихин</a> <br>Участвует в техническом направлении и представитель зоны "Сибирь". Все вопросы по порталу можно задавать ему.</li>
+        </ul>
+
+        <h2>Федерация маджонга</h2>
+        <ul>
+            <li><a href="http://mahjong.ru/" target="_blank">Сайт федерации</a></li>
+            <li><a href="http://mahjong.ru/index.php?option=com_content&view=article&id=401" target="_blank">Информация про вступление в федерацию</a></li>
+        </ul>
+    </div>
+{% endblock %}
