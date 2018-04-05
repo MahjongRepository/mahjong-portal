@@ -40,7 +40,7 @@ class OnlineTournamentRegistrationAdmin(admin.ModelAdmin):
 
 
 class TournamentApplicationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'created_on']
+    list_display = ['tournament_name', 'city', 'start_date', 'created_on']
 
 
 class TournamentResultAdmin(admin.ModelAdmin):
