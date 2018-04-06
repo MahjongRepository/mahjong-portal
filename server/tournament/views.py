@@ -72,9 +72,11 @@ def tournament_details(request, slug):
 def tournament_announcement(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
 
-    initial = {}
+    initial = {
+        'tournament': tournament
+    }
     if tournament.city and tournament.fill_city_in_registration:
-        initial = {'city': tournament.city.name_ru}
+        initial['city'] = tournament.city.name_ru
 
     if tournament.is_online():
         form = OnlineTournamentRegistrationForm()
@@ -116,7 +118,9 @@ def tournament_registration(request, tournament_id):
     if tournament.is_online():
         form = OnlineTournamentRegistrationForm(request.POST)
     else:
-        form = TournamentRegistrationForm(request.POST)
+        form = TournamentRegistrationForm(request.POST, initial = {
+            'tournament': tournament
+        })
 
     if form.is_valid():
         if tournament.is_online():

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-26 02:30+0000\n"
+"POT-Creation-Date: 2018-04-06 09:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,7 +153,7 @@ msgstr "Маджонг портал"
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:78 templates/base.html:98 templates/base.html:114
+#: templates/base.html:78 templates/base.html:88 templates/base.html:114
 #: templates/club/details.html:27 templates/player/details.html:60
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
@@ -166,30 +166,31 @@ msgstr "Турниры"
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:85 templates/tournament/application.html:84
-#: tournament/models.py:261
+#: templates/base.html:89 templates/player/details.html:35
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: templates/base.html:94 templates/tournament/application.html:84
+#: tournament/models.py:266
 msgid "Other"
 msgstr "Другое"
 
-#: templates/base.html:88 templates/website/about_en.html:5
+#: templates/base.html:97 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтингах"
 
-#: templates/base.html:89
+#: templates/base.html:98 templates/website/contacts_en.html:5
+#: templates/website/contacts_ru.html:5
 msgid "Contacts"
 msgstr "Развитие"
 
-#: templates/base.html:90 templates/tournament/application.html:5
+#: templates/base.html:99 templates/tournament/application.html:5
 #: templates/tournament/application.html:10
 #: templates/tournament/application.html:104
 #: templates/tournament/application.html:105
 msgid "Tournament application"
 msgstr "Заявка на турнир"
-
-#: templates/base.html:99 templates/player/details.html:35
-msgid "Rating"
-msgstr "Рейтинг"
 
 #: templates/base.html:109
 msgid "Django admin"
@@ -324,8 +325,8 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:20 templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:61
 #: templates/tournament_admin/tournament_manage.html:79
-#: templates/website/search.html:17 tournament/models.py:180
-#: tournament/models.py:206 tournament/models.py:229
+#: templates/website/search.html:17 tournament/models.py:181
+#: tournament/models.py:211 tournament/models.py:234
 msgid "City"
 msgstr "Город"
 
@@ -489,7 +490,7 @@ msgstr "Записаться"
 msgid "Participants"
 msgstr "Участники"
 
-#: templates/tournament/announcement.html:63 tournament/models.py:207
+#: templates/tournament/announcement.html:63 tournament/models.py:212
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
@@ -497,7 +498,8 @@ msgstr "Ник на tenhou.net"
 msgid ""
 "Please tell us about your tournament. We will contact with you in 3 days "
 "after application."
-msgstr "Расскажите нам про ваш турнир и мы свяжемся с вами в течение трёх дней."
+msgstr ""
+"Расскажите нам про ваш турнир и мы свяжемся с вами в течение трёх дней."
 
 #: templates/tournament/application.html:16
 msgid ""
@@ -508,7 +510,7 @@ msgstr "Ваша заявка была сохранена! Мы свяжемся
 msgid "Main info"
 msgstr "Основная информация"
 
-#: templates/tournament/application.html:36 tournament/models.py:266
+#: templates/tournament/application.html:36 tournament/models.py:271
 msgid "Additional info"
 msgstr "Дополнительная информация"
 
@@ -574,7 +576,7 @@ msgstr "Участников"
 
 #: templates/tournament_admin/managed_tournaments.html:27
 #: templates/tournament_admin/new_tournaments.html:19
-#: templates/tournament_admin/tournament_manage.html:84
+#: templates/tournament_admin/tournament_manage.html:87
 msgid "Action"
 msgstr "Действие"
 
@@ -644,7 +646,7 @@ msgid "Registered at"
 msgstr "Дата регистрации"
 
 #: templates/tournament_admin/tournament_manage.html:81
-#: tournament/models.py:181
+#: tournament/models.py:182
 msgid "Phone"
 msgstr "Телефон"
 
@@ -652,24 +654,32 @@ msgstr "Телефон"
 msgid "Additional contact"
 msgstr "Альтернативный контакт"
 
-#: templates/tournament_admin/tournament_manage.html:83
+#: templates/tournament_admin/tournament_manage.html:84
+msgid "Notes"
+msgstr "Примечания"
+
+#: templates/tournament_admin/tournament_manage.html:86
 msgid "Approved"
 msgstr "Одобрено"
 
-#: templates/tournament_admin/tournament_manage.html:123
-#: tournament/models.py:250 tournament/models.py:257
+#: templates/tournament_admin/tournament_manage.html:131
+#: tournament/models.py:255 tournament/models.py:262
 msgid "Yes"
 msgstr "Да"
 
-#: templates/tournament_admin/tournament_manage.html:126
+#: templates/tournament_admin/tournament_manage.html:134
 msgid "Approve"
 msgstr "Одобрить"
 
-#: templates/tournament_admin/tournament_manage.html:132
+#: templates/tournament_admin/tournament_manage.html:140
 msgid "Delete"
 msgstr "Удалить"
 
-#: templates/tournament_admin/tournament_manage.html:141
+#: templates/tournament_admin/tournament_manage.html:145
+msgid "Color"
+msgstr "Цвет"
+
+#: templates/tournament_admin/tournament_manage.html:155
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
@@ -707,153 +717,161 @@ msgstr "Результаты поиска"
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: tournament/forms.py:17 tournament/forms.py:30 tournament/forms.py:43
-#: tournament/models.py:190 tournament/models.py:214 tournament/models.py:268
+#: tournament/forms.py:19 tournament/forms.py:36 tournament/forms.py:49
+#: tournament/models.py:195 tournament/models.py:219 tournament/models.py:273
 msgid "I allow to store my personal data"
 msgstr "Я разрешаю сбор моих персональных данных, их хранение и обработку"
 
-#: tournament/models.py:178 tournament/models.py:204
+#: tournament/models.py:179 tournament/models.py:209
 msgid "First name"
 msgstr "Имя"
 
-#: tournament/models.py:179 tournament/models.py:205
+#: tournament/models.py:180 tournament/models.py:210
 msgid "Last name"
 msgstr "Фамилия"
 
-#: tournament/models.py:182 tournament/models.py:184 tournament/models.py:209
+#: tournament/models.py:183 tournament/models.py:185 tournament/models.py:214
 msgid "It will be visible only to the administrator"
 msgstr "Он будет показан только администратору"
 
-#: tournament/models.py:183
+#: tournament/models.py:184
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: tournament/models.py:208
+#: tournament/models.py:189
+msgid "Notes. Optional"
+msgstr "Примечания. Опционально"
+
+#: tournament/models.py:190
+msgid "Tell us about yourself"
+msgstr "Расскажите про себя"
+
+#: tournament/models.py:213
 msgid "Your contact (email, phone, etc.)"
 msgstr "Контактные данные (почта, телефон, т.п.)"
 
-#: tournament/models.py:228
+#: tournament/models.py:233
 msgid "Tournament name"
 msgstr "Название турнира"
 
-#: tournament/models.py:230
+#: tournament/models.py:235
 msgid "Tournament type"
 msgstr "Желаемый тип турнира"
 
-#: tournament/models.py:232
+#: tournament/models.py:237
 msgid "Start date"
 msgstr "Дата начала"
 
-#: tournament/models.py:233
+#: tournament/models.py:238
 msgid "End date"
 msgstr "Дата окончания"
 
-#: tournament/models.py:234
+#: tournament/models.py:239
 msgid "Leave empty if tournament has one day"
 msgstr "Оставьте пустым если турнир однодневный"
 
-#: tournament/models.py:235
+#: tournament/models.py:240
 msgid "Address"
 msgstr "Адрес"
 
-#: tournament/models.py:235
+#: tournament/models.py:240
 msgid "How to reach your tournament venue"
 msgstr ""
 "Расскажите как добрать до места проведения турнира на общественном транспорте"
 
-#: tournament/models.py:237
+#: tournament/models.py:242
 msgid "Link to additional tournament information"
 msgstr "Ссылка на дополнительную информацию (например группа в контакте)"
 
-#: tournament/models.py:239
+#: tournament/models.py:244
 msgid "Organizer name"
 msgstr "ФИО организатора"
 
-#: tournament/models.py:240
+#: tournament/models.py:245
 msgid "Organizer phone"
 msgstr "Телефон организатора"
 
-#: tournament/models.py:241
+#: tournament/models.py:246
 msgid "Organizer additional contact"
 msgstr "Дополнительный способ связи"
 
-#: tournament/models.py:243 tournament/models.py:249
+#: tournament/models.py:248 tournament/models.py:254
 msgid "Email, link to vk or something else"
 msgstr "Почта, страница в vk или что-то другое"
 
-#: tournament/models.py:245
+#: tournament/models.py:250
 msgid "Referee name"
 msgstr "ФИО судьи"
 
-#: tournament/models.py:246
+#: tournament/models.py:251
 msgid "Referee phone"
 msgstr "Телефон судьи"
 
-#: tournament/models.py:247
+#: tournament/models.py:252
 msgid "Referee additional contact"
 msgstr "Дополнительный способ связи"
 
-#: tournament/models.py:250 tournament/models.py:257
+#: tournament/models.py:255 tournament/models.py:262
 msgid "No"
 msgstr "Нет"
 
-#: tournament/models.py:251
+#: tournament/models.py:256
 msgid "Referee english"
 msgstr "Владение английским языком у главного судьи"
 
-#: tournament/models.py:254
+#: tournament/models.py:259
 msgid "Max number of participants"
 msgstr "Предполагаемое максимальное  количество участников"
 
-#: tournament/models.py:255
+#: tournament/models.py:260
 msgid "Entry fee"
 msgstr "Стоимость взноса"
 
-#: tournament/models.py:256
+#: tournament/models.py:261
 msgid "Leave empty if it is free tournament"
 msgstr "Оставьте пустым если турнир бесплатный"
 
-#: tournament/models.py:258
+#: tournament/models.py:263
 msgid "Pantheon needed"
 msgstr "Потребуется ли система “Пантеон” на турнире"
 
-#: tournament/models.py:260
+#: tournament/models.py:265
 msgid "Tournament rules"
 msgstr "Турнирные правила"
 
-#: tournament/models.py:261
+#: tournament/models.py:266
 msgid "EMA"
 msgstr "EMA"
 
-#: tournament/models.py:261
+#: tournament/models.py:266
 msgid "WRC"
 msgstr "WRC"
 
-#: tournament/models.py:261
+#: tournament/models.py:266
 msgid "JPML-A"
 msgstr "JPML-A"
 
-#: tournament/models.py:261
+#: tournament/models.py:266
 msgid "JPML-B"
 msgstr "JPML-B"
 
-#: tournament/models.py:263
+#: tournament/models.py:268
 msgid "Open"
 msgstr "Открытая"
 
-#: tournament/models.py:263
+#: tournament/models.py:268
 msgid "Closed"
 msgstr "Закрытая"
 
-#: tournament/models.py:263
+#: tournament/models.py:268
 msgid "Limited"
 msgstr "Ограниченая"
 
-#: tournament/models.py:264
+#: tournament/models.py:269
 msgid "Registration type"
 msgstr "Тип регистрации"
 
-#: tournament/models.py:267
+#: tournament/models.py:272
 msgid "More information about tournament"
 msgstr ""
 "Указывается наличие опциональных изменений под выбранные правила. Если тип "
@@ -862,11 +880,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:125
+#: tournament/views.py:129
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: tournament/views.py:147
+#: tournament/views.py:151
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -874,10 +892,10 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:150
+#: tournament/views.py:154
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:156
+#: tournament/views.py:160
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"

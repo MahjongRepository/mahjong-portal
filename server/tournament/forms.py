@@ -9,12 +9,18 @@ class TournamentRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = TournamentRegistration
-        fields = ['last_name', 'first_name', 'city', 'phone', 'additional_contact', 'allow_to_save_data']
+        fields = ['last_name', 'first_name', 'city', 'phone', 'additional_contact', 'notes', 'allow_to_save_data']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        tournament = kwargs.get('initial', {}).get('tournament')
+
         self.fields['allow_to_save_data'].label = _('I allow to store my personal data')
+        if tournament.display_notes:
+            self.fields['notes'].widget = forms.Textarea(attrs={'rows': 2})
+        else:
+            del self.fields['notes']
 
 
 class OnlineTournamentRegistrationForm(forms.ModelForm):

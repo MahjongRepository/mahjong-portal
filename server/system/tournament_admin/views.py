@@ -208,6 +208,18 @@ def remove_registration(request, tournament_id, registration_id, **kwargs):
 
 @login_required
 @tournament_manager_auth_required
+def toggle_highlight(request, tournament_id, registration_id, **kwargs):
+    tournament = kwargs['tournament']
+
+    registration = get_object_or_404(TournamentRegistration, tournament=tournament, id=registration_id)
+    registration.is_highlighted = not registration.is_highlighted
+    registration.save()
+
+    return redirect(tournament_manage, tournament.id)
+
+
+@login_required
+@tournament_manager_auth_required
 def approve_registration(request, tournament_id, registration_id, **kwargs):
     tournament = kwargs['tournament']
 

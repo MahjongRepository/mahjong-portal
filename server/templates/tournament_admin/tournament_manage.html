@@ -80,13 +80,16 @@
                         <th scope="col">{% trans 'Registered at' %}</th>
                         <th scope="col">{% trans 'Phone' %}</th>
                         <th scope="col">{% trans 'Additional contact' %}</th>
+                        {% if tournament.display_notes %}
+                            <th scope="col">{% trans 'Notes' %}</th>
+                        {% endif %}
                         <th scope="col">{% trans 'Approved' %}</th>
                         <th scope="col">{% trans 'Action' %}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for registration_item in tournament_registrations %}
-                        <tr>
+                        <tr {% if registration_item.is_highlighted %}class="table-success" {% endif %}>
                             <td>{{ forloop.revcounter }}</td>
                             <td>
                                 <nobr>
@@ -118,6 +121,11 @@
                             </td>
                             <td>{{ registration_item.phone }}</td>
                             <td>{{ registration_item.additional_contact|default:'-' }}</td>
+                            {% if tournament.display_notes %}
+                                <td>
+                                    {{ registration_item.notes }}
+                                </td>
+                            {% endif %}
                             <td>
                                 {% if registration_item.is_approved %}
                                     {% trans 'Yes' %}
@@ -131,6 +139,12 @@
                                 <a href="{% url 'remove_registration' tournament.id registration_item.id %}" class="btn btn-danger">
                                     {% trans 'Delete' %}
                                 </a>
+
+                                {% if not tournament.is_online %}
+                                    <a href="{% url 'toggle_highlight' tournament.id registration_item.id %}" class="btn btn-primary" style="margin-top: 5px">
+                                        {% trans 'Color' %}
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

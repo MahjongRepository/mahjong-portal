@@ -60,6 +60,7 @@ class Tournament(BaseModel):
 
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)
+    display_notes = models.BooleanField(default=False)
 
     pantheon_id = models.CharField(max_length=20, null=True, blank=True)
 
@@ -183,6 +184,10 @@ class TournamentRegistration(BaseModel):
     additional_contact = models.CharField(max_length=255, verbose_name=_('Additional contact. Optional'),
                                           help_text=_('It will be visible only to the administrator'),
                                           default='', null=True, blank=True)
+
+    is_highlighted = models.BooleanField(default=False)
+    notes = models.TextField(null=True, blank=True, default='', verbose_name=_('Notes. Optional'),
+                             help_text=_('Tell us about yourself'))
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)
