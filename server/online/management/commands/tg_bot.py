@@ -133,8 +133,8 @@ def get_tournament_status(bot, update):
 def help_bot(bot, update):
     logger.info('Help')
 
-    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?C44234907 \n'
-    message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid73/stat \n'
+    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?C99728909 \n'
+    message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
     message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10'
     bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
@@ -160,13 +160,7 @@ def new_chat_member(bot, update):
     username = update.message.from_user.username
     logger.info('New member. {}'.format(username))
 
-    message = 'Добро пожаловать в чат онлайн турнира! \n'
-    if not username:
-        message += u'Для начала установите username в настройках телеграма (Settings -> Username) \n'
-        message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
-    else:
-        message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
-
+    message = tournament_handler.new_chat_member(username)
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 

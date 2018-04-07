@@ -26,7 +26,7 @@ class TournamentPlayersForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['tournament'].queryset = Tournament.objects.filter(tournament_type=Tournament.ONLINE)
+        self.fields['tournament'].queryset = Tournament.objects.filter(tournament_type=Tournament.ONLINE).order_by('-start_date')
 
 
 class TournamentStatusAdmin(admin.ModelAdmin):
@@ -36,6 +36,9 @@ class TournamentStatusAdmin(admin.ModelAdmin):
 class TournamentPlayersAdmin(admin.ModelAdmin):
     form = TournamentPlayersForm
     list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id']
+    list_filter = [
+        ['tournament', admin.RelatedOnlyFieldListFilter],
+    ]
 
     def player(self, obj):
         try:
@@ -50,12 +53,12 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 class TournamentGameAdmin(admin.ModelAdmin):
     form = TournamentGameForm
     list_display = ['tournament', 'tournament_round', 'status', 'log_id', 'created_on', 'updated_on']
-    list_filter = ['status', 'tournament_round']
+    list_filter = [['tournament', admin.RelatedOnlyFieldListFilter], 'status', 'tournament_round',]
 
 
 class TournamentGamePlayerAdmin(admin.ModelAdmin):
     list_display = ['player', 'game', 'wind', 'is_active']
-    list_filter = ['game__status']
+    list_filter = [['game__tournament', admin.RelatedOnlyFieldListFilter], 'game__status']
 
 
 admin.site.register(TournamentStatus, TournamentStatusAdmin)

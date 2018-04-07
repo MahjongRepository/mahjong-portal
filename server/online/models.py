@@ -47,7 +47,7 @@ class TournamentGame(BaseModel):
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
 
     class Meta:
-        ordering = ['-tournament_round', 'status', 'tournament']
+        ordering = ['-tournament', '-tournament_round', 'status', ]
 
     def __unicode__(self):
         return '{}, {}, {}'.format(self.id, self.get_status_display(), self.tournament_round)

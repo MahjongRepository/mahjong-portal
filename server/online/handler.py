@@ -2,6 +2,7 @@
 import logging
 from datetime import timedelta
 from random import randint
+from urllib.error import HTTPError
 from urllib.parse import urlencode, quote, unquote, urlparse, parse_qs
 
 import requests
@@ -24,6 +25,7 @@ TOURNAMENT_BREAKS_TIME = [
     30,
     5,
     5,
+    5
 ]
 
 
@@ -38,7 +40,10 @@ class TournamentHandler(object):
     def get_tournament_status(self):
         if not self.status.current_round:
             confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
-            return 'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
+            if self.status.registration_closed:
+                return 'Игры скоро начнутся. Подтвержденных игроков: {}.'.format(confirmed_players)
+            else:
+                return 'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
 
         if self.status.end_break_time:
             now = timezone.now()
@@ -48,11 +53,13 @@ class TournamentHandler(object):
 
             delta = self.status.end_break_time - now
             if delta.seconds > 60:
-                minutes = round(delta.seconds / 60.0, 2)
+                minutes = round(delta.seconds // 60 % 60, 2)
+                seconds = delta.seconds - minutes * 60
+                date = '{} минуты и {} секунд'.format(minutes, seconds)
             else:
-                minutes = round(delta.seconds * 0.0166, 2)
+                date = '{} секунд'.format(delta.seconds)
 
-            return 'Перерыв. Следующий тур начнётся через {} минут.'.format(minutes)
+            return 'Перерыв. Следующий тур начнётся через {}.'.format(date)
 
         active_games_count = (TournamentGame.objects
                               .filter(tournament=self.tournament)
@@ -86,7 +93,7 @@ class TournamentHandler(object):
     def close_registration(self):
         self.status.registration_closed = True
         self.status.save()
-        return 'Этап подтверждения участия завершился. Игры начнутся через 5 минут.'
+        return 'Этап подтверждения участия завершился. Игры начнутся через 10 минут.'
 
     def add_game_log(self, log_link):
         error_message = 'Это не похоже на лог игры.'
@@ -102,8 +109,11 @@ class TournamentHandler(object):
 
         log_id = attributes['log'][0]
 
-        parser = TenhouParser()
-        players = parser.get_player_names(log_id)
+        try:
+            parser = TenhouParser()
+            players = parser.get_player_names(log_id)
+        except HTTPError:
+            return 'Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не весь log id.'
         
         if TournamentGame.objects.filter(log_id=log_id).exists():
             return 'Игра уже была добавлена в систему. Спасибо.'
@@ -346,3 +356,17 @@ class TournamentHandler(object):
                 return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.'.format(break_minutes)
         else:
             return None
+
+    def new_chat_member(self, username):
+        if not self.status.current_round:
+            message = 'Добро пожаловать в чат онлайн турнира! \n'
+            if not username:
+                message += u'Для начала установите username в настройках телеграма (Settings -> Username) \n'
+                message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
+            else:
+                message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
+            return message
+        else:
+            message = 'Добро пожаловать в чат онлайн турнира! \n\n'
+            message += 'Статистику турнира можно посмотреть вот тут: https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
+            return message
