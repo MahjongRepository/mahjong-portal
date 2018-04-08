@@ -135,7 +135,8 @@ def help_bot(bot, update):
 
     message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?C99728909 \n'
     message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
-    message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10'
+    message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10  \n'
+    message += '4. Отправка лога игры через команду "/log http://tenhou.net..."'
     bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 

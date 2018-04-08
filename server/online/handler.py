@@ -51,13 +51,55 @@ class TournamentHandler(object):
             if now > self.status.end_break_time:
                 return 'Ждём начала нового тура.'
 
+            minutes_dict = {
+                1: 'минуту',
+                2: 'минуты',
+                3: 'минуты',
+                4: 'минуты',
+                21: 'минуту',
+                22: 'минуты',
+                23: 'минуты',
+                24: 'минуты',
+            }
+
+            seconds_dict = {
+                1: 'секунду',
+                2: 'секунды',
+                3: 'секунды',
+                4: 'секунды',
+                21: 'секунду',
+                22: 'секунды',
+                23: 'секунды',
+                24: 'секунды',
+                31: 'секунду',
+                32: 'секунды',
+                33: 'секунды',
+                34: 'секунды',
+                41: 'секунду',
+                42: 'секунды',
+                43: 'секунды',
+                44: 'секунды',
+                51: 'секунду',
+                52: 'секунды',
+                53: 'секунды',
+                54: 'секунды',
+            }
+
             delta = self.status.end_break_time - now
             if delta.seconds > 60:
                 minutes = round(delta.seconds // 60 % 60, 2)
                 seconds = delta.seconds - minutes * 60
-                date = '{} минуты и {} секунд'.format(minutes, seconds)
+                date = '{} {} и {} {}'.format(
+                    minutes,
+                    minutes_dict.get(minutes, 'минут'),
+                    seconds,
+                    seconds_dict.get(seconds, 'секунд'),
+                )
             else:
-                date = '{} секунд'.format(delta.seconds)
+                date = '{} {}'.format(
+                    delta.seconds,
+                    seconds_dict.get(delta.seconds, 'секунд'),
+                )
 
             return 'Перерыв. Следующий тур начнётся через {}.'.format(date)
 
