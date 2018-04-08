@@ -42,7 +42,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
     def player(self, obj):
         try:
-            registration = OnlineTournamentRegistration.objects.get(tenhou_nickname=obj.tenhou_username)
+            registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
             return registration.player
         except:
             pass
