@@ -24,7 +24,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
     prepopulated_fields = {'slug': ['last_name_en', 'first_name_en']}
 
-    list_display = ['last_name', 'first_name', 'city']
+    list_display = ['last_name', 'first_name', 'city', 'pantheon_id']
     list_filter = ['is_hide']
     search_fields = ['first_name_ru', 'first_name_en', 'last_name_ru', 'last_name_en', 'ema_id']
 
