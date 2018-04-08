@@ -205,7 +205,7 @@ class TournamentHandler(object):
             return 'Ник на тенхе не должен быть больше 8 символов.'
 
         try:
-            registration = OnlineTournamentRegistration.objects.get(tenhou_nickname=tenhou_nickname)
+            registration = OnlineTournamentRegistration.objects.get(tenhou_nickname=tenhou_nickname, tournament=self.tournament)
         except OnlineTournamentRegistration.DoesNotExist:
             return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
 
