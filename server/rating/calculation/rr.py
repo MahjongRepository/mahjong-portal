@@ -42,9 +42,13 @@ class RatingRRCalculation(object):
                       .filter(tournament__end_date__gte=date))
         return base_query
 
+    def get_date(self):
+        # two years ago
+        return timezone.now().date() - timedelta(days=365 * 2)
+
     def calculate_players_rating_rank(self, rating):
         results = []
-        two_years_ago = timezone.now().date() - timedelta(days=365 * 2)
+        two_years_ago = self.get_date()
 
         # it is important to save rating updates time
         rating.updated_on = timezone.now()
