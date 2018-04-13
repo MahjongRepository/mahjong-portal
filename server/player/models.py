@@ -102,7 +102,7 @@ class TenhouNickname(BaseModel):
         return self.tenhou_username
 
     class Meta:
-        ordering = ['rank']
+        ordering = ['-rank']
 
 
 class TenhouStatistics(models.Model):
