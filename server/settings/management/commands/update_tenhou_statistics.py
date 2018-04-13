@@ -117,7 +117,10 @@ class Command(BaseCommand):
                         stat_object.fourth_place = fourth_place
                         stat_object.save()
 
-                total_average_place = (total_first_place + total_second_place * 2 + total_third_place * 3 + total_fourth_place * 4) / total_played_games
+                if total_played_games:
+                    total_average_place = (total_first_place + total_second_place * 2 + total_third_place * 3 + total_fourth_place * 4) / total_played_games
+                else:
+                    total_average_place = 0
 
                 tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank][0]
                 tenhou_object.played_games = total_played_games
