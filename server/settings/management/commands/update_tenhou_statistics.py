@@ -20,7 +20,10 @@ class Command(BaseCommand):
         tenhou_objects = TenhouNickname.objects.all()
 
         for tenhou_object in tenhou_objects:
-            url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}'.format(tenhou_object.tenhou_username)
+            url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}&d1={}'.format(
+                tenhou_object.tenhou_username,
+                tenhou_object.username_created_at.strftime('%Y%m%d'),
+            )
 
             page = requests.get(url)
             soup = BeautifulSoup(page.content, 'html.parser', from_encoding='utf-8')
