@@ -1,4 +1,5 @@
 import re
+from urllib.parse import quote
 
 import requests
 from bs4 import BeautifulSoup
@@ -25,7 +26,7 @@ class Command(BaseCommand):
 
             for tenhou_object in tenhou_objects:
                 url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}&d1={}'.format(
-                    tenhou_object.tenhou_username,
+                    quote(tenhou_object.tenhou_username),
                     tenhou_object.username_created_at.strftime('%Y%m%d'),
                 )
 
