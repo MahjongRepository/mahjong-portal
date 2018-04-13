@@ -31,6 +31,9 @@ class Rating(BaseModel):
     def __unicode__(self):
         return self.name
 
+    def is_online(self):
+        return self.type == self.ONLINE
+
 
 class RatingDelta(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)

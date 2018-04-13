@@ -24,6 +24,9 @@ def rating_details(request, slug):
                                   .prefetch_related('player__country')
                                   .order_by('place'))
 
+    if rating.is_online():
+        rating_results = rating_results.prefetch_related('player__tenhou')
+
     render_as_json = request.GET.get('json')
     if render_as_json is not None:
         data = []
@@ -36,12 +39,12 @@ def rating_details(request, slug):
                 'city': rating_result.player.city.name
             })
         return JsonResponse(data, safe=False)
-    else:
-        return render(request, 'rating/details.html', {
-            'rating': rating,
-            'rating_results': rating_results,
-            'page': 'rating'
-        })
+
+    return render(request, 'rating/details.html', {
+        'rating': rating,
+        'rating_results': rating_results,
+        'page': 'rating'
+    })
 
 
 def rating_tournaments(request, slug):

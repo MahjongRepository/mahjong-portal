@@ -6,6 +6,11 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">{% trans 'Name' %}</th>
+            {% if rating.is_online %}
+                <th scope="col">
+                    {% trans 'Tenhou' %}
+                </th>
+            {% endif %}
             <th scope="col">{% trans 'Points' %}</th>
             <th scope="col">{% trans 'From' context 'location' %}</th>
         </tr>
@@ -30,6 +35,11 @@
                         {{ rating_result.player.full_name }}
                     </span>
                 </td>
+                {% if rating.is_online %}
+                    <td>
+                        {{ rating_result.player.tenhou.all.0.get_rank_display }}
+                    </td>
+                {% endif %}
                 <td>{{ rating_result.score|floatformat:0 }}</td>
                 <td>
                     {% if rating_result.player.city %}

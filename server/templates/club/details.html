@@ -48,10 +48,10 @@
                                 {% trans 'Tenhou' %}
                             </th>
                             <th scope="col">
-                                <nobr>{% trans 'Avg. place' %}</nobr>
+                                {% trans 'Games' %}
                             </th>
                             <th scope="col">
-                                {% trans 'Games' %}
+                                <nobr>{% trans 'Avg. place' %}</nobr>
                             </th>
                             <th scope="col">
                                 {% trans '1st' %}
@@ -83,17 +83,15 @@
                                 <td>
                                     {% with tenhou_object=item.player.tenhou_object %}
                                         {% if tenhou_object %}
-                                            <a class="not-colored-link" href="http://arcturus.su/tenhou/ranking/ranking.pl?name={{ tenhou_object.tenhou_username }}&d1={{ tenhou_object.username_created_at|date:'Ymd' }}" target="_blank">
-                                                {{ tenhou_object.get_rank_display }}
-                                            </a>
+                                            {{ tenhou_object.get_rank_display }}
                                         {% endif %}
                                     {% endwith %}
                                 </td>
                                 <td>
-                                    {{ item.average_place|floatformat:2 }}
+                                    {{ item.games_count }}
                                 </td>
                                 <td>
-                                    {{ item.games_count }}
+                                    {{ item.average_place|floatformat:2 }}
                                 </td>
                                 <td>
                                     {{ item.first_place|floatformat:2 }}
@@ -108,35 +106,35 @@
                                     {{ item.fourth_place|floatformat:2 }}
                                 </td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td colspan="8">
-                                    <span title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <b>{% trans 'feeds' %}</b>
-                                    </span>
-                                    {{ item.feed_percentage|floatformat:2 }}%,
-
-                                    <span title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <b>{% trans 'ippatsu' %}</b>
-                                    </span>
-                                    {{ item.ippatsu_chance|floatformat:2 }}%,
-
-                                    <span title="{% trans 'How many win hands were opened' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <b>{% trans 'open hands' %}</b>
-                                    </span>
-                                    {{ item.open_hand|floatformat:2 }}%,
-
-                                    <span title="{% trans 'How often riichi was ended with win' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <b>{% trans 'successful riichi' %}</b>
-                                    </span>
-                                    {{ item.successful_riichi|floatformat:2 }}%,
-
-                                    <span title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">
-                                        <b>{% trans 'avg. dora' %}</b>
-                                    </span>
-                                    {{ item.average_dora_in_hand|floatformat:2 }}
-                                </td>
-                            </tr>
+{#                            <tr>#}
+{#                                <td></td>#}
+{#                                <td colspan="8">#}
+{#                                    <span title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
+{#                                        <b>{% trans 'feeds' %}</b>#}
+{#                                    </span>#}
+{#                                    {{ item.feed_percentage|floatformat:2 }}%,#}
+{##}
+{#                                    <span title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
+{#                                        <b>{% trans 'ippatsu' %}</b>#}
+{#                                    </span>#}
+{#                                    {{ item.ippatsu_chance|floatformat:2 }}%,#}
+{##}
+{#                                    <span title="{% trans 'How many win hands were opened' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
+{#                                        <b>{% trans 'open hands' %}</b>#}
+{#                                    </span>#}
+{#                                    {{ item.open_hand|floatformat:2 }}%,#}
+{##}
+{#                                    <span title="{% trans 'How often riichi was ended with win' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
+{#                                        <b>{% trans 'successful riichi' %}</b>#}
+{#                                    </span>#}
+{#                                    {{ item.successful_riichi|floatformat:2 }}%,#}
+{##}
+{#                                    <span title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
+{#                                        <b>{% trans 'avg. dora' %}</b>#}
+{#                                    </span>#}
+{#                                    {{ item.average_dora_in_hand|floatformat:2 }}#}
+{#                                </td>#}
+{#                            </tr>#}
                         {% endfor %}
                     </tbody>
                 </table>

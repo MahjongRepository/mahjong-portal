@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from mahjong_portal.models import BaseModel
 from settings.models import Country, City
@@ -66,15 +67,15 @@ class Player(BaseModel):
 class TenhouNickname(BaseModel):
     RANKS = [
         [0, u'新人'],
-        [1, u'9級'],
-        [2, u'8級'],
-        [3, u'7級'],
-        [4, u'6級'],
-        [5, u'5級'],
-        [6, u'4級'],
-        [7, u'3級'],
-        [8, u'2級'],
-        [9, u'1級'],
+        [1, u'９級'],
+        [2, u'８級'],
+        [3, u'７級'],
+        [4, u'６級'],
+        [5, u'５級'],
+        [6, u'４級'],
+        [7, u'３級'],
+        [8, u'２級'],
+        [9, u'１級'],
         [10, u'初段'],
         [11, u'二段'],
         [12, u'三段'],
@@ -92,7 +93,41 @@ class TenhouNickname(BaseModel):
 
     tenhou_username = models.CharField(max_length=8)
     username_created_at = models.DateField()
+
     rank = models.PositiveSmallIntegerField(choices=RANKS)
+    average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    played_games = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return self.tenhou_username
+
+    class Meta:
+        ordering = ['rank']
+
+
+class TenhouStatistics(models.Model):
+    KYU_LOBBY = 0
+    DAN_LOBBY = 1
+    UPPERDAN_LOBBY = 2
+    PHOENIX_LOBBY = 3
+
+    LOBBIES = [
+        [KYU_LOBBY, gettext_lazy('Kyu lobby')],
+        [DAN_LOBBY, gettext_lazy('Dan lobby')],
+        [UPPERDAN_LOBBY, gettext_lazy('Upperdan lobby')],
+        [PHOENIX_LOBBY, gettext_lazy('Phoenix lobby')],
+    ]
+
+    tenhou_object = models.ForeignKey(TenhouNickname, related_name='statistics')
+    lobby = models.PositiveSmallIntegerField(choices=LOBBIES)
+
+    played_games = models.PositiveIntegerField(default=0)
+    average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+
+    first_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    second_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    third_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    fourth_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+
+    class Meta:
+        ordering = ['lobby']

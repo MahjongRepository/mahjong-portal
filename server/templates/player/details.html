@@ -27,27 +27,27 @@
             <p>{% trans 'Table with all ratings where player was counted' %}</p>
 
             <div class="table-responsive-sm">
-                <table class="table table-hover">
+                <table class="table table-hover" style="max-width: 450px">
                     <thead>
                     <tr>
+                        <th scope="col">{% trans 'Rating' %}</th>
                         <th scope="col">{% trans 'Place' %}</th>
                         <th scope="col">{% trans 'Scores' %}</th>
-                        <th scope="col">{% trans 'Rating' %}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for rating_result in rating_results %}
                         <tr>
+                            <td width="250px">
+                                <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
+                                    {{ rating_result.rating.name }}
+                                </a>
+                            </td>
                             <td>
                                 {{ rating_result.place }}
                             </td>
                             <td>
                                 {{ rating_result.score }}
-                            </td>
-                            <td>
-                                <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
-                                    {{ rating_result.rating.name }}
-                                </a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -62,6 +62,73 @@
             {% with deltas=tournament_results highlight=False %}
                 {% include 'player/_deltas_table.html' %}
             {% endwith %}
+        {% endif %}
+
+        {% if tenhou_data %}
+            <h4>{% trans 'Tenhou.net profile' %}</h4>
+
+            {% for tenhou_item in tenhou_data %}
+                <h5>{% trans 'Statistics for' %} {{ tenhou_item.tenhou_username }}</h5>
+                <p class="mt-3">{% trans 'Rank' %}: {{ tenhou_item.get_rank_display }}</p>
+                <p>{% trans 'Games' %}: {{ tenhou_item.played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.average_place }}</p>
+
+                <div class="table-responsive-sm">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    {% trans 'Lobby' %}
+                                </th>
+                                <th scope="col">
+                                    {% trans 'Games' %}
+                                </th>
+                                <th scope="col">
+                                    <nobr>{% trans 'Avg. place' %}</nobr>
+                                </th>
+                                <th scope="col">
+                                    {% trans '1st' %}
+                                </th>
+                                <th scope="col">
+                                    {% trans '2nd' %}
+                                </th>
+                                <th scope="col">
+                                    {% trans '3rd' %}
+                                </th>
+                                <th scope="col">
+                                    {% trans '4th' %}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat_item in tenhou_item.statistics.all %}
+                                <tr>
+                                    <td>
+                                        {{ stat_item.get_lobby_display }}
+                                    </td>
+                                    <td>
+                                        {{ stat_item.played_games }}
+                                    </td>
+                                    <td>
+                                        {{ stat_item.average_place|floatformat:2 }}
+                                    </td>
+                                    <td>
+                                        {{ stat_item.first_place|floatformat:2 }}
+                                    </td>
+                                    <td>
+                                        {{ stat_item.second_place|floatformat:2 }}
+                                    </td>
+                                    <td>
+                                        {{ stat_item.third_place|floatformat:2 }}
+                                    </td>
+                                    <td>
+                                        {{ stat_item.fourth_place|floatformat:2 }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
         {% endif %}
     </div>
 {% endblock %}

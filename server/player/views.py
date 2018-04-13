@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
-from player.models import Player
+from player.models import Player, TenhouNickname
 from rating.models import RatingDelta, Rating, RatingResult
 from tournament.models import TournamentResult
 
@@ -21,10 +21,13 @@ def player_details(request, slug):
     if not rating_results.count():
         tournament_results = RatingDelta.objects.filter(player=player)
 
+    tenhou_data = TenhouNickname.objects.filter(player=player).prefetch_related('statistics')
+
     return render(request, 'player/details.html', {
         'player': player,
         'rating_results': rating_results,
-        'tournament_results': tournament_results
+        'tournament_results': tournament_results,
+        'tenhou_data': tenhou_data
     })
 
 

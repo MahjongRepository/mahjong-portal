@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-06 09:15+0000\n"
+"POT-Creation-Date: 2018-04-13 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,9 +115,25 @@ msgstr "Клуб \"%(name)s\" в %(place)s"
 msgid "Riichi mahjong player %(name)s from %(place)s"
 msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
-#: player/models.py:56
+#: player/models.py:57
 msgid "Substitution player"
 msgstr "Игрок замены"
+
+#: player/models.py:115
+msgid "Kyu lobby"
+msgstr "Кю-лобби"
+
+#: player/models.py:116
+msgid "Dan lobby"
+msgstr "Перводан"
+
+#: player/models.py:117
+msgid "Upperdan lobby"
+msgstr "Втородан"
+
+#: player/models.py:118
+msgid "Phoenix lobby"
+msgstr "Феникс"
 
 #: templates/404.html:5 templates/404.html:10
 msgid "404 Page Not Found"
@@ -166,7 +182,7 @@ msgstr "Турниры"
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:89 templates/player/details.html:35
+#: templates/base.html:89 templates/player/details.html:33
 msgid "Rating"
 msgstr "Рейтинг"
 
@@ -242,69 +258,31 @@ msgstr "Имя"
 msgid "Tenhou"
 msgstr "Tenhou"
 
-#: templates/club/details.html:51
-msgid "Avg. place"
-msgstr "Ср. место"
-
-#: templates/club/details.html:54
+#: templates/club/details.html:51 templates/player/details.html:73
+#: templates/player/details.html:83
 msgid "Games"
 msgstr "Игр"
 
-#: templates/club/details.html:57
+#: templates/club/details.html:54 templates/player/details.html:73
+#: templates/player/details.html:86
+msgid "Avg. place"
+msgstr "Ср. место"
+
+#: templates/club/details.html:57 templates/player/details.html:89
 msgid "1st"
 msgstr "1-e"
 
-#: templates/club/details.html:60
+#: templates/club/details.html:60 templates/player/details.html:92
 msgid "2nd"
 msgstr "2-е"
 
-#: templates/club/details.html:63
+#: templates/club/details.html:63 templates/player/details.html:95
 msgid "3rd"
 msgstr "3-е"
 
-#: templates/club/details.html:66
+#: templates/club/details.html:66 templates/player/details.html:98
 msgid "4th"
 msgstr "4-е"
-
-#: templates/club/details.html:114
-msgid "How often player feed to other hand"
-msgstr "Как часто игрок накидывает в другие руки"
-
-#: templates/club/details.html:115
-msgid "feeds"
-msgstr "набросов"
-
-#: templates/club/details.html:119
-msgid "How often riichi was ended with ippatsu"
-msgstr "Как часто риичи игрока заканчивалось с иппацу"
-
-#: templates/club/details.html:120
-msgid "ippatsu"
-msgstr "иппацу"
-
-#: templates/club/details.html:124
-msgid "How many win hands were opened"
-msgstr "Как много победных рук были открытыми"
-
-#: templates/club/details.html:125
-msgid "open hands"
-msgstr "открытых рук"
-
-#: templates/club/details.html:129
-msgid "How often riichi was ended with win"
-msgstr "Как часто риичи игрока заканчивалось победой"
-
-#: templates/club/details.html:130
-msgid "successful riichi"
-msgstr "успешных риичи"
-
-#: templates/club/details.html:134
-msgid "Average dora number in win hands"
-msgstr "Среднее количество дор в собранных руках"
-
-#: templates/club/details.html:135
-msgid "avg. dora"
-msgstr "дор"
 
 #: templates/club/details.html:147
 msgid "Latest 10 club games"
@@ -343,7 +321,7 @@ msgstr "Ранг"
 msgid "Date"
 msgstr "Дата"
 
-#: templates/player/_deltas_table.html:10 templates/player/details.html:33
+#: templates/player/_deltas_table.html:10 templates/player/details.html:34
 msgid "Place"
 msgstr "Место"
 
@@ -368,9 +346,25 @@ msgstr "Из"
 msgid "Table with all ratings where player was counted"
 msgstr "Таблица со всеми рейтингами игрока"
 
-#: templates/player/details.html:34 templates/tournament/details.html:39
+#: templates/player/details.html:35 templates/tournament/details.html:39
 msgid "Scores"
 msgstr "Очки"
+
+#: templates/player/details.html:68
+msgid "Tenhou.net profile"
+msgstr "Tenhou.net профиль"
+
+#: templates/player/details.html:71
+msgid "Statistics for"
+msgstr "Статистика аккаунта"
+
+#: templates/player/details.html:72
+msgid "Rank"
+msgstr "Ранг"
+
+#: templates/player/details.html:80
+msgid "Lobby"
+msgstr "Лобби"
 
 #: templates/player/rating_details.html:21
 msgid "Player page"
@@ -899,3 +893,33 @@ msgstr "Регистрация принята!"
 #: tournament/views.py:160
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
+
+#~ msgid "How often player feed to other hand"
+#~ msgstr "Как часто игрок накидывает в другие руки"
+
+#~ msgid "feeds"
+#~ msgstr "набросов"
+
+#~ msgid "How often riichi was ended with ippatsu"
+#~ msgstr "Как часто риичи игрока заканчивалось с иппацу"
+
+#~ msgid "ippatsu"
+#~ msgstr "иппацу"
+
+#~ msgid "How many win hands were opened"
+#~ msgstr "Как много победных рук были открытыми"
+
+#~ msgid "open hands"
+#~ msgstr "открытых рук"
+
+#~ msgid "How often riichi was ended with win"
+#~ msgstr "Как часто риичи игрока заканчивалось победой"
+
+#~ msgid "successful riichi"
+#~ msgstr "успешных риичи"
+
+#~ msgid "Average dora number in win hands"
+#~ msgstr "Среднее количество дор в собранных руках"
+
+#~ msgid "avg. dora"
+#~ msgstr "дор"
