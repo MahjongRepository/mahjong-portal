@@ -31,7 +31,7 @@ class Command(BaseCommand):
         tenhou_nickname = options.get('tenhou_nickname')
 
         url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}'.format(
-            quote(tenhou_nickname)
+            quote(tenhou_nickname, safe='')
         )
 
         page = requests.get(url)

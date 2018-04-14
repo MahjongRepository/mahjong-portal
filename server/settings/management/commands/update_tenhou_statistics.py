@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
 def load_data_for_tenhou_object(tenhou_object):
     url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}&d1={}'.format(
-        quote(tenhou_object.tenhou_username),
+        quote(tenhou_object.tenhou_username, safe=''),
         tenhou_object.username_created_at.strftime('%Y%m%d'),
     )
 
