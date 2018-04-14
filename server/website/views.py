@@ -94,15 +94,29 @@ def city_page(request, slug):
 def players_api(request):
     translation.activate('ru')
 
-    players = Player.objects.filter(country__code='RU').prefetch_related('city').order_by('id')
+    players = (Player.objects
+               .filter(country__code='RU')
+               .prefetch_related('city')
+               .prefetch_related('tenhou')
+               .order_by('id'))
 
     data = []
     for player in players:
+        tenhou_query = player.tenhou.filter(is_main=True).first()
+        tenhou_data = None
+        if tenhou_query:
+            tenhou_data = {
+                'username': tenhou_query.tenhou_username,
+                'rank': tenhou_query.get_rank_display(),
+                'date': tenhou_query.username_created_at.strftime('%Y-%m-%d')
+            }
+
         data.append({
             'id': player.id,
             'name': player.full_name,
             'city': player.city and player.city.name or '',
             'ema_id': player.ema_id or '',
+            'tenhou': tenhou_data
         })
     return JsonResponse(data, safe=False)
 

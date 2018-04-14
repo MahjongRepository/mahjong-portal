@@ -102,6 +102,8 @@ class TenhouNickname(BaseModel):
     end_pt = models.PositiveSmallIntegerField(default=0)
     last_played_date = models.DateField(null=True, blank=True)
 
+    is_main = models.BooleanField(default=True)
+
     def __unicode__(self):
         return self.tenhou_username
 
