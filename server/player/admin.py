@@ -38,6 +38,8 @@ class TenhouStatisticsAdmin(admin.ModelAdmin):
 
     def rank(self, obj):
         return obj.tenhou_object.get_rank_display()
+    rank.short_description = 'Rank'
+    rank.admin_order_field = 'tenhou_object__rank'
 
     def last_played_date(self, obj):
         return obj.tenhou_object.last_played_date
