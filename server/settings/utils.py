@@ -197,14 +197,16 @@ class TenhouCalculator(object):
 
                 rank = copy(TenhouCalculator.DAN_SETTINGS[next_rank])
                 rank['pt'] = rank['start_pt']
-
             # wasted dan
-            if rank['pt'] < 0:
+            elif rank['pt'] < 0:
                 # getting previous record from ordered dict
                 rank_index = list(TenhouCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
                 next_rank = list(TenhouCalculator.DAN_SETTINGS.keys())[rank_index - 1]
 
-                rank = copy(TenhouCalculator.DAN_SETTINGS[next_rank])
-                rank['pt'] = rank['start_pt']
-
+                if TenhouCalculator.DAN_SETTINGS[next_rank]['start_pt'] > 0:
+                    rank = copy(TenhouCalculator.DAN_SETTINGS[next_rank])
+                    rank['pt'] = rank['start_pt']
+                else:
+                    # we can't lose first kyu
+                    rank['pt'] = 0
         return rank

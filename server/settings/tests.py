@@ -36,6 +36,13 @@ class TenhouCalculatorTestCase(TestCase):
         self.assertEqual(result['rank'], u'新人')
         self.assertEqual(result['pt'], 15)
 
+    def test_you_cant_lose_1_kyu(self):
+        first_places = [1] * 19
+        game_records = self._generate_game_records(first_places + [4])
+        result = TenhouCalculator.calculate_rank(game_records)
+        self.assertEqual(result['rank'], u'１級')
+        self.assertEqual(result['pt'], 0)
+
     def _generate_game_records(self, places, lobby=u'般', game_type=u'南'):
         data = []
         for place in places:
