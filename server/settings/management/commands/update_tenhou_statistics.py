@@ -138,7 +138,7 @@ def load_data_for_tenhou_object(tenhou_object):
     tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
     tenhou_object.pt = rank['pt']
     tenhou_object.end_pt = rank['end_pt']
-    tenhou_object.last_played_date = player_games and player_games[-1]['date']
+    tenhou_object.last_played_date = player_games and player_games[-1]['date'] or None
     tenhou_object.played_games = total_played_games
     tenhou_object.average_place = total_average_place
     tenhou_object.save()
