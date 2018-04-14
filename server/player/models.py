@@ -98,6 +98,10 @@ class TenhouNickname(BaseModel):
     average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     played_games = models.PositiveIntegerField(default=0)
 
+    pt = models.PositiveSmallIntegerField(default=0)
+    end_pt = models.PositiveSmallIntegerField(default=0)
+    last_played_date = models.DateField(null=True, blank=True)
+
     def __unicode__(self):
         return self.tenhou_username
 

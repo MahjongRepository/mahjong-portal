@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from urllib.parse import quote
 
 import requests
@@ -8,6 +9,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from player.models import TenhouNickname, TenhouStatistics
+from settings.utils import TenhouCalculator
 
 
 def get_date_string():
@@ -39,13 +41,6 @@ def load_data_for_tenhou_object(tenhou_object):
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser', from_encoding='utf-8')
 
-    tags = soup.find_all('p')
-
-    rank = ''
-    for tag in tags:
-        if '4man' in tag.text:
-            rank = re.search(r"\s+(\w+)\s+", tag.text.strip()).group(0).strip()
-
     places_dict = {
         '1位': 1,
         '2位': 2,
@@ -68,6 +63,7 @@ def load_data_for_tenhou_object(tenhou_object):
     }
 
     records = soup.find('div', {'id': 'records'}).text.split('\n')
+    player_games = []
     for record in records:
         if not record:
             continue
@@ -78,11 +74,20 @@ def load_data_for_tenhou_object(tenhou_object):
         place = places_dict[temp_array[0].strip()]
         lobby_number = temp_array[1].strip()
         lobby_name = lobbies_dict[game_settings[1]]
+        game_type = game_settings[2]
+        date = datetime.strptime(temp_array[3].strip(), '%Y-%m-%d')
 
         # for now let's collect stat only from usual games for 4 players
         if lobby_number == 'L0000' and game_settings[0] == u'四':
             lobbies_data[lobby_name]['played_games'] += 1
             lobbies_data[lobby_name][place] += 1
+
+            player_games.append({
+                'date': date,
+                'place': place,
+                'lobby': game_settings[1],
+                'game_type': game_type
+            })
 
     total_played_games = 0
     total_first_place = 0
@@ -128,7 +133,12 @@ def load_data_for_tenhou_object(tenhou_object):
     else:
         total_average_place = 0
 
-    tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank][0]
+    rank = TenhouCalculator.calculate_rank(player_games)
+
+    tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
+    tenhou_object.pt = rank['pt']
+    tenhou_object.end_pt = rank['end_pt']
+    tenhou_object.last_played_date = player_games and player_games[-1]['date']
     tenhou_object.played_games = total_played_games
     tenhou_object.average_place = total_average_place
     tenhou_object.save()

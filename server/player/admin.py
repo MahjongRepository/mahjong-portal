@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from player.models import Player, TenhouNickname
+from player.models import Player, TenhouNickname, TenhouStatistics
 
 
 class PlayerForm(forms.ModelForm):
@@ -32,4 +32,16 @@ class PlayerAdmin(admin.ModelAdmin):
         return Player.all_objects.all()
 
 
+class TenhouStatisticsAdmin(admin.ModelAdmin):
+    list_display = ['tenhou_object', 'lobby', 'rank', 'played_games', 'average_place', 'last_played_date']
+    list_filter = ['lobby']
+
+    def rank(self, obj):
+        return obj.tenhou_object.get_rank_display()
+
+    def last_played_date(self, obj):
+        return obj.tenhou_object.last_played_date
+
+
 admin.site.register(Player, PlayerAdmin)
+admin.site.register(TenhouStatistics, TenhouStatisticsAdmin)

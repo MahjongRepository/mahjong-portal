@@ -69,7 +69,8 @@
 
             {% for tenhou_item in tenhou_data %}
                 <h5>{% trans 'Statistics for' %} {{ tenhou_item.tenhou_username }}</h5>
-                <p class="mt-3">{% trans 'Rank' %}: {{ tenhou_item.get_rank_display }}</p>
+
+                <p class="mt-3">{% trans 'Rank' %}: {{ tenhou_item.get_rank_display }}, {{ tenhou_item.pt }} / {{ tenhou_item.end_pt }}pt</p>
                 <p>{% trans 'Games' %}: {{ tenhou_item.played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.average_place }}</p>
 
                 <div class="table-responsive-sm">
