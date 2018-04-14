@@ -26,7 +26,7 @@ class TenhouCalculatorTestCase(TestCase):
         self.assertEqual(result['rank'], u'６級')
         self.assertEqual(result['pt'], 20)
 
-    def test_old_and_new_kyu_lobby(self):
+    def test_old_and_new_kyu_lobby_append_points(self):
         game_records = [
             {'date': datetime(2017, 10, 23), 'lobby': u'般', 'place': 2, 'game_type': u'南'},
             {'date': datetime.now(), 'lobby': u'般', 'place': 2, 'game_type': u'南'},
@@ -35,6 +35,18 @@ class TenhouCalculatorTestCase(TestCase):
         result = TenhouCalculator.calculate_rank(game_records)
         self.assertEqual(result['rank'], u'新人')
         self.assertEqual(result['pt'], 15)
+
+    def test_old_kyu_lobby_rank_limits(self):
+        game_records = [
+            {'date': datetime(2017, 10, 23), 'lobby': u'般', 'place': 1, 'game_type': u'南'},
+            {'date': datetime(2017, 10, 23), 'lobby': u'般', 'place': 1, 'game_type': u'南'},
+            {'date': datetime(2017, 10, 23), 'lobby': u'般', 'place': 1, 'game_type': u'南'},
+            {'date': datetime(2017, 10, 23), 'lobby': u'般', 'place': 1, 'game_type': u'南'},
+        ]
+
+        result = TenhouCalculator.calculate_rank(game_records)
+        self.assertEqual(result['rank'], u'７級')
+        self.assertEqual(result['pt'], 45)
 
     def test_you_cant_lose_1_kyu(self):
         first_places = [1] * 19

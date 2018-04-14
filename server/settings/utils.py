@@ -170,6 +170,16 @@ class TenhouCalculator(object):
         }
     })
 
+    OLD_RANK_LIMITS = {
+        '新人': 30,
+        '９級': 30,
+        '８級': 30,
+        '７級': 60,
+        '６級': 60,
+        '５級': 60,
+        '４級': 90,
+    }
+
     @staticmethod
     def calculate_rank(game_records):
         rank = copy(TenhouCalculator.DAN_SETTINGS['新人'])
@@ -181,8 +191,14 @@ class TenhouCalculator(object):
             lobby = game_record['lobby']
             game_type = game_record['game_type']
 
-            if lobby == '般' and date < datetime(2017, 10, 24):
-                lobby = '般_old'
+            # we have different values for old games
+            if date < datetime(2017, 10, 24):
+                # lobby + pt was different
+                if lobby == '般':
+                    lobby = '般_old'
+
+                if TenhouCalculator.OLD_RANK_LIMITS.get(rank['rank']):
+                    rank['end_pt'] = TenhouCalculator.OLD_RANK_LIMITS.get(rank['rank'])
 
             if place == 1 or place == 2:
                 rank['pt'] += TenhouCalculator.LOBBY[lobby][game_type].get(place, 0)
