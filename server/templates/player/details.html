@@ -137,14 +137,15 @@
                     </div>
                 {% endif %}
 
-                <h5>{% trans 'All time' %}</h5>
-                <p>
-                    {% trans 'Games' %}: {{ tenhou_item.played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.average_place }}{% if not tenhou_item.month_played_games %}, {% trans 'Last played date:' %} {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}{% endif %}
-                </p>
+                {% if tenhou_item.played_games %}
+                    <h5>{% trans 'All time' %}</h5>
+                    <p>
+                        {% trans 'Games' %}: {{ tenhou_item.played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.average_place }}{% if not tenhou_item.month_played_games %}, {% trans 'Last played date:' %} {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}{% endif %}
+                    </p>
 
-                <div class="table-responsive-sm">
-                    <table class="table table-hover">
-                        <thead>
+                    <div class="table-responsive-sm">
+                        <table class="table table-hover">
+                            <thead>
                             <tr>
                                 <th scope="col">
                                     {% trans 'Lobby' %}
@@ -168,8 +169,8 @@
                                     {% trans '4th' %}
                                 </th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             {% for stat_item in tenhou_item.all_time_stat %}
                                 <tr>
                                     <td>
@@ -195,9 +196,10 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
             {% endfor %}
         {% endif %}
     </div>
