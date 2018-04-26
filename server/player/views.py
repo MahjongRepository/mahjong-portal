@@ -21,7 +21,7 @@ def player_details(request, slug):
     if not rating_results.count():
         tournament_results = RatingDelta.objects.filter(player=player)
 
-    tenhou_data = TenhouNickname.objects.filter(player=player).prefetch_related('statistics')
+    tenhou_data = TenhouNickname.objects.filter(player=player)
 
     return render(request, 'player/details.html', {
         'player': player,

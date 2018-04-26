@@ -185,6 +185,8 @@ class TenhouCalculator(object):
         rank = copy(TenhouCalculator.DAN_SETTINGS['新人'])
         rank['pt'] = rank['start_pt']
 
+        kyu_lobby_changes_date = datetime(2017, 10, 24).date()
+
         for game_record in game_records:
             date = game_record['date']
             place = game_record['place']
@@ -192,7 +194,7 @@ class TenhouCalculator(object):
             game_type = game_record['game_type']
 
             # we have different values for old games
-            if date < datetime(2017, 10, 24):
+            if date < kyu_lobby_changes_date:
                 # lobby + pt was different
                 if lobby == '般':
                     lobby = '般_old'

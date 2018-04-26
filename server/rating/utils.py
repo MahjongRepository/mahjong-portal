@@ -1,5 +1,9 @@
+import calendar
 import string
 import random
+from datetime import datetime
+
+from django.utils import timezone
 
 
 def make_random_letters_and_digit_string(length=15):
@@ -58,3 +62,13 @@ def transliterate_name(russian_name):
             transliterated += letter
 
     return transliterated.title()
+
+
+def get_month_first_day(date=None):
+    date = date or timezone.now()
+    return datetime(date.year, date.month, 1)
+
+
+def get_month_last_day(date=None):
+    date = date or timezone.now()
+    return datetime(date.year, date.month, calendar.monthrange(date.year, date.month)[1])

@@ -95,8 +95,11 @@ class TenhouNickname(BaseModel):
     username_created_at = models.DateField()
 
     rank = models.PositiveSmallIntegerField(choices=RANKS)
+    
     average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     played_games = models.PositiveIntegerField(default=0)
+    month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    month_played_games = models.PositiveIntegerField(default=0)
 
     pt = models.PositiveSmallIntegerField(default=0)
     end_pt = models.PositiveSmallIntegerField(default=0)
@@ -109,6 +112,12 @@ class TenhouNickname(BaseModel):
 
     class Meta:
         ordering = ['-rank']
+
+    def all_time_stat(self):
+        return self.statistics.filter(stat_type=TenhouStatistics.ALL_TIME)
+
+    def current_month_stat(self):
+        return self.statistics.filter(stat_type=TenhouStatistics.CURRENT_MONTH)
 
 
 class TenhouStatistics(models.Model):
@@ -124,8 +133,16 @@ class TenhouStatistics(models.Model):
         [PHOENIX_LOBBY, gettext_lazy('Phoenix lobby')],
     ]
 
+    ALL_TIME = 0
+    CURRENT_MONTH = 1
+    TYPES = [
+        [ALL_TIME, 'All time'],
+        [CURRENT_MONTH, 'Current month'],
+    ]
+
     tenhou_object = models.ForeignKey(TenhouNickname, related_name='statistics')
     lobby = models.PositiveSmallIntegerField(choices=LOBBIES)
+    stat_type = models.PositiveSmallIntegerField(choices=TYPES, default=ALL_TIME)
 
     played_games = models.PositiveIntegerField(default=0)
     average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
