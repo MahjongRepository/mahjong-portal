@@ -34,7 +34,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
 class TenhouStatisticsAdmin(admin.ModelAdmin):
     list_display = ['player', 'tenhou_object', 'lobby', 'rank', 'played_games', 'average_place', 'last_played_date']
-    list_filter = ['lobby']
+    list_filter = ['lobby', 'stat_type']
 
     def player(self, obj):
         return obj.tenhou_object.player.full_name
