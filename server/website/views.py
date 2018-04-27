@@ -138,7 +138,6 @@ def get_current_tenhou_games(request):
     games = get_latest_wg_games()
     for game in games:
         for player in game['players']:
-            print(player['name'])
             # we found a player from our database
             if player['name'] in watching_nicknames:
                 player['is_hirosima'] = len(game['players']) == 3

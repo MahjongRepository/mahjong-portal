@@ -5,9 +5,9 @@ from collections import OrderedDict
 from copy import copy
 from datetime import datetime
 
+import pytz
 import requests
 from django.conf import settings
-from django.utils import timezone
 
 
 class TenhouCalculator(object):
@@ -255,7 +255,7 @@ def get_latest_wg_games():
             })
             i += 1
 
-        current_date = timezone.now()
+        current_date = datetime.now(tz=pytz.timezone('Asia/Tokyo'))
         # Asia/Tokyo tz didn't work here (it added additional 30 minutes)
         # so I just added 9 hours
         start_time = '{} {} +0900'.format(current_date.strftime('%Y-%d-%m'), start_time)
