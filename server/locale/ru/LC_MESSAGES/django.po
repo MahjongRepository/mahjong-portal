@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-26 15:11+0000\n"
+"POT-Creation-Date: 2018-04-27 04:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,19 +119,19 @@ msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: player/models.py:130
+#: player/models.py:131
 msgid "Kyu lobby"
 msgstr "Кю-лобби"
 
-#: player/models.py:131
+#: player/models.py:132
 msgid "Dan lobby"
 msgstr "Перводан"
 
-#: player/models.py:132
+#: player/models.py:133
 msgid "Upperdan lobby"
 msgstr "Втородан"
 
-#: player/models.py:133
+#: player/models.py:134
 msgid "Phoenix lobby"
 msgstr "Феникс"
 
@@ -259,34 +259,34 @@ msgid "Tenhou"
 msgstr "Tenhou"
 
 #: templates/club/details.html:51 templates/player/details.html:80
-#: templates/player/details.html:90 templates/player/details.html:142
-#: templates/player/details.html:153
+#: templates/player/details.html:90 templates/player/details.html:143
+#: templates/player/details.html:154
 msgid "Games"
 msgstr "Игр"
 
 #: templates/club/details.html:54 templates/player/details.html:80
-#: templates/player/details.html:93 templates/player/details.html:142
-#: templates/player/details.html:156
+#: templates/player/details.html:93 templates/player/details.html:143
+#: templates/player/details.html:157
 msgid "Avg. place"
 msgstr "Ср. место"
 
 #: templates/club/details.html:57 templates/player/details.html:96
-#: templates/player/details.html:159
+#: templates/player/details.html:160
 msgid "1st"
 msgstr "1-e"
 
 #: templates/club/details.html:60 templates/player/details.html:99
-#: templates/player/details.html:162
+#: templates/player/details.html:163
 msgid "2nd"
 msgstr "2-е"
 
 #: templates/club/details.html:63 templates/player/details.html:102
-#: templates/player/details.html:165
+#: templates/player/details.html:166
 msgid "3rd"
 msgstr "3-е"
 
 #: templates/club/details.html:66 templates/player/details.html:105
-#: templates/player/details.html:168
+#: templates/player/details.html:169
 msgid "4th"
 msgstr "4-е"
 
@@ -372,15 +372,15 @@ msgstr "Ранг"
 msgid "Current month"
 msgstr "За текущий месяц"
 
-#: templates/player/details.html:80 templates/player/details.html:142
+#: templates/player/details.html:80 templates/player/details.html:143
 msgid "Last played date:"
 msgstr "Дата последней игры: "
 
-#: templates/player/details.html:87 templates/player/details.html:150
+#: templates/player/details.html:87 templates/player/details.html:151
 msgid "Lobby"
 msgstr "Лобби"
 
-#: templates/player/details.html:140
+#: templates/player/details.html:141
 msgid "All time"
 msgstr "За всё время"
 
@@ -699,6 +699,10 @@ msgstr "Пока нет регистраций"
 msgid "Success!"
 msgstr "Успех!"
 
+#: templates/website/_tenhou_table.html:7
+msgid "Start"
+msgstr "Начало"
+
 #: templates/website/city.html:16
 msgctxt "list of players"
 msgid "Players"
@@ -728,6 +732,27 @@ msgstr "Результаты поиска"
 #: templates/website/search.html:39
 msgid "nothing found"
 msgstr "ничего не нашлось"
+
+#: templates/website/tenhou_games.html:5 templates/website/tenhou_games.html:29
+#: templates/website/tenhou_games.html:30
+msgid "Current tenhou.net games"
+msgstr "Текущие игры на tenhou.net"
+
+#: templates/website/tenhou_games.html:11
+msgid "Current games with our players"
+msgstr "Текущие игры с нашими игроками"
+
+#: templates/website/tenhou_games.html:12
+msgid "Games from upperdan and phoenix with players from Russia."
+msgstr "Игры втородана и феникса с игроками из России."
+
+#: templates/website/tenhou_games.html:19
+msgid "Current games with high level players"
+msgstr "Текущие игры высоких данов"
+
+#: templates/website/tenhou_games.html:20
+msgid "Games with 9 dan, 10 dan and tenhou dan players."
+msgstr "Игры с 9, 10 данами и тенходанами."
 
 #: tournament/forms.py:19 tournament/forms.py:36 tournament/forms.py:49
 #: tournament/models.py:195 tournament/models.py:219 tournament/models.py:273

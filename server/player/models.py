@@ -100,6 +100,7 @@ class TenhouNickname(BaseModel):
     played_games = models.PositiveIntegerField(default=0)
     month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     month_played_games = models.PositiveIntegerField(default=0)
+    four_games_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
     pt = models.PositiveSmallIntegerField(default=0)
     end_pt = models.PositiveSmallIntegerField(default=0)

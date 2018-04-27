@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Current tenhou.net games' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% if our_players_games %}
+            <h2>{% trans 'Current games with our players' %}</h2>
+            {% trans 'Games from upperdan and phoenix with players from Russia.' %}
+            {% with our_players_games as games %}
+                {% include 'website/_tenhou_table.html' %}
+            {% endwith %}
+        {% endif %}
+
+        {% if high_level_games %}
+            <h2>{% trans 'Current games with high level players' %}</h2>
+            <p>{% trans 'Games with 9 dan, 10 dan and tenhou dan players.' %}</p>
+            {% with high_level_games as games %}
+                {% include 'website/_tenhou_table.html' %}
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Current tenhou.net games' %}">
+    <meta property="og:description" content="{% trans 'Current tenhou.net games' %}">
+{% endblock %}

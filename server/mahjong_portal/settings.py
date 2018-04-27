@@ -187,6 +187,14 @@ PANTHEON_URL = None
 PANTHEON_EVENT_ID = None
 PANTHEON_ADMIN_TOKEN = None
 
+TENHOU_WG_URL = None
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
 try:
     from .settings_local import *
 except:

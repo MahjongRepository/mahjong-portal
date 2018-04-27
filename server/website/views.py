@@ -2,11 +2,13 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.translation import get_language
+from django.views.decorators.cache import cache_page
 from haystack.forms import ModelSearchForm
 
-from player.models import Player
+from player.models import Player, TenhouNickname
 from rating.models import Rating, RatingResult
 from settings.models import City
+from settings.utils import get_latest_wg_games
 from tournament.models import Tournament
 
 
@@ -123,3 +125,42 @@ def players_api(request):
 
 def online_tournament_rules(request):
     return render(request, 'website/rules.html')
+
+
+@cache_page(30)
+def get_current_tenhou_games(request):
+    watching_nicknames = TenhouNickname.objects.all().values_list('tenhou_username', flat=True)
+    # let's find players from our database that are playing right now
+    found_players = []
+    our_players_games = {}
+    high_level_games = {}
+
+    games = get_latest_wg_games()
+    for game in games:
+        for player in game['players']:
+            print(player['name'])
+            # we found a player from our database
+            if player['name'] in watching_nicknames:
+                player['is_hirosima'] = len(game['players']) == 3
+                found_players.append(player)
+                our_players_games[game['game_id']] = game
+
+            if player['dan'] >= 18:
+                high_level_games[game['game_id']] = game
+
+    player_profiles = {}
+
+    for player in found_players:
+        tenhou_object = TenhouNickname.objects.get(tenhou_username=player['name'])
+
+        if not player['is_hirosima']:
+            tenhou_object.four_games_rate = player['rate']
+            tenhou_object.save()
+
+        player_profiles[player['name']] = tenhou_object.player
+
+    return render(request, 'website/tenhou_games.html', {
+        'our_players_games': our_players_games.values(),
+        'high_level_games': high_level_games.values(),
+        'player_profiles': player_profiles
+    })
