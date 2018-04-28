@@ -243,7 +243,7 @@ def get_latest_wg_games():
     data = json.loads(re.match('sw\((.*)\);', text).group(1))
     active_games = []
     for game in data:
-        game_id, _, start_time_string, game_type, *players_data = game.split(',')
+        game_id, _, start_time, game_type, *players_data = game.split(',')
         players = []
         i = 0
         for name, dan, rate in [players_data[i:i+3] for i in range(0, len(players_data), 3)]:
@@ -257,14 +257,14 @@ def get_latest_wg_games():
 
         current_date = datetime.now()
 
-        hour = start_time_string[0:2]
+        hour = start_time[0:2]
         if hour[0] == '0' and int(hour[1]) < 9:
             current_date += timedelta(days=1)
 
-        start_time = '{} {}'.format(current_date.strftime('%Y-%d-%m'), start_time_string)
-        start_time = datetime.strptime(start_time, '%Y-%d-%m %H:%M')
-
-        start_time = start_time.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+        # Asia/Tokyo tz didn't work here (it added additional 30 minutes)
+        # so I just added 9 hours
+        start_time = '{} {} +0900'.format(current_date.strftime('%Y-%d-%m'), start_time)
+        start_time = datetime.strptime(start_time, '%Y-%d-%m %H:%M %z')
 
         game = {
             'start_time': start_time,
