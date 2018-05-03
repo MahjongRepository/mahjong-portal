@@ -47,7 +47,7 @@ def get_latest_wg_games():
         game = {
             'start_time': start_time,
             'game_id': game_id,
-            'game_type': is_hanchan and u'東' or u'南',
+            'game_type': is_hanchan and u'南' or u'東',
             'players': players,
         }
 
