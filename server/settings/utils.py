@@ -266,10 +266,17 @@ def get_latest_wg_games():
         start_time = '{} {} +0900'.format(current_date.strftime('%Y-%d-%m'), start_time)
         start_time = datetime.strptime(start_time, '%Y-%d-%m %H:%M %z')
 
+        # need to find better way to do it
+        rules = bin(int(game_type)).replace('0b', '')
+        while len(rules) != 8:
+            rules = '0' + rules
+
+        is_hanchan = rules[4] == '1'
+
         game = {
             'start_time': start_time,
             'game_id': game_id,
-            'game_type': game_type,
+            'game_type': is_hanchan and u'東' or u'南',
             'players': players,
         }
 

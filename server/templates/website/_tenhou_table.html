@@ -23,7 +23,7 @@
         {% for game in games %}
             <tr>
                 <td style="align-items : center;">
-                    {{ game.start_time|naturaltime }}
+                    {{ game.game_type }}, {{ game.start_time|naturaltime }}
                 </td>
                 {% for player in game.players %}
                     <td>
