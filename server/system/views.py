@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 
-from rating.utils import transliterate_name
+from utils.general import transliterate_name
 
 
 @login_required

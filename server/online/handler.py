@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 import logging
 from datetime import timedelta
-from random import randint
 from urllib.error import HTTPError
-from urllib.parse import urlencode, quote, unquote, urlparse, parse_qs
+from urllib.parse import unquote, urlparse, parse_qs
 
 import requests
 from django.db import transaction
-from django.db.models import Q
 from django.conf import settings
 from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
-from rating.utils import make_random_letters_and_digit_string
+from utils.general import make_random_letters_and_digit_string
 from tournament.models import OnlineTournamentRegistration
 
 logger = logging.getLogger()

@@ -8,8 +8,8 @@ from haystack.forms import ModelSearchForm
 from player.models import Player, TenhouNickname
 from rating.models import Rating, RatingResult
 from settings.models import City
-from settings.utils import get_latest_wg_games
 from tournament.models import Tournament
+from utils.tenhou.latest_tenhou_games import get_latest_wg_games
 
 
 def home(request):

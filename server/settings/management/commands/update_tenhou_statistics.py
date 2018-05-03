@@ -9,8 +9,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from player.models import TenhouNickname, TenhouStatistics
-from rating.utils import get_month_first_day, get_month_last_day
-from settings.utils import TenhouCalculator
+from utils.general import get_month_first_day, get_month_last_day
+from utils.tenhou.points_calculator import PointsCalculator
 
 
 def get_date_string():
@@ -198,7 +198,7 @@ def update_stat(tenhou_object, lobbies_data, player_games, last_played_date):
     else:
         month_average_place = 0
 
-    rank = TenhouCalculator.calculate_rank(player_games)
+    rank = PointsCalculator.calculate_rank(player_games)
 
     tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
     tenhou_object.pt = rank['pt']

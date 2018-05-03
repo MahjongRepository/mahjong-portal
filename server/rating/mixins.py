@@ -1,8 +1,8 @@
 from django.utils import timezone
 
 from player.models import Player
-from rating.models import RatingDelta, Rating
-from rating.utils import make_random_letters_and_digit_string
+from rating.models import RatingDelta
+from utils.general import make_random_letters_and_digit_string
 from settings.models import Country
 from tournament.models import Tournament, TournamentResult
 

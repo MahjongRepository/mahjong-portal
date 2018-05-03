@@ -1,11 +1,10 @@
-import codecs
 import csv
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 
 from player.models import Player
-from rating.utils import transliterate_name
+from utils.general import transliterate_name
 from system.decorators import tournament_manager_auth_required
 from system.tournament_admin.forms import UploadResultsForm, TournamentForm
 from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration

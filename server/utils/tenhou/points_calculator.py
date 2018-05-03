@@ -1,16 +1,14 @@
-import json
-import re
-from base64 import b64decode
+# -*- coding: utf-8 -*-
 from collections import OrderedDict
 from copy import copy
-from datetime import datetime, timedelta
-
-import pytz
-import requests
-from django.conf import settings
+from datetime import datetime
 
 
-class TenhouCalculator(object):
+class PointsCalculator(object):
+    """
+    Calculate how much points user will get from games in various lobby's
+    """
+
     LOBBY = {
         '般_old': {
             '東': {1: 30},
@@ -189,7 +187,7 @@ class TenhouCalculator(object):
 
     @staticmethod
     def calculate_rank(game_records):
-        rank = copy(TenhouCalculator.DAN_SETTINGS['新人'])
+        rank = copy(PointsCalculator.DAN_SETTINGS['新人'])
         rank['pt'] = rank['start_pt']
 
         kyu_lobby_changes_date = datetime(2017, 10, 24).date()
@@ -206,79 +204,33 @@ class TenhouCalculator(object):
                 if lobby == '般':
                     lobby = '般_old'
 
-                if TenhouCalculator.OLD_RANK_LIMITS.get(rank['rank']):
-                    rank['end_pt'] = TenhouCalculator.OLD_RANK_LIMITS.get(rank['rank'])
+                if PointsCalculator.OLD_RANK_LIMITS.get(rank['rank']):
+                    rank['end_pt'] = PointsCalculator.OLD_RANK_LIMITS.get(rank['rank'])
 
             if place == 1 or place == 2:
-                rank['pt'] += TenhouCalculator.LOBBY[lobby][game_type].get(place, 0)
+                rank['pt'] += PointsCalculator.LOBBY[lobby][game_type].get(place, 0)
             elif place == 4:
-                rank['pt'] -= TenhouCalculator.DAN_SETTINGS[rank['rank']][game_type]
+                rank['pt'] -= PointsCalculator.DAN_SETTINGS[rank['rank']][game_type]
 
             # new dan
             if rank['pt'] >= rank['end_pt']:
                 # getting next record from ordered dict
-                rank_index = list(TenhouCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
-                next_rank = list(TenhouCalculator.DAN_SETTINGS.keys())[rank_index + 1]
+                rank_index = list(PointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
+                next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index + 1]
 
-                rank = copy(TenhouCalculator.DAN_SETTINGS[next_rank])
+                rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
                 rank['pt'] = rank['start_pt']
             # wasted dan
             elif rank['pt'] < 0:
                 # getting previous record from ordered dict
-                rank_index = list(TenhouCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
-                next_rank = list(TenhouCalculator.DAN_SETTINGS.keys())[rank_index - 1]
+                rank_index = list(PointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
+                next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index - 1]
 
-                if TenhouCalculator.DAN_SETTINGS[next_rank]['start_pt'] > 0:
-                    rank = copy(TenhouCalculator.DAN_SETTINGS[next_rank])
+                if PointsCalculator.DAN_SETTINGS[next_rank]['start_pt'] > 0:
+                    rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
                     rank['pt'] = rank['start_pt']
                 else:
                     # we can't lose first kyu
                     rank['pt'] = 0
+
         return rank
-
-
-def get_latest_wg_games():
-    text = requests.get(settings.TENHOU_WG_URL).text
-    text = text.replace('\r\n', '')
-    data = json.loads(re.match('sw\((.*)\);', text).group(1))
-    active_games = []
-    for game in data:
-        game_id, _, start_time, game_type, *players_data = game.split(',')
-        players = []
-        i = 0
-        for name, dan, rate in [players_data[i:i+3] for i in range(0, len(players_data), 3)]:
-            players.append({
-                'name': b64decode(name).decode('utf-8'),
-                'dan': int(dan),
-                'rate': float(rate),
-                'game_link': 'http://tenhou.net/0/?wg={}&tw={}'.format(game_id, i)
-            })
-            i += 1
-
-        current_date = datetime.now()
-
-        hour = start_time[0:2]
-        if hour[0] == '0' and int(hour[1]) < 9:
-            current_date += timedelta(days=1)
-
-        # Asia/Tokyo tz didn't work here (it added additional 30 minutes)
-        # so I just added 9 hours
-        start_time = '{} {} +0900'.format(current_date.strftime('%Y-%d-%m'), start_time)
-        start_time = datetime.strptime(start_time, '%Y-%d-%m %H:%M %z')
-
-        # need to find better way to do it
-        rules = bin(int(game_type)).replace('0b', '')
-        while len(rules) != 8:
-            rules = '0' + rules
-
-        is_hanchan = rules[4] == '1'
-
-        game = {
-            'start_time': start_time,
-            'game_id': game_id,
-            'game_type': is_hanchan and u'東' or u'南',
-            'players': players,
-        }
-
-        active_games.append(game)
-    return reversed(active_games)
