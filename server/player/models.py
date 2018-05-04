@@ -155,3 +155,16 @@ class TenhouStatistics(models.Model):
 
     class Meta:
         ordering = ['lobby']
+
+
+class TenhouGameLog(models.Model):
+    tenhou_object = models.ForeignKey(TenhouNickname, related_name='game_logs')
+
+    lobby = models.PositiveSmallIntegerField(choices=TenhouStatistics.LOBBIES)
+    place = models.PositiveSmallIntegerField()
+    delta = models.SmallIntegerField(default=0)
+    game_date = models.DateTimeField()
+    game_rules = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ['tenhou_object', 'game_date']

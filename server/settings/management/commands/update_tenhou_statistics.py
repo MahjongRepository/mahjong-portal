@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from player.models import TenhouNickname, TenhouStatistics
 from utils.general import get_month_first_day, get_month_last_day
+from utils.tenhou.latest_tenhou_games import lobbies_dict
 from utils.tenhou.points_calculator import PointsCalculator
 
 
@@ -225,13 +226,6 @@ def load_data_for_tenhou_object(tenhou_object):
         '2位': 2,
         '3位': 3,
         '4位': 4,
-    }
-
-    lobbies_dict = {
-        '般': TenhouStatistics.KYU_LOBBY,
-        '上': TenhouStatistics.DAN_LOBBY,
-        '特': TenhouStatistics.UPPERDAN_LOBBY,
-        '鳳': TenhouStatistics.PHOENIX_LOBBY,
     }
 
     lobbies_data = {

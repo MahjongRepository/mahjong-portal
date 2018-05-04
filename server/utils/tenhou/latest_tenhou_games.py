@@ -7,6 +7,14 @@ from datetime import datetime, timedelta
 import requests
 from django.conf import settings
 
+from player.models import TenhouStatistics
+
+lobbies_dict = {
+    '般': TenhouStatistics.KYU_LOBBY,
+    '上': TenhouStatistics.DAN_LOBBY,
+    '特': TenhouStatistics.UPPERDAN_LOBBY,
+    '鳳': TenhouStatistics.PHOENIX_LOBBY,
+}
 
 def get_latest_wg_games():
     text = requests.get(settings.TENHOU_WG_URL).text
