@@ -1035,8 +1035,6 @@ msgid "Tsuu iisou"
 msgstr "Тсуисо"
 
 #: utils/tenhou/yakuman_list.py:20
-#, fuzzy
-#| msgid "Yakuman"
 msgid "Kazoe yakuman"
 msgstr "Казое"
 
