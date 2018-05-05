@@ -122,7 +122,7 @@ class TenhouNickname(BaseModel):
         return self.statistics.filter(stat_type=TenhouStatistics.CURRENT_MONTH)
 
     def latest_yakumans(self):
-        return self.yakumans.order_by('-date')[:10]
+        return self.yakumans.order_by('-date')
 
 
 class TenhouStatistics(models.Model):
