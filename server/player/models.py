@@ -175,4 +175,4 @@ class CollectedYakuman(models.Model):
             return YAKUMAN_CONST.get('kazoe')
 
         yakuman_list = [int(x) for x in self.yakuman_list.split(',')]
-        return ','.join([str(YAKUMAN_CONST.get(x, x)) for x in yakuman_list])
+        return ', '.join([str(YAKUMAN_CONST.get(x, x)) for x in yakuman_list])
