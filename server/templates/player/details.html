@@ -214,11 +214,11 @@
                             <tbody>
                             {% for yakuman in yakumans %}
                                 <tr>
-                                    <td width="250px">
-                                        {{ yakuman.date|date:SHORT_DATE_FORMAT }}
-                                    </td>
                                     <td>
                                         {{ yakuman.yakuman_names }}
+                                    </td>
+                                    <td>
+                                        {{ yakuman.date|date:SHORT_DATE_FORMAT }}
                                     </td>
                                     <td>
                                         <a href="{{ yakuman.get_log_link }}" target="_blank">
