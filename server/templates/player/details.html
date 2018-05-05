@@ -75,12 +75,11 @@
 
                 {% if tenhou_item.month_played_games %}
                     <h5>{% trans 'Current month' %}</h5>
-
                     <p>
                         {% trans 'Games' %}: {{ tenhou_item.month_played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.month_average_place }}, {% trans 'Last played date:' %} {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}
                     </p>
                     <div class="table-responsive-sm">
-                        <table class="table table-hover">
+                        <table class="table table-hover mt-4">
                             <thead>
                             <tr>
                                 <th scope="col">
@@ -144,7 +143,7 @@
                     </p>
 
                     <div class="table-responsive-sm">
-                        <table class="table table-hover">
+                        <table class="table table-hover mt-4">
                             <thead>
                             <tr>
                                 <th scope="col">
@@ -200,6 +199,38 @@
                         </table>
                     </div>
                 {% endif %}
+
+                {% with tenhou_item.latest_yakumans as yakumans %}
+                    {% if yakumans %}
+                        <h5>{% trans 'Latest collected yakumans' %}</h5>
+                        <table class="table table-hover mt-4">
+                            <thead>
+                            <tr>
+                                <th scope="col">{% trans 'Date' %}</th>
+                                <th scope="col">{% trans 'Yakuman' %}</th>
+                                <th scope="col">{% trans 'Log' %}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for yakuman in yakumans %}
+                                <tr>
+                                    <td width="250px">
+                                        {{ yakuman.date|date:SHORT_DATE_FORMAT }}
+                                    </td>
+                                    <td>
+                                        {{ yakuman.yakuman_names }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ yakuman.get_log_link }}" target="_blank">
+                                            {{ yakuman.get_log_link }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% endwith %}
             {% endfor %}
         {% endif %}
     </div>

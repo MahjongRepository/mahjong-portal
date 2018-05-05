@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy
 
 from mahjong_portal.models import BaseModel
 from settings.models import Country, City
+from utils.tenhou.yakuman_list import YAKUMAN_CONST
 
 
 class PlayerManager(models.Manager):
@@ -120,6 +121,9 @@ class TenhouNickname(BaseModel):
     def current_month_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.CURRENT_MONTH)
 
+    def latest_yakumans(self):
+        return self.yakumans.order_by('-date')[:10]
+
 
 class TenhouStatistics(models.Model):
     KYU_LOBBY = 0
@@ -155,3 +159,20 @@ class TenhouStatistics(models.Model):
 
     class Meta:
         ordering = ['lobby']
+
+
+class CollectedYakuman(models.Model):
+    tenhou_object = models.ForeignKey(TenhouNickname, related_name='yakumans')
+    date = models.DateTimeField()
+    log_id = models.CharField(max_length=44)
+    yakuman_list = models.CharField(max_length=60)
+
+    def get_log_link(self):
+        return 'http://tenhou.net/0/?log={}'.format(self.log_id)
+
+    def yakuman_names(self):
+        if not self.yakuman_list:
+            return YAKUMAN_CONST.get('kazoe')
+
+        yakuman_list = [int(x) for x in self.yakuman_list.split(',')]
+        return ','.join([str(YAKUMAN_CONST.get(x, x)) for x in yakuman_list])

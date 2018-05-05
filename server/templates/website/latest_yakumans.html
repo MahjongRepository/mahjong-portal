@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Latest yakumans' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'Latest yakumans' %}</h2>
+
+        <div class="table-responsive">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans 'Yakuman' %}</th>
+                    <th scope="col">{% trans 'Player' %}</th>
+                    <th scope="col">{% trans 'Date' %}</th>
+                    <th scope="col">{% trans 'Log' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for yakuman in yakumans %}
+                    <tr>
+                        <td>
+                            {{ yakuman.yakuman_names }}
+                        </td>
+                        <td>
+                            <a href="{% url 'player_details' yakuman.tenhou_object.player.slug %}">
+                                <nobr>{{ yakuman.tenhou_object.player }}</nobr>
+                            </a>
+                        </td>
+                        <td>
+                            {{ yakuman.date|date:SHORT_DATE_FORMAT }}
+                        </td>
+                        <td>
+                            <a href="{{ yakuman.get_log_link }}" target="_blank">
+                                {% trans 'link' %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Latest yakumans' %}">
+    <meta property="og:description" content="{% trans 'Latest yakumans' %}">
+{% endblock %}
+
+{% block additional_js %}
+    <script>
+        var games_url = '{% url 'get_current_tenhou_games_async' %}';
+        $(document).ready(function () {
+            update_games();
+
+            setInterval('update_games()', 30000);
+        });
+
+        function update_games() {
+            $.get(games_url, function (data) {
+                $('#games-container').html(data);
+            });
+        }
+    </script>
+{% endblock %}

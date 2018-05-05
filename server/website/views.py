@@ -4,7 +4,7 @@ from django.utils import translation
 from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
-from player.models import Player, TenhouNickname
+from player.models import Player, TenhouNickname, CollectedYakuman
 from rating.models import Rating, RatingResult
 from settings.models import City
 from tournament.models import Tournament
@@ -157,4 +157,14 @@ def get_current_tenhou_games_async(request):
         'our_players_games': our_players_games.values(),
         'high_level_games': high_level_games.values(),
         'player_profiles': player_profiles
+    })
+
+
+def latest_yakumans(request):
+    yakumans = (CollectedYakuman.objects
+                .all()
+                .order_by('-date')
+                .prefetch_related('tenhou_object', 'tenhou_object__player'))
+    return render(request, 'website/latest_yakumans.html', {
+        'yakumans': yakumans
     })

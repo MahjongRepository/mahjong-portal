@@ -38,10 +38,10 @@ def player_rating_details(request, slug, rating_slug):
     rating_result = get_object_or_404(RatingResult, rating=rating, player=player)
 
     rating_deltas = (RatingDelta.objects
-                      .filter(player=player, rating=rating)
-                      .prefetch_related('player')
-                      .prefetch_related('tournament')
-                      .order_by('-tournament__end_date'))
+                     .filter(player=player, rating=rating)
+                     .prefetch_related('player')
+                     .prefetch_related('tournament')
+                     .order_by('-tournament__end_date'))
 
     return render(request, 'player/rating_details.html', {
         'player': player,
