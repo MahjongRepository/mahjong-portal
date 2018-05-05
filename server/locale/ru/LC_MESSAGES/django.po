@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-27 04:37+0000\n"
+"POT-Creation-Date: 2018-05-04 17:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,7 +169,7 @@ msgstr "Маджонг портал"
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:78 templates/base.html:88 templates/base.html:114
+#: templates/base.html:78 templates/base.html:88 templates/base.html:115
 #: templates/club/details.html:27 templates/player/details.html:60
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
@@ -208,11 +208,17 @@ msgstr "Развитие"
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: templates/base.html:109
+#: templates/base.html:100 templates/website/tenhou_games.html:5
+#: templates/website/tenhou_games.html:15
+#: templates/website/tenhou_games.html:16
+msgid "Current tenhou.net games"
+msgstr "Текущие игры на tenhou.net"
+
+#: templates/base.html:110
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:110 templates/system_index.html:5
+#: templates/base.html:111 templates/system_index.html:5
 #: templates/tournament_admin/managed_tournaments.html:5
 #: templates/tournament_admin/new_tournaments.html:5
 #: templates/tournament_admin/tournament_edit.html:5
@@ -222,11 +228,11 @@ msgstr "Django админка"
 msgid "Admin page"
 msgstr "Админка"
 
-#: templates/base.html:116
+#: templates/base.html:117
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:123 templates/base.html:124
+#: templates/base.html:124 templates/base.html:125
 msgid "Search"
 msgstr "Поиск"
 
@@ -733,24 +739,27 @@ msgstr "Результаты поиска"
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: templates/website/tenhou_games.html:5 templates/website/tenhou_games.html:29
-#: templates/website/tenhou_games.html:30
-msgid "Current tenhou.net games"
-msgstr "Текущие игры на tenhou.net"
+#: templates/website/tenhou_games.html:10
+msgid "loading..."
+msgstr "загружаю..."
 
-#: templates/website/tenhou_games.html:11
+#: templates/website/tenhou_games_async.html:5
+msgid "update time"
+msgstr "время обновления"
+
+#: templates/website/tenhou_games_async.html:9
 msgid "Current games with our players"
 msgstr "Текущие игры с нашими игроками"
 
-#: templates/website/tenhou_games.html:12
+#: templates/website/tenhou_games_async.html:10
 msgid "Games from upperdan and phoenix with players from Russia."
 msgstr "Игры втородана и феникса с игроками из России."
 
-#: templates/website/tenhou_games.html:19
+#: templates/website/tenhou_games_async.html:17
 msgid "Current games with high level players"
 msgstr "Текущие игры высоких данов"
 
-#: templates/website/tenhou_games.html:20
+#: templates/website/tenhou_games_async.html:18
 msgid "Games with 9 dan, 10 dan and tenhou dan players."
 msgstr "Игры с 9, 10 данами и тенходанами."
 

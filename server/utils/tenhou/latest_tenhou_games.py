@@ -6,9 +6,14 @@ from datetime import datetime, timedelta
 
 import requests
 from django.conf import settings
+from django.core.cache import cache
 
 
 def get_latest_wg_games():
+    active_games = cache.get('tenhou_games')
+    if active_games:
+        return active_games
+
     text = requests.get(settings.TENHOU_WG_URL).text
     text = text.replace('\r\n', '')
     data = json.loads(re.match('sw\((.*)\);', text).group(1))
@@ -53,4 +58,7 @@ def get_latest_wg_games():
 
         active_games.append(game)
 
-    return reversed(active_games)
+    active_games = reversed(active_games)
+    cache.set('tenhou_games', active_games, 30)
+
+    return active_games

@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.translation import get_language
-from django.views.decorators.cache import cache_page
 from haystack.forms import ModelSearchForm
 
 from player.models import Player, TenhouNickname
@@ -127,38 +126,34 @@ def online_tournament_rules(request):
     return render(request, 'website/rules.html')
 
 
-@cache_page(30)
 def get_current_tenhou_games(request):
-    watching_nicknames = TenhouNickname.objects.all().values_list('tenhou_username', flat=True)
+    return render(request, 'website/tenhou_games.html', {})
+
+
+def get_current_tenhou_games_async(request):
+    games = get_latest_wg_games()
+
+    tenhou_objects = TenhouNickname.objects.all().prefetch_related('player')
+    player_profiles = {}
+    for tenhou_object in tenhou_objects:
+        player_profiles[tenhou_object.tenhou_username] = tenhou_object.player
+
     # let's find players from our database that are playing right now
     found_players = []
     our_players_games = {}
     high_level_games = {}
 
-    games = get_latest_wg_games()
     for game in games:
         for player in game['players']:
             # we found a player from our database
-            if player['name'] in watching_nicknames:
-                player['is_hirosima'] = len(game['players']) == 3
+            if player['name'] in player_profiles:
                 found_players.append(player)
                 our_players_games[game['game_id']] = game
 
             if player['dan'] >= 18:
                 high_level_games[game['game_id']] = game
 
-    player_profiles = {}
-
-    for player in found_players:
-        tenhou_object = TenhouNickname.objects.get(tenhou_username=player['name'])
-
-        if not player['is_hirosima']:
-            tenhou_object.four_games_rate = player['rate']
-            tenhou_object.save()
-
-        player_profiles[player['name']] = tenhou_object.player
-
-    return render(request, 'website/tenhou_games.html', {
+    return render(request, 'website/tenhou_games_async.html', {
         'our_players_games': our_players_games.values(),
         'high_level_games': high_level_games.values(),
         'player_profiles': player_profiles
