@@ -20,7 +20,7 @@ class Command(BaseCommand):
         tenhou_objects = TenhouNickname.objects.all().prefetch_related('player')
         player_profiles = {}
         for tenhou_object in tenhou_objects:
-            player_profiles[tenhou_object.tenhou_username] = tenhou_object.player
+            player_profiles[tenhou_object.tenhou_username] = tenhou_object
 
         found_players = {}
         for game in games:
@@ -32,7 +32,8 @@ class Command(BaseCommand):
 
         for player_name, rate in found_players.items():
             tenhou_obj = player_profiles[player_name]
-            tenhou_obj.rate = rate
+            tenhou_obj.four_games_rate = rate
             tenhou_obj.save()
+            print(tenhou_obj, rate)
 
         print('{0}: End'.format(get_date_string()))
