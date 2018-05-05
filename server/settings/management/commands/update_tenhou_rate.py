@@ -34,6 +34,5 @@ class Command(BaseCommand):
             tenhou_obj = player_profiles[player_name]
             tenhou_obj.four_games_rate = rate
             tenhou_obj.save()
-            print(tenhou_obj, rate)
 
         print('{0}: End'.format(get_date_string()))
