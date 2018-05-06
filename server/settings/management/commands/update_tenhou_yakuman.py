@@ -26,9 +26,9 @@ class Command(BaseCommand):
             player_profiles[tenhou_object.tenhou_username] = tenhou_object
 
         with transaction.atomic():
-            CollectedYakuman.objects.all().delete()
-
-            self.old_records(player_profiles)
+            # CollectedYakuman.objects.all().delete()
+            #
+            # self.old_records(player_profiles)
             self.current_month_data(player_profiles)
 
         print('{0}: End'.format(get_date_string()))
