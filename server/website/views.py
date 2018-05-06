@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.translation import get_language
@@ -131,6 +131,8 @@ def get_current_tenhou_games(request):
 
 
 def get_current_tenhou_games_async(request):
+    return HttpResponse(u'На профилактике')
+
     games = get_latest_wg_games()
 
     tenhou_objects = TenhouNickname.objects.all().prefetch_related('player')
@@ -152,6 +154,8 @@ def get_current_tenhou_games_async(request):
 
             if player['dan'] >= 18:
                 high_level_games[game['game_id']] = game
+
+
 
     return render(request, 'website/tenhou_games_async.html', {
         'our_players_games': our_players_games.values(),
