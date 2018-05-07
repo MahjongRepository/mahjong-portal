@@ -131,8 +131,6 @@ def get_current_tenhou_games(request):
 
 
 def get_current_tenhou_games_async(request):
-    return HttpResponse(u'На профилактике')
-
     games = get_latest_wg_games()
 
     tenhou_objects = TenhouNickname.objects.all().prefetch_related('player')
