@@ -141,7 +141,9 @@ def get_current_tenhou_games_async(request):
     # let's find players from our database that are playing right now
     found_players = []
     our_players_games = {}
+
     high_level_games = {}
+    high_level_hirosima_games = {}
 
     for game in games:
         for player in game['players']:
@@ -151,13 +153,15 @@ def get_current_tenhou_games_async(request):
                 our_players_games[game['game_id']] = game
 
             if player['dan'] >= 18:
-                high_level_games[game['game_id']] = game
-
-
+                if len(game['players']) == 3:
+                    high_level_hirosima_games[game['game_id']] = game
+                else:
+                    high_level_games[game['game_id']] = game
 
     return render(request, 'website/tenhou_games_async.html', {
         'our_players_games': our_players_games.values(),
         'high_level_games': high_level_games.values(),
+        'high_level_hirosima_games': high_level_hirosima_games.values(),
         'player_profiles': player_profiles
     })
 

@@ -13,10 +13,20 @@
     {% endwith %}
 {% endif %}
 
-{% if high_level_games %}
+{% if high_level_games or high_level_hirosima_games %}
     <h2>{% trans 'Current games with high level players' %}</h2>
     <p>{% trans 'Games with 9 dan, 10 dan and tenhou dan players.' %}</p>
-    {% with high_level_games as games %}
-        {% include 'website/_tenhou_table.html' %}
-    {% endwith %}
+
+    {% if high_level_games %}
+        {% with high_level_games as games %}
+            {% include 'website/_tenhou_table.html' %}
+        {% endwith %}
+    {% endif %}
+
+    {% if high_level_hirosima_games %}
+        <h3>{% trans 'Hirosima' %}</h3>
+        {% with high_level_hirosima_games as games %}
+            {% include 'website/_tenhou_table.html' %}
+        {% endwith %}
+    {% endif %}
 {% endif %}

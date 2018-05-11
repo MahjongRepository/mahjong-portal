@@ -25,7 +25,7 @@
         <tbody>
         {% for game in games %}
             <tr>
-                <td style="align-items : center;">
+                <td style="vertical-align: middle">
                     {{ game.game_type }} {{ game.start_time|naturaltime }}
                 </td>
                 {% for player in game.players %}

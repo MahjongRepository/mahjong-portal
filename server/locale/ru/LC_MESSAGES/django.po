@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-05 15:20+0000\n"
+"POT-Creation-Date: 2018-05-11 06:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,7 +169,7 @@ msgstr "Маджонг портал"
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:78 templates/base.html:88 templates/base.html:124
+#: templates/base.html:78 templates/base.html:88 templates/base.html:123
 #: templates/club/details.html:27 templates/player/details.html:60
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
@@ -191,8 +191,8 @@ msgstr "Рейтинг"
 msgid "Tenhou"
 msgstr "Тенхо"
 
-#: templates/base.html:97 templates/base.html:109
-#: templates/website/tenhou_games.html:5 templates/website/tenhou_games.html:15
+#: templates/base.html:97 templates/website/tenhou_games.html:5
+#: templates/website/tenhou_games.html:15
 #: templates/website/tenhou_games.html:16
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
@@ -226,11 +226,11 @@ msgstr "Развитие"
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: templates/base.html:119
+#: templates/base.html:118
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:120 templates/system_index.html:5
+#: templates/base.html:119 templates/system_index.html:5
 #: templates/tournament_admin/managed_tournaments.html:5
 #: templates/tournament_admin/new_tournaments.html:5
 #: templates/tournament_admin/tournament_edit.html:5
@@ -240,11 +240,11 @@ msgstr "Django админка"
 msgid "Admin page"
 msgstr "Админка"
 
-#: templates/base.html:126
+#: templates/base.html:125
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:133 templates/base.html:134
+#: templates/base.html:132 templates/base.html:133
 msgid "Search"
 msgstr "Поиск"
 
@@ -338,7 +338,7 @@ msgstr "Ранг"
 
 #: templates/player/_deltas_table.html:9 templates/player/details.html:209
 #: templates/tournament/_tournaments_table.html:9
-#: templates/website/latest_yakumans.html:16
+#: templates/website/latest_yakumans.html:18
 msgid "Date"
 msgstr "Дата"
 
@@ -403,13 +403,17 @@ msgstr "За всё время"
 msgid "Latest collected yakumans"
 msgstr "Последние якуманы"
 
-#: templates/player/details.html:210 templates/website/latest_yakumans.html:17
+#: templates/player/details.html:210 templates/website/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
 
 #: templates/player/details.html:211 templates/website/latest_yakumans.html:19
 msgid "Log"
 msgstr "Игра"
+
+#: templates/player/details.html:225 templates/website/latest_yakumans.html:38
+msgid "link"
+msgstr "ссылка"
 
 #: templates/player/rating_details.html:21
 msgid "Player page"
@@ -726,7 +730,8 @@ msgstr "Пока нет регистраций"
 msgid "Success!"
 msgstr "Успех!"
 
-#: templates/website/_tenhou_table.html:8
+#: templates/website/_tenhou_table.html:9
+#: templates/website/_tenhou_table.html:52
 msgid "Start"
 msgstr "Начало"
 
@@ -751,16 +756,12 @@ msgstr ""
 "Портал для российского маджонг сообщества. Предстоящие турниры, рейтинги "
 "игроков и т.п."
 
-#: templates/website/latest_yakumans.html:18
+#: templates/website/latest_yakumans.html:17
 #, fuzzy
 #| msgctxt "number of players"
 #| msgid "Players"
 msgid "Player"
 msgstr "Игроков"
-
-#: templates/website/latest_yakumans.html:38
-msgid "link"
-msgstr "ссылка"
 
 #: templates/website/search.html:5 templates/website/search.html:9
 #: templates/website/search.html:44 templates/website/search.html:45
@@ -794,6 +795,10 @@ msgstr "Текущие игры высоких данов"
 #: templates/website/tenhou_games_async.html:18
 msgid "Games with 9 dan, 10 dan and tenhou dan players."
 msgstr "Игры с 9, 10 данами и тенходанами."
+
+#: templates/website/tenhou_games_async.html:27
+msgid "Hirosima"
+msgstr "Хиросима"
 
 #: tournament/forms.py:19 tournament/forms.py:36 tournament/forms.py:49
 #: tournament/models.py:195 tournament/models.py:219 tournament/models.py:273
@@ -1037,33 +1042,3 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
-
-#~ msgid "How often player feed to other hand"
-#~ msgstr "Как часто игрок накидывает в другие руки"
-
-#~ msgid "feeds"
-#~ msgstr "набросов"
-
-#~ msgid "How often riichi was ended with ippatsu"
-#~ msgstr "Как часто риичи игрока заканчивалось с иппацу"
-
-#~ msgid "ippatsu"
-#~ msgstr "иппацу"
-
-#~ msgid "How many win hands were opened"
-#~ msgstr "Как много победных рук были открытыми"
-
-#~ msgid "open hands"
-#~ msgstr "открытых рук"
-
-#~ msgid "How often riichi was ended with win"
-#~ msgstr "Как часто риичи игрока заканчивалось победой"
-
-#~ msgid "successful riichi"
-#~ msgstr "успешных риичи"
-
-#~ msgid "Average dora number in win hands"
-#~ msgstr "Среднее количество дор в собранных руках"
-
-#~ msgid "avg. dora"
-#~ msgstr "дор"
