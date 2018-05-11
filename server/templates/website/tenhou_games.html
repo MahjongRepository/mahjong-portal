@@ -32,3 +32,19 @@
         }
     </script>
 {% endblock %}
+
+{% block additional_css %}
+    <style>
+        th {
+            font-weight: normal;
+        }
+
+        @media (max-width:768px) {
+            th {
+                vertical-align: middle !important;
+                text-align: center;
+                padding: 5px !important;
+            }
+        }
+    </style>
+{% endblock %}
