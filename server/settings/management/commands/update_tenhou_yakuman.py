@@ -1,8 +1,10 @@
 import json
 import datetime
+import os
 
 import pytz
 import requests
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
@@ -26,9 +28,7 @@ class Command(BaseCommand):
             player_profiles[tenhou_object.tenhou_username] = tenhou_object
 
         with transaction.atomic():
-            # CollectedYakuman.objects.all().delete()
-            #
-            # self.old_records(player_profiles)
+            self.old_records(player_profiles)
             self.current_month_data(player_profiles)
 
         print('{0}: End'.format(get_date_string()))
@@ -37,35 +37,64 @@ class Command(BaseCommand):
         url = 'http://tenhou.net/sc/ykm.js'
         print(url)
 
-        current_year = datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Tokyo')).year
-        response = requests.get(url)
-        self.parse_and_create_records(player_profiles, response, current_year)
+        current_date = datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+        current_year = current_date.year
+        data = requests.get(url).content.decode('utf-8')
+        self.parse_and_create_records(player_profiles, data, current_year)
 
     def old_records(self, player_profiles):
         """
         Download historical data
         """
-        # 2006 - 2009 years had old format
-        # we need additionally support it
+        current_date = datetime.datetime.now().replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+        current_year = current_date.year
+
+        # 2006 - 2009 years have old format
+        # we need to add additional support for them
         start_year = 2009
-        stop_year = timezone.now().year
+        stop_year = current_year
         months = ['{:02}'.format(x) for x in range(1, 13)]
 
+        folder = os.path.join(settings.BASE_DIR, 'yakuman')
+        if not os.path.exists(folder):
+            os.mkdir(folder)
+
         for year in range(start_year, stop_year + 1):
+            # we don't need to load data from the future
+            if current_year == year:
+                months = ['{:02}'.format(x) for x in range(1, current_date.month)]
+
             for month in months:
-                url = 'http://tenhou.net/sc/{}/{}/ykm.js'.format(year, month)
-                response = requests.get(url)
+                print(year, month)
+                file_path = os.path.join(folder, '{}-{}.json'.format(year, month))
 
-                if response.status_code == 200:
-                    print(url)
-                    self.parse_and_create_records(player_profiles, response, year)
+                data = None
+                # load from cache
+                if os.path.exists(file_path):
+                    with open(file_path, 'r') as f:
+                        data = f.read()
+                else:
+                    url = 'http://tenhou.net/sc/{}/{}/ykm.js'.format(year, month)
+                    response = requests.get(url)
 
-    def parse_and_create_records(self, player_profiles, response, year):
+                    if response.status_code == 200:
+                        data = response.content.decode('utf-8')
+                        # store to cache
+                        with open(file_path, 'w') as f:
+                            f.write(data)
+
+                if not data:
+                    print('Missed data')
+                    continue
+
+                self.parse_and_create_records(player_profiles, data, year)
+
+    def parse_and_create_records(self, player_profiles, yakuman_data, year):
         # tenhou returns it not in really handy format
-        yakuman_data = response.content.decode('utf-8')
+
         # new format
         if '\r\n' in yakuman_data:
-            yakuman_data = response.content.decode('utf-8').split('\r\n')[2]
+            yakuman_data = yakuman_data.split('\r\n')[2]
             yakuman_data = json.loads(yakuman_data[4:-1].replace('"', '\\"').replace("'", '"'))
         # old format
         else:
@@ -86,12 +115,16 @@ class Command(BaseCommand):
                 date = datetime.datetime.strptime(date, '%Y %m/%d %H:%M')
                 date = date.replace(tzinfo=pytz.timezone('Asia/Tokyo'))
 
-                filtered_results.append({
-                    'tenhou_object': player_profiles[name],
-                    'date': date,
-                    'yakuman_list': ','.join([str(x) for x in yakuman_list]),
-                    'log_id': log
-                })
+                tenhou_object = player_profiles[name]
+
+                # let's add only yakumans related to the current profile
+                if date.date() >= tenhou_object.username_created_at:
+                    filtered_results.append({
+                        'tenhou_object': tenhou_object,
+                        'date': date,
+                        'yakuman_list': ','.join([str(x) for x in yakuman_list]),
+                        'log_id': log
+                    })
 
         for item in filtered_results:
             exists = (CollectedYakuman.objects
