@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-11 06:06+0000\n"
+"POT-Creation-Date: 2018-05-18 12:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,7 +202,7 @@ msgstr "Текущие игры на tenhou.net"
 #: templates/website/latest_yakumans.html:50
 #: templates/website/latest_yakumans.html:51
 msgid "Latest yakumans"
-msgstr "Последние якуманы"
+msgstr "Якуманы"
 
 #: templates/base.html:103 templates/tournament/application.html:84
 #: tournament/models.py:266
@@ -400,8 +400,8 @@ msgid "All time"
 msgstr "За всё время"
 
 #: templates/player/details.html:205
-msgid "Latest collected yakumans"
-msgstr "Последние якуманы"
+msgid "Collected yakumans"
+msgstr "Собранные якуманы"
 
 #: templates/player/details.html:210 templates/website/latest_yakumans.html:16
 msgid "Yakuman"
@@ -757,11 +757,8 @@ msgstr ""
 "игроков и т.п."
 
 #: templates/website/latest_yakumans.html:17
-#, fuzzy
-#| msgctxt "number of players"
-#| msgid "Players"
 msgid "Player"
-msgstr "Игроков"
+msgstr "Игрок"
 
 #: templates/website/search.html:5 templates/website/search.html:9
 #: templates/website/search.html:44 templates/website/search.html:45
@@ -785,8 +782,8 @@ msgid "Current games with our players"
 msgstr "Текущие игры с нашими игроками"
 
 #: templates/website/tenhou_games_async.html:10
-msgid "Games from upperdan and phoenix with players from Russia."
-msgstr "Игры втородана и феникса с игроками из России."
+msgid "Games from upperdan and phoenix with portal players."
+msgstr "Игры втородана и феникса с игроками имеющими профиль на портале."
 
 #: templates/website/tenhou_games_async.html:17
 msgid "Current games with high level players"
