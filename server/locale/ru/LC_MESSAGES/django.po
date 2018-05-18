@@ -794,7 +794,7 @@ msgid "Games with 9 dan, 10 dan and tenhou dan players."
 msgstr "Игры с 9, 10 данами и тенходанами."
 
 #: templates/website/tenhou_games_async.html:27
-msgid "Hirosima"
+msgid "Sanma"
 msgstr "Хиросима"
 
 #: tournament/forms.py:19 tournament/forms.py:36 tournament/forms.py:49
