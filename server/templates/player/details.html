@@ -65,8 +65,8 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Base rank' %}</th>
-                        <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Place' %}</th>
+                        <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
                         <th scope="col">{% trans 'Tournament' %}</th>
                     </tr>
@@ -84,10 +84,10 @@
                                     <span class="badge badge-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
+                            <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
                             <td>
                                 <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                             </td>
-                            <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
                             <td>
                                 {% with tournament_result.tournament as tournament %}
                                     {% include 'tournament/_tournament_type.html' %}
