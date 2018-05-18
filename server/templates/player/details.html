@@ -57,11 +57,48 @@
         {% endif %}
 
         {% if tournament_results %}
-            <h4>{% trans 'Tournaments' %}</h4>
+            <h4>{% trans 'Latest tournaments' %}</h4>
 
-            {% with deltas=tournament_results highlight=False %}
-                {% include 'player/_deltas_table.html' %}
-            {% endwith %}
+            <div class="table-responsive-sm">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{% trans 'Base rank' %}</th>
+                        <th scope="col">{% trans 'Date' %}</th>
+                        <th scope="col">{% trans 'Place' %}</th>
+                        <th scope="col">{% trans 'Type' %}</th>
+                        <th scope="col">{% trans 'Tournament' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tournament_result in tournament_results %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>
+                                {% if tournament_result.base_rank > 500 %}
+                                    <span class="badge badge-success">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                {% elif tournament_result.base_rank == 0 %}
+                                    <span class="badge badge-primary">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                {% else %}
+                                    <span class="badge badge-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+                            </td>
+                            <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
+                            <td>
+                                {% with tournament_result.tournament as tournament %}
+                                    {% include 'tournament/_tournament_type.html' %}
+                                {% endwith %}
+                            </td>
+                            <td><a href="{{ tournament_result.tournament.get_url }}">{{ tournament_result.tournament.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
 
         {% if tenhou_data %}

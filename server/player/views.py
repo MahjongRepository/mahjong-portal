@@ -14,12 +14,10 @@ def player_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
 
     rating_results = player.rating_results.all().order_by('rating__order')
-    tournament_results = []
-
-    # let's display player tournament if ratings result is empty
-    # for example player participated in only one tournament
-    if not rating_results.count():
-        tournament_results = RatingDelta.objects.filter(player=player)
+    tournament_results = (TournamentResult.objects
+                          .filter(player=player)
+                          .prefetch_related('tournament')
+                          .order_by('-tournament__end_date'))[:10]
 
     tenhou_data = TenhouNickname.objects.filter(player=player)
 

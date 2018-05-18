@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         {% for delta in deltas %}
-            <tr {% if not delta.is_active and highlight %}class="table-secondary"{% endif %}>
+            <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>
                     {% if delta.is_active %}
