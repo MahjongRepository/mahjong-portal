@@ -27,7 +27,7 @@
         {% include 'tournament/_tournament_header.html' %}
 
         {% if tournament.results_description %}
-            <p>{{ tournament.results_description|linebreaksbr }}</p>
+            <p>{{ tournament.results_description|linebreaksbr|urlize }}</p>
         {% endif %}
 
         <div class="table-responsive-sm">
