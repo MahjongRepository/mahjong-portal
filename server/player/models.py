@@ -61,7 +61,7 @@ class Player(BaseModel):
 
     @property
     def tenhou_object(self):
-        tenhou = self.tenhou.all().order_by('is_main').first()
+        tenhou = self.tenhou.all().order_by('-is_main').first()
         return tenhou
 
 

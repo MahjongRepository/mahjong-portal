@@ -19,7 +19,7 @@ def player_details(request, slug):
                           .prefetch_related('tournament')
                           .order_by('-tournament__end_date'))[:10]
 
-    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('is_main')
+    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('-is_main')
 
     return render(request, 'player/details.html', {
         'player': player,
