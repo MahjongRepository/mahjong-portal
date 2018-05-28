@@ -44,8 +44,10 @@ def get_latest_wg_games():
 
         # need to find better way to do it
         rules = bin(int(game_type)).replace('0b', '')
-        while len(rules) != 8:
-            rules = '0' + rules
+        # add leading zeros
+        if len(rules) < 8:
+            while len(rules) != 8:
+                rules = '0' + rules
 
         is_hanchan = rules[4] == '1'
 
