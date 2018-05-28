@@ -58,6 +58,7 @@
 
         {% if tournament_results %}
             <h4>{% trans 'Latest tournaments' %}</h4>
+            <p><a href="{% url 'player_tournaments' player.slug %}">{% trans 'all player tournaments' %}</a></p>
 
             <div class="table-responsive-sm">
                 <table class="table table-hover">

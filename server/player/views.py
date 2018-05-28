@@ -29,6 +29,20 @@ def player_details(request, slug):
     })
 
 
+def player_tournaments(request, slug):
+    player = get_object_or_404(Player, slug=slug)
+
+    tournament_results = (TournamentResult.objects
+                          .filter(player=player)
+                          .prefetch_related('tournament')
+                          .order_by('-tournament__end_date'))
+
+    return render(request, 'player/tournaments.html', {
+        'player': player,
+        'tournament_results': tournament_results
+    })
+
+
 def player_rating_details(request, slug, rating_slug):
     player = get_object_or_404(Player, slug=slug)
     rating = get_object_or_404(Rating, slug=rating_slug)
