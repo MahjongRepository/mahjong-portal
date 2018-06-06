@@ -174,3 +174,10 @@ def latest_yakumans(request):
     return render(request, 'website/latest_yakumans.html', {
         'yakumans': yakumans
     })
+
+
+def tenhou_accounts(request):
+    accounts = TenhouNickname.objects.all().prefetch_related('player')
+    return render(request, 'website/tenhou_accounts.html', {
+        'accounts': accounts
+    })

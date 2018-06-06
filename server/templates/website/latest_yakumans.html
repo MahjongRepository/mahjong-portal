@@ -50,20 +50,3 @@
     <meta name="description" content="{% trans 'Latest yakumans' %}">
     <meta property="og:description" content="{% trans 'Latest yakumans' %}">
 {% endblock %}
-
-{% block additional_js %}
-    <script>
-        var games_url = '{% url 'get_current_tenhou_games_async' %}';
-        $(document).ready(function () {
-            update_games();
-
-            setInterval('update_games()', 30000);
-        });
-
-        function update_games() {
-            $.get(games_url, function (data) {
-                $('#games-container').html(data);
-            });
-        }
-    </script>
-{% endblock %}
