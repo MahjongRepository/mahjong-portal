@@ -103,7 +103,7 @@
         {% endif %}
 
         {% if tenhou_data %}
-            <h4>{% trans 'Tenhou.net profile' %}</h4>
+            <h4 id="tenhou">{% trans 'Tenhou.net profile' %}</h4>
 
             {% for tenhou_item in tenhou_data %}
                 <h5>{% trans 'Statistics for' %} {{ tenhou_item.tenhou_username }}</h5>

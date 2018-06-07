@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 
 from player.models import Player, TenhouNickname
 from rating.models import RatingDelta, Rating, RatingResult
@@ -8,6 +9,12 @@ from tournament.models import TournamentResult
 def player_by_id_details(request, player_id):
     player = get_object_or_404(Player, id=player_id)
     return redirect(player_details, player.slug)
+
+
+def player_by_id_tenhou_details(request, player_id):
+    player = get_object_or_404(Player, id=player_id)
+    url = reverse('player_details', kwargs={'slug': player.slug})
+    return redirect(url + '#tenhou')
 
 
 def player_details(request, slug):
