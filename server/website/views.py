@@ -177,7 +177,11 @@ def latest_yakumans(request):
 
 
 def tenhou_accounts(request):
-    accounts = TenhouNickname.objects.all().prefetch_related('player')
+    accounts = (TenhouNickname.objects
+                .all()
+                .order_by('-rank', '-four_games_rate')
+                .prefetch_related('player')
+                .prefetch_related('player__city'))
     return render(request, 'website/tenhou_accounts.html', {
         'accounts': accounts
     })
