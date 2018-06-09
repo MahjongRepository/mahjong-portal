@@ -83,7 +83,7 @@
                                 <td>
                                     {% with tenhou_object=item.player.tenhou_object %}
                                         {% if tenhou_object %}
-                                            {{ tenhou_object.get_rank_display }}
+                                            <nobr>{{ tenhou_object.get_rank_display }}</nobr>
                                         {% endif %}
                                     {% endwith %}
                                 </td>
