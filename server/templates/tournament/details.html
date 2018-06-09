@@ -53,16 +53,9 @@
                                 <nobr>{% trans 'Substitution' %}</nobr>
                             </span>
                             {% else %}
-                                <a href="{% url 'player_details' result.player.slug %}">
-                                    {# on large screns show full name #}
-                                    <span class="d-none d-md-block">
-                                    {{ result.player.full_name }}
-                                </span>
-                                    {# on small screens show shorten first name #}
-                                    <span class="d-block d-md-none">
-                                    <nobr>{{ result.player.last_name }} {{ result.player.first_name.0 }}.</nobr>
-                                </span>
-                                </a>
+                                {% with result.player as player %}
+                                    {% include 'common/_player_name.html' %}
+                                {% endwith %}
                             {% endif %}
                         </td>
                         <td>

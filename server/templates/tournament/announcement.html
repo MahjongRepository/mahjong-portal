@@ -62,6 +62,7 @@
                         {% if tournament.is_online %}
                             <th scope="col">{% trans 'Tenhou.net nickname' %}</th>
                         {% endif %}
+                        <th scope="col">{% trans 'Dan' %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,9 +71,9 @@
                             <th scope="row">{{ forloop.counter }}</th>
                             <td>
                                 {% if registration_item.player %}
-                                    <a href="{% url 'player_details' registration_item.player.slug %}">
-                                        {{ registration_item.player.full_name }}
-                                    </a>
+                                    {% with registration_item.player as player %}
+                                        {% include 'common/_player_name.html' %}
+                                    {% endwith %}
                                 {% else %}
                                     {{ registration_item.full_name }}
                                 {% endif %}
@@ -89,6 +90,15 @@
                             {% if tournament.is_online %}
                                 <td>{{ registration_item.tenhou_nickname }}</td>
                             {% endif %}
+                            <td>
+                                {% with registration_item.player.tenhou_object as tenhou_object %}
+                                    {% if tenhou_object %}
+                                        <a href="{% url 'player_details' registration_item.player.slug %}#tenhou">
+                                            {{ tenhou_object.get_rank_display }}
+                                        </a>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

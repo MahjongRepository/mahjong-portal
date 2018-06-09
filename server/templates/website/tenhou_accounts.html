@@ -24,9 +24,9 @@
                 {% for account in accounts %}
                     <tr>
                         <td>
-                            <a href="{% url 'player_details' account.player.slug %}">
-                                <nobr>{{ account.player }}</nobr>
-                            </a>
+                            {% with account.player as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
                         </td>
                         <td>
                             <nobr>{{ account.get_rank_display }}</nobr>

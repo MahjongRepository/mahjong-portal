@@ -1,0 +1,15 @@
+<a href="{% url 'player_details' player.slug %}" class="d-print-none">
+    {# on large screns show full name #}
+    <span class="d-none d-md-block d-print-none">
+        {{ player.full_name }}
+    </span>
+    {# on small screens show shorten first name #}
+    <span class="d-block d-md-none d-print-none">
+        <nobr>{{ player.last_name }} {{ player.first_name.0 }}.</nobr>
+    </span>
+</a>
+
+{# special case for print #}
+<span class="d-none d-print-block">
+    {{ player.full_name }}
+</span>

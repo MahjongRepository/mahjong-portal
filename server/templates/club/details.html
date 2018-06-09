@@ -73,9 +73,9 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>
                                     {% if item.player %}
-                                        <a href="{% url 'player_details' item.player.slug %}">
-                                            <nobr>{{ item.player }}</nobr>
-                                        </a>
+                                        {% with item.player as player %}
+                                            {% include 'common/_player_name.html' %}
+                                        {% endwith %}
                                     {% else %}
                                         <nobr>{{ item.player_string }}</nobr>
                                     {% endif %}
@@ -173,7 +173,9 @@
                                         <nobr>
                                             {{ result.wind }}
                                             {% if result.player %}
-                                                <a href="{% url 'player_details' result.player.slug %}">{{ result.player }}</a>
+                                                {% with result.player as player %}
+                                                    {% include 'common/_player_name.html' %}
+                                                {% endwith %}
                                             {% else %}
                                                 {{ result.player_string }}
                                             {% endif %}

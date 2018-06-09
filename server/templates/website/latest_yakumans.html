@@ -26,9 +26,9 @@
                             {{ yakuman.yakuman_names }}
                         </td>
                         <td>
-                            <a href="{% url 'player_details' yakuman.tenhou_object.player.slug %}">
-                                <nobr>{{ yakuman.tenhou_object.player }}</nobr>
-                            </a>
+                            {% with yakuman.tenhou_object.player as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
                         </td>
                         <td>
                             {{ yakuman.date|date:SHORT_DATE_FORMAT }}

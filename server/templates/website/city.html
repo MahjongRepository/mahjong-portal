@@ -28,7 +28,9 @@
                     {% for player in players %}
                         <tr>
                             <th scope="row">{{ player.rating_result.place|default:'-' }}</th>
-                            <td><a href="{% url 'player_details' player.slug %}">{{ player.full_name }}</a></td>
+                            <td>
+                                {% include 'common/_player_name.html' %}
+                            </td>
                             <td>{{ player.rating_result.score|default_if_none:'-' }}</td>
                         </tr>
                     {% endfor %}
