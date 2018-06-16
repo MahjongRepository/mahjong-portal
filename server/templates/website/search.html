@@ -13,9 +13,10 @@
             <table class="table table-hover mt-4">
                 <thead>
                 <tr>
-                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">{% trans 'Player' %}</th>
+                    <th scope="col">{% trans 'Dan' %}</th>
+                    <th scope="col">{% trans 'Tenhou account' %}</th>
                     <th scope="col">{% trans 'City' %}</th>
-                    <th scope="col">{% trans 'Country' %}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -25,13 +26,18 @@
                             {% include 'common/_player_name.html' %}
                         </td>
                         <td>
+                            <nobr>{{ player.tenhou_object.get_rank_display }}</nobr>
+                        </td>
+                        <td>
+                            {{ player.tenhou_object.tenhou_username }}
+                        </td>
+                        <td>
                             {% if player.city %}
                                 <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name }}</a>
                             {% else %}
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ player.country|default:'-' }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

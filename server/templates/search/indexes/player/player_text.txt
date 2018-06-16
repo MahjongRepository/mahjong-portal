@@ -2,3 +2,4 @@
 {{ object.last_name_ru }}
 {{ object.first_name_en }}
 {{ object.last_name_en }}
+{{ object.tenhou_object.tenhou_username }}
