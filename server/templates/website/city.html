@@ -7,6 +7,29 @@
 
 {% block content %}
     <div>
+        {% if clubs %}
+            <h1>{% trans 'Clubs' %}</h1>
+            <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans 'Name' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for club in clubs %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'club_details' club.slug %}">
+                                {{ club.name }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
         {% if tournaments %}
             <h1>{% trans 'Tournaments' %} {% if tournaments|length > 1 %}({{ tournaments|length }}){% endif %}</h1>
             {% include 'tournament/_tournaments_table.html' %}
@@ -21,17 +44,17 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Name' %}</th>
-                        <th scope="col">{% trans 'Points' %}</th>
+                        <th scope="col">{% trans 'Dan' %}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for player in players %}
                         <tr>
-                            <th scope="row">{{ player.rating_result.place|default:'-' }}</th>
+                            <th scope="row">{{ forloop.counter }}</th>
                             <td>
                                 {% include 'common/_player_name.html' %}
                             </td>
-                            <td>{{ player.rating_result.score|default_if_none:'-' }}</td>
+                            <td><nobr>{{ player.rank_display|default_if_none:'-' }}</nobr></td>
                         </tr>
                     {% endfor %}
                     </tbody>

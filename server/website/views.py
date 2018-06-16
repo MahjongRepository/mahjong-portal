@@ -4,6 +4,7 @@ from django.utils import translation
 from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
+from club.models import Club
 from player.models import Player, TenhouNickname, CollectedYakuman
 from rating.models import Rating, RatingResult
 from settings.models import City
@@ -71,22 +72,25 @@ def search(request):
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
+    clubs = Club.objects.filter(city=city).prefetch_related('city')
     tournaments = Tournament.public.filter(city=city).order_by('-end_date').prefetch_related('city')
 
     # small queries optimizations
-    rating_results = RatingResult.objects.filter(player__city=city, rating__type=Rating.RR)
+    tenhou_nicknames = TenhouNickname.objects.all()
     players = Player.objects.filter(city=city).prefetch_related('city')
     for player in players:
-        player.rating_result = None
+        player.rank = -1
 
-        for rating_result in rating_results:
-            if rating_result.player_id == player.id:
-                player.rating_result = rating_result
+        for nickname in tenhou_nicknames:
+            if nickname.player_id == player.id:
+                player.rank = nickname.rank
+                player.rank_display = nickname.get_rank_display()
 
-    players = sorted(players, key=lambda x: (x.rating_result and -x.rating_result.score or 0, x.full_name))
+    players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
     return render(request, 'website/city.html', {
         'city': city,
+        'clubs': clubs,
         'players': players,
         'tournaments': tournaments
     })
