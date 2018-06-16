@@ -257,6 +257,7 @@ class TournamentApplication(BaseModel):
 
     max_number_of_participants = models.PositiveSmallIntegerField(null=True, blank=True,
                                                                   verbose_name=_('Max number of participants'))
+    number_of_games = models.PositiveSmallIntegerField(verbose_name=_('Number of hanchans'))
     entry_fee = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Entry fee'),
                                                  help_text=_('Leave empty if it is free tournament'))
     pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1, 

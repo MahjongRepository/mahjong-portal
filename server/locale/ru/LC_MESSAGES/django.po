@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-06 09:20+0000\n"
+"POT-Creation-Date: 2018-06-16 12:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,46 +39,6 @@ msgstr "Среднее место (по возрастанию)"
 #: club/views.py:38
 msgid "Average place (descending)"
 msgstr "Среднее место (по убыванию)"
-
-#: club/views.py:39
-msgid "Feeds (ascending)"
-msgstr "Набросы (по возрастанию)"
-
-#: club/views.py:40
-msgid "Feeds (descending)"
-msgstr "Набросы (по убыванию)"
-
-#: club/views.py:41
-msgid "Ippatsu (ascending)"
-msgstr "Иппацу (по возрастанию)"
-
-#: club/views.py:42
-msgid "Ippatsu (descending)"
-msgstr "Иппацу (по убыванию)"
-
-#: club/views.py:43
-msgid "Open hands (ascending)"
-msgstr "Открытые руки (по возрастанию)"
-
-#: club/views.py:44
-msgid "Open hands (descending)"
-msgstr "Открытые руки (по убыванию)"
-
-#: club/views.py:45
-msgid "Successful riichi (ascending)"
-msgstr "Успешные риичи (по возрастанию)"
-
-#: club/views.py:46
-msgid "Successful riichi (descending)"
-msgstr "Успешные риичи (по убыванию)"
-
-#: club/views.py:47
-msgid "Average dora (ascending)"
-msgstr "Доры (по возрастанию)"
-
-#: club/views.py:48
-msgid "Average dora (descending)"
-msgstr "Доры (по убыванию)"
 
 #: mahjong_portal/templatetags/meta_tags_helper.py:13
 #, python-format
@@ -169,7 +129,7 @@ msgstr "Маджонг портал"
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:78 templates/base.html:88 templates/base.html:124
+#: templates/base.html:78 templates/base.html:124
 #: templates/club/details.html:27 templates/player/tournaments.html:5
 #: templates/player/tournaments.html:24 templates/player/tournaments.html:71
 #: templates/player/tournaments.html:72
@@ -183,10 +143,6 @@ msgstr "Турниры"
 #: templates/base.html:81 templates/club/list.html:10
 msgid "Clubs"
 msgstr "Клубы"
-
-#: templates/base.html:89 templates/player/details.html:33
-msgid "Rating"
-msgstr "Рейтинг"
 
 #: templates/base.html:94 templates/club/details.html:48
 #: templates/rating/_results_table.html:11 utils/tenhou/yakuman_list.py:18
@@ -208,13 +164,13 @@ msgstr "Якуманы"
 
 #: templates/base.html:99 templates/website/tenhou_accounts.html:5
 #: templates/website/tenhou_accounts.html:10
-#: templates/website/tenhou_accounts.html:50
-#: templates/website/tenhou_accounts.html:51
+#: templates/website/tenhou_accounts.html:62
+#: templates/website/tenhou_accounts.html:63
 msgid "Tenhou accounts"
 msgstr "Аккаунты на тенхе"
 
 #: templates/base.html:104 templates/tournament/application.html:84
-#: tournament/models.py:266
+#: tournament/models.py:267
 msgid "Other"
 msgstr "Другое"
 
@@ -332,8 +288,8 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:20 templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:61
 #: templates/tournament_admin/tournament_manage.html:79
-#: templates/website/search.html:17 tournament/models.py:181
-#: tournament/models.py:211 tournament/models.py:234
+#: templates/website/search.html:17 templates/website/tenhou_accounts.html:20
+#: tournament/models.py:181 tournament/models.py:211 tournament/models.py:234
 msgid "City"
 msgstr "Город"
 
@@ -381,6 +337,10 @@ msgstr "Из"
 #: templates/player/details.html:27
 msgid "Table with all ratings where player was counted"
 msgstr "Таблица со всеми рейтингами игрока"
+
+#: templates/player/details.html:33
+msgid "Rating"
+msgstr "Рейтинг"
 
 #: templates/player/details.html:35 templates/tournament/details.html:39
 msgid "Scores"
@@ -560,6 +520,11 @@ msgstr "Участники"
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
+#: templates/tournament/announcement.html:65
+#: templates/website/tenhou_accounts.html:17
+msgid "Dan"
+msgstr "Дан"
+
 #: templates/tournament/application.html:12
 msgid ""
 "Please tell us about your tournament. We will contact with you in 3 days "
@@ -576,7 +541,7 @@ msgstr "Ваша заявка была сохранена! Мы свяжемся
 msgid "Main info"
 msgstr "Основная информация"
 
-#: templates/tournament/application.html:36 tournament/models.py:271
+#: templates/tournament/application.html:36 tournament/models.py:272
 msgid "Additional info"
 msgstr "Дополнительная информация"
 
@@ -729,7 +694,7 @@ msgid "Approved"
 msgstr "Одобрено"
 
 #: templates/tournament_admin/tournament_manage.html:131
-#: tournament/models.py:255 tournament/models.py:262
+#: tournament/models.py:255 tournament/models.py:263
 msgid "Yes"
 msgstr "Да"
 
@@ -763,7 +728,7 @@ msgctxt "list of players"
 msgid "Players"
 msgstr "Игроки"
 
-#: templates/website/city.html:43 templates/website/city.html:44
+#: templates/website/city.html:45 templates/website/city.html:46
 msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 
@@ -785,25 +750,21 @@ msgid "Player"
 msgstr "Игрок"
 
 #: templates/website/search.html:5 templates/website/search.html:9
-#: templates/website/search.html:44 templates/website/search.html:45
+#: templates/website/search.html:46 templates/website/search.html:47
 msgid "Search results for"
 msgstr "Результаты поиска"
 
-#: templates/website/search.html:39
+#: templates/website/search.html:41
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: templates/website/tenhou_accounts.html:17
-msgid "Tenhou account"
-msgstr "Ник на тенхе"
-
 #: templates/website/tenhou_accounts.html:18
-msgid "Dan"
-msgstr "Дан"
-
-#: templates/website/tenhou_accounts.html:19
 msgid "Rate"
 msgstr "Рейт"
+
+#: templates/website/tenhou_accounts.html:19
+msgid "Tenhou account"
+msgstr "Ник на тенхе"
 
 #: templates/website/tenhou_games.html:10
 msgid "loading..."
@@ -834,7 +795,7 @@ msgid "Sanma"
 msgstr "Хиросима"
 
 #: tournament/forms.py:19 tournament/forms.py:36 tournament/forms.py:49
-#: tournament/models.py:195 tournament/models.py:219 tournament/models.py:273
+#: tournament/models.py:195 tournament/models.py:219 tournament/models.py:274
 msgid "I allow to store my personal data"
 msgstr "Я разрешаю сбор моих персональных данных, их хранение и обработку"
 
@@ -927,7 +888,7 @@ msgstr "Телефон судьи"
 msgid "Referee additional contact"
 msgstr "Дополнительный способ связи"
 
-#: tournament/models.py:255 tournament/models.py:262
+#: tournament/models.py:255 tournament/models.py:263
 msgid "No"
 msgstr "Нет"
 
@@ -940,54 +901,58 @@ msgid "Max number of participants"
 msgstr "Предполагаемое максимальное  количество участников"
 
 #: tournament/models.py:260
+msgid "Number of hanchans"
+msgstr "Количество ханчанов"
+
+#: tournament/models.py:261
 msgid "Entry fee"
 msgstr "Стоимость взноса"
 
-#: tournament/models.py:261
+#: tournament/models.py:262
 msgid "Leave empty if it is free tournament"
 msgstr "Оставьте пустым если турнир бесплатный"
 
-#: tournament/models.py:263
+#: tournament/models.py:264
 msgid "Pantheon needed"
 msgstr "Потребуется ли система “Пантеон” на турнире"
 
-#: tournament/models.py:265
+#: tournament/models.py:266
 msgid "Tournament rules"
 msgstr "Турнирные правила"
 
-#: tournament/models.py:266
+#: tournament/models.py:267
 msgid "EMA"
 msgstr "EMA"
 
-#: tournament/models.py:266
+#: tournament/models.py:267
 msgid "WRC"
 msgstr "WRC"
 
-#: tournament/models.py:266
+#: tournament/models.py:267
 msgid "JPML-A"
 msgstr "JPML-A"
 
-#: tournament/models.py:266
+#: tournament/models.py:267
 msgid "JPML-B"
 msgstr "JPML-B"
 
-#: tournament/models.py:268
+#: tournament/models.py:269
 msgid "Open"
 msgstr "Открытая"
 
-#: tournament/models.py:268
+#: tournament/models.py:269
 msgid "Closed"
 msgstr "Закрытая"
 
-#: tournament/models.py:268
+#: tournament/models.py:269
 msgid "Limited"
 msgstr "Ограниченая"
 
-#: tournament/models.py:269
+#: tournament/models.py:270
 msgid "Registration type"
 msgstr "Тип регистрации"
 
-#: tournament/models.py:272
+#: tournament/models.py:273
 msgid "More information about tournament"
 msgstr ""
 "Указывается наличие опциональных изменений под выбранные правила. Если тип "
@@ -1075,3 +1040,33 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
+
+#~ msgid "Feeds (ascending)"
+#~ msgstr "Набросы (по возрастанию)"
+
+#~ msgid "Feeds (descending)"
+#~ msgstr "Набросы (по убыванию)"
+
+#~ msgid "Ippatsu (ascending)"
+#~ msgstr "Иппацу (по возрастанию)"
+
+#~ msgid "Ippatsu (descending)"
+#~ msgstr "Иппацу (по убыванию)"
+
+#~ msgid "Open hands (ascending)"
+#~ msgstr "Открытые руки (по возрастанию)"
+
+#~ msgid "Open hands (descending)"
+#~ msgstr "Открытые руки (по убыванию)"
+
+#~ msgid "Successful riichi (ascending)"
+#~ msgstr "Успешные риичи (по возрастанию)"
+
+#~ msgid "Successful riichi (descending)"
+#~ msgstr "Успешные риичи (по убыванию)"
+
+#~ msgid "Average dora (ascending)"
+#~ msgstr "Доры (по возрастанию)"
+
+#~ msgid "Average dora (descending)"
+#~ msgstr "Доры (по убыванию)"
