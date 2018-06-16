@@ -31,7 +31,7 @@ class Command(BaseCommand):
         if rating_type == 'rr':
             calculator = RatingRRCalculation()
             rating = Rating.objects.get(type=Rating.RR)
-            tournaments = Tournament.objects.filter(
+            tournaments = Tournament.public.filter(
                 Q(tournament_type=Tournament.RR) |
                 Q(tournament_type=Tournament.EMA) |
                 Q(tournament_type=Tournament.FOREIGN_EMA)
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         if rating_type == 'crr':
             calculator = RatingCRRCalculation()
             rating = Rating.objects.get(type=Rating.CRR)
-            tournaments = Tournament.objects.filter(
+            tournaments = Tournament.public.filter(
                 Q(tournament_type=Tournament.CRR) |
                 Q(tournament_type=Tournament.RR) |
                 Q(tournament_type=Tournament.EMA) |
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         if rating_type == 'ema':
             calculator = EmaRatingCalculation()
             rating = Rating.objects.get(type=Rating.EMA)
-            tournaments = (Tournament.objects
+            tournaments = (Tournament.public
                            .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
                            .filter(is_upcoming=False)
                            .order_by('end_date'))
@@ -58,7 +58,7 @@ class Command(BaseCommand):
         if rating_type == 'online':
             calculator = RatingOnlineCalculation()
             rating = Rating.objects.get(type=Rating.ONLINE)
-            tournaments = (Tournament.objects
+            tournaments = (Tournament.public
                            .filter(tournament_type=Tournament.ONLINE)
                            .filter(is_upcoming=False)
                            .order_by('end_date'))

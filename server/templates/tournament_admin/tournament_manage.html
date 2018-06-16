@@ -16,6 +16,17 @@
 
         <h1>{{ tournament.name }}</h1>
 
+        {% if tournament.is_hidden %}
+            <div class="alert alert-warning">
+                <p>
+                    {% trans 'The tournament is excluded from all lists right now, and it is available only by direct link.' %}
+                </p>
+                <p>
+                    {% trans 'It will be published automatically when you will open registration first time.' %}
+                </p>
+            </div>
+        {% endif %}
+
         <ul class="list-group">
             <li class="list-group-item list-group-item-light">{% trans 'Settings' %}</li>
             <li class="list-group-item">

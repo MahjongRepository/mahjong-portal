@@ -57,7 +57,7 @@ class RatingRRCalculation(object):
         base_query = self.get_base_query(rating, two_years_ago)
 
         tournament_ids = base_query.values_list('tournament_id', flat=True).distinct()
-        coefficient_temp = Tournament.objects.filter(id__in=tournament_ids)
+        coefficient_temp = Tournament.public.filter(id__in=tournament_ids)
 
         coefficients_cache = {}
 

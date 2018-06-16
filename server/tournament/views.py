@@ -25,7 +25,7 @@ def tournament_list(request, tournament_type=None, year=None):
     if current_year != default_year_filter and current_year not in years:
         current_year = default_year_filter
 
-    tournaments = Tournament.objects.all()
+    tournaments = Tournament.public.all()
 
     if current_year != default_year_filter:
         tournaments = tournaments.filter(end_date__year=current_year)

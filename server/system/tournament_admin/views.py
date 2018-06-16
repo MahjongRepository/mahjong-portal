@@ -180,7 +180,13 @@ def tournament_edit(request, tournament_id, **kwargs):
 def toggle_registration(request, tournament_id, **kwargs):
     tournament = kwargs['tournament']
     tournament.opened_registration = not tournament.opened_registration
+
+    # We need to publish tournament once admin open registration
+    if tournament.opened_registration and tournament.is_hidden:
+        tournament.is_hidden = False
+
     tournament.save()
+
     return redirect(tournament_manage, tournament.id)
 
 

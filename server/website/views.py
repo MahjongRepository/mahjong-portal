@@ -19,7 +19,7 @@ def home(request):
                                   .prefetch_related('player__city')
                                   .order_by('place'))[:16]
 
-    upcoming_tournaments = (Tournament.objects
+    upcoming_tournaments = (Tournament.public
                                       .filter(is_upcoming=True)
                                       .exclude(tournament_type=Tournament.FOREIGN_EMA)
                                       .prefetch_related('city')
@@ -71,7 +71,7 @@ def search(request):
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
-    tournaments = Tournament.objects.filter(city=city).order_by('-end_date').prefetch_related('city')
+    tournaments = Tournament.public.filter(city=city).order_by('-end_date').prefetch_related('city')
 
     # small queries optimizations
     rating_results = RatingResult.objects.filter(player__city=city, rating__type=Rating.RR)
