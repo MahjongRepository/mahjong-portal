@@ -174,7 +174,11 @@
                                             {{ result.wind }}
                                             {% if result.player %}
                                                 {% with result.player as player %}
-                                                    {% include 'common/_player_name.html' %}
+                                                    <a href="{% url 'player_details' player.slug %}" class="d-print-none">
+                                                        <span class="d-block d-md-none d-print-none">
+                                                            <nobr>{{ player.last_name }} {{ player.first_name.0 }}.</nobr>
+                                                        </span>
+                                                    </a>
                                                 {% endwith %}
                                             {% else %}
                                                 {{ result.player_string }}
