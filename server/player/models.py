@@ -102,6 +102,7 @@ class TenhouNickname(BaseModel):
     month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     month_played_games = models.PositiveIntegerField(default=0)
     four_games_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    latest_twenty_places = models.CharField(max_length=40, null=True, blank=True)
 
     pt = models.PositiveSmallIntegerField(default=0)
     end_pt = models.PositiveSmallIntegerField(default=0)
@@ -123,6 +124,12 @@ class TenhouNickname(BaseModel):
 
     def latest_yakumans(self):
         return self.yakumans.order_by('-date')
+
+    def prepare_latest_places(self):
+        if not self.latest_twenty_places:
+            return []
+
+        return [int(x) for x in self.latest_twenty_places.split(',')]
 
 
 class TenhouStatistics(models.Model):

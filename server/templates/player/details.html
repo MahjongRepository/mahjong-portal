@@ -110,6 +110,22 @@
                 <p class="mt-3">
                     {% trans 'Rank' %}: {{ tenhou_item.get_rank_display }}, {{ tenhou_item.pt }} / {{ tenhou_item.end_pt }}pt{% if tenhou_item.four_games_rate %}, R{{ tenhou_item.four_games_rate|floatformat:0 }}{% endif %}
                 </p>
+                {% if tenhou_item.latest_twenty_places %}
+                    <p>
+                        {% trans 'Latest places:' %}<br>
+                        {% for x in tenhou_item.prepare_latest_places %}
+                            {% if x == 1 %}
+                                <span class="badge badge-success">{{ x }}</span>
+                            {% elif x == 2 %}
+                                <span class="badge badge-warning">{{ x }}</span>
+                            {% elif x == 3 %}
+                                <span class="badge badge-secondary">{{ x }}</span>
+                            {% elif x == 4 %}
+                                <span class="badge badge-danger">{{ x }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
 
                 {% if tenhou_item.month_played_games %}
                     <h5>{% trans 'Current month' %}</h5>

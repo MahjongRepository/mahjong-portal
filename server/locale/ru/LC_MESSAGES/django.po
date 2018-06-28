@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-21 12:09+0000\n"
+"POT-Creation-Date: 2018-06-28 15:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,19 +79,19 @@ msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: player/models.py:135
+#: player/models.py:142
 msgid "Kyu lobby"
 msgstr "Кю-лобби"
 
-#: player/models.py:136
+#: player/models.py:143
 msgid "Dan lobby"
 msgstr "Перводан"
 
-#: player/models.py:137
+#: player/models.py:144
 msgid "Upperdan lobby"
 msgstr "Втородан"
 
-#: player/models.py:138
+#: player/models.py:145
 msgid "Phoenix lobby"
 msgstr "Феникс"
 
@@ -238,35 +238,35 @@ msgstr "Сортировка:"
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/details.html:51 templates/player/details.html:117
-#: templates/player/details.html:127 templates/player/details.html:180
-#: templates/player/details.html:191
+#: templates/club/details.html:51 templates/player/details.html:133
+#: templates/player/details.html:143 templates/player/details.html:196
+#: templates/player/details.html:207
 msgid "Games"
 msgstr "Игр"
 
-#: templates/club/details.html:54 templates/player/details.html:117
-#: templates/player/details.html:130 templates/player/details.html:180
-#: templates/player/details.html:194
+#: templates/club/details.html:54 templates/player/details.html:133
+#: templates/player/details.html:146 templates/player/details.html:196
+#: templates/player/details.html:210
 msgid "Avg. place"
 msgstr "Ср. место"
 
-#: templates/club/details.html:57 templates/player/details.html:133
-#: templates/player/details.html:197
+#: templates/club/details.html:57 templates/player/details.html:149
+#: templates/player/details.html:213
 msgid "1st"
 msgstr "1-e"
 
-#: templates/club/details.html:60 templates/player/details.html:136
-#: templates/player/details.html:200
+#: templates/club/details.html:60 templates/player/details.html:152
+#: templates/player/details.html:216
 msgid "2nd"
 msgstr "2-е"
 
-#: templates/club/details.html:63 templates/player/details.html:139
-#: templates/player/details.html:203
+#: templates/club/details.html:63 templates/player/details.html:155
+#: templates/player/details.html:219
 msgid "3rd"
 msgstr "3-е"
 
-#: templates/club/details.html:66 templates/player/details.html:142
-#: templates/player/details.html:206
+#: templates/club/details.html:66 templates/player/details.html:158
+#: templates/player/details.html:222
 msgid "4th"
 msgstr "4-е"
 
@@ -304,7 +304,7 @@ msgid "Base rank"
 msgstr "Ранг"
 
 #: templates/player/_deltas_table.html:9 templates/player/details.html:70
-#: templates/player/details.html:247 templates/player/tournaments.html:33
+#: templates/player/details.html:263 templates/player/tournaments.html:33
 #: templates/tournament/_tournaments_table.html:9
 #: templates/website/latest_yakumans.html:18
 msgid "Date"
@@ -372,34 +372,38 @@ msgid "Rank"
 msgstr "Ранг"
 
 #: templates/player/details.html:115
+msgid "Latest places:"
+msgstr "Последние игры:"
+
+#: templates/player/details.html:131
 msgid "Current month"
 msgstr "За текущий месяц"
 
-#: templates/player/details.html:117 templates/player/details.html:180
+#: templates/player/details.html:133 templates/player/details.html:196
 msgid "Last played date:"
 msgstr "Дата последней игры: "
 
-#: templates/player/details.html:124 templates/player/details.html:188
+#: templates/player/details.html:140 templates/player/details.html:204
 msgid "Lobby"
 msgstr "Лобби"
 
-#: templates/player/details.html:178
+#: templates/player/details.html:194
 msgid "All time"
 msgstr "За всё время"
 
-#: templates/player/details.html:243
+#: templates/player/details.html:259
 msgid "Collected yakumans"
 msgstr "Собранные якуманы"
 
-#: templates/player/details.html:248 templates/website/latest_yakumans.html:16
+#: templates/player/details.html:264 templates/website/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
 
-#: templates/player/details.html:249 templates/website/latest_yakumans.html:19
+#: templates/player/details.html:265 templates/website/latest_yakumans.html:19
 msgid "Log"
 msgstr "Игра"
 
-#: templates/player/details.html:263 templates/website/latest_yakumans.html:38
+#: templates/player/details.html:279 templates/website/latest_yakumans.html:38
 msgid "link"
 msgstr "ссылка"
 
