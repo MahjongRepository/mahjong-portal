@@ -64,9 +64,7 @@ def upload_results(request, tournament_id):
                     if first_name == 'Замены':
                         first_name = 'замены'
 
-                data = [place, first_name, last_name, scores]
-                if is_ema:
-                    data.append(ema_id)
+                data = [place, first_name, last_name, scores, ema_id]
 
                 filtered_results.append(data)
 
@@ -104,9 +102,13 @@ def upload_results(request, tournament_id):
                     first_name = result[1]
                     last_name = result[2]
                     scores = result[3]
+                    ema_id = result[4]
 
                     if is_ema:
-                        player = Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
+                        if ema_id:
+                            player = Player.all_objects.get(ema_id=ema_id)
+                        else:
+                            player = Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
                     else:
                         player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
 
@@ -178,7 +180,13 @@ def tournament_edit(request, tournament_id, **kwargs):
 def toggle_registration(request, tournament_id, **kwargs):
     tournament = kwargs['tournament']
     tournament.opened_registration = not tournament.opened_registration
+
+    # We need to publish tournament once admin open registration
+    if tournament.opened_registration and tournament.is_hidden:
+        tournament.is_hidden = False
+
     tournament.save()
+
     return redirect(tournament_manage, tournament.id)
 
 

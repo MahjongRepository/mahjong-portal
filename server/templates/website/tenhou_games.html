@@ -6,26 +6,45 @@
 {% endblock %}
 
 {% block content %}
-    <div>
-        {% if our_players_games %}
-            <h2>{% trans 'Current games with our players' %}</h2>
-            {% trans 'Games from upperdan and phoenix with players from Russia.' %}
-            {% with our_players_games as games %}
-                {% include 'website/_tenhou_table.html' %}
-            {% endwith %}
-        {% endif %}
-
-        {% if high_level_games %}
-            <h2>{% trans 'Current games with high level players' %}</h2>
-            <p>{% trans 'Games with 9 dan, 10 dan and tenhou dan players.' %}</p>
-            {% with high_level_games as games %}
-                {% include 'website/_tenhou_table.html' %}
-            {% endwith %}
-        {% endif %}
+    <div id="games-container">
+        <p>{% trans 'loading...' %}</p>
     </div>
 {% endblock %}
 
 {% block meta_tags %}
     <meta name="description" content="{% trans 'Current tenhou.net games' %}">
     <meta property="og:description" content="{% trans 'Current tenhou.net games' %}">
+{% endblock %}
+
+{% block additional_js %}
+    <script>
+        var games_url = '{% url 'get_current_tenhou_games_async' %}';
+        $(document).ready(function () {
+            update_games();
+
+            setInterval('update_games()', 30000);
+        });
+
+        function update_games() {
+            $.get(games_url, function (data) {
+                $('#games-container').html(data);
+            });
+        }
+    </script>
+{% endblock %}
+
+{% block additional_css %}
+    <style>
+        th {
+            font-weight: normal;
+        }
+
+        @media (max-width:768px) {
+            th {
+                vertical-align: middle !important;
+                text-align: center;
+                padding: 5px !important;
+            }
+        }
+    </style>
 {% endblock %}

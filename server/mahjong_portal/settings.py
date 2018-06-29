@@ -10,13 +10,14 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-APP_VERSION = 'v0.2.2-dev'
+APP_VERSION = 'v0.3.1'
 
 SCHEME = 'https'
 
 AUTH_USER_MODEL = 'account.User'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

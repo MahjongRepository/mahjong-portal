@@ -53,7 +53,7 @@ def rating_tournaments(request, slug):
                       .filter(rating=rating)
                       .filter(is_active=True)
                       .values_list('tournament_id', flat=True))
-    tournaments = (Tournament.objects
+    tournaments = (Tournament.public
                    .filter(id__in=tournament_ids)
                    .prefetch_related('city')
                    .prefetch_related('country')

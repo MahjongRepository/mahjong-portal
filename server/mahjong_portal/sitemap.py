@@ -44,7 +44,7 @@ class TournamentSitemap(BaseSitemap):
     changefreq = 'monthly'
 
     def items(self):
-        return Tournament.objects.filter(is_upcoming=False).order_by('-end_date')
+        return Tournament.public.filter(is_upcoming=False).order_by('-end_date')
 
     def location(self, obj):
         return reverse('tournament_details', kwargs={'slug': obj.slug})
@@ -57,7 +57,7 @@ class TournamentAnnouncementSitemap(BaseSitemap):
     changefreq = 'weekly'
 
     def items(self):
-        return Tournament.objects.filter(is_upcoming=True).order_by('-end_date')
+        return Tournament.public.filter(is_upcoming=True).order_by('-end_date')
 
     def location(self, obj):
         return reverse('tournament_announcement', kwargs={'slug': obj.slug})

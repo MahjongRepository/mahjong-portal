@@ -1,11 +1,11 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.translation import get_language
-from django.views.decorators.cache import cache_page
 from haystack.forms import ModelSearchForm
 
-from player.models import Player, TenhouNickname
+from club.models import Club
+from player.models import Player, TenhouNickname, CollectedYakuman
 from rating.models import Rating, RatingResult
 from settings.models import City
 from tournament.models import Tournament
@@ -20,7 +20,7 @@ def home(request):
                                   .prefetch_related('player__city')
                                   .order_by('place'))[:16]
 
-    upcoming_tournaments = (Tournament.objects
+    upcoming_tournaments = (Tournament.public
                                       .filter(is_upcoming=True)
                                       .exclude(tournament_type=Tournament.FOREIGN_EMA)
                                       .prefetch_related('city')
@@ -72,22 +72,25 @@ def search(request):
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
-    tournaments = Tournament.objects.filter(city=city).order_by('-end_date').prefetch_related('city')
+    clubs = Club.objects.filter(city=city).prefetch_related('city')
+    tournaments = Tournament.public.filter(city=city).order_by('-end_date').prefetch_related('city')
 
     # small queries optimizations
-    rating_results = RatingResult.objects.filter(player__city=city, rating__type=Rating.RR)
+    tenhou_nicknames = TenhouNickname.objects.all()
     players = Player.objects.filter(city=city).prefetch_related('city')
     for player in players:
-        player.rating_result = None
+        player.rank = -1
 
-        for rating_result in rating_results:
-            if rating_result.player_id == player.id:
-                player.rating_result = rating_result
+        for nickname in tenhou_nicknames:
+            if nickname.player_id == player.id:
+                player.rank = nickname.rank
+                player.rank_display = nickname.get_rank_display()
 
-    players = sorted(players, key=lambda x: (x.rating_result and -x.rating_result.score or 0, x.full_name))
+    players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
     return render(request, 'website/city.html', {
         'city': city,
+        'clubs': clubs,
         'players': players,
         'tournaments': tournaments
     })
@@ -127,39 +130,62 @@ def online_tournament_rules(request):
     return render(request, 'website/rules.html')
 
 
-@cache_page(30)
 def get_current_tenhou_games(request):
-    watching_nicknames = TenhouNickname.objects.all().values_list('tenhou_username', flat=True)
+    return render(request, 'website/tenhou_games.html', {})
+
+
+def get_current_tenhou_games_async(request):
+    games = get_latest_wg_games()
+
+    tenhou_objects = TenhouNickname.objects.all().prefetch_related('player')
+    player_profiles = {}
+    for tenhou_object in tenhou_objects:
+        player_profiles[tenhou_object.tenhou_username] = tenhou_object.player
+
     # let's find players from our database that are playing right now
     found_players = []
     our_players_games = {}
-    high_level_games = {}
 
-    games = get_latest_wg_games()
+    high_level_games = {}
+    high_level_hirosima_games = {}
+
     for game in games:
         for player in game['players']:
             # we found a player from our database
-            if player['name'] in watching_nicknames:
-                player['is_hirosima'] = len(game['players']) == 3
+            if player['name'] in player_profiles:
                 found_players.append(player)
                 our_players_games[game['game_id']] = game
 
             if player['dan'] >= 18:
-                high_level_games[game['game_id']] = game
+                if len(game['players']) == 3:
+                    high_level_hirosima_games[game['game_id']] = game
+                else:
+                    high_level_games[game['game_id']] = game
 
-    player_profiles = {}
-
-    for player in found_players:
-        tenhou_object = TenhouNickname.objects.get(tenhou_username=player['name'])
-
-        if not player['is_hirosima']:
-            tenhou_object.four_games_rate = player['rate']
-            tenhou_object.save()
-
-        player_profiles[player['name']] = tenhou_object.player
-
-    return render(request, 'website/tenhou_games.html', {
+    return render(request, 'website/tenhou_games_async.html', {
         'our_players_games': our_players_games.values(),
         'high_level_games': high_level_games.values(),
+        'high_level_hirosima_games': high_level_hirosima_games.values(),
         'player_profiles': player_profiles
+    })
+
+
+def latest_yakumans(request):
+    yakumans = (CollectedYakuman.objects
+                .all()
+                .order_by('-date')
+                .prefetch_related('tenhou_object', 'tenhou_object__player'))
+    return render(request, 'website/latest_yakumans.html', {
+        'yakumans': yakumans
+    })
+
+
+def tenhou_accounts(request):
+    accounts = (TenhouNickname.objects
+                .all()
+                .order_by('-rank', '-four_games_rate')
+                .prefetch_related('player')
+                .prefetch_related('player__city'))
+    return render(request, 'website/tenhou_accounts.html', {
+        'accounts': accounts
     })

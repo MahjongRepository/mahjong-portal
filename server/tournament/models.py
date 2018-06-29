@@ -8,6 +8,13 @@ from player.models import Player
 from settings.models import City, Country
 
 
+class PublicTournamentManager(models.Manager):
+
+    def get_queryset(self):
+        queryset = super(PublicTournamentManager, self).get_queryset()
+        return queryset.exclude(is_hidden=True)
+
+
 class Tournament(BaseModel):
     RIICHI = 0
     MCR = 1
@@ -33,6 +40,9 @@ class Tournament(BaseModel):
         [ONLINE, 'online'],
     ]
 
+    objects = models.Manager()
+    public = PublicTournamentManager()
+
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
 
@@ -41,7 +51,6 @@ class Tournament(BaseModel):
 
     number_of_sessions = models.PositiveSmallIntegerField(default=0, blank=True)
     number_of_players = models.PositiveSmallIntegerField(default=0, blank=True)
-    game_type = models.PositiveSmallIntegerField(choices=GAME_TYPES, default=RIICHI)
 
     registration_description = models.TextField(null=True, blank=True, default='')
     registration_link = models.URLField(null=True, blank=True, default='')
@@ -54,16 +63,19 @@ class Tournament(BaseModel):
     tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR)
 
     is_upcoming = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
+    # we need it only to EMA rating, probably can be removed
     need_qualification = models.BooleanField(default=False)
-    has_accreditation = models.BooleanField(default=True)
-    fill_city_in_registration = models.BooleanField(default=True)
 
+    # tournament setting, tournament admin can change them
+    fill_city_in_registration = models.BooleanField(default=True)
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)
+
+    # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
 
     pantheon_id = models.CharField(max_length=20, null=True, blank=True)
-
     ema_id = models.CharField(max_length=20, null=True, blank=True)
 
     def __unicode__(self):
@@ -257,6 +269,7 @@ class TournamentApplication(BaseModel):
 
     max_number_of_participants = models.PositiveSmallIntegerField(null=True, blank=True,
                                                                   verbose_name=_('Max number of participants'))
+    number_of_games = models.PositiveSmallIntegerField(verbose_name=_('Number of hanchans'))
     entry_fee = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Entry fee'),
                                                  help_text=_('Leave empty if it is free tournament'))
     pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1, 

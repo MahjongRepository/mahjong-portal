@@ -34,100 +34,6 @@ class Command(BaseCommand):
         print('{0}: End'.format(get_date_string()))
 
 
-# they blocked my requests :(
-def load_data_from_nodocchi(tenhou_object):
-    url = 'https://nodocchi.moe/api/listuser.php?name={}'.format(
-        quote(tenhou_object.tenhou_username, safe='')
-    )
-    print(url)
-
-    response = requests.get(url).json()
-
-    lobbies_dict = {
-        '0': TenhouStatistics.KYU_LOBBY,
-        '1': TenhouStatistics.DAN_LOBBY,
-        '2': TenhouStatistics.UPPERDAN_LOBBY,
-        '3': TenhouStatistics.PHOENIX_LOBBY,
-    }
-
-    lobbies_tenhou_dict = {
-        '0': u'般',
-        '1': u'上',
-        '2': u'特',
-        '3': u'鳳',
-    }
-
-    lobbies_data = {
-        TenhouStatistics.KYU_LOBBY: {
-            'all': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0},
-            'current_month': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0}
-        },
-        TenhouStatistics.DAN_LOBBY: {
-            'all': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0},
-            'current_month': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0}
-        },
-        TenhouStatistics.UPPERDAN_LOBBY: {
-            'all': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0},
-            'current_month': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0}
-        },
-        TenhouStatistics.PHOENIX_LOBBY: {
-            'all': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0},
-            'current_month': {'played_games': 0, 1: 0, 2: 0, 3: 0, 4: 0}
-        },
-    }
-
-    if response.get('rate'):
-        four_games_rate = response.get('rate').get('4', None)
-    else:
-        four_games_rate = None
-
-    games = response.get('list', [])
-
-    month_first_day = get_month_first_day().date()
-    month_last_day = get_month_last_day().date()
-
-    player_games = []
-    for game in games:
-        if game['playernum'] != '4':
-            continue
-
-        # usual and phoenix games
-        if game['sctype'] == 'b' or game['sctype'] == 'c':
-            # api doesnt' return player place we had to assume from game results
-            place = None
-            for x in range(1, 5):
-                if game['player{}'.format(x)] == tenhou_object.tenhou_username:
-                    place = x
-                    break
-
-            if game['playlength'] == '1':
-                game_type = u'東'
-            else:
-                game_type = u'南'
-
-            date = datetime.utcfromtimestamp(int(game['starttime'])).replace(tzinfo=pytz.timezone('Asia/Tokyo')).date()
-
-            lobby_name = lobbies_dict[game['playerlevel']]
-            lobbies_data[lobby_name]['all']['played_games'] += 1
-            lobbies_data[lobby_name]['all'][place] += 1
-
-            if month_first_day <= date <= month_last_day:
-                lobbies_data[lobby_name]['current_month']['played_games'] += 1
-                lobbies_data[lobby_name]['current_month'][place] += 1
-
-            player_games.append({
-                'date': date,
-                'place': place,
-                'lobby': lobbies_tenhou_dict[game['playerlevel']],
-                'game_type': game_type
-            })
-
-    update_stat(tenhou_object, lobbies_data, player_games)
-
-    tenhou_object.four_games_rate = four_games_rate
-    tenhou_object.save()
-
-
 def update_stat(tenhou_object, lobbies_data, player_games, last_played_date):
     total_played_games = 0
     total_first_place = 0
@@ -209,6 +115,7 @@ def update_stat(tenhou_object, lobbies_data, player_games, last_played_date):
     tenhou_object.average_place = total_average_place
     tenhou_object.month_played_games = month_played_games
     tenhou_object.month_average_place = month_average_place
+    tenhou_object.latest_twenty_places = ','.join([str(x['place']) for x in player_games][-20:])
     tenhou_object.save()
 
 

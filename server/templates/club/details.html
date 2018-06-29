@@ -73,9 +73,9 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>
                                     {% if item.player %}
-                                        <a href="{% url 'player_details' item.player.slug %}">
-                                            <nobr>{{ item.player }}</nobr>
-                                        </a>
+                                        {% with item.player as player %}
+                                            {% include 'common/_player_name.html' %}
+                                        {% endwith %}
                                     {% else %}
                                         <nobr>{{ item.player_string }}</nobr>
                                     {% endif %}
@@ -83,7 +83,7 @@
                                 <td>
                                     {% with tenhou_object=item.player.tenhou_object %}
                                         {% if tenhou_object %}
-                                            {{ tenhou_object.get_rank_display }}
+                                            <nobr>{{ tenhou_object.get_rank_display }}</nobr>
                                         {% endif %}
                                     {% endwith %}
                                 </td>
@@ -173,7 +173,13 @@
                                         <nobr>
                                             {{ result.wind }}
                                             {% if result.player %}
-                                                <a href="{% url 'player_details' result.player.slug %}">{{ result.player }}</a>
+                                                {% with result.player as player %}
+                                                    <a href="{% url 'player_details' player.slug %}" class="d-print-none">
+                                                        <span class="d-block d-md-none d-print-none">
+                                                            <nobr>{{ player.last_name }} {{ player.first_name.0 }}.</nobr>
+                                                        </span>
+                                                    </a>
+                                                {% endwith %}
                                             {% else %}
                                                 {{ result.player_string }}
                                             {% endif %}

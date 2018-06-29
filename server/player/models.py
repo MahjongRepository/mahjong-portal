@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy
 
 from mahjong_portal.models import BaseModel
 from settings.models import Country, City
+from utils.tenhou.yakuman_list import YAKUMAN_CONST
 
 
 class PlayerManager(models.Manager):
@@ -60,7 +61,7 @@ class Player(BaseModel):
 
     @property
     def tenhou_object(self):
-        tenhou = self.tenhou.all().order_by('-rank').first()
+        tenhou = self.tenhou.all().order_by('-is_main').first()
         return tenhou
 
 
@@ -101,6 +102,7 @@ class TenhouNickname(BaseModel):
     month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     month_played_games = models.PositiveIntegerField(default=0)
     four_games_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    latest_twenty_places = models.CharField(max_length=40, null=True, blank=True)
 
     pt = models.PositiveSmallIntegerField(default=0)
     end_pt = models.PositiveSmallIntegerField(default=0)
@@ -119,6 +121,15 @@ class TenhouNickname(BaseModel):
 
     def current_month_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.CURRENT_MONTH)
+
+    def latest_yakumans(self):
+        return self.yakumans.order_by('-date')
+
+    def prepare_latest_places(self):
+        if not self.latest_twenty_places:
+            return []
+
+        return [int(x) for x in self.latest_twenty_places.split(',')]
 
 
 class TenhouStatistics(models.Model):
@@ -155,6 +166,23 @@ class TenhouStatistics(models.Model):
 
     class Meta:
         ordering = ['lobby']
+
+
+class CollectedYakuman(models.Model):
+    tenhou_object = models.ForeignKey(TenhouNickname, related_name='yakumans')
+    date = models.DateTimeField()
+    log_id = models.CharField(max_length=44)
+    yakuman_list = models.CharField(max_length=60)
+
+    def get_log_link(self):
+        return 'http://tenhou.net/0/?log={}'.format(self.log_id)
+
+    def yakuman_names(self):
+        if not self.yakuman_list:
+            return YAKUMAN_CONST.get('kazoe')
+
+        yakuman_list = [int(x) for x in self.yakuman_list.split(',')]
+        return ', '.join([str(YAKUMAN_CONST.get(x, x)) for x in yakuman_list])
 
 
 class TenhouGameLog(models.Model):

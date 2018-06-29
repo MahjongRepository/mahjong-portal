@@ -1,0 +1,19 @@
+{% load tenhou_helper %}
+
+{% if player.dan >= 18 %}
+    <b>{{ player.dan|display_dan }} R{{ player.rate|floatformat:0 }}</b>
+{% else %}
+    {{ player.dan|display_dan }} R{{ player.rate|floatformat:0 }}
+{% endif %}
+
+<br>
+
+<a href="{{ player.game_link }}" target="_blank">
+    <nobr>{{ player.name }}</nobr>
+</a>
+
+{% with player_profiles|get_item:player.name as player_profile %}
+    {% if player_profile %}
+        (<a href="{% url 'player_details' player_profile.slug %}">{{ player_profile.last_name }}</a>)
+    {% endif %}
+{% endwith %}

@@ -20,24 +20,13 @@
             <tr id="{{ rating_result.player.slug }}">
                 <th scope="row">{{ rating_result.place }}</th>
                 <td>
-                    <a href="{% url 'player_details' rating_result.player.slug %}" class="d-print-none">
-                        {# on large screns show full name #}
-                        <span class="d-none d-md-block d-print-none">
-                            {{ rating_result.player.full_name }}
-                        </span>
-                        {# on small screens show shorten first name #}
-                        <span class="d-block d-md-none d-print-none">
-                            <nobr>{{ rating_result.player.last_name }} {{ rating_result.player.first_name.0 }}.</nobr>
-                        </span>
-                    </a>
-                    {# special case for print #}
-                    <span class="d-none d-print-block">
-                        {{ rating_result.player.full_name }}
-                    </span>
+                    {% with rating_result.player as player %}
+                        {% include 'common/_player_name.html' %}
+                    {% endwith %}
                 </td>
                 {% if rating.is_online %}
                     <td>
-                        {{ rating_result.player.tenhou.all.0.get_rank_display }}
+                        <nobr>{{ rating_result.player.tenhou.all.0.get_rank_display }}</nobr>
                     </td>
                 {% endif %}
                 <td>{{ rating_result.score|floatformat:0 }}</td>

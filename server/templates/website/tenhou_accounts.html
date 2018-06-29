@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Tenhou accounts' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'Tenhou accounts' %}</h2>
+
+        <div class="table-responsive">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans 'Player' %}</th>
+                    <th scope="col">{% trans 'Dan' %}</th>
+                    <th scope="col">{% trans 'Rate' %}</th>
+                    <th scope="col">{% trans 'Tenhou account' %}</th>
+                    <th scope="col">{% trans 'City' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for account in accounts %}
+                    <tr>
+                        <td>
+                            {% with account.player as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            <nobr>{{ account.get_rank_display }}</nobr>
+                        </td>
+                        <td>
+                            {% if account.four_games_rate %}
+                                R{{ account.four_games_rate|floatformat:0 }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ account.tenhou_username }}
+                        </td>
+                        <td>
+                            {% if account.player.city %}
+                                <a href="{% url 'city_page' account.player.city.slug %}">{{ account.player.city.name }}</a>
+                            {% else %}
+                                {% if account.player.is_replacement or account.player.is_hide %}
+                                    -
+                                {% else %}
+                                    {{ account.player.country }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Tenhou accounts' %}">
+    <meta property="og:description" content="{% trans 'Tenhou accounts' %}">
+{% endblock %}

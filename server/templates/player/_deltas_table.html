@@ -9,13 +9,14 @@
             <th scope="col">{% trans 'Date' %}</th>
             <th scope="col">{% trans 'Place' %}</th>
             <th scope="col">{% trans 'Power' %}</th>
+            <th scope="col">{% trans 'Coefficient' %}</th>
             <th scope="col">{% trans 'Type' %}</th>
             <th scope="col">{% trans 'Tournament' %}</th>
         </tr>
         </thead>
         <tbody>
         {% for delta in deltas %}
-            <tr {% if not delta.is_active and highlight %}class="table-secondary"{% endif %}>
+            <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>
                     {% if delta.is_active %}
@@ -36,6 +37,9 @@
                 <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
                 <td>
                     {{ delta.tournament_coefficient.age|floatformat:0 }}%
+                </td>
+                <td>
+                    {{ delta.tournament_coefficient.coefficient|floatformat:1 }}
                 </td>
                 <td>
                     {% with delta.tournament as tournament %}

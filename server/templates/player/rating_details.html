@@ -40,7 +40,7 @@
 
         <h4 class="mt-4">{% trans 'Rating changes' %}</h4>
 
-        {% with deltas=rating_deltas highlight=True %}
+        {% with deltas=rating_deltas %}
             {% include 'player/_deltas_table.html' %}
         {% endwith %}
     </div>

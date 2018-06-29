@@ -9,7 +9,7 @@ class TournamentForm(forms.ModelForm):
 
     class Meta:
         model = Tournament
-        exclude = ['name', 'registration_description']
+        exclude = ['name', 'registration_description', 'results_description']
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -23,6 +23,15 @@ class TournamentAdmin(admin.ModelAdmin):
     ordering = ['-end_date']
 
     filter_horizontal = ['clubs']
+
+    def changelist_view(self, request, extra_context=None):
+        ref = request.META.get('HTTP_REFERER','')
+        if '/?' not in ref:
+            q = request.GET.copy()
+            q['country__id__exact'] = 9
+            request.GET = q
+            request.META['QUERY_STRING'] = request.GET.urlencode()
+        return super(TournamentAdmin,self).changelist_view(request, extra_context=extra_context)
 
 
 class TournamentRegistrationAdmin(admin.ModelAdmin):
