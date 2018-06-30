@@ -14,8 +14,7 @@ def player_by_id_details(request, player_id):
 
 def player_by_id_tenhou_details(request, player_id):
     player = get_object_or_404(Player, id=player_id)
-    url = reverse('player_details', kwargs={'slug': player.slug})
-    return redirect(url + '#tenhou')
+    return redirect(player_tenhou_details, player.slug)
 
 
 def player_details(request, slug):
@@ -27,7 +26,7 @@ def player_details(request, slug):
                           .prefetch_related('tournament')
                           .order_by('-tournament__end_date'))[:10]
 
-    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('-is_main')
+    tenhou_data = TenhouNickname.objects.filter(player=player, is_main=True)
 
     return render(request, 'player/details.html', {
         'player': player,
@@ -68,4 +67,13 @@ def player_rating_details(request, slug, rating_slug):
         'rating': rating,
         'rating_deltas': rating_deltas,
         'rating_result': rating_result
+    })
+
+
+def player_tenhou_details(request, slug):
+    player = get_object_or_404(Player, slug=slug)
+    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('-is_main')
+    return render(request, 'player/tenhou.html', {
+        'player': player,
+        'tenhou_data': tenhou_data,
     })
