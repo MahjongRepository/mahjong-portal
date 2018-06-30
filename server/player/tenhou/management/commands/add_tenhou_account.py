@@ -9,6 +9,7 @@ from django.utils import timezone
 from player.models import Player
 from player.tenhou.management.commands.download_all_games import download_all_games_from_arcturus
 from player.tenhou.models import TenhouNickname
+from utils.tenhou.helper import recalculate_tenhou_statistics
 
 
 def get_date_string():
@@ -69,5 +70,6 @@ class Command(BaseCommand):
         )
 
         download_all_games_from_arcturus(tenhou_object)
+        recalculate_tenhou_statistics(tenhou_object)
 
         print('{0}: End'.format(get_date_string()))
