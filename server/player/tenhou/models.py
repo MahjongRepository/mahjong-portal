@@ -104,6 +104,7 @@ class TenhouStatistics(models.Model):
 
     class Meta:
         ordering = ['lobby']
+        db_table = 'portal_tenhou_statistics'
 
 
 class CollectedYakuman(models.Model):
@@ -111,6 +112,9 @@ class CollectedYakuman(models.Model):
     date = models.DateTimeField()
     log_id = models.CharField(max_length=44)
     yakuman_list = models.CharField(max_length=60)
+
+    class Meta:
+        db_table = 'portal_collected_yakuman'
 
     def get_log_link(self):
         return 'http://tenhou.net/0/?log={}'.format(self.log_id)
@@ -136,6 +140,7 @@ class TenhouGameLog(models.Model):
     class Meta:
         unique_together = ['tenhou_object', 'game_date']
         ordering = ['game_date']
+        db_table = 'portal_tenhou_game_log'
 
     @property
     def game_type(self):
