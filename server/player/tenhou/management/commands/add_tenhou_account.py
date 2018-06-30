@@ -6,8 +6,9 @@ from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from player.models import TenhouNickname, Player
-from settings.management.commands.update_tenhou_statistics import load_data_for_tenhou_object
+from player.models import Player
+from player.tenhou.management.commands.download_all_games import download_all_games_from_arcturus
+from player.tenhou.models import TenhouNickname
 
 
 def get_date_string():
@@ -67,6 +68,6 @@ class Command(BaseCommand):
             username_created_at=account_start_date
         )
 
-        load_data_for_tenhou_object(tenhou_object)
+        download_all_games_from_arcturus(tenhou_object)
 
         print('{0}: End'.format(get_date_string()))

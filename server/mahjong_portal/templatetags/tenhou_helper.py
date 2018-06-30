@@ -1,6 +1,6 @@
 from django import template
 
-from player.models import TenhouNickname
+from player.tenhou.models import TenhouNickname
 
 register = template.Library()
 

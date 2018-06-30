@@ -3,6 +3,8 @@ from collections import OrderedDict
 from copy import copy
 from datetime import datetime
 
+import pytz
+
 
 class PointsCalculator(object):
     """
@@ -186,20 +188,18 @@ class PointsCalculator(object):
     }
 
     @staticmethod
-    def calculate_rank(game_records):
+    def calculate_rank(games):
         rank = copy(PointsCalculator.DAN_SETTINGS['新人'])
         rank['pt'] = rank['start_pt']
 
-        kyu_lobby_changes_date = datetime(2017, 10, 24).date()
+        kyu_lobby_changes_date = datetime(2017, 10, 24, 0, 0, tzinfo=pytz.utc)
 
-        for game_record in game_records:
-            date = game_record['date']
-            place = game_record['place']
-            lobby = game_record['lobby']
-            game_type = game_record['game_type']
+        lobbies = [u'般', u'上', u'特', u'鳳']
+        for game in games:
+            lobby = lobbies[game.lobby]
 
             # we have different values for old games
-            if date < kyu_lobby_changes_date:
+            if game.game_date < kyu_lobby_changes_date:
                 # lobby + pt was different
                 if lobby == '般':
                     lobby = '般_old'
@@ -207,10 +207,10 @@ class PointsCalculator(object):
                 if PointsCalculator.OLD_RANK_LIMITS.get(rank['rank']):
                     rank['end_pt'] = PointsCalculator.OLD_RANK_LIMITS.get(rank['rank'])
 
-            if place == 1 or place == 2:
-                rank['pt'] += PointsCalculator.LOBBY[lobby][game_type].get(place, 0)
-            elif place == 4:
-                rank['pt'] -= PointsCalculator.DAN_SETTINGS[rank['rank']][game_type]
+            if game.place == 1 or game.place == 2:
+                rank['pt'] += PointsCalculator.LOBBY[lobby][game.game_type].get(game.place, 0)
+            elif game.place == 4:
+                rank['pt'] -= PointsCalculator.DAN_SETTINGS[rank['rank']][game.game_type]
 
             # new dan
             if rank['pt'] >= rank['end_pt']:

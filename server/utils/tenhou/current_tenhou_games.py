@@ -8,6 +8,15 @@ import requests
 from django.conf import settings
 from django.core.cache import cache
 
+from player.tenhou.models import TenhouStatistics
+
+lobbies_dict = {
+    '般': TenhouStatistics.KYU_LOBBY,
+    '上': TenhouStatistics.DAN_LOBBY,
+    '特': TenhouStatistics.UPPERDAN_LOBBY,
+    '鳳': TenhouStatistics.PHOENIX_LOBBY,
+}
+
 
 def get_latest_wg_games():
     active_games = cache.get('tenhou_games')
