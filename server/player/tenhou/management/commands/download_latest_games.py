@@ -34,6 +34,8 @@ class Command(BaseCommand):
         results = []
 
         temp_folder = os.path.join('/tmp', 'tenhou')
+        if not os.path.exists(temp_folder):
+            os.mkdir(temp_folder)
 
         self.download_archives_with_games(temp_folder, settings.TENHOU_LATEST_GAMES_URL)
         lines = self.load_game_records(temp_folder)
