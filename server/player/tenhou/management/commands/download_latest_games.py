@@ -10,9 +10,9 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.models import TenhouNickname, TenhouGameLog
-from utils.tenhou.latest_tenhou_games import lobbies_dict
-from utils.tenhou.load_latest_games import parse_log_line, generate_game_hash
+from player.tenhou.models import TenhouNickname, TenhouGameLog
+from utils.tenhou.current_tenhou_games import lobbies_dict
+from utils.tenhou.helper import parse_log_line, recalculate_tenhou_statistics
 
 
 def get_date_string():
@@ -34,10 +34,8 @@ class Command(BaseCommand):
         results = []
 
         temp_folder = os.path.join('/tmp', 'tenhou')
-        # shutil.rmtree(temp_folder, ignore_errors=True)
-        # os.mkdir(temp_folder)
 
-        # self.download_archives_with_games(temp_folder, settings.TENHOU_LATEST_GAMES_URL)
+        self.download_archives_with_games(temp_folder, settings.TENHOU_LATEST_GAMES_URL)
         lines = self.load_game_records(temp_folder)
 
         for line in lines:
@@ -47,36 +45,50 @@ class Command(BaseCommand):
                 # player from watched list
                 # was found in latest games
                 if player['name'] in watching_nicknames:
+                    # skip sanma games for now
+                    if result['game_rules'][0] == u'三':
+                        continue
+
                     game_date = '{} {} +0900'.format(date.strftime('%Y-%d-%m'), result['game_time'])
+                    game_date = datetime.strptime(game_date, '%Y-%d-%m %H:%M %z')
+
                     results.append({
                         'name': player['name'],
-                        'position': player['position'],
-                        'game_type': result['game_type'],
+                        'place': player['place'],
+                        'game_rules': result['game_rules'],
+                        'game_length': result['game_length'],
                         'game_date': game_date
                     })
 
-        items_to_create = []
+        added_accounts = {}
         with transaction.atomic():
             for result in results:
-                items_to_create.append(TenhouGameLog(
-                    tenhou_object=cached_objects[result['name']],
-                    game_date=result['game_date'],
-                    game_rules=result['game_type'],
-                    lobby=lobbies_dict[result['game_type'][1]]
-                ))
+                tenhou_object = cached_objects[result['name']]
 
-        TenhouGameLog.objects.bulk_create(items_to_create)
+                TenhouGameLog.objects.get_or_create(
+                    tenhou_object=tenhou_object,
+                    place=result['place'],
+                    game_date=result['game_date'],
+                    game_rules=result['game_rules'],
+                    game_length=result['game_length'],
+                    lobby=lobbies_dict[result['game_rules'][1]]
+                )
+
+                added_accounts[tenhou_object.id] = tenhou_object
+
+        for tenhou_object in added_accounts.values():
+            recalculate_tenhou_statistics(tenhou_object)
 
         print('{0}: End'.format(get_date_string()))
 
     def download_archives_with_games(self, logs_folder, items_url):
-        download_url = 'http://tenhou.net/sc/raw/dat/'
+        download_url = settings.TENHOU_DOWNLOAD_ARCHIVE_URL
 
         response = requests.get(items_url)
         response = response.text.replace('list(', '').replace(');', '')
         response = response.split(',\r\n')
         for archive_name in response:
-            # scb is games from 0000 lobby
+            # scb are games from 0000 lobby
             if 'scb' in archive_name:
                 archive_name = archive_name.split("',")[0].replace("{file:'", '')
 
@@ -94,7 +106,7 @@ class Command(BaseCommand):
                         f.write(page.content)
 
     def load_game_records(self, logs_folder):
-        gz_files = glob.glob('{}/*.gz'.format(logs_folder))
+        gz_files = sorted(glob.glob('{}/*.gz'.format(logs_folder)))
         lines = []
         for gz_file in gz_files:
             file_name = gz_file.split('/')[-1]

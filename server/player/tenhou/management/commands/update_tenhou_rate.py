@@ -2,8 +2,8 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from player.models import TenhouNickname
-from utils.tenhou.latest_tenhou_games import get_latest_wg_games
+from player.tenhou.models import TenhouNickname
+from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
 def get_date_string():

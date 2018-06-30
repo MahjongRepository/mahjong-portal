@@ -3,6 +3,7 @@ import string
 import random
 from datetime import datetime
 
+import pytz
 from django.utils import timezone
 
 
@@ -66,9 +67,16 @@ def transliterate_name(russian_name):
 
 def get_month_first_day(date=None):
     date = date or timezone.now()
-    return datetime(date.year, date.month, 1)
+    return datetime(date.year, date.month, 1, tzinfo=pytz.utc)
 
 
 def get_month_last_day(date=None):
     date = date or timezone.now()
-    return datetime(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
+    return datetime(
+        date.year,
+        date.month,
+        calendar.monthrange(date.year, date.month)[1],
+        23,
+        59,
+        tzinfo=pytz.utc
+    )

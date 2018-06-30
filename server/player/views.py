@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from player.models import Player, TenhouNickname
+from player.models import Player
+from player.tenhou.models import TenhouNickname
 from rating.models import RatingDelta, Rating, RatingResult
 from tournament.models import TournamentResult
 

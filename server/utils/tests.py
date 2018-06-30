@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 
-from utils.tenhou.load_latest_games import parse_log_line
+from utils.tenhou.helper import parse_log_line
 
 
 class ParseLogLinesTestCase(TestCase):

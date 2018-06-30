@@ -5,11 +5,12 @@ from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
-from player.models import Player, TenhouNickname, CollectedYakuman
+from player.models import Player
+from player.tenhou.models import TenhouNickname, CollectedYakuman
 from rating.models import Rating, RatingResult
 from settings.models import City
 from tournament.models import Tournament
-from utils.tenhou.latest_tenhou_games import get_latest_wg_games
+from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
 def home(request):

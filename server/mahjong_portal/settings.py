@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'club.club_games',
     'settings',
     'player',
+    'player.tenhou',
     'tournament',
     'rating',
     'system',
@@ -190,6 +191,7 @@ PANTHEON_ADMIN_TOKEN = None
 
 TENHOU_WG_URL = None
 TENHOU_LATEST_GAMES_URL = None
+TENHOU_DOWNLOAD_ARCHIVE_URL = None
 
 CACHES = {
     'default': {
