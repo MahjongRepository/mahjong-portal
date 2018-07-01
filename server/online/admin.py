@@ -45,7 +45,9 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
             registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
             return registration.player
         except:
-            pass
+            result = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
+            if result:
+                return u'[{} {}]'.format(result.last_name, result.first_name)
 
         return None
 
