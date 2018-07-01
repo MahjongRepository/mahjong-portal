@@ -22,17 +22,16 @@ tournament_handler = None
 
 class Command(BaseCommand):
 
-    def add_arguments(self, parser):
-        parser.add_argument('tournament_id', type=int)
-        parser.add_argument('lobby', type=str)
-        parser.add_argument('game_type', type=str)
-
     def handle(self, *args, **options):
         set_up_logging()
 
-        tournament_id = options.get('tournament_id')
-        lobby = options.get('lobby')
-        game_type = options.get('game_type')
+        tournament_id = settings.TOURNAMENT_ID
+        lobby = settings.TOURNAMENT_PRIVATE_LOBBY
+        game_type = settings.TOURNAMENT_GAME_TYPE
+
+        if not tournament_id or not lobby or not game_type:
+            print('Tournament wasn\'t configured properly')
+            return
 
         tournament = Tournament.objects.get(id=tournament_id)
 
@@ -133,7 +132,7 @@ def get_tournament_status(bot, update):
 def help_bot(bot, update):
     logger.info('Help')
 
-    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?C99728909 \n'
+    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
     message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
     message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10  \n'
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..."'
@@ -149,7 +148,7 @@ def set_tenhou_nickname(bot, update, args):
 
     username = update.message.from_user.username
     if not username:
-        update.message.reply_text(text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма.')
+        update.message.reply_text(text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/')
         return
 
     tenhou_nickname = args[0]
@@ -224,3 +223,27 @@ def error_callback(bot, update, error):
     except TelegramError as e:
         # handle all other telegram related errors
         pass
+
+
+# we need to run it in the shell before new tournament start (after closed registration)
+def generate_sql():
+    from django.conf import settings
+    from online.models import TournamentPlayers
+
+    players = TournamentPlayers.objects.filter(tournament_id=settings.TOURNAMENT_ID)
+    values = []
+    for player in players:
+        # escape ' symbol
+        username = player.tenhou_username.replace("'", "''")
+        values.append('({}, \'{}\')'.format(player.pantheon_id, username))
+
+    sql = """
+    UPDATE player AS p SET
+      tenhou_id = data_dict.tenhou_id
+    FROM (VALUES
+    {})
+    AS data_dict(id, tenhou_id)
+    WHERE p.id = data_dict.id;
+    """.format(',\n'.join(values))
+
+    print(sql)

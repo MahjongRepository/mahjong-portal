@@ -203,22 +203,25 @@ class TournamentHandler(object):
             return 'Ник на тенхе не должен быть больше 8 символов.'
 
         try:
-            registration = OnlineTournamentRegistration.objects.get(tenhou_nickname=tenhou_nickname, tournament=self.tournament)
+            registration = OnlineTournamentRegistration.objects.get(
+                tenhou_nickname=tenhou_nickname,
+                tournament=self.tournament
+            )
         except OnlineTournamentRegistration.DoesNotExist:
             return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
+
+        if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
+            return 'Ник "{}" уже был зарегистрирован на турнир.'.format(tenhou_nickname)
 
         pantheon_id = registration.player and registration.player.pantheon_id or None
 
         try:
-            confirmation = TournamentPlayers.objects.get(
+            TournamentPlayers.objects.get(
                 telegram_username=telegram_username,
                 tournament=self.tournament,
             )
-            confirmation.tenhou_username = tenhou_nickname
-            confirmation.pantheon_id = pantheon_id
-            confirmation.save()
         except TournamentPlayers.DoesNotExist:
-            confirmation = TournamentPlayers.objects.create(
+            TournamentPlayers.objects.create(
                 telegram_username=telegram_username,
                 tenhou_username=tenhou_nickname,
                 tournament=self.tournament,
@@ -243,9 +246,6 @@ class TournamentHandler(object):
             return [], 'Невозможно запустить новые игры. Старые игры ещё не завершились.'
 
         confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
-
-        if confirmed_players.count() % 4 != 0:
-            return [], 'Невозможно запустить новые игры. Количество игроков не кратно 4.'
 
         missed_id = confirmed_players.filter(pantheon_id=None)
         if missed_id.exists():
@@ -357,7 +357,10 @@ class TournamentHandler(object):
                 message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
                 missed_players = [x for x in result.split('\r\n')[1:] if x]
 
-                tg_usernames = TournamentPlayers.objects.filter(tenhou_username__in=missed_players).values_list('telegram_username', flat=True)
+                tg_usernames = (TournamentPlayers.objects
+                                .filter(tenhou_username__in=missed_players)
+                                .filter(tournament=self.tournament)
+                                .values_list('telegram_username', flat=True))
                 tg_usernames = ['@' + x for x in tg_usernames]
 
                 message += ' Отсутствующие игроки: {}'.format(', '.join(tg_usernames))
@@ -401,7 +404,7 @@ class TournamentHandler(object):
         if not self.status.current_round:
             message = 'Добро пожаловать в чат онлайн турнира! \n'
             if not username:
-                message += u'Для начала установите username в настройках телеграма (Settings -> Username) \n'
+                message += u'Для начала установите username в настройках телеграма (Settings -> Username). Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n'
                 message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
             else:
                 message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
