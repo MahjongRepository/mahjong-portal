@@ -148,7 +148,10 @@ def set_tenhou_nickname(bot, update, args):
 
     username = update.message.from_user.username
     if not username:
-        update.message.reply_text(text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/')
+        update.message.reply_text(
+            text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/',
+            disable_web_page_preview=True
+        )
         return
 
     tenhou_nickname = args[0]
