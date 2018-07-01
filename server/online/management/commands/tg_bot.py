@@ -164,7 +164,7 @@ def new_chat_member(bot, update):
     logger.info('New member. {}'.format(username))
 
     message = tournament_handler.new_chat_member(username)
-    bot.send_message(chat_id=update.message.chat_id, text=message)
+    bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 
 def prepare_next_round(bot, update):
