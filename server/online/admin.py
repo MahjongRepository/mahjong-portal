@@ -43,11 +43,14 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
     def player(self, obj):
         try:
             registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
-            return registration.player
+            if registration.player:
+                return registration.player
         except:
-            result = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
-            if result:
-                return u'[{} {}]'.format(result.last_name, result.first_name)
+            pass
+
+        result = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
+        if result:
+            return u'[{} {}]'.format(result.last_name, result.first_name)
 
         return None
 
