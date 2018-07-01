@@ -804,7 +804,7 @@ msgstr "Зима"
 
 #: templates/website/iormc.html:30
 msgid "Total"
-msgstr "Всего"
+msgstr "Сумма двух лучших"
 
 #: templates/website/search.html:5 templates/website/search.html:9
 #: templates/website/search.html:52 templates/website/search.html:53
