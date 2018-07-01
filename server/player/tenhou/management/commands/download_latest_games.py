@@ -37,8 +37,8 @@ class Command(BaseCommand):
         if not os.path.exists(temp_folder):
             os.mkdir(temp_folder)
 
-        self.download_archives_with_games(temp_folder, settings.TENHOU_LATEST_GAMES_URL)
-        lines = self.load_game_records(temp_folder)
+        archive_names = self.download_archives_with_games(temp_folder, settings.TENHOU_LATEST_GAMES_URL)
+        lines = self.load_game_records(temp_folder, archive_names)
 
         for line in lines:
             date = line[0]
@@ -84,6 +84,8 @@ class Command(BaseCommand):
         print('{0}: End'.format(get_date_string()))
 
     def download_archives_with_games(self, logs_folder, items_url):
+        archive_names = []
+
         download_url = settings.TENHOU_DOWNLOAD_ARCHIVE_URL
 
         response = requests.get(items_url)
@@ -107,11 +109,14 @@ class Command(BaseCommand):
                     with open(archive_path, 'wb') as f:
                         f.write(page.content)
 
-    def load_game_records(self, logs_folder):
-        gz_files = sorted(glob.glob('{}/*.gz'.format(logs_folder)))
+                    archive_names.append(archive_name)
+
+        return archive_names
+
+    def load_game_records(self, logs_folder, archive_names):
         lines = []
-        for gz_file in gz_files:
-            file_name = gz_file.split('/')[-1]
+        for file_name in archive_names:
+            gz_file = os.path.join(logs_folder, file_name)
             date = datetime.strptime(file_name[3:11], '%Y%m%d')
             with gzip.open(gz_file, 'r') as f:
                 for line in f:
