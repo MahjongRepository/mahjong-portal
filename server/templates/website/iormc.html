@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block title %}
+    IORMC 2018
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>IORMC 2018</h2>
+        <p>{% trans 'Qualification results' %}</p>
+
+        <div class="table-responsive">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Player' %}</th>
+                    <th scope="col">
+                        <a href="/en/tournaments/riichi/spring-online-tournament-2018/">
+                            {% trans 'Spring' %}
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a href="/en/tournaments/riichi/summer-online-tournament-2018/">
+                            {% trans 'Summer' %}
+                        </a>
+                    </th>
+                    <th scope="col">{% trans 'Winter' %}</th>
+                    <th scope="col">{% trans 'Total' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>
+                            {% with item.player as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {{ item.first|floatformat:0|intcomma }}
+                        </td>
+                        <td>
+                            {{ item.second|floatformat:0|intcomma }}
+                        </td>
+                        <td>
+                            {{ item.third|floatformat:0|intcomma }}
+                        </td>
+                        <td>
+                            {{ item.total|floatformat:0|intcomma }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="IORMC 2018">
+    <meta property="og:description" content="IORMC 2018">
+{% endblock %}

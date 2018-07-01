@@ -9,7 +9,7 @@ from player.models import Player
 from player.tenhou.models import TenhouNickname, CollectedYakuman
 from rating.models import Rating, RatingResult
 from settings.models import City
-from tournament.models import Tournament
+from tournament.models import Tournament, TournamentResult
 from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
@@ -189,4 +189,43 @@ def tenhou_accounts(request):
                 .prefetch_related('player__city'))
     return render(request, 'website/tenhou_accounts.html', {
         'accounts': accounts
+    })
+
+
+def iormc_2018(request):
+    spring_id = 294
+    summer_id = 310
+    winter_id = -1
+
+    tournament_ids = [spring_id, summer_id, winter_id]
+    results = TournamentResult.objects.filter(tournament_id__in=tournament_ids).prefetch_related('player')
+    data = {}
+    for result in results:
+        if result.player.is_hide or result.player.is_replacement:
+            continue
+
+        if not data.get(result.player_id):
+            data[result.player_id] = {
+                'player': result.player,
+                'first': None,
+                'second': None,
+                'third': None,
+                'total': 0
+            }
+
+        if result.tournament_id == spring_id:
+            data[result.player_id]['first'] = result.scores
+            data[result.player_id]['total'] += result.scores
+
+        if result.tournament_id == summer_id:
+            data[result.player_id]['second'] = result.scores
+            data[result.player_id]['total'] += result.scores
+
+        if result.tournament_id == winter_id:
+            data[result.player_id]['third'] = result.scores
+            data[result.player_id]['total'] += result.scores
+
+    data = sorted(data.values(), key=lambda x: x['total'], reverse=True)
+    return render(request, 'website/iormc.html', {
+        'data': data
     })
