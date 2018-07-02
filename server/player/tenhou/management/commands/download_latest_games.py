@@ -84,34 +84,43 @@ class Command(BaseCommand):
         print('{0}: End'.format(get_date_string()))
 
     def download_archives_with_games(self, logs_folder, items_url):
-        archive_names = []
-
         download_url = settings.TENHOU_DOWNLOAD_ARCHIVE_URL
 
         response = requests.get(items_url)
         response = response.text.replace('list(', '').replace(');', '')
         response = response.split(',\r\n')
-        for archive_name in response:
+
+        archive_names = []
+        for item in response:
             # scb are games from 0000 lobby
-            if 'scb' in archive_name:
-                archive_name = archive_name.split("',")[0].replace("{file:'", '')
+            if 'scb' in item:
+                archive_name = item.split("',")[0].replace("{file:'", '')
+                archive_names.append(archive_name)
 
-                file_name = archive_name
-                if '/' in file_name:
-                    file_name = file_name.split('/')[1]
-                archive_path = os.path.join(logs_folder, file_name)
+        processed = []
+        for i, archive_name in enumerate(archive_names):
+            file_name = archive_name
+            if '/' in file_name:
+                file_name = file_name.split('/')[1]
 
-                if not os.path.exists(archive_path):
-                    print('Downloading... {}'.format(archive_name))
+            archive_path = os.path.join(logs_folder, file_name)
 
-                    url = '{}{}'.format(download_url, archive_name)
-                    page = requests.get(url)
-                    with open(archive_path, 'wb') as f:
-                        f.write(page.content)
+            download = not os.path.exists(archive_path)
+            # because of tenhou format we need to download latest array each run
+            if i + 1 == len(archive_names):
+                download = True
 
-                    archive_names.append(archive_name)
+            if download:
+                print('Downloading... {}'.format(archive_name))
 
-        return archive_names
+                url = '{}{}'.format(download_url, archive_name)
+                page = requests.get(url)
+                with open(archive_path, 'wb') as f:
+                    f.write(page.content)
+
+                processed.append(archive_name)
+
+        return processed
 
     def load_game_records(self, logs_folder, archive_names):
         lines = []
