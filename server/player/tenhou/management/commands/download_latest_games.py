@@ -106,8 +106,8 @@ class Command(BaseCommand):
             archive_path = os.path.join(logs_folder, file_name)
 
             download = not os.path.exists(archive_path)
-            # because of tenhou format we need to download latest array each run
-            if i + 1 == len(archive_names):
+            # because of tenhou format we need to download latest two data files each run
+            if (i + 1 == len(archive_names)) or (i + 2 == len(archive_names)):
                 download = True
 
             if download:
