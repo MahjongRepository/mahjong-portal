@@ -210,22 +210,27 @@ def iormc_2018(request):
                 'first': None,
                 'second': None,
                 'third': None,
-                'total': 0
+                'total': 0,
+                'number_of_played': 0
             }
 
         if result.tournament_id == spring_id:
             data[result.player_id]['first'] = result.scores
             data[result.player_id]['total'] += result.scores
+            data[result.player_id]['number_of_played'] += 1
 
         if result.tournament_id == summer_id:
             data[result.player_id]['second'] = result.scores
             data[result.player_id]['total'] += result.scores
+            data[result.player_id]['number_of_played'] += 1
 
         if result.tournament_id == winter_id:
             data[result.player_id]['third'] = result.scores
             data[result.player_id]['total'] += result.scores
+            data[result.player_id]['number_of_played'] += 1
 
-    data = sorted(data.values(), key=lambda x: x['total'], reverse=True)
+    data = sorted(data.values(), key=lambda x: (x['number_of_played'], x['total']), reverse=True)
+
     return render(request, 'website/iormc.html', {
         'data': data
     })
