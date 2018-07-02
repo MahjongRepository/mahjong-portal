@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 16:00+0000\n"
+"POT-Creation-Date: 2018-07-02 01:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -799,12 +799,12 @@ msgid "Summer"
 msgstr "Лето"
 
 #: templates/website/iormc.html:29
-msgid "Winter"
-msgstr "Зима"
+msgid "Autumn"
+msgstr "Осень"
 
 #: templates/website/iormc.html:30
 msgid "Total"
-msgstr "Сумма двух лучших"
+msgstr "Сумма 2х лучших"
 
 #: templates/website/search.html:5 templates/website/search.html:9
 #: templates/website/search.html:52 templates/website/search.html:53
@@ -1097,6 +1097,9 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
+
+#~ msgid "Winter"
+#~ msgstr "Зима"
 
 #~ msgid "Feeds (ascending)"
 #~ msgstr "Набросы (по возрастанию)"
