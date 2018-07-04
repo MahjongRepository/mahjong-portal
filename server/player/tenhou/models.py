@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.utils.translation import gettext_lazy
 
@@ -145,3 +147,7 @@ class TenhouGameLog(models.Model):
     @property
     def game_type(self):
         return self.game_rules[2]
+
+    @property
+    def game_end_date(self):
+        return self.game_date + timedelta(minutes=self.game_length)
