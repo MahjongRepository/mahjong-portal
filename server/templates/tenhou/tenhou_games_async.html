@@ -9,7 +9,7 @@
     <h2>{% trans 'Current games with our players' %}</h2>
     {% trans 'Games from upperdan and phoenix with portal players.' %}
     {% with our_players_games as games %}
-        {% include 'website/_tenhou_table.html' %}
+        {% include 'tenhou/_tenhou_table.html' %}
     {% endwith %}
 {% endif %}
 
@@ -19,14 +19,14 @@
 
     {% if high_level_games %}
         {% with high_level_games as games %}
-            {% include 'website/_tenhou_table.html' %}
+            {% include 'tenhou/_tenhou_table.html' %}
         {% endwith %}
     {% endif %}
 
     {% if high_level_hirosima_games %}
         <h3>{% trans 'Sanma' %}</h3>
         {% with high_level_hirosima_games as games %}
-            {% include 'website/_tenhou_table.html' %}
+            {% include 'tenhou/_tenhou_table.html' %}
         {% endwith %}
     {% endif %}
 {% endif %}

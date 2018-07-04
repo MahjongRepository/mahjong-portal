@@ -30,7 +30,7 @@
                 </td>
                 {% for player in game.players %}
                     <td>
-                        {% include 'website/_tenhou_player.html' %}
+                        {% include 'tenhou/_tenhou_player.html' %}
                     </td>
                 {% endfor %}
                 {% if not game.players.3 %}
@@ -61,7 +61,7 @@
                 </th>
                 <td>
                     {% with game.players.0 as player %}
-                        {% include 'website/_tenhou_player.html' %}
+                        {% include 'tenhou/_tenhou_player.html' %}
                     {% endwith %}
                 </td>
             </tr>
@@ -71,7 +71,7 @@
                 </th>
                 <td>
                     {% with game.players.1 as player %}
-                        {% include 'website/_tenhou_player.html' %}
+                        {% include 'tenhou/_tenhou_player.html' %}
                     {% endwith %}
                 </td>
             </tr>
@@ -81,7 +81,7 @@
                 </th>
                 <td>
                     {% with game.players.2 as player %}
-                        {% include 'website/_tenhou_player.html' %}
+                        {% include 'tenhou/_tenhou_player.html' %}
                     {% endwith %}
                 </td>
             </tr>
@@ -92,7 +92,7 @@
                 <td>
                     {% if game.players.3 %}
                         {% with game.players.3 as player %}
-                            {% include 'website/_tenhou_player.html' %}
+                            {% include 'tenhou/_tenhou_player.html' %}
                         {% endwith %}
                     {% else %}
                         -
