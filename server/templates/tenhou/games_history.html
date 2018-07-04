@@ -25,7 +25,6 @@
                             <th scope="col">{% trans 'Delta' %}</th>
                             <th scope="col">{% trans 'Type' %}</th>
                             <th scope="col">{% trans 'Lobby' %}</th>
-                            <th scope="col">{% trans 'Time' %}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -58,9 +57,6 @@
                                 </td>
                                 <td>
                                     {{ game.get_lobby_display }}
-                                </td>
-                                <td>
-                                    {{ game.game_date|date:'H:i' }}
                                 </td>
                             </tr>
                         {% endfor %}
