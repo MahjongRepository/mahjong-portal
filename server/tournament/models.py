@@ -128,7 +128,7 @@ class Tournament(BaseModel):
 
     @property
     def rating_link(self):
-        if self.is_other():
+        if self.is_other() or self.is_ema():
             return '#'
 
         tournament_type = self.tournament_type
