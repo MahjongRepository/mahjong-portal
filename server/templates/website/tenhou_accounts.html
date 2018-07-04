@@ -13,6 +13,7 @@
             <table class="table table-hover mt-4">
                 <thead>
                 <tr>
+                    <th scope="col">#</th>
                     <th scope="col">{% trans 'Player' %}</th>
                     <th scope="col">{% trans 'Dan' %}</th>
                     <th scope="col">{% trans 'Rate' %}</th>
@@ -23,6 +24,7 @@
                 <tbody>
                 {% for account in accounts %}
                     <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
                         <td>
                             {% with account.player as player %}
                                 {% include 'common/_player_name.html' %}
