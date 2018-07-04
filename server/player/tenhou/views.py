@@ -82,7 +82,11 @@ def games_history(request):
     )
 
     games_dict = {}
-    games = TenhouGameLog.objects.filter(game_date__gte=three_days_ago).order_by('-game_date')
+    games = (TenhouGameLog.objects
+             .filter(game_date__gte=three_days_ago)
+             .prefetch_related('tenhou_object')
+             .prefetch_related('tenhou_object__player')
+             .order_by('-game_date'))
     for game in games:
         key = game.game_date.strftime(date_format)
         if not games_dict.get(key):
