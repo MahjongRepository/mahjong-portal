@@ -80,15 +80,6 @@
             <li class="nav-item {% if page == 'club' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'club_list' %}">{% trans 'Clubs' %}</a>
             </li>
-{#            <li class="nav-item dropdown">#}
-{#                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#                    EMA#}
-{#                </a>#}
-{#                <div class="dropdown-menu" aria-labelledby="navbarDropdown">#}
-{#                    <a class="dropdown-item" href="{% url 'tournament_ema_list' 'ema' 2018 %}">{% trans 'Tournaments' %}</a>#}
-{#                    <a class="dropdown-item" href="{% url 'rating' 'ema' %}">{% trans 'Rating' %}</a>#}
-{#                </div>#}
-{#            </li>#}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {% trans 'Tenhou' %}
@@ -97,6 +88,7 @@
                     <a class="dropdown-item" href="{% url 'get_current_tenhou_games' %}">{% trans 'Current tenhou.net games' %}</a>
                     <a class="dropdown-item" href="{% url 'latest_yakumans' %}">{% trans 'Latest yakumans' %}</a>
                     <a class="dropdown-item" href="{% url 'tenhou_accounts' %}">{% trans 'Tenhou accounts' %}</a>
+                    <a class="dropdown-item" href="{% url 'tenhou_games_history' %}">{% trans 'Tenhou games history' %}</a>
                 </div>
             </li>
             <li class="nav-item dropdown">

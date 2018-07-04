@@ -136,6 +136,7 @@ class TenhouGameLog(models.Model):
     place = models.PositiveSmallIntegerField()
     game_length = models.PositiveSmallIntegerField()
     delta = models.SmallIntegerField(default=0)
+    rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
     game_date = models.DateTimeField()
     game_rules = models.CharField(max_length=20)
 

@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from datetime import datetime, timedelta
 
-from player.tenhou.models import TenhouNickname, CollectedYakuman
+import pytz
+from django.shortcuts import render
+from django.utils import timezone
+from django.utils.translation import get_language
+
+from player.tenhou.models import TenhouNickname, CollectedYakuman, TenhouGameLog
 from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
@@ -62,4 +67,35 @@ def tenhou_accounts(request):
                 .prefetch_related('player__city'))
     return render(request, 'tenhou/tenhou_accounts.html', {
         'accounts': accounts
+    })
+
+
+def games_history(request):
+    language = get_language()
+    date_format = language == 'ru' and '%d.%m.%Y' or '%d.%m.%Y'
+
+    three_days_ago = timezone.now() - timedelta(days=2)
+    three_days_ago = datetime(
+        three_days_ago.year,
+        three_days_ago.month,
+        three_days_ago.day,
+    )
+
+    games_dict = {}
+    games = TenhouGameLog.objects.filter(game_date__gte=three_days_ago).order_by('-game_date')
+    for game in games:
+        key = game.game_date.strftime(date_format)
+        if not games_dict.get(key):
+            games_dict[key] = {
+                'games': [],
+                'total': 0,
+                'points': 0,
+            }
+
+        games_dict[key]['games'].append(game)
+        games_dict[key]['total'] += 1
+        games_dict[key]['points'] += game.delta
+
+    return render(request, 'tenhou/games_history.html', {
+        'games': games_dict
     })

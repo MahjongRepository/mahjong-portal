@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Tenhou games history' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans 'Tenhou games history' %}</h1>
+        <p>{% trans 'Games from last three days.' %}</p>
+
+        {% for key, values in games.items %}
+            {% if values.total %}
+                <h2>{{ key }}</h2>
+                <p>{% trans 'Games' %}: {{ values.total }}, {% trans 'points' %}: {{ values.points }}.</p>
+
+                <div class="table-responsive">
+                    <table class="table table-hover mt-4">
+                        <thead>
+                        <tr>
+                            <th scope="col">{% trans 'Player' %}</th>
+                            <th scope="col">{% trans 'Rank' %}</th>
+                            <th scope="col">{% trans 'Place' %}</th>
+                            <th scope="col">{% trans 'Delta' %}</th>
+                            <th scope="col">{% trans 'Type' %}</th>
+                            <th scope="col">{% trans 'Lobby' %}</th>
+                            <th scope="col">{% trans 'Time' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for game in values.games %}
+                            <tr>
+                                <td>
+                                    {% with game.tenhou_object.player as player %}
+                                        {% include 'common/_player_name.html' %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <nobr>{{ game.get_rank_display }}</nobr>
+                                </td>
+                                <td>
+                                    {{ game.place }}
+                                </td>
+                                <td>
+                                    <nobr>
+                                        {% if game.delta > 0 %}
+                                            <span class="badge badge-success">{{ game.delta }}</span>
+                                        {% elif game.delta == 0 %}
+                                            <span class="badge badge-secondary">{{ game.delta }}</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">{{ game.delta }}</span>
+                                        {% endif %}
+                                    </nobr>
+                                </td>
+                                <td>
+                                    {{ game.game_type }}
+                                </td>
+                                <td>
+                                    {{ game.get_lobby_display }}
+                                </td>
+                                <td>
+                                    {{ game.game_date|date:'H:i' }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'Tenhou games history' %}">
+    <meta property="og:description" content="{% trans 'Tenhou games history' %}">
+{% endblock %}

@@ -207,15 +207,22 @@ class PointsCalculator(object):
                 if PointsCalculator.OLD_RANK_LIMITS.get(rank['rank']):
                     rank['end_pt'] = PointsCalculator.OLD_RANK_LIMITS.get(rank['rank'])
 
+            delta = 0
             if game.place == 1 or game.place == 2:
-                rank['pt'] += PointsCalculator.LOBBY[lobby][game.game_type].get(game.place, 0)
+                delta = PointsCalculator.LOBBY[lobby][game.game_type].get(game.place, 0)
             elif game.place == 4:
-                rank['pt'] -= PointsCalculator.DAN_SETTINGS[rank['rank']][game.game_type]
+                delta = -PointsCalculator.DAN_SETTINGS[rank['rank']][game.game_type]
+
+            rank_index = list(PointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
+
+            rank['pt'] += delta
+            game.delta = delta
+            game.rank = rank_index
+            game.save()
 
             # new dan
             if rank['pt'] >= rank['end_pt']:
                 # getting next record from ordered dict
-                rank_index = list(PointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
                 next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index + 1]
 
                 rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
@@ -223,7 +230,6 @@ class PointsCalculator(object):
             # wasted dan
             elif rank['pt'] < 0:
                 # getting previous record from ordered dict
-                rank_index = list(PointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
                 next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index - 1]
 
                 if PointsCalculator.DAN_SETTINGS[next_rank]['start_pt'] > 0:
