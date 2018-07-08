@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-04 12:06+0000\n"
+"POT-Creation-Date: 2018-07-08 14:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,8 +171,8 @@ msgstr "Аккаунты на тенхе"
 
 #: templates/base.html:91 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:10
-#: templates/tenhou/games_history.html:72
 #: templates/tenhou/games_history.html:73
+#: templates/tenhou/games_history.html:74
 msgid "Tenhou games history"
 msgstr "История игр на tenhou.net"
 
@@ -247,7 +247,7 @@ msgstr "Имя"
 #: templates/club/details.html:51 templates/player/details.html:144
 #: templates/player/details.html:154 templates/player/tenhou.html:53
 #: templates/player/tenhou.html:63 templates/player/tenhou.html:116
-#: templates/player/tenhou.html:127 templates/tenhou/games_history.html:16
+#: templates/player/tenhou.html:127 templates/tenhou/games_history.html:17
 msgid "Games"
 msgstr "Игр"
 
@@ -313,7 +313,7 @@ msgid "Base rank"
 msgstr "Ранг"
 
 #: templates/player/_deltas_table.html:9 templates/player/details.html:70
-#: templates/player/details.html:210 templates/player/tenhou.html:183
+#: templates/player/details.html:211 templates/player/tenhou.html:184
 #: templates/player/tournaments.html:33
 #: templates/tenhou/latest_yakumans.html:18
 #: templates/tournament/_tournaments_table.html:9
@@ -322,6 +322,7 @@ msgstr "Дата"
 
 #: templates/player/_deltas_table.html:10 templates/player/details.html:34
 #: templates/player/details.html:69 templates/player/tournaments.html:32
+#: templates/tenhou/games_history.html:25
 msgid "Place"
 msgstr "Место"
 
@@ -334,7 +335,7 @@ msgid "Coefficient"
 msgstr "Коэффициент"
 
 #: templates/player/_deltas_table.html:13 templates/player/details.html:71
-#: templates/player/tournaments.html:34 templates/tenhou/games_history.html:25
+#: templates/player/tournaments.html:34 templates/tenhou/games_history.html:27
 #: templates/tournament/_tournaments_table.html:17
 msgid "Type"
 msgstr "Тип"
@@ -383,7 +384,7 @@ msgid "Statistics for"
 msgstr "Статистика аккаунта"
 
 #: templates/player/details.html:112 templates/player/tenhou.html:27
-#: templates/tenhou/games_history.html:23
+#: templates/tenhou/games_history.html:24
 msgid "Rank"
 msgstr "Ранг"
 
@@ -401,7 +402,7 @@ msgid "Current month"
 msgstr "За текущий месяц"
 
 #: templates/player/details.html:151 templates/player/tenhou.html:60
-#: templates/player/tenhou.html:124 templates/tenhou/games_history.html:26
+#: templates/player/tenhou.html:124 templates/tenhou/games_history.html:28
 msgid "Lobby"
 msgstr "Лобби"
 
@@ -409,7 +410,7 @@ msgstr "Лобби"
 msgid "Collected yakumans"
 msgstr "Собранные якуманы"
 
-#: templates/player/details.html:211 templates/player/tenhou.html:184
+#: templates/player/details.html:210 templates/player/tenhou.html:183
 #: templates/tenhou/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
@@ -499,24 +500,24 @@ msgstr "Начало"
 msgid "Games from last three days."
 msgstr "Игры за последние три дня."
 
-#: templates/tenhou/games_history.html:16
+#: templates/tenhou/games_history.html:17
 msgid "points"
 msgstr "очков"
 
-#: templates/tenhou/games_history.html:22
+#: templates/tenhou/games_history.html:17
+msgid "hours spent"
+msgstr "часов потратили"
+
+#: templates/tenhou/games_history.html:23
 #: templates/tenhou/latest_yakumans.html:17
 #: templates/tenhou/tenhou_accounts.html:17 templates/website/iormc.html:18
 #: templates/website/search.html:16
 msgid "Player"
 msgstr "Игрок"
 
-#: templates/tenhou/games_history.html:24
+#: templates/tenhou/games_history.html:26
 msgid "Delta"
 msgstr "Дельта"
-
-#: templates/tenhou/games_history.html:27
-msgid "Time"
-msgstr "Время"
 
 #: templates/tenhou/tenhou_accounts.html:18
 #: templates/tournament/announcement.html:65 templates/website/city.html:47
@@ -1123,6 +1124,9 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
+
+#~ msgid "Time"
+#~ msgstr "Время"
 
 #~ msgid "Winter"
 #~ msgstr "Зима"

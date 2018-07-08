@@ -79,6 +79,7 @@ def games_history(request):
         three_days_ago.year,
         three_days_ago.month,
         three_days_ago.day,
+        tzinfo=pytz.utc
     )
 
     games_dict = {}
@@ -94,11 +95,13 @@ def games_history(request):
                 'games': [],
                 'total': 0,
                 'points': 0,
+                'time_spent': 0
             }
 
         games_dict[key]['games'].append(game)
         games_dict[key]['total'] += 1
         games_dict[key]['points'] += game.delta
+        games_dict[key]['time_spent'] += float(game.game_length) / 60.0
 
     return render(request, 'tenhou/games_history.html', {
         'games': games_dict

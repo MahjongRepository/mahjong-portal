@@ -13,7 +13,7 @@
         {% for key, values in games.items %}
             {% if values.total %}
                 <h2>{{ key }}</h2>
-                <p>{% trans 'Games' %}: {{ values.total }}, {% trans 'points' %}: {{ values.points }}.</p>
+                <p>{% trans 'Games' %}: {{ values.total }}, {% trans 'points' %}: {{ values.points }}, {% trans 'hours spent' %}: {{ values.time_spent|floatformat:1 }}.</p>
 
                 <div class="table-responsive">
                     <table class="table table-hover mt-4">
