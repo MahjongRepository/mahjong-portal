@@ -1,3 +1,11 @@
-<a href="{{ tournament.rating_link }}" class="badge badge-{{ tournament.type_badge_class }}" title="{{ tournament.type_help_text }}" data-toggle="tooltip" data-placement="bottom">
-    {{ tournament.type_display|upper }}
-</a>
+{% with tournament.rating_link as link  %}
+    {% if link %}
+        <a href="{{ link }}" class="badge badge-{{ tournament.type_badge_class }}" title="{{ tournament.type_help_text }}" data-toggle="tooltip" data-placement="bottom">
+            {{ tournament.type_display|upper }}
+        </a>
+    {% else %}
+        <span class="badge badge-{{ tournament.type_badge_class }}" title="{{ tournament.type_help_text }}" data-toggle="tooltip" data-placement="bottom">
+            {{ tournament.type_display|upper }}
+        </span>
+    {% endif %}
+{% endwith %}
