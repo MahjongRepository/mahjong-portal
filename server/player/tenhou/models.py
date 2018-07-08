@@ -137,6 +137,7 @@ class TenhouGameLog(models.Model):
     game_length = models.PositiveSmallIntegerField()
     delta = models.SmallIntegerField(default=0)
     rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
+    next_rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
     game_date = models.DateTimeField()
     game_rules = models.CharField(max_length=20)
 
@@ -152,3 +153,10 @@ class TenhouGameLog(models.Model):
     @property
     def game_end_date(self):
         return self.game_date + timedelta(minutes=self.game_length)
+
+    @property
+    def badge_class(self):
+        if self.rank < self.next_rank:
+            return 'success'
+        else:
+            return 'danger'

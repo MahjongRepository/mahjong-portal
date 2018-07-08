@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 
 import pytz
+from django.db.models import F, Sum
+from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import get_language
@@ -70,39 +72,29 @@ def tenhou_accounts(request):
     })
 
 
-def games_history(request):
-    language = get_language()
-    date_format = language == 'ru' and '%d.%m.%Y' or '%d.%m.%Y'
+def games_history(request, year=None, month=None, day=None):
+    query_date = timezone.now().date()
+    if year and month and day:
+        try:
+            query_date = datetime(year=int(year), month=int(month), day=int(day), tzinfo=pytz.utc)
+        except:
+            raise Http404
 
-    three_days_ago = timezone.now() - timedelta(days=2)
-    three_days_ago = datetime(
-        three_days_ago.year,
-        three_days_ago.month,
-        three_days_ago.day,
-        tzinfo=pytz.utc
-    )
+    previous_day = query_date - timedelta(days=1)
 
-    games_dict = {}
     games = (TenhouGameLog.objects
-             .filter(game_date__gte=three_days_ago)
+             .filter(game_date__date=query_date)
              .prefetch_related('tenhou_object')
              .prefetch_related('tenhou_object__player')
              .order_by('-game_date'))
-    for game in games:
-        key = game.game_date.strftime(date_format)
-        if not games_dict.get(key):
-            games_dict[key] = {
-                'games': [],
-                'total': 0,
-                'points': 0,
-                'time_spent': 0
-            }
-
-        games_dict[key]['games'].append(game)
-        games_dict[key]['total'] += 1
-        games_dict[key]['points'] += game.delta
-        games_dict[key]['time_spent'] += float(game.game_length) / 60.0
 
     return render(request, 'tenhou/games_history.html', {
-        'games': games_dict
+        'query_date': query_date,
+        'previous_day': previous_day,
+        'games': games,
+        'total': games.count(),
+        'time_spent': games.aggregate(Sum('game_length'))['game_length__sum'] / 60.0,
+        'rank_changes': TenhouGameLog.objects.filter(
+            game_date__date=query_date
+        ).exclude(rank=F('next_rank'))
     })

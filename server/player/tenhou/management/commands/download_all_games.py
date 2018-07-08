@@ -1,7 +1,6 @@
 from datetime import datetime
 from urllib.parse import quote
 
-import pytz
 import requests
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
@@ -9,10 +8,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from player.tenhou.models import TenhouStatistics, TenhouNickname, TenhouGameLog
-from utils.general import get_month_first_day, get_month_last_day
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.helper import recalculate_tenhou_statistics
-from utils.tenhou.points_calculator import PointsCalculator
 
 
 def get_date_string():

@@ -218,25 +218,28 @@ class PointsCalculator(object):
             rank['pt'] += delta
             game.delta = delta
             game.rank = rank_index
-            game.save()
+            game.next_rank = rank_index
 
             # new dan
             if rank['pt'] >= rank['end_pt']:
                 # getting next record from ordered dict
                 next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index + 1]
+                game.next_rank = rank_index + 1
 
                 rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
                 rank['pt'] = rank['start_pt']
             # wasted dan
             elif rank['pt'] < 0:
-                # getting previous record from ordered dict
-                next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index - 1]
-
-                if PointsCalculator.DAN_SETTINGS[next_rank]['start_pt'] > 0:
+                if rank['start_pt'] > 0:
+                    # getting previous record from ordered dict
+                    next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index - 1]
+                    game.next_rank = rank_index - 1
                     rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
                     rank['pt'] = rank['start_pt']
                 else:
                     # we can't lose first kyu
                     rank['pt'] = 0
+
+            game.save()
 
         return rank
