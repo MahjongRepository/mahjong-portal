@@ -78,8 +78,8 @@ class Command(BaseCommand):
 
                 added_accounts[tenhou_object.id] = tenhou_object
 
-        for tenhou_object in added_accounts.values():
-            recalculate_tenhou_statistics(tenhou_object)
+            for tenhou_object in added_accounts.values():
+                recalculate_tenhou_statistics(tenhou_object)
 
         print('{0}: End'.format(get_date_string()))
 
