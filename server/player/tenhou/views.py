@@ -93,7 +93,7 @@ def games_history(request, year=None, month=None, day=None):
         'previous_day': previous_day,
         'games': games,
         'total': games.count(),
-        'time_spent': games.aggregate(Sum('game_length'))['game_length__sum'] / 60.0,
+        'time_spent': games.aggregate(Sum('game_length'))['game_length__sum'] or 0 / 60.0,
         'rank_changes': TenhouGameLog.objects.filter(
             game_date__date=query_date
         ).exclude(rank=F('next_rank'))
