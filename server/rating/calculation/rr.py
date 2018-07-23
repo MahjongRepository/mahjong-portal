@@ -71,7 +71,7 @@ class RatingRRCalculation(object):
             coefficients.append(c)
 
         # TODO: Remove these hardcoded values when tournaments with stages will be implemented
-        if not rating.is_online():
+        if not rating.is_online() and Tournament.objects.filter(id=307).exists():
             tournament = Tournament.objects.get(id=307)
             age = self.tournament_age(tournament)
             coefficients.append(self._calculate_percentage(3.18, age))

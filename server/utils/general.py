@@ -86,7 +86,7 @@ def get_month_last_day(date=None):
 
 # TODO: Remove these hardcoded values when tournaments with stages will be implemented
 def get_tournament_coefficient(tournament, player, default_coefficient):
-    if tournament.id in HARDCODED_COEFFICIENTS:
-        return HARDCODED_COEFFICIENTS[tournament.id][player.id]
+    if HARDCODED_COEFFICIENTS.get(tournament.id):
+        return HARDCODED_COEFFICIENTS.get(tournament.id).get(player.id, 0)
 
     return default_coefficient
