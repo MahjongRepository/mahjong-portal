@@ -37,6 +37,9 @@
                     <th scope="col">#</th>
                     <th scope="col">{% trans 'Name' %}</th>
                     <th scope="col">{% trans 'Scores' %}</th>
+                    {% if tournament.is_stage_tournament %}
+                        <th scope="col">{% trans 'Games' %}</th>
+                    {% endif %}
                     <th scope="col">{% trans 'From' context 'location' %}</th>
                 </tr>
                 </thead>
@@ -65,6 +68,11 @@
                                 {{ result.scores|floatformat:-1|intcomma }}
                             {% endif %}
                         </td>
+                        {% if tournament.is_stage_tournament %}
+                            <td>
+                                {{ result.games }}
+                            </td>
+                        {% endif %}
                         <td>
                             {% if result.player.city %}
                                 <a href="{% url 'city_page' result.player.city.slug %}">{{ result.player.city.name }}</a>

@@ -45,6 +45,7 @@ def upload_results(request, tournament_id):
                 place = row['place']
                 name = row.get('name', '')
                 scores = row['scores']
+                games = row.get('games')
 
                 ema_id = row.get('ema', '').strip()
 
@@ -64,8 +65,7 @@ def upload_results(request, tournament_id):
                     if first_name == 'Замены':
                         first_name = 'замены'
 
-                data = [place, first_name, last_name, scores, ema_id]
-
+                data = [place, first_name, last_name, scores, ema_id, games]
                 filtered_results.append(data)
 
                 try:
@@ -103,6 +103,7 @@ def upload_results(request, tournament_id):
                     last_name = result[2]
                     scores = result[3]
                     ema_id = result[4]
+                    games = result[5]
 
                     if is_ema:
                         if ema_id:
@@ -117,6 +118,7 @@ def upload_results(request, tournament_id):
                         tournament=tournament,
                         place=place,
                         scores=scores,
+                        games=games
                     )
 
                 tournament.is_upcoming = False

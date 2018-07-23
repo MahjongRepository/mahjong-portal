@@ -3,6 +3,7 @@ from django.db import models
 from mahjong_portal.models import BaseModel
 from player.models import Player
 from tournament.models import Tournament
+from utils.general import get_tournament_coefficient
 
 
 class Rating(BaseModel):
@@ -49,8 +50,14 @@ class RatingDelta(BaseModel):
     def __unicode__(self):
         return self.tournament.name
 
-    def tournament_coefficient(self):
+    @property
+    def coefficient_obj(self):
         return TournamentCoefficients.objects.get(rating=self.rating, tournament=self.tournament)
+
+    @property
+    def coefficient_value(self):
+        coefficient_obj = self.coefficient_obj
+        return get_tournament_coefficient(self.tournament, self.player, coefficient_obj.coefficient)
 
 
 class RatingResult(BaseModel):

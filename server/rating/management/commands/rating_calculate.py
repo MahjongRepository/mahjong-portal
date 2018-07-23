@@ -74,12 +74,13 @@ class Command(BaseCommand):
             processed = 1
             total = tournaments.count()
             for tournament in tournaments:
-                print('Process {}/{}'.format(processed, total))
+                print('Process tournaments {}/{}'.format(processed, total))
 
                 calculator.calculate_players_deltas(tournament, rating)
 
                 processed += 1
 
+            print('Players rating calculating...')
             calculator.calculate_players_rating_rank(rating)
 
         print('{0}: End'.format(get_date_string()))

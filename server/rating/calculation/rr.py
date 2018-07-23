@@ -9,6 +9,7 @@ from django.utils import timezone
 from player.models import Player
 from rating.models import RatingDelta, RatingResult, TournamentCoefficients
 from tournament.models import TournamentResult, Tournament
+from utils.general import get_tournament_coefficient
 
 
 class RatingRRCalculation(object):
@@ -69,6 +70,13 @@ class RatingRRCalculation(object):
             c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
             coefficients.append(c)
 
+        # TODO: Remove these hardcoded values when tournaments with stages will be implemented
+        if not rating.is_online():
+            tournament = Tournament.objects.get(id=307)
+            age = self.tournament_age(tournament)
+            coefficients.append(self._calculate_percentage(3.18, age))
+            coefficients.append(self._calculate_percentage(2.73, age))
+
         coefficients = sorted(coefficients, reverse=True)
         max_coefficient = sum(coefficients[:self.SECOND_PART_MIN_TOURNAMENTS])
 
@@ -102,19 +110,20 @@ class RatingRRCalculation(object):
             first_part_denominator = 0
 
             for result in tournaments_results:
-                coefficient = coefficients_cache[result.tournament_id]
+                coefficient_obj = coefficients_cache[result.tournament_id]
+                coefficient = get_tournament_coefficient(coefficient_obj.tournament, player, coefficient_obj.coefficient)
 
                 first_part_numerator += float(result.delta)
-                first_part_denominator += float(self._calculate_percentage(float(coefficient.coefficient), coefficient.age))
+                first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
 
                 first_part_numerator_calculation.append('{} * {} * {}'.format(
                     floatformat(result.base_rank, -2),
-                    floatformat(coefficient.coefficient, -2),
-                    floatformat(coefficient.age / 100, -2)
+                    floatformat(coefficient, -2),
+                    floatformat(coefficient_obj.age / 100, -2)
                 ))
                 first_part_denominator_calculation.append('{} * {}'.format(
-                    floatformat(coefficient.coefficient, -2),
-                    floatformat(coefficient.age / 100, -2)
+                    floatformat(coefficient, -2),
+                    floatformat(coefficient_obj.age / 100, -2)
                 ))
 
             if len(tournaments_results) < self.FIRST_PART_MIN_TOURNAMENTS:
@@ -132,14 +141,15 @@ class RatingRRCalculation(object):
 
             best_results = deltas.order_by('-delta')[:self.SECOND_PART_MIN_TOURNAMENTS]
             for result in best_results:
-                coefficient = coefficients_cache[result.tournament_id]
+                coefficient_obj = coefficients_cache[result.tournament_id]
+                coefficient = get_tournament_coefficient(coefficient_obj.tournament, player, coefficient_obj.coefficient)
 
                 second_part_numerator += float(result.delta)
 
                 second_part_numerator_calculation.append('{} * {} * {}'.format(
                     floatformat(result.base_rank, -2),
-                    floatformat(coefficient.coefficient, -2),
-                    floatformat(coefficient.age / 100, -2)
+                    floatformat(coefficient, -2),
+                    floatformat(coefficient_obj.age / 100, -2)
                 ))
 
             second_part = second_part_numerator / second_part_denominator
@@ -243,6 +253,7 @@ class RatingRRCalculation(object):
         """
         tournament = tournament_result.tournament
         tournament_coefficient = self.tournament_coefficient(tournament)
+        tournament_coefficient = get_tournament_coefficient(tournament, tournament_result.player, tournament_coefficient)
 
         base_rank = self.calculate_base_rank(tournament_result)
         # for ema we had to round base rank

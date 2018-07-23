@@ -152,6 +152,9 @@ class Tournament(BaseModel):
     def is_other(self):
         return self.tournament_type == self.OTHER
 
+    def is_stage_tournament(self):
+        return self.id == 307
+
     def get_tournament_registrations(self):
         if self.is_online():
             return self.online_tournament_registrations.filter(is_approved=True)
@@ -165,6 +168,7 @@ class TournamentResult(BaseModel):
     place = models.PositiveSmallIntegerField()
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     exclude_from_rating = models.BooleanField(default=False)
+    games = models.PositiveSmallIntegerField(default=0)
 
     def __unicode__(self):
         return self.tournament.name

@@ -36,10 +36,10 @@
                 </td>
                 <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
                 <td>
-                    {{ delta.tournament_coefficient.age|floatformat:0 }}%
+                    {{ delta.coefficient_obj.age|floatformat:0 }}%
                 </td>
                 <td>
-                    {{ delta.tournament_coefficient.coefficient|floatformat:1 }}
+                    {{ delta.coefficient_value|floatformat:1 }}
                 </td>
                 <td>
                     {% with delta.tournament as tournament %}
