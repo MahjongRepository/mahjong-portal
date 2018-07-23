@@ -55,6 +55,9 @@ def tournament_list(request, tournament_type=None, year=None):
 
 def tournament_details(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug)
+    if tournament.is_upcoming:
+        return redirect(tournament_announcement, slug=slug)
+
     results = (TournamentResult.objects
                                .filter(tournament=tournament)
                                .order_by('place')
