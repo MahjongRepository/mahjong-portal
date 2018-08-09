@@ -76,16 +76,14 @@ def city_page(request, slug):
     clubs = Club.objects.filter(city=city).prefetch_related('city')
     tournaments = Tournament.public.filter(city=city).order_by('-end_date').prefetch_related('city')
 
-    # small queries optimizations
-    tenhou_nicknames = TenhouNickname.objects.all()
     players = Player.objects.filter(city=city).prefetch_related('city')
     for player in players:
         player.rank = -1
 
-        for nickname in tenhou_nicknames:
-            if nickname.player_id == player.id:
-                player.rank = nickname.rank
-                player.rank_display = nickname.get_rank_display()
+        tenhou_object = player.tenhou_object
+        if tenhou_object:
+            player.rank = tenhou_object.rank
+            player.rank_display = tenhou_object.get_rank_display()
 
     players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
