@@ -54,10 +54,7 @@ class RatingDelta(BaseModel):
 
     @property
     def coefficient_obj(self):
-        return (TournamentCoefficients.objects
-                .filter(rating=self.rating, tournament=self.tournament)
-                .order_by('-date')
-                .last())
+        return TournamentCoefficients.objects.get(rating=self.rating, tournament=self.tournament, date=self.date)
 
     @property
     def coefficient_value(self):
