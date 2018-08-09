@@ -77,43 +77,41 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         tournament = self.create_tournament(players=80, sessions=4)
 
         result = self.create_tournament_result(tournament, place=1)
-        self.assertEqual(calculator.calculate_base_rank(result), 1000)
+        self.assertEqual(calculator.calculate_base_rank(result, tournament), 1000)
 
         result = self.create_tournament_result(tournament, place=20)
-        self.assertEqual(round(calculator.calculate_base_rank(result), 2), 759.49)
+        self.assertEqual(round(calculator.calculate_base_rank(result, tournament), 2), 759.49)
 
         result = self.create_tournament_result(tournament, place=40)
-        self.assertEqual(round(calculator.calculate_base_rank(result), 2), 506.33)
+        self.assertEqual(round(calculator.calculate_base_rank(result, tournament), 2), 506.33)
 
         result = self.create_tournament_result(tournament, place=60)
-        self.assertEqual(round(calculator.calculate_base_rank(result), 2), 253.16)
+        self.assertEqual(round(calculator.calculate_base_rank(result, tournament), 2), 253.16)
 
         result = self.create_tournament_result(tournament, place=80)
-        self.assertEqual(calculator.calculate_base_rank(result), 0)
+        self.assertEqual(calculator.calculate_base_rank(result, tournament), 0)
 
     def test_calculate_players_deltas(self):
+        now = timezone.now().date()
         rating, _ = Rating.objects.get_or_create(type=Rating.RR)
 
         first_player = self.create_player()
         second_player = self.create_player()
-
         calculator = RatingRRCalculation()
 
         # First tournament
-
         tournament = self.create_tournament(players=4, sessions=2)
         self.create_tournament_result(tournament, place=1, player=first_player)
         self.create_tournament_result(tournament, place=2, player=second_player)
 
-        calculator.calculate_players_deltas(tournament, rating)
+        calculator.calculate_players_deltas(tournament, rating, now, True)
 
         # Second tournament
-
         tournament = self.create_tournament(players=4, sessions=2)
         self.create_tournament_result(tournament, place=4, player=first_player)
         self.create_tournament_result(tournament, place=1, player=second_player)
 
-        calculator.calculate_players_deltas(tournament, rating)
+        calculator.calculate_players_deltas(tournament, rating, now, True)
 
         rating_deltas = RatingDelta.objects.filter(player=first_player).order_by('id')
 
@@ -134,6 +132,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         self.assertEqual(rating_deltas[1].base_rank, 1000)
 
     def test_calculate_players_delta_and_tournament_age(self):
+        now = timezone.now().date()
         rating, _ = Rating.objects.get_or_create(type=Rating.RR)
         first_player = self.create_player()
         calculator = RatingRRCalculation()
@@ -141,7 +140,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         tournament = self.create_tournament(players=4, sessions=2)
         self.create_tournament_result(tournament, place=1, player=first_player)
 
-        calculator.calculate_players_deltas(tournament, rating)
+        calculator.calculate_players_deltas(tournament, rating, now, True)
 
         rating_delta = RatingDelta.objects.filter(player=first_player).first()
         self.assertEqual(rating_delta.delta, 500)
@@ -150,7 +149,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         RatingDelta.objects.all().delete()
         tournament.end_date = timezone.now().date() - timedelta(days=400)
         tournament.save()
-        calculator.calculate_players_deltas(tournament, rating)
+        calculator.calculate_players_deltas(tournament, rating, now, True)
 
         rating_delta = RatingDelta.objects.filter(player=first_player).first()
         self.assertEqual(rating_delta.delta, 330)
@@ -159,7 +158,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         RatingDelta.objects.all().delete()
         tournament.end_date = timezone.now().date() - timedelta(days=600)
         tournament.save()
-        calculator.calculate_players_deltas(tournament, rating)
+        calculator.calculate_players_deltas(tournament, rating, now, True)
 
         rating_delta = RatingDelta.objects.filter(player=first_player).first()
         self.assertEqual(rating_delta.delta, 165)
@@ -205,28 +204,32 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         now = timezone.now().date()
 
         tournament = self.create_tournament(end_date=now)
-        self.assertEqual(calculator.tournament_age(tournament), 100)
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 100)
 
         tournament = self.create_tournament(end_date=now - timedelta(days=60))
-        self.assertEqual(calculator.tournament_age(tournament), 100)
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 100)
+
+        tournament = self.create_tournament(end_date=now - timedelta(days=364))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 100)
 
         tournament = self.create_tournament(end_date=now - timedelta(days=365))
-        self.assertEqual(calculator.tournament_age(tournament), 100)
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 66)
 
         tournament = self.create_tournament(end_date=now - timedelta(days=365 + 31))
-        self.assertEqual(calculator.tournament_age(tournament), 66)
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 66)
 
         tournament = self.create_tournament(end_date=now - timedelta(days=365 + 7 * 31))
-        self.assertEqual(calculator.tournament_age(tournament), 33)
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 33)
+
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 - 1))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 33)
 
         tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2))
-        self.assertEqual(calculator.tournament_age(tournament), 33)
-
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 + 2))
-        self.assertEqual(calculator.tournament_age(tournament), 0)
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 0)
 
     def test_calculate_players_rating_rank(self):
         rating, _ = Rating.objects.get_or_create(type=Rating.RR)
+        rating_date = datetime.now()
 
         tournament = self.create_tournament(
             end_date=timezone.now().date() - timedelta(days=100),
@@ -237,10 +240,16 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         deltas = [500, 600, 100, 200, 400, 900, 1000, 800, 900, 100]
         for delta in deltas:
-            self.create_rating_delta(rating, tournament, self.player, delta)
+            self.create_rating_delta(rating, tournament, self.player, delta, rating_date)
 
-        TournamentCoefficients.objects.create(rating=rating, tournament=tournament, coefficient=2, age=100)
-        calculator.calculate_players_rating_rank(rating)
+        TournamentCoefficients.objects.create(
+            rating=rating,
+            tournament=tournament,
+            coefficient=2,
+            age=100,
+            date=rating_date
+        )
+        calculator.calculate_players_rating_rank(rating, rating_date, True)
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 
@@ -249,6 +258,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
     def test_calculate_players_rating_rank_and_not_enough_tournaments(self):
         rating, _ = Rating.objects.get_or_create(type=Rating.RR)
+        rating_date = datetime.now()
 
         tournament = self.create_tournament(end_date=timezone.now().date() - timedelta(days=100), players=16)
 
@@ -256,10 +266,16 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         deltas = [1000, 1000]
         for delta in deltas:
-            self.create_rating_delta(rating, tournament, self.player, delta)
+            self.create_rating_delta(rating, tournament, self.player, delta, rating_date)
 
-        TournamentCoefficients.objects.create(rating=rating, tournament=tournament, coefficient=2, age=100)
-        calculator.calculate_players_rating_rank(rating)
+        TournamentCoefficients.objects.create(
+            rating=rating,
+            tournament=tournament,
+            coefficient=2,
+            age=100,
+            date=rating_date
+        )
+        calculator.calculate_players_rating_rank(rating, rating_date, True)
 
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 

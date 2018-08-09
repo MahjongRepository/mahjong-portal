@@ -41,9 +41,11 @@ class RatingDelta(BaseModel):
     player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='rating_delta')
     tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name='rating_delta')
     is_active = models.BooleanField(default=False)
+    is_last = models.BooleanField(default=False)
 
     base_rank = models.DecimalField(decimal_places=2, max_digits=10)
     delta = models.DecimalField(decimal_places=2, max_digits=10)
+    date = models.DateField(default=None, null=True, blank=True, db_index=True)
 
     tournament_place = models.PositiveSmallIntegerField(default=0)
 
@@ -52,12 +54,15 @@ class RatingDelta(BaseModel):
 
     @property
     def coefficient_obj(self):
-        return TournamentCoefficients.objects.get(rating=self.rating, tournament=self.tournament)
+        return (TournamentCoefficients.objects
+                .filter(rating=self.rating, tournament=self.tournament)
+                .order_by('-date')
+                .last())
 
     @property
     def coefficient_value(self):
         coefficient_obj = self.coefficient_obj
-        return get_tournament_coefficient(self.tournament, self.player, coefficient_obj.coefficient)
+        return get_tournament_coefficient(self.tournament_id, self.player, coefficient_obj.coefficient)
 
 
 class RatingResult(BaseModel):
@@ -66,6 +71,8 @@ class RatingResult(BaseModel):
 
     score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
+    date = models.DateField(default=None, null=True, blank=True, db_index=True)
+    is_last = models.BooleanField(default=False, db_index=True)
 
     rating_calculation = models.TextField(null=True, blank=True)
 
@@ -84,6 +91,7 @@ class RatingResult(BaseModel):
 class TournamentCoefficients(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='rating_results')
+    date = models.DateField(default=None, null=True, blank=True, db_index=True)
 
     coefficient = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)

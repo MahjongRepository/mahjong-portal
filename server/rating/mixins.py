@@ -51,7 +51,7 @@ class RatingTestMixin(object):
             player=player
         )
 
-    def create_rating_delta(self, rating, tournament, player, delta):
+    def create_rating_delta(self, rating, tournament, player, delta, rating_date):
         return RatingDelta.objects.create(
             tournament=tournament,
             tournament_place=1,
@@ -59,4 +59,5 @@ class RatingTestMixin(object):
             player=player,
             delta=delta,
             base_rank=0,
+            date=rating_date,
         )

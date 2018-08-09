@@ -7,12 +7,13 @@ from tournament.models import Tournament
 
 class RatingCRRCalculation(RatingRRCalculation):
 
-    def get_base_query(self, rating, date):
+    def get_base_query(self, rating, start_date, rating_date):
         base_query = (RatingDelta.objects
                       .filter(rating=rating)
                       .filter(Q(tournament__tournament_type=Tournament.CRR) |
                               Q(tournament__tournament_type=Tournament.RR) |
                               Q(tournament__tournament_type=Tournament.EMA) |
                               Q(tournament__tournament_type=Tournament.FOREIGN_EMA))
-                      .filter(tournament__end_date__gte=date))
+                      .filter(Q(tournament__end_date__gt=start_date) & Q(tournament__end_date__lte=rating_date))
+                      .filter(date=rating_date))
         return base_query

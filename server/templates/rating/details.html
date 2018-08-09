@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n tz %}
+{% load i18n %}
 
 {% block title %}
     {{ rating.name }}
@@ -13,17 +13,19 @@
             <p class="d-print-none">{{ rating.description }}</p>
         {% endif %}
 
-        {% timezone 'Europe/Moscow' %}
-            <p>{% trans 'Latest update: ' %}{{ rating.updated_on }} (UTC+3)</p>
-        {% endtimezone %}
+        {% if rating_results %}
+            <p>{% trans 'Rating date' %} {{ rating_date }}</p>
 
-        <p class="d-print-none">
-            <a href="{% url 'rating_tournaments' rating.slug %}">
-                {% trans 'What tournaments were included to the rating?' %}
-            </a>
-        </p>
+            {% if not rating_date %}
+                <p class="d-print-none">
+                    <a href="{% url 'rating_tournaments' rating.slug %}">
+                        {% trans 'What tournaments were included to the rating?' %}
+                    </a>
+                </p>
+            {% endif %}
 
-        {% include 'rating/_results_table.html' %}
+            {% include 'rating/_results_table.html' %}
+        {% endif %}
     </div>
 {% endblock %}
 

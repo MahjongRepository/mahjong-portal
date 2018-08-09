@@ -6,7 +6,7 @@ from datetime import datetime
 import pytz
 from django.utils import timezone
 
-from rating.calculation.coefficients import HARDCODED_COEFFICIENTS
+from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 
 
 def make_random_letters_and_digit_string(length=15):
@@ -85,8 +85,8 @@ def get_month_last_day(date=None):
 
 
 # TODO: Remove these hardcoded values when tournaments with stages will be implemented
-def get_tournament_coefficient(tournament, player, default_coefficient):
-    if HARDCODED_COEFFICIENTS.get(tournament.id):
-        return HARDCODED_COEFFICIENTS.get(tournament.id).get(player.id, 0)
+def get_tournament_coefficient(tournament_id, player, default_coefficient):
+    if HARDCODED_COEFFICIENTS.get(tournament_id):
+        return HARDCODED_COEFFICIENTS.get(tournament_id).get(player.id, 0)
 
     return default_coefficient

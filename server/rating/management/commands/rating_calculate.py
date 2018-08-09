@@ -1,10 +1,11 @@
+import datetime
+
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
-from rating.calculation.ema import EmaRatingCalculation
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingDelta, RatingResult
@@ -27,8 +28,12 @@ class Command(BaseCommand):
         rating = None
         tournaments = None
         calculator = None
+        rating_date = None
+        today = datetime.datetime.now().date()
 
         if rating_type == 'rr':
+            rating_date = today - datetime.timedelta(days=365 * 2)
+
             calculator = RatingRRCalculation()
             rating = Rating.objects.get(type=Rating.RR)
             tournaments = Tournament.public.filter(
@@ -38,6 +43,8 @@ class Command(BaseCommand):
             ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'crr':
+            rating_date = today - datetime.timedelta(days=365 * 2)
+
             calculator = RatingCRRCalculation()
             rating = Rating.objects.get(type=Rating.CRR)
             tournaments = Tournament.public.filter(
@@ -47,15 +54,9 @@ class Command(BaseCommand):
                 Q(tournament_type=Tournament.FOREIGN_EMA)
             ).filter(is_upcoming=False).order_by('end_date')
 
-        if rating_type == 'ema':
-            calculator = EmaRatingCalculation()
-            rating = Rating.objects.get(type=Rating.EMA)
-            tournaments = (Tournament.public
-                           .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA))
-                           .filter(is_upcoming=False)
-                           .order_by('end_date'))
-
         if rating_type == 'online':
+            rating_date = today - datetime.timedelta(days=913)
+
             calculator = RatingOnlineCalculation()
             rating = Rating.objects.get(type=Rating.ONLINE)
             tournaments = (Tournament.public
@@ -67,20 +68,53 @@ class Command(BaseCommand):
             print('Unknown rating type: {}'.format(rating_type))
             return
 
+        print('Calculating dates...')
+
+        continue_work = True
+
         with transaction.atomic():
-            RatingDelta.objects.filter(rating=rating).delete()
             RatingResult.objects.filter(rating=rating).delete()
+            RatingDelta.objects.filter(rating=rating).delete()
 
-            processed = 1
-            total = tournaments.count()
-            for tournament in tournaments:
-                print('Process tournaments {}/{}'.format(processed, total))
+            tournaments_diff = {}
+            dates_to_process = []
+            while continue_work:
+                need_to_recalculate = False
 
-                calculator.calculate_players_deltas(tournament, rating)
+                if rating_date > today:
+                    continue_work = False
 
-                processed += 1
+                # we need to rebuild rating only after changes in tournaments
+                # there is no need to rebuild it each day
+                limited_tournaments = tournaments.filter(end_date__lte=rating_date)
+                for tournament in limited_tournaments:
+                    if tournament.id not in tournaments_diff:
+                        # new tournament was added
+                        need_to_recalculate = True
+                        tournaments_diff[tournament.id] = 100
+                    else:
+                        # old tournament changed age weight
+                        age = calculator.tournament_age(tournament.end_date, rating_date)
+                        if tournaments_diff[tournament.id] != age:
+                            need_to_recalculate = True
+                            tournaments_diff[tournament.id] = age
 
-            print('Players rating calculating...')
-            calculator.calculate_players_rating_rank(rating)
+                if need_to_recalculate:
+                    dates_to_process.append(rating_date)
+
+                rating_date = rating_date + datetime.timedelta(days=1)
+
+            print('Dates to process: {}'.format(len(dates_to_process)))
+
+            for i, rating_date in enumerate(dates_to_process):
+                is_last = i == len(dates_to_process) - 1
+                limited_tournaments = tournaments.filter(end_date__lte=rating_date)
+
+                print(rating_date, limited_tournaments.count(), is_last)
+
+                for tournament in limited_tournaments:
+                    calculator.calculate_players_deltas(tournament, rating, rating_date, is_last)
+
+                calculator.calculate_players_rating_rank(rating, rating_date, is_last)
 
         print('{0}: End'.format(get_date_string()))

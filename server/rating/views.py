@@ -1,4 +1,7 @@
-from django.http import JsonResponse
+from datetime import datetime
+
+import pytz
+from django.http import JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404
 
 from rating.models import Rating, RatingResult, RatingDelta
@@ -14,8 +17,15 @@ def rating_list(request):
     })
 
 
-def rating_details(request, slug):
+def rating_details(request, slug, year=None, month=None, day=None):
     rating = get_object_or_404(Rating, slug=slug)
+
+    rating_date = datetime.now().date()
+    if year and month and day:
+        try:
+            rating_date = datetime(int(year), int(month), int(day)).date()
+        except:
+            raise Http404
 
     rating_results = (RatingResult.objects
                                   .filter(rating=rating)
@@ -23,6 +33,14 @@ def rating_details(request, slug):
                                   .prefetch_related('player__city')
                                   .prefetch_related('player__country')
                                   .order_by('place'))
+
+    closest_date = RatingResult.objects.filter(rating=rating, date__lte=rating_date)
+    if closest_date.exists():
+        closest_date = closest_date.last().date
+    else:
+        raise Http404
+
+    rating_results = rating_results.filter(date=closest_date)
 
     if rating.is_online():
         rating_results = rating_results.prefetch_related('player__tenhou')
@@ -43,6 +61,7 @@ def rating_details(request, slug):
     return render(request, 'rating/details.html', {
         'rating': rating,
         'rating_results': rating_results,
+        'rating_date': rating_date,
         'page': 'rating'
     })
 

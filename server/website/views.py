@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.translation import get_language
@@ -6,17 +6,17 @@ from haystack.forms import ModelSearchForm
 
 from club.models import Club
 from player.models import Player
-from player.tenhou.models import TenhouNickname, CollectedYakuman
+from player.tenhou.models import TenhouNickname
 from rating.models import Rating, RatingResult
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
-from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
 def home(request):
     rating = Rating.objects.get(type=Rating.RR)
     rating_results = (RatingResult.objects
                                   .filter(rating=rating)
+                                  .filter(is_last=True)
                                   .prefetch_related('player')
                                   .prefetch_related('player__city')
                                   .order_by('place'))[:16]

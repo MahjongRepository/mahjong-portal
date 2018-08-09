@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from club.models import Club
 from mahjong_portal.models import BaseModel
 from player.models import Player
+from rating.calculation.hardcoded_coefficients import AGARI_TOURNAMENT_ID
 from settings.models import City, Country
 
 
@@ -47,7 +48,7 @@ class Tournament(BaseModel):
     slug = models.SlugField(unique=True, max_length=255)
 
     start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField()
+    end_date = models.DateField(db_index=True)
 
     number_of_sessions = models.PositiveSmallIntegerField(default=0, blank=True)
     number_of_players = models.PositiveSmallIntegerField(default=0, blank=True)
@@ -60,7 +61,7 @@ class Tournament(BaseModel):
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
-    tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR)
+    tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR, db_index=True)
 
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
@@ -153,7 +154,7 @@ class Tournament(BaseModel):
         return self.tournament_type == self.OTHER
 
     def is_stage_tournament(self):
-        return self.id == 307
+        return self.id == AGARI_TOURNAMENT_ID
 
     def get_tournament_registrations(self):
         if self.is_online():
