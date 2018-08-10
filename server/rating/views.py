@@ -21,9 +21,11 @@ def rating_details(request, slug, year=None, month=None, day=None):
     rating = get_object_or_404(Rating, slug=slug)
 
     rating_date = datetime.now().date()
+    is_last = True
     if year and month and day:
         try:
             rating_date = datetime(int(year), int(month), int(day)).date()
+            is_last = False
         except:
             raise Http404
 
@@ -62,6 +64,7 @@ def rating_details(request, slug, year=None, month=None, day=None):
         'rating': rating,
         'rating_results': rating_results,
         'rating_date': rating_date,
+        'is_last': is_last,
         'page': 'rating'
     })
 

@@ -16,7 +16,7 @@
         {% if rating_results %}
             <p>{% trans 'Rating date' %} {{ rating_date }}</p>
 
-            {% if not rating_date %}
+            {% if is_last %}
                 <p class="d-print-none">
                     <a href="{% url 'rating_tournaments' rating.slug %}">
                         {% trans 'What tournaments were included to the rating?' %}
