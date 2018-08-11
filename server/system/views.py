@@ -13,7 +13,14 @@ def system_index(request):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def transliterate_text(request):
-    text = ''
+    original_text = ''
+    transliterated_text = ''
+
     if request.POST.get('text'):
-        text = transliterate_name(request.POST.get('text'))
-    return render(request, 'transliterate.html', {'text': text})
+        original_text = request.POST.get('text')
+        transliterated_text = transliterate_name(original_text)
+
+    return render(request, 'transliterate.html', {
+        'original_text': original_text,
+        'transliterated_text': transliterated_text,
+    })
