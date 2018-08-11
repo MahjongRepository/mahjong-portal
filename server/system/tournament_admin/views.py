@@ -45,7 +45,7 @@ def upload_results(request, tournament_id):
                 place = row['place']
                 name = row.get('name', '')
                 scores = row['scores']
-                games = row.get('games')
+                games = row.get('games', 0)
 
                 ema_id = row.get('ema', '').strip()
 
