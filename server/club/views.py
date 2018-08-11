@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import get_language
 
@@ -36,11 +37,15 @@ def club_details(request, slug):
     sorting = {
         'average_place': _('Average place (ascending)'),
         '-average_place': _('Average place (descending)'),
+        'rank': _('Tenhou'),
     }
 
     # check that given sorting in allowed options
     if sort not in sorting:
         sort = default_sort
+
+    if sort == 'rank':
+        sort = F('rank').desc(nulls_last=True)
 
     club_rating = (club.rating
                    .filter(games_count__gte=5)

@@ -81,11 +81,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% with tenhou_object=item.player.tenhou_object %}
-                                        {% if tenhou_object %}
-                                            <nobr>{{ tenhou_object.get_rank_display }}</nobr>
-                                        {% endif %}
-                                    {% endwith %}
+                                    <nobr>{{ item.get_rank_display|default:'' }}</nobr>
                                 </td>
                                 <td>
                                     {{ item.games_count }}
@@ -106,35 +102,6 @@
                                     {{ item.fourth_place|floatformat:2 }}
                                 </td>
                             </tr>
-{#                            <tr>#}
-{#                                <td></td>#}
-{#                                <td colspan="8">#}
-{#                                    <span title="{% trans 'How often player feed to other hand' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
-{#                                        <b>{% trans 'feeds' %}</b>#}
-{#                                    </span>#}
-{#                                    {{ item.feed_percentage|floatformat:2 }}%,#}
-{##}
-{#                                    <span title="{% trans 'How often riichi was ended with ippatsu' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
-{#                                        <b>{% trans 'ippatsu' %}</b>#}
-{#                                    </span>#}
-{#                                    {{ item.ippatsu_chance|floatformat:2 }}%,#}
-{##}
-{#                                    <span title="{% trans 'How many win hands were opened' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
-{#                                        <b>{% trans 'open hands' %}</b>#}
-{#                                    </span>#}
-{#                                    {{ item.open_hand|floatformat:2 }}%,#}
-{##}
-{#                                    <span title="{% trans 'How often riichi was ended with win' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
-{#                                        <b>{% trans 'successful riichi' %}</b>#}
-{#                                    </span>#}
-{#                                    {{ item.successful_riichi|floatformat:2 }}%,#}
-{##}
-{#                                    <span title="{% trans 'Average dora number in win hands' %}" data-toggle="tooltip" data-placement="bottom" class="tooltip-link">#}
-{#                                        <b>{% trans 'avg. dora' %}</b>#}
-{#                                    </span>#}
-{#                                    {{ item.average_dora_in_hand|floatformat:2 }}#}
-{#                                </td>#}
-{#                            </tr>#}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -143,52 +110,106 @@
 
         {% if club_sessions %}
             <h2>{% trans 'Latest 10 club games' %}</h2>
+
             {% timezone club.timezone %}
-                <p>
-                    {% trans 'Total games: ' %} {{ total_sessions }}.
-                    {% trans 'Last updated ' %} {{ club.sync_info.updated_on }}
-                </p>
+                <p>{% trans 'Total games: ' %} {{ total_sessions }}</p>
+                <p>{% trans 'Last updated ' %} {{ club.sync_info.updated_on }}</p>
             {% endtimezone %}
 
-            <div class="table-responsive-sm">
-                <table class="table mt-4 table-bordered table-striped">
+            {# Desktop table #}
+            <div class="table-responsive d-none d-md-block">
+                <table class="table mt-2 mb-4 table-bordered">
                     <tbody>
-                        {% for club_session in club_sessions %}
-                            <tr class="">
-                                <td colspan="8">
-                                    {% timezone club.timezone %}
-                                        {% if club_session.pantheon_id and club_session.pantheon_event_id %}
-                                            <a href="https://gui.mjtop.net/eid{{ club_session.pantheon_event_id }}/game/{{ club_session.pantheon_id }}" target="_blank">
-                                                {{ club_session.date }}
-                                            </a>
-                                        {% else %}
+                    {% for club_session in club_sessions %}
+                        <tr>
+                            <td colspan="8">
+                                {% timezone club.timezone %}
+                                    {% if club_session.pantheon_id and club_session.pantheon_event_id %}
+                                        <a href="https://gui.mjtop.net/eid{{ club_session.pantheon_event_id }}/game/{{ club_session.pantheon_id }}" target="_blank">
                                             {{ club_session.date }}
-                                        {% endif %}
-                                    {% endtimezone %}
+                                        </a>
+                                    {% else %}
+                                        {{ club_session.date }}
+                                    {% endif %}
+                                {% endtimezone %}
+                            </td>
+                        </tr>
+                        <tr>
+                            {% for result in club_session.results.all %}
+                                <td>
+                                    {% with result as item %}
+                                        {% include 'club/_club_game_header.html' %}
+                                    {% endwith %}
+                                </td>
+                                <td>{{ result.score|intcomma }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Mobile table #}
+            <div class="table-responsive d-block d-md-none">
+                <table class="table mt-2 mb-4 table-bordered">
+                    <tbody>
+                    {% for club_session in club_sessions %}
+                        <tr class="table-success">
+                            <td colspan="2">
+                                {% timezone club.timezone %}
+                                    {% if club_session.pantheon_id and club_session.pantheon_event_id %}
+                                        <a href="https://gui.mjtop.net/eid{{ club_session.pantheon_event_id }}/game/{{ club_session.pantheon_id }}" target="_blank">
+                                            {{ club_session.date }}
+                                        </a>
+                                    {% else %}
+                                        {{ club_session.date }}
+                                    {% endif %}
+                                {% endtimezone %}
+                            </td>
+                        </tr>
+                        {% with club_session.results.all as results %}
+                            <tr>
+                                <td>
+                                    {% with results.0 as result %}
+                                        {% include 'club/_club_game_header.html' %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {{ results.0.score|intcomma }}
                                 </td>
                             </tr>
                             <tr>
-                                {% for result in club_session.results.all %}
-                                    <td>
-                                        <nobr>
-                                            {{ result.wind }}
-                                            {% if result.player %}
-                                                {% with result.player as player %}
-                                                    <a href="{% url 'player_details' player.slug %}" class="d-print-none">
-                                                        <span class="d-block d-md-none d-print-none">
-                                                            <nobr>{{ player.last_name }} {{ player.first_name.0 }}.</nobr>
-                                                        </span>
-                                                    </a>
-                                                {% endwith %}
-                                            {% else %}
-                                                {{ result.player_string }}
-                                            {% endif %}
-                                        </nobr>
-                                    </td>
-                                    <td>{{ result.score|intcomma }}</td>
-                                {% endfor %}
+                                <td>
+                                    {% with results.1 as result %}
+                                        {% include 'club/_club_game_header.html' %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {{ results.1.score|intcomma }}
+                                </td>
                             </tr>
-                        {% endfor %}
+                            <tr>
+                                <td>
+                                    {% with results.2 as result %}
+                                        {% include 'club/_club_game_header.html' %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {{ results.2.score|intcomma }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {% with results.3 as result %}
+                                        {% include 'club/_club_game_header.html' %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {{ results.3.score|intcomma }}
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

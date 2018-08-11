@@ -3,6 +3,7 @@ from django.db import models
 from club.models import Club
 from mahjong_portal.models import BaseModel
 from player.models import Player
+from player.tenhou.models import TenhouNickname
 
 
 class ClubSessionSyncData(BaseModel):
@@ -48,8 +49,4 @@ class ClubRating(BaseModel):
     third_place = models.DecimalField(decimal_places=2, max_digits=10)
     fourth_place = models.DecimalField(decimal_places=2, max_digits=10)
 
-    ippatsu_chance = models.DecimalField(decimal_places=2, max_digits=10)
-    average_dora_in_hand = models.DecimalField(decimal_places=2, max_digits=10)
-    feed_percentage = models.DecimalField(decimal_places=2, max_digits=10)
-    open_hand = models.DecimalField(decimal_places=2, max_digits=10)
-    successful_riichi = models.DecimalField(decimal_places=2, max_digits=10)
+    rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)

@@ -1,0 +1,12 @@
+<nobr>
+    {{ result.wind }}
+    {% if result.player %}
+        {% with result.player as player %}
+            <a href="{% url 'player_details' player.slug %}" class="d-print-none">
+                {{ player.last_name }} {{ player.first_name.0 }}.
+            </a>
+        {% endwith %}
+    {% else %}
+        {{ result.player_string }}
+    {% endif %}
+</nobr>
