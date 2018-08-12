@@ -124,12 +124,6 @@ class Command(BaseCommand):
         sync_data.last_session_id = session.id
         sync_data.save()
 
-        for key in missed_players.keys():
-            print('Players without pantheon id: {}, {}'.format(
-                key,
-                missed_players[key]
-            ))
-
         print('Downloading completed')
 
     def calculate_club_rating(self, club, event_ids):
