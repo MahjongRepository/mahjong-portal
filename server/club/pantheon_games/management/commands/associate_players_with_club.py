@@ -77,7 +77,7 @@ class Command(BaseCommand):
                     Player.all_objects.get(pantheon_id=pantheon_player.id)
                 except Player.DoesNotExist:
                     games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
-                    if games > 5:
+                    if games >= 10:
                         print('Missed player: id={}, {}, Games: {} '.format(
                             pantheon_player.id,
                             pantheon_player.display_name,

@@ -49,7 +49,7 @@ def club_details(request, slug):
         real_sort = F('rank').desc(nulls_last=True)
 
     club_rating = (club.rating
-                   .filter(games_count__gte=5)
+                   .filter(games_count__gte=10)
                    .order_by(real_sort)
                    .prefetch_related('player'))
 
