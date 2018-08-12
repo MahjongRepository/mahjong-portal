@@ -44,12 +44,13 @@ def club_details(request, slug):
     if sort not in sorting:
         sort = default_sort
 
+    real_sort = sort
     if sort == 'rank':
-        sort = F('rank').desc(nulls_last=True)
+        real_sort = F('rank').desc(nulls_last=True)
 
     club_rating = (club.rating
                    .filter(games_count__gte=5)
-                   .order_by(sort)
+                   .order_by(real_sort)
                    .prefetch_related('player'))
 
     return render(request, 'club/details.html', {
