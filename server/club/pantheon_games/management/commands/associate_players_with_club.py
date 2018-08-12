@@ -67,14 +67,14 @@ class Command(BaseCommand):
             first_name = len(temp) > 1 and temp[1].title() or ''
 
             try:
-                player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 player.pantheon_id = pantheon_player.id
                 player.save()
 
                 club.players.add(player)
             except Player.DoesNotExist:
                 try:
-                    Player.objects.get(pantheon_id=pantheon_player.id)
+                    Player.all_objects.get(pantheon_id=pantheon_player.id)
                 except Player.DoesNotExist:
                     games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
                     if games > 5:
