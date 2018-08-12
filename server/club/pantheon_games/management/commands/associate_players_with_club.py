@@ -25,14 +25,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
-        
+
         club_id = options.get('club_id')
-        
+
         if club_id:
             clubs = Club.objects.filter(id=club_id)
         else:
             clubs = Club.objects.exclude(pantheon_ids__isnull=True)
-            
+
         for club in clubs:
             event_ids = club.pantheon_ids.split(',')
             print('')
@@ -46,7 +46,7 @@ class Command(BaseCommand):
 
     def _associate_players(self, club, event_ids):
         print('Associating players...')
-        
+
         club.players.clear()
 
         player_ids = []
@@ -64,7 +64,7 @@ class Command(BaseCommand):
         for pantheon_player in players:
             temp = pantheon_player.display_name.split(' ')
             last_name = temp[0].title()
-            first_name = temp[1].title()
+            first_name = len(temp) > 1 and temp[1].title() or ''
 
             try:
                 player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
