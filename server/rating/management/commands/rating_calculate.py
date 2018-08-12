@@ -81,9 +81,6 @@ class Command(BaseCommand):
             while continue_work:
                 need_to_recalculate = False
 
-                if rating_date > today:
-                    continue_work = False
-
                 # we need to rebuild rating only after changes in tournaments
                 # there is no need to rebuild it each day
                 limited_tournaments = tournaments.filter(end_date__lte=rating_date)
@@ -103,6 +100,9 @@ class Command(BaseCommand):
                     dates_to_process.append(rating_date)
 
                 rating_date = rating_date + datetime.timedelta(days=1)
+
+                if rating_date > today:
+                    continue_work = False
 
             print('Dates to process: {}'.format(len(dates_to_process)))
 
