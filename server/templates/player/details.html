@@ -239,7 +239,7 @@
             <h4 class="mb-3" id="club">{% trans 'Club statistics' %}</h4>
             {% for item in club_ratings %}
                 <h5><a href="{% url 'club_details' item.club.slug %}#stat">{{ item.club.name }}</a></h5>
-                <p>{{ item.city }}</p>
+                <p>{{ item.club.city }}</p>
                 <div class="table-responsive-sm">
                     <table class="table table-hover mt-4">
                         <thead>
