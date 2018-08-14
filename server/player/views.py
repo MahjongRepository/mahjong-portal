@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 
+from club.club_games.models import ClubRating
 from player.models import Player
 from player.tenhou.models import TenhouNickname
 from rating.models import RatingDelta, Rating, RatingResult
@@ -27,12 +27,17 @@ def player_details(request, slug):
                           .order_by('-tournament__end_date'))[:10]
 
     tenhou_data = TenhouNickname.objects.filter(player=player, is_main=True)
+    club_ratings = (ClubRating.objects
+                    .filter(player=player)
+                    .prefetch_related('club', 'club__city')
+                    .order_by('-games_count'))
 
     return render(request, 'player/details.html', {
         'player': player,
         'rating_results': rating_results,
         'tournament_results': tournament_results,
-        'tenhou_data': tenhou_data
+        'tenhou_data': tenhou_data,
+        'club_ratings': club_ratings
     })
 
 

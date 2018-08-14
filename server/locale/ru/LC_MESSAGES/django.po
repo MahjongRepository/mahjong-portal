@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-12 16:53+0000\n"
+"POT-Creation-Date: 2018-08-14 02:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -220,8 +220,8 @@ msgstr "Выйти"
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/club/details.html:32
-msgid "Club members statistics"
+#: templates/club/details.html:32 templates/player/details.html:239
+msgid "Club statistics"
 msgstr "Клубная статистика"
 
 #: templates/club/details.html:33
@@ -245,37 +245,41 @@ msgid "Name"
 msgstr "Имя"
 
 #: templates/club/details.html:51 templates/player/details.html:144
-#: templates/player/details.html:154 templates/player/tenhou.html:53
-#: templates/player/tenhou.html:63 templates/player/tenhou.html:116
-#: templates/player/tenhou.html:127 templates/tenhou/games_history.html:51
-#: templates/tournament/details.html:41
+#: templates/player/details.html:154 templates/player/details.html:247
+#: templates/player/tenhou.html:53 templates/player/tenhou.html:63
+#: templates/player/tenhou.html:116 templates/player/tenhou.html:127
+#: templates/tenhou/games_history.html:51 templates/tournament/details.html:41
 msgid "Games"
 msgstr "Игр"
 
 #: templates/club/details.html:54 templates/player/details.html:144
-#: templates/player/details.html:157 templates/player/tenhou.html:53
-#: templates/player/tenhou.html:66 templates/player/tenhou.html:116
-#: templates/player/tenhou.html:130
+#: templates/player/details.html:157 templates/player/details.html:250
+#: templates/player/tenhou.html:53 templates/player/tenhou.html:66
+#: templates/player/tenhou.html:116 templates/player/tenhou.html:130
 msgid "Avg. place"
 msgstr "Ср. место"
 
 #: templates/club/details.html:57 templates/player/details.html:160
-#: templates/player/tenhou.html:69 templates/player/tenhou.html:133
+#: templates/player/details.html:253 templates/player/tenhou.html:69
+#: templates/player/tenhou.html:133
 msgid "1st"
 msgstr "1-e"
 
 #: templates/club/details.html:60 templates/player/details.html:163
-#: templates/player/tenhou.html:72 templates/player/tenhou.html:136
+#: templates/player/details.html:256 templates/player/tenhou.html:72
+#: templates/player/tenhou.html:136
 msgid "2nd"
 msgstr "2-е"
 
 #: templates/club/details.html:63 templates/player/details.html:166
-#: templates/player/tenhou.html:75 templates/player/tenhou.html:139
+#: templates/player/details.html:259 templates/player/tenhou.html:75
+#: templates/player/tenhou.html:139
 msgid "3rd"
 msgstr "3-е"
 
 #: templates/club/details.html:66 templates/player/details.html:169
-#: templates/player/tenhou.html:78 templates/player/tenhou.html:142
+#: templates/player/details.html:262 templates/player/tenhou.html:78
+#: templates/player/tenhou.html:142
 msgid "4th"
 msgstr "4-е"
 
