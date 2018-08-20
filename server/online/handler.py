@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from datetime import timedelta
+from random import randint
 from urllib.error import HTTPError
 from urllib.parse import unquote, urlparse, parse_qs
 
@@ -255,11 +256,11 @@ class TournamentHandler(object):
             self.status.current_round += 1
             self.status.end_break_time = None
 
-            sortition = self.make_sortition()
-
             pantheon_ids = {}
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
+
+            sortition = self.make_sortition(list(pantheon_ids.keys()))
 
             games = []
             for item in sortition:
@@ -290,32 +291,11 @@ class TournamentHandler(object):
 
         return games, message
 
-    def make_sortition(self):
-        data = {
-            'jsonrpc': '2.0',
-            'method': 'generateSwissSeating',
-            'params': {
-                'eventId': settings.PANTHEON_EVENT_ID,
-            },
-            'id': make_random_letters_and_digit_string()
-        }
-
-        headers = {
-            'X-Auth-Token': settings.PANTHEON_ADMIN_TOKEN,
-        }
-
-        response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
-        if response.status_code == 500:
-            logger.error('Make sortition. Pantheon 500.')
-            return []
-
-        content = response.json()
-        if content.get('error'):
-            logger.error('Make sortition. Pantheon error. {}'.format(content.get('error')))
-            return []
-
-        sortition = content['result']
-        return sortition
+    def make_sortition(self, pantheon_ids):
+        if self.status.current_round == 1:
+            return self._random_sortition(pantheon_ids)
+        else:
+            return self._pantheon_swiss_sortition()
 
     def start_game(self, game):
         """
@@ -413,3 +393,44 @@ class TournamentHandler(object):
             message = 'Добро пожаловать в чат онлайн турнира! \n\n'
             message += 'Статистику турнира можно посмотреть вот тут: https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
             return message
+
+    def _pantheon_swiss_sortition(self):
+        data = {
+            'jsonrpc': '2.0',
+            'method': 'generateSwissSeating',
+            'params': {
+                'eventId': settings.PANTHEON_EVENT_ID,
+            },
+            'id': make_random_letters_and_digit_string()
+        }
+
+        headers = {
+            'X-Auth-Token': settings.PANTHEON_ADMIN_TOKEN,
+        }
+
+        response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+        if response.status_code == 500:
+            logger.error('Make sortition. Pantheon 500.')
+            return []
+
+        content = response.json()
+        if content.get('error'):
+            logger.error('Make sortition. Pantheon error. {}'.format(content.get('error')))
+            return []
+
+        return content['result']
+
+    def _random_sortition(self, pantheon_ids):
+        # default random.shuffle function doesn't produce good results
+        # so, let's use our own shuffle implementation
+        for i in range(len(pantheon_ids)):
+            swap = randint(0, len(pantheon_ids) - 1)
+            temp = pantheon_ids[swap]
+            pantheon_ids[swap] = pantheon_ids[i]
+            pantheon_ids[i] = temp
+        return list(self._split_to_chunks(pantheon_ids))
+
+    def _split_to_chunks(self, items):
+        n = 4
+        for i in range(0, len(items), n):
+            yield items[i:i + n]
