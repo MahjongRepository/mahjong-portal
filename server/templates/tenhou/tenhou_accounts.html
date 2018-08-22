@@ -19,6 +19,7 @@
                     <th scope="col">{% trans 'Rate' %}</th>
                     <th scope="col">{% trans 'Tenhou account' %}</th>
                     <th scope="col"></th>
+                    <th scope="col">{% trans 'Last played date' %}</th>
                     <th scope="col">{% trans 'City' %}</th>
                 </tr>
                 </thead>
@@ -44,6 +45,9 @@
                         </td>
                         <td>
                             <nobr>{{ account.pt }} / {{ account.end_pt }}pt</nobr>
+                        </td>
+                        <td>
+                            {{ account.last_played_date|date:SHORT_DATE_FORMAT }}
                         </td>
                         <td>
                             {% if account.player.city %}

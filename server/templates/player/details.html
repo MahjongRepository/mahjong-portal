@@ -113,7 +113,7 @@
                 </p>
                 {% if tenhou_item.last_played_date %}
                     <p>
-                        {% trans 'Last played date:' %} {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}
+                        {% trans 'Last played date' %}: {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}
                     </p>
                 {% endif %}
 
@@ -141,7 +141,7 @@
                 {% if tenhou_item.month_played_games %}
                     <h5>{% trans 'Current month' %}</h5>
                     <p>
-                        {% trans 'Games' %}: {{ tenhou_item.month_played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.month_average_place }}, {% trans 'Last played date:' %} {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}
+                        {% trans 'Games' %}: {{ tenhou_item.month_played_games }}, {% trans 'Avg. place' %}: {{ tenhou_item.month_average_place }}, {% trans 'Last played date' %}: {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}
                     </p>
                     <div class="table-responsive-sm">
                         <table class="table table-hover mt-4">
