@@ -64,7 +64,7 @@ def latest_yakumans(request):
 def tenhou_accounts(request):
     accounts = (TenhouNickname.objects
                 .all()
-                .order_by('-rank', '-four_games_rate')
+                .order_by('-rank', '-four_games_rate', '-pt')
                 .prefetch_related('player')
                 .prefetch_related('player__city'))
     return render(request, 'tenhou/tenhou_accounts.html', {

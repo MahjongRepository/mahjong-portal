@@ -18,6 +18,7 @@
                     <th scope="col">{% trans 'Dan' %}</th>
                     <th scope="col">{% trans 'Rate' %}</th>
                     <th scope="col">{% trans 'Tenhou account' %}</th>
+                    <th scope="col"></th>
                     <th scope="col">{% trans 'City' %}</th>
                 </tr>
                 </thead>
@@ -40,6 +41,9 @@
                         </td>
                         <td>
                             {{ account.tenhou_username }}
+                        </td>
+                        <td>
+                            <nobr>{{ account.pt }} / {{ account.end_pt }}pt</nobr>
                         </td>
                         <td>
                             {% if account.player.city %}
