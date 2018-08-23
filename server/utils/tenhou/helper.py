@@ -98,6 +98,8 @@ def recalculate_tenhou_statistics(tenhou_object):
         month_third_place = 0
         month_fourth_place = 0
 
+        TenhouStatistics.objects.filter(tenhou_object=tenhou_object).delete()
+
         for lobby_key, lobby_data in lobbies_data.items():
             stat_types = {
                 'all': TenhouStatistics.ALL_TIME,
