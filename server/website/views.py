@@ -132,7 +132,7 @@ def online_tournament_rules(request):
 def iormc_2018(request):
     spring_id = 294
     summer_id = 310
-    winter_id = -1
+    winter_id = 323
 
     tournament_ids = [spring_id, summer_id, winter_id]
     results = TournamentResult.objects.filter(tournament_id__in=tournament_ids).prefetch_related('player')
@@ -144,29 +144,35 @@ def iormc_2018(request):
         if not data.get(result.player_id):
             data[result.player_id] = {
                 'player': result.player,
-                'first': None,
-                'second': None,
-                'third': None,
+                'first': 0,
+                'second': 0,
+                'third': 0,
                 'total': 0,
                 'number_of_played': 0
             }
 
         if result.tournament_id == spring_id:
             data[result.player_id]['first'] = result.scores
-            data[result.player_id]['total'] += result.scores
             data[result.player_id]['number_of_played'] += 1
 
         if result.tournament_id == summer_id:
             data[result.player_id]['second'] = result.scores
-            data[result.player_id]['total'] += result.scores
             data[result.player_id]['number_of_played'] += 1
 
         if result.tournament_id == winter_id:
             data[result.player_id]['third'] = result.scores
-            data[result.player_id]['total'] += result.scores
             data[result.player_id]['number_of_played'] += 1
 
-    data = sorted(data.values(), key=lambda x: (x['number_of_played'], x['total']), reverse=True)
+    for key, value in data.items():
+        first = value['first'] + value['second']
+        second = value['first'] + value['third']
+
+        if data[key]['number_of_played'] <= 2:
+            data[key]['total'] = value['first'] + value['second'] + value['third']
+        else:
+            data[key]['total'] = max([first, second])
+
+    data = sorted(data.values(), key=lambda x: (x['number_of_played'] >= 2, x['total']), reverse=True)
 
     return render(request, 'website/iormc.html', {
         'data': data

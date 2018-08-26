@@ -59,13 +59,25 @@
                             {% endwith %}
                         </td>
                         <td>
-                            {{ item.first|floatformat:0|intcomma }}
+                            {% if item.first %}
+                                {{ item.first|floatformat:0|intcomma }}
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                         <td>
-                            {{ item.second|floatformat:0|intcomma }}
+                            {% if item.second %}
+                                {{ item.second|floatformat:0|intcomma }}
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                         <td>
-                            {{ item.third|floatformat:0|intcomma }}
+                            {% if item.third %}
+                                {{ item.third|floatformat:0|intcomma }}
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
                         <td>
                             {{ item.total|floatformat:0|intcomma }}
