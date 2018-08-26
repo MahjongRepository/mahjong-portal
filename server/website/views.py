@@ -164,13 +164,14 @@ def iormc_2018(request):
             data[result.player_id]['number_of_played'] += 1
 
     for key, value in data.items():
-        first = value['first'] + value['second']
-        second = value['first'] + value['third']
-
         if data[key]['number_of_played'] <= 2:
             data[key]['total'] = value['first'] + value['second'] + value['third']
         else:
-            data[key]['total'] = max([first, second])
+            first = value['first'] + value['second']
+            second = value['first'] + value['third']
+            third = value['second'] + value['third']
+
+            data[key]['total'] = max([first, second, third])
 
     data = sorted(data.values(), key=lambda x: (x['number_of_played'] >= 2, x['total']), reverse=True)
 
