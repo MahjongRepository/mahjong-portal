@@ -57,7 +57,11 @@
                             </span>
                             {% else %}
                                 {% with result.player as player %}
-                                    {% include 'common/_player_name.html' %}
+                                    {% if player %}
+                                        {% include 'common/_player_name.html' %}
+                                    {% else %}
+                                        {{ result.player_string }}
+                                    {% endif %}
                                 {% endwith %}
                             {% endif %}
                         </td>

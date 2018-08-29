@@ -48,6 +48,8 @@ def upload_results(request, tournament_id):
                 games = row.get('games', 0)
 
                 ema_id = row.get('ema', '').strip()
+                load_player = row.get('load_player', 'true').strip().lower()
+                load_player = load_player == 'true'
 
                 if is_ema:
                     first_name = row['first_name'].title()
@@ -65,8 +67,11 @@ def upload_results(request, tournament_id):
                     if first_name == 'Замены':
                         first_name = 'замены'
 
-                data = [place, first_name, last_name, scores, ema_id, games]
+                data = [place, first_name, last_name, scores, ema_id, games, load_player]
                 filtered_results.append(data)
+
+                if not load_player:
+                    continue
 
                 try:
                     if is_ema:
@@ -104,17 +109,24 @@ def upload_results(request, tournament_id):
                     scores = result[3]
                     ema_id = result[4]
                     games = result[5]
+                    load_player = result[6]
 
-                    if is_ema:
-                        if ema_id:
-                            player = Player.all_objects.get(ema_id=ema_id)
+                    player = None
+                    player_string = None
+                    if load_player:
+                        if is_ema:
+                            if ema_id:
+                                player = Player.all_objects.get(ema_id=ema_id)
+                            else:
+                                player = Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
                         else:
-                            player = Player.all_objects.get(first_name_en=first_name, last_name_en=last_name)
+                            player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                     else:
-                        player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                        player_string = '{} {}'.format(last_name, first_name)
 
                     TournamentResult.objects.create(
                         player=player,
+                        player_string=player_string,
                         tournament=tournament,
                         place=place,
                         scores=scores,

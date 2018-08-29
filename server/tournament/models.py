@@ -165,7 +165,8 @@ class Tournament(BaseModel):
 
 class TournamentResult(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='results', on_delete=models.PROTECT)
-    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results')
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results', null=True, blank=True)
+    player_string = models.CharField(max_length=512, null=True, blank=True)
     place = models.PositiveSmallIntegerField()
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     exclude_from_rating = models.BooleanField(default=False)
