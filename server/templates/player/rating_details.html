@@ -16,9 +16,26 @@
         places_data = [];
 
         {% for x in filtered_results %}
-            labels.push('{{ x.date|date:SHORT_DATE_FORMAT }}');
-            rating_data.push({{ x.score|safe }});
-            places_data.push({{ x.place }});
+            labels.push('{{ x.result.date|date:SHORT_DATE_FORMAT }}');
+            tournaments = []
+            {% for c in x.coefficients %}
+                tournaments.push({
+                    'name': '{{ c.tournament_name }}',
+                    'age': '{{ c.age }}',
+                    'previous_age': '{{ c.previous_age }}',
+                })
+            {% endfor %}
+            rating_data.push(
+                {
+                    'x': '{{ x.result.date|date:SHORT_DATE_FORMAT }}',
+                    'y': '{{ x.result.score|safe }}',
+                    'tournaments': tournaments,
+                });
+            places_data.push({
+                'x': '{{ x.result.date|date:SHORT_DATE_FORMAT }}',
+                'y': '{{ x.result.place }}',
+                'tournaments': tournaments,
+            });
         {% endfor %}
 
         var font_size = 15;
@@ -83,6 +100,20 @@
                     display: true,
                     labels: {
                         fontSize: font_size
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function(tooltipItems, data) {
+                            var result = [tooltipItems[0].xLabel]
+                            console.log( data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index])
+                            var tournaments = data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].tournaments
+                            for(var i in tournaments){
+                                var tournament = tournaments[i]
+                                result.push(tournament.name + ': ' + tournament.previous_age + ' -> ' + tournament.age)
+                            }
+                            return result
+                        }
                     }
                 }
             }

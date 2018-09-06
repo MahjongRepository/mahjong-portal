@@ -1,9 +1,12 @@
+from collections import defaultdict
+
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
 
 from club.club_games.models import ClubRating
 from player.models import Player
 from player.tenhou.models import TenhouNickname
-from rating.models import RatingDelta, Rating, RatingResult
+from rating.models import RatingDelta, Rating, RatingResult, TournamentCoefficients
 from tournament.models import TournamentResult
 
 
@@ -63,6 +66,26 @@ def player_rating_details(request, slug, rating_slug):
     all_rating_results = RatingResult.objects.filter(rating=rating, player=player).order_by('date')
     filtered_results = []
 
+    tournament_coefficients = TournamentCoefficients.objects.filter(
+        tournament__results__player=player,
+        rating=rating,
+    ).exclude(
+        previous_age=None,
+    ).exclude(
+        age=F('previous_age'),
+    ).order_by(
+        'date'
+    ).select_related(
+        'tournament'
+    )
+    tournament_coefficients_by_date = defaultdict(list)
+    for tc in tournament_coefficients:
+        tournament_coefficients_by_date[tc.date].append({
+            'tournament_name': tc.tournament.name,
+            'age': float(tc.age),
+            'previous_age': float(tc.previous_age)
+        })
+
     previous_score = -1
     previous_place = -1
     for x in all_rating_results:
@@ -77,7 +100,10 @@ def player_rating_details(request, slug, rating_slug):
             previous_place = x.place
 
         if need_to_add:
-            filtered_results.append(x)
+            filtered_results.append({
+                'result': x,
+                'coefficients': tournament_coefficients_by_date.get(x.date)
+            })
 
     rating_deltas = (RatingDelta.objects
                      .filter(player=player, rating=rating, is_last=True)
@@ -93,7 +119,7 @@ def player_rating_details(request, slug, rating_slug):
         'rating_deltas': rating_deltas,
         'rating_result': rating_result,
         'filtered_results': filtered_results,
-        'last_rating_place': last_rating_place
+        'last_rating_place': last_rating_place,
     })
 
 
