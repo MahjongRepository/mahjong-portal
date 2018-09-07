@@ -1,0 +1,42 @@
+{% load i18n %}
+
+<div class="table-responsive-sm">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">{% trans 'Date' %}</th>
+            <th scope="col">{% trans 'Place' %}</th>
+            <th scope="col">{% trans 'Points' %}</th>
+            <th scope="col">{% trans 'Reason' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for x in filtered_results|slice:":-11:-1" %}
+                <tr>
+                    <td nowrap>
+                        {{ x.result.date|date:SHORT_DATE_FORMAT }}
+                    </td>
+                    <td nowrap>
+                        {% if x.previous_place == x.result.place %}
+                            {{ x.result.place }}
+                        {% else %}
+                            {{ x.previous_place }} -> {{ x.result.place }}
+                        {% endif %}
+                    </td>
+                    <td nowrap>
+                        {% if x.previous_score == x.result.score %}
+                            {{ x.previous_score }}
+                        {% else %}
+                            {{ x.previous_score }} -> {{ x.result.score }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for c in x.coefficients %}
+                            <p>{{ c.tournament_name }}: {{ c.previous_age|floatformat:"0" }}% -> {{ c.age|floatformat:"0" }}%</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

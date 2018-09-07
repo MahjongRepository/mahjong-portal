@@ -21,8 +21,8 @@
             {% for c in x.coefficients %}
                 tournaments.push({
                     'name': '{{ c.tournament_name }}',
-                    'age': '{{ c.age }}',
-                    'previous_age': '{{ c.previous_age }}',
+                    'age': '{{ c.age|floatformat:"0" }}',
+                    'previous_age': '{{ c.previous_age|floatformat:"0" }}',
                 })
             {% endfor %}
             rating_data.push(
@@ -110,7 +110,7 @@
                             var tournaments = data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].tournaments
                             for(var i in tournaments){
                                 var tournament = tournaments[i]
-                                result.push(tournament.name + ': ' + tournament.previous_age + ' -> ' + tournament.age)
+                                result.push(tournament.name + ': ' + tournament.previous_age + '% -> ' + tournament.age + "%")
                             }
                             return result
                         }
@@ -227,6 +227,15 @@
 
         <h4 class="mt-4">{% trans 'Rating changes' %}</h4>
 
+        <p>
+          <a data-toggle="collapse" href="#ChangesTableCollapse">
+            Показать
+          </a>
+        </p>
+        <div class="collapse" id="ChangesTableCollapse">
+          {% include 'player/_changes_table.html' %}
+        </div>
+        <h4 class="mt-4">{% trans 'Tournaments' %}</h4>
         {% with deltas=rating_deltas %}
             {% include 'player/_deltas_table.html' %}
         {% endwith %}

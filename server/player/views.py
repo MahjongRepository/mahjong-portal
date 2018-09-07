@@ -89,21 +89,15 @@ def player_rating_details(request, slug, rating_slug):
     previous_score = -1
     previous_place = -1
     for x in all_rating_results:
-        need_to_add = False
-
-        if x.score != previous_score:
-            need_to_add = True
-            previous_score = x.score
-
-        if x.place != previous_place:
-            need_to_add = True
-            previous_place = x.place
-
-        if need_to_add:
+        if x.score != previous_score or x.place != previous_place:
             filtered_results.append({
                 'result': x,
+                'previous_score': previous_score,
+                'previous_place': previous_place,
                 'coefficients': tournament_coefficients_by_date.get(x.date)
             })
+        previous_score = x.score
+        previous_place = x.place
 
     rating_deltas = (RatingDelta.objects
                      .filter(player=player, rating=rating, is_last=True)
