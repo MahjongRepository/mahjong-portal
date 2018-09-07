@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from club.club_games.models import ClubRating
 from player.models import Player
-from player.tenhou.models import TenhouNickname
+from player.tenhou.models import TenhouNickname, TenhouGameLog
 from rating.models import RatingDelta, Rating, RatingResult, TournamentCoefficients
 from tournament.models import TournamentResult
 

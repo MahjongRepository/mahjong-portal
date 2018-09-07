@@ -1,10 +1,12 @@
 from datetime import timedelta
 
 from django.db import models
+from django.db.models import F
 from django.utils.translation import gettext_lazy
 
 from mahjong_portal.models import BaseModel
 from player.models import Player
+from utils.tenhou.points_calculator import PointsCalculator
 from utils.tenhou.yakuman_list import YAKUMAN_CONST
 
 
@@ -70,6 +72,17 @@ class TenhouNickname(BaseModel):
 
     def prepare_latest_places(self):
         return reversed(self.game_logs.order_by('-game_date')[:20])
+
+    def rank_changes(self):
+        return self.game_logs.exclude(rank=F('next_rank')).order_by('game_date')
+
+    def pt_changes(self):
+        last_rank_change_date = self.rank_changes().last()
+        last_rank_change_date = last_rank_change_date.game_end_date if last_rank_change_date else None
+        return self.game_logs.filter(game_date__gte=last_rank_change_date)
+
+    def dan_settings(self):
+        return PointsCalculator.DAN_SETTINGS[self.get_rank_display()]
 
 
 class TenhouStatistics(models.Model):
