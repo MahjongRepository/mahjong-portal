@@ -216,6 +216,10 @@ class RatingRRCalculation(object):
         )
         coefficient_obj.coefficient = self.tournament_coefficient(tournament)
         coefficient_obj.age = self.tournament_age(tournament.end_date, rating_date)
+        if rating_date <= tournament.end_date:
+            coefficient_obj.previous_age = 0
+        else:
+            coefficient_obj.previous_age = self.tournament_age(tournament.end_date, rating_date - timedelta(days=1))
         coefficient_obj.save()
 
         results = (TournamentResult.objects
