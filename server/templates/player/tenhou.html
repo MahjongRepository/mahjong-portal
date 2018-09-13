@@ -1,8 +1,113 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper tz %}
+{% load i18n russian_words_morph meta_tags_helper tz staticfiles %}
 
 {% block title %}
     {{ player.full_name }}. {% trans 'Tenhou.net profile' %}
+{% endblock %}
+
+{% block additional_js %}
+    <script src="{% static 'js/сhart.bundle.min.js' %}"></script>
+    <script>
+        var rank_changes = [];
+        var ranks = [];
+        {% for rank in tenhou_data.0.RANKS reversed %}
+            ranks.push('{{ rank.1 }}')
+        {% endfor %}
+        {% for c in tenhou_data.0.rank_changes %}
+            {% if forloop.first %}
+                rank_changes.push({
+                    'x': '{{ c.game_date|date:'Y-m-d' }}',
+                    'y': '{{ c.get_rank_display }}',
+                })
+            {% endif %}
+            rank_changes.push({
+                'x': '{{ c.game_date|date:'Y-m-d' }}',
+                'y': '{{ c.get_next_rank_display }}',
+            })
+            {% if forloop.last %}
+                rank_changes.push({
+                    'x': '{% now 'Y-m-d' %}',
+                    'y': '{{ c.get_next_rank_display }}',
+                })
+            {% endif %}
+        {% endfor %}
+        var rankChart = new Chart('rank_chart', {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: '{% trans 'Rank' %}',
+                        data: rank_changes,
+                        fill: false,
+                        borderColor: 'rgb(153, 102, 255)',
+                        backgroundColor: 'rgb(153, 102, 255)',
+                        steppedLine: true,
+                    },
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                    }],
+                    yAxes: [{
+                        type: 'category',
+                        labels: ranks,
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]['y'] || '';
+                            {# Понятия не имею почему без этого тултип кривой #}
+                        }
+                    }
+                }
+            }
+        });
+
+        var pt_changes = [];
+        var labels = [];
+        {% for c in tenhou_data.0.pt_changes %}
+            {% if forloop.first %}
+                pt_changes.push({{ tenhou_data.0.dan_settings.start_pt }})
+                labels.push("{{ c.game_date|date:'Y-m-d' }}")
+            {% endif %}
+            pt_changes.push(pt_changes[pt_changes.length - 1] + {{ c.delta }})
+            labels.push("{{ c.game_date|date:'Y-m-d' }}")
+        {% endfor %}
+        var ptChart = new Chart('pt_chart', {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: '{% trans 'Points' %}',
+                        data: pt_changes,
+                        fill: false,
+                        borderColor: 'green',
+                        backgroundColor: 'green',
+                        cubicInterpolationMode: 'monotone'
+                    },
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'category',
+                        labels: labels,
+                    }],
+                    yAxes: [{
+                        type: 'linear',
+                        ticks: {
+                            min: 0,
+                            max: {{ tenhou_data.0.dan_settings.end_pt }},
+                        }
+                    }]
+                }
+            }
+        });
+
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -46,6 +151,14 @@
                         {% endif %}
                     {% endtimezone %}
                 {% endwith %}
+                {% if forloop.first %}
+                    <div class="d-none d-md-block d-print-none">
+                        <h5>{% trans "Rank chart" %}</h5>
+                        <canvas id="rank_chart"></canvas>
+                        <h5>{% trans "Pt chart" %}</h5>
+                        <canvas id="pt_chart" class="d-none d-md-block d-print-none"></canvas>
+                    </div>
+                {% endif %}
 
                 {% if tenhou_item.month_played_games %}
                     <h5>{% trans 'Current month' %}</h5>

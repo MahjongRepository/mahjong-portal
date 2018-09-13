@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-07 12:00+0000\n"
+"POT-Creation-Date: 2018-09-12 16:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,19 +84,19 @@ msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: player/tenhou/models.py:82
+#: player/tenhou/models.py:95
 msgid "Kyu lobby"
 msgstr "Кю-лобби"
 
-#: player/tenhou/models.py:83
+#: player/tenhou/models.py:96
 msgid "Dan lobby"
 msgstr "Перводан"
 
-#: player/tenhou/models.py:84
+#: player/tenhou/models.py:97
 msgid "Upperdan lobby"
 msgstr "Втородан"
 
-#: player/tenhou/models.py:85
+#: player/tenhou/models.py:98
 msgid "Phoenix lobby"
 msgstr "Феникс"
 
@@ -246,40 +246,40 @@ msgstr "Имя"
 
 #: templates/club/details.html:51 templates/player/details.html:144
 #: templates/player/details.html:154 templates/player/details.html:248
-#: templates/player/tenhou.html:53 templates/player/tenhou.html:63
-#: templates/player/tenhou.html:116 templates/player/tenhou.html:127
+#: templates/player/tenhou.html:164 templates/player/tenhou.html:174
+#: templates/player/tenhou.html:227 templates/player/tenhou.html:238
 #: templates/tenhou/games_history.html:51 templates/tournament/details.html:41
 msgid "Games"
 msgstr "Игр"
 
 #: templates/club/details.html:54 templates/player/details.html:144
 #: templates/player/details.html:157 templates/player/details.html:251
-#: templates/player/tenhou.html:53 templates/player/tenhou.html:66
-#: templates/player/tenhou.html:116 templates/player/tenhou.html:130
+#: templates/player/tenhou.html:164 templates/player/tenhou.html:177
+#: templates/player/tenhou.html:227 templates/player/tenhou.html:241
 msgid "Avg. place"
 msgstr "Ср. место"
 
 #: templates/club/details.html:57 templates/player/details.html:160
-#: templates/player/details.html:254 templates/player/tenhou.html:69
-#: templates/player/tenhou.html:133
+#: templates/player/details.html:254 templates/player/tenhou.html:180
+#: templates/player/tenhou.html:244
 msgid "1st"
 msgstr "1-e"
 
 #: templates/club/details.html:60 templates/player/details.html:163
-#: templates/player/details.html:257 templates/player/tenhou.html:72
-#: templates/player/tenhou.html:136
+#: templates/player/details.html:257 templates/player/tenhou.html:183
+#: templates/player/tenhou.html:247
 msgid "2nd"
 msgstr "2-е"
 
 #: templates/club/details.html:63 templates/player/details.html:166
-#: templates/player/details.html:260 templates/player/tenhou.html:75
-#: templates/player/tenhou.html:139
+#: templates/player/details.html:260 templates/player/tenhou.html:186
+#: templates/player/tenhou.html:250
 msgid "3rd"
 msgstr "3-е"
 
 #: templates/club/details.html:66 templates/player/details.html:169
-#: templates/player/details.html:263 templates/player/tenhou.html:78
-#: templates/player/tenhou.html:142
+#: templates/player/details.html:263 templates/player/tenhou.html:189
+#: templates/player/tenhou.html:253
 msgid "4th"
 msgstr "4-е"
 
@@ -314,7 +314,7 @@ msgstr "Список и карта всех российских риичи ма
 
 #: templates/player/_changes_table.html:7 templates/player/_deltas_table.html:9
 #: templates/player/details.html:70 templates/player/details.html:211
-#: templates/player/tenhou.html:184 templates/player/tournaments.html:33
+#: templates/player/tenhou.html:295 templates/player/tournaments.html:33
 #: templates/tenhou/latest_yakumans.html:18
 #: templates/tournament/_tournaments_table.html:9
 msgid "Date"
@@ -328,7 +328,7 @@ msgstr "Дата"
 msgid "Place"
 msgstr "Место"
 
-#: templates/player/_changes_table.html:9
+#: templates/player/_changes_table.html:9 templates/player/tenhou.html:84
 #: templates/rating/_results_table.html:14
 msgid "Points"
 msgstr "Очки"
@@ -362,7 +362,7 @@ msgid "Tournament"
 msgstr "Турнир"
 
 #: templates/player/details.html:12 templates/player/rating_details.html:189
-#: templates/player/tenhou.html:12 templates/player/tournaments.html:12
+#: templates/player/tenhou.html:117 templates/player/tournaments.html:12
 msgid "From"
 msgstr "Из"
 
@@ -388,7 +388,7 @@ msgid "all player tournaments"
 msgstr "все турниры игрока"
 
 #: templates/player/details.html:106 templates/player/tenhou.html:5
-#: templates/player/tenhou.html:214 templates/player/tenhou.html:215
+#: templates/player/tenhou.html:325 templates/player/tenhou.html:326
 msgid "Tenhou.net profile"
 msgstr "Tenhou.net профиль"
 
@@ -396,54 +396,54 @@ msgstr "Tenhou.net профиль"
 msgid "more information"
 msgstr "больше информации"
 
-#: templates/player/details.html:110 templates/player/tenhou.html:25
+#: templates/player/details.html:110 templates/player/tenhou.html:130
 msgid "Statistics for"
 msgstr "Статистика аккаунта"
 
-#: templates/player/details.html:112 templates/player/tenhou.html:27
-#: templates/tenhou/games_history.html:58
+#: templates/player/details.html:112 templates/player/tenhou.html:39
+#: templates/player/tenhou.html:132 templates/tenhou/games_history.html:58
 msgid "Rank"
 msgstr "Ранг"
 
 #: templates/player/details.html:116 templates/player/details.html:144
-#: templates/player/tenhou.html:53 templates/player/tenhou.html:116
+#: templates/player/tenhou.html:164 templates/player/tenhou.html:227
 #: templates/tenhou/tenhou_accounts.html:22
 msgid "Last played date"
 msgstr "Дата последней игры"
 
-#: templates/player/details.html:124 templates/player/tenhou.html:33
+#: templates/player/details.html:124 templates/player/tenhou.html:138
 msgid "Latest places:"
 msgstr "Последние игры:"
 
-#: templates/player/details.html:142 templates/player/tenhou.html:51
+#: templates/player/details.html:142 templates/player/tenhou.html:162
 msgid "Current month"
 msgstr "За текущий месяц"
 
-#: templates/player/details.html:151 templates/player/tenhou.html:60
-#: templates/player/tenhou.html:124 templates/tenhou/games_history.html:62
+#: templates/player/details.html:151 templates/player/tenhou.html:171
+#: templates/player/tenhou.html:235 templates/tenhou/games_history.html:62
 msgid "Lobby"
 msgstr "Лобби"
 
-#: templates/player/details.html:206 templates/player/tenhou.html:179
+#: templates/player/details.html:206 templates/player/tenhou.html:290
 msgid "Collected yakumans"
 msgstr "Собранные якуманы"
 
-#: templates/player/details.html:210 templates/player/tenhou.html:183
+#: templates/player/details.html:210 templates/player/tenhou.html:294
 #: templates/tenhou/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
 
-#: templates/player/details.html:212 templates/player/tenhou.html:185
+#: templates/player/details.html:212 templates/player/tenhou.html:296
 #: templates/tenhou/latest_yakumans.html:19
 msgid "Log"
 msgstr "Игра"
 
-#: templates/player/details.html:226 templates/player/tenhou.html:199
+#: templates/player/details.html:226 templates/player/tenhou.html:310
 #: templates/tenhou/latest_yakumans.html:38
 msgid "link"
 msgstr "ссылка"
 
-#: templates/player/rating_details.html:198 templates/player/tenhou.html:21
+#: templates/player/rating_details.html:198 templates/player/tenhou.html:126
 #: templates/player/tournaments.html:21
 msgid "Player page"
 msgstr "Страница игрока"
@@ -472,7 +472,15 @@ msgstr "оригинальный"
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/tenhou.html:114
+#: templates/player/tenhou.html:155
+msgid "Rank chart"
+msgstr "График ранга"
+
+#: templates/player/tenhou.html:157
+msgid "Pt chart"
+msgstr "График pt"
+
+#: templates/player/tenhou.html:225
 msgid "All time"
 msgstr "За всё время"
 
