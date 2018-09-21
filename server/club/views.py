@@ -22,7 +22,7 @@ def club_list(request):
 
 def club_details(request, slug):
     club = get_object_or_404(Club, slug=slug)
-    tournaments = club.tournament_set.all().order_by('-end_date').prefetch_related('city')
+    tournaments = club.tournament_set.filter(is_hidden=False).order_by('-end_date').prefetch_related('city')
 
     club_sessions = (club.club_sessions
                      .all()
