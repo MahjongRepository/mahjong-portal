@@ -42,8 +42,8 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2))
         self.assertEqual(calculator.tournament_age(tournament.end_date, now), 25)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 + 181))
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 + 182))
         self.assertEqual(calculator.tournament_age(tournament.end_date, now), 25)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 + 182))
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 + 185))
         self.assertEqual(calculator.tournament_age(tournament.end_date, now), 0)
