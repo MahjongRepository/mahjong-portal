@@ -27,8 +27,7 @@ class RatingOnlineCalculation(RatingRRCalculation):
         return Player.objects.all()
 
     def tournament_age(self, end_date, rating_date):
-        today = timezone.now().date()
-        diff = relativedelta(today, end_date)
+        diff = relativedelta(rating_date, end_date)
 
         if diff.years < 1:
             return 100
