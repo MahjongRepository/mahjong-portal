@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
+from player.tenhou.models import TenhouNickname
 from utils.general import make_random_letters_and_digit_string
 from tournament.models import OnlineTournamentRegistration
 
@@ -205,17 +206,20 @@ class TournamentHandler(object):
             return 'Ник на тенхе не должен быть больше 8 символов.'
 
         try:
-            registration = OnlineTournamentRegistration.objects.get(
-                tenhou_nickname=tenhou_nickname,
-                tournament=self.tournament
-            )
-        except OnlineTournamentRegistration.DoesNotExist:
+            # registration = OnlineTournamentRegistration.objects.get(
+            #     tenhou_nickname=tenhou_nickname,
+            #     tournament=self.tournament
+            # )
+            tenhou_object = TenhouNickname.objects.get(tenhou_username=tenhou_nickname)
+        except TenhouNickname.DoesNotExist:
+        # except OnlineTournamentRegistration.DoesNotExist:
             return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
 
         if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
             return 'Ник "{}" уже был зарегистрирован на турнир.'.format(tenhou_nickname)
 
-        pantheon_id = registration.player and registration.player.pantheon_id or None
+        # pantheon_id = registration.player and registration.player.pantheon_id or None
+        pantheon_id = tenhou_object.player and tenhou_object.player.pantheon_id or None
 
         try:
             TournamentPlayers.objects.get(
