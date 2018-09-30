@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import random
 from datetime import timedelta
 from random import randint
 from urllib.error import HTTPError
@@ -260,10 +261,14 @@ class TournamentHandler(object):
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()))
+            # sortition = self.make_sortition(list(pantheon_ids.keys()))
+            sortition = self.make_sortition(self.status.current_round)
 
             games = []
             for item in sortition:
+                # shuffle player winds
+                random.shuffle(item)
+
                 try:
                     game = TournamentGame.objects.create(
                         status=TournamentGame.NEW,
@@ -291,11 +296,22 @@ class TournamentHandler(object):
 
         return games, message
 
-    def make_sortition(self, pantheon_ids):
-        if self.status.current_round == 1:
-            return self._random_sortition(pantheon_ids)
-        else:
-            return self._pantheon_swiss_sortition()
+    # def make_sortition(self, pantheon_ids):
+    def make_sortition(self, round_number):
+        sortition = [
+            [[231, 310, 258, 518], [36, 571, 10, 391],  [473, 55, 30, 40],    [287, 217, 56, 522],  [355, 235, 655, 262], [230, 12, 249, 214]],
+            [[231, 30, 235, 249],  [36, 258, 12, 56],   [473, 10, 287, 655],  [391, 355, 217, 55],  [310, 40, 262, 230],  [571, 518, 214, 522]],
+            [[231, 287, 40, 214],  [36, 235, 518, 217], [473, 12, 391, 262],  [56, 310, 355, 10],   [30, 571, 655, 230],  [258, 55, 249, 522]],
+            [[231, 391, 655, 522], [36, 40, 249, 355],  [473, 518, 56, 230],  [217, 30, 310, 12],   [287, 571, 258, 262], [235, 55, 10, 214]],
+            [[231, 56, 262, 55],   [36, 655, 214, 310], [473, 249, 217, 571], [355, 287, 30, 518],  [391, 258, 235, 230], [40, 10, 12, 522]],
+            [[231, 391, 230, 10],  [36, 262, 522, 30],  [473, 214, 355, 258], [310, 391, 287, 249], [56, 571, 235, 40],   [655, 55, 12, 518]],
+            [[231, 355, 571, 12],  [36, 230, 55, 287],  [473, 522, 310, 235], [30, 56, 391, 214],   [217, 258, 40, 655],  [262, 10, 518, 249]]
+        ]
+        return sortition[round_number - 1]
+        # if self.status.current_round == 1:
+        #     return self._random_sortition(pantheon_ids)
+        # else:
+        #     return self._pantheon_swiss_sortition()
 
     def start_game(self, game):
         """
