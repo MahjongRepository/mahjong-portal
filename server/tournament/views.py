@@ -91,7 +91,7 @@ def tournament_announcement(request, slug):
         form = TournamentRegistrationForm(initial=initial)
 
     if tournament.is_online():
-        registration_results = (TournamentRegistration.objects
+        registration_results = (OnlineTournamentRegistration.objects
                                                             .filter(tournament=tournament)
                                                             .filter(is_approved=True)
                                                             .prefetch_related('player')
