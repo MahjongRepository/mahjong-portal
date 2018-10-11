@@ -16,7 +16,7 @@
         <ol>
             <li><a href="#rr">Internal rating (RR)</a></li>
             <li><a href="#crr">Common russian riichi rating (CRR)</a></li>
-            <li><a href="#ema">EMA rating</a></li>
+            <li><a href="#online">Online rating</a></li>
         </ol>
 
         <h1 id="rr">Internal rating (RR)</h1>
@@ -110,7 +110,13 @@
         <h1 id="crr">Common russian riichi rating (CRR)</h1>
         <p>All calculations are equal to RR. Difference is only in tournaments that were added to the rating. It contains all tournaments with 12+ players and 3+ sessions.</p>
 
-        <h1 id="ema">EMA rating</h1>
-        <p>Simulated EMA rating.</p>
+        <h1 id="online">Online rating</h1>
+        <p>All the calculations are similar to RR with a few exceptions:</p>
+        <ol>
+            <li>Rating includes all online tournaments with 12+ players and 3+ hanchans.</li>
+            <li>Rating is calculated for a player after his first tournament.</li>
+            <li>The second part of the rating formula includes 3 best tournaments instead of 4.</li>
+            <li>Tournaments held in the past two and a half years are taken into account. Results of the tournaments held in the last 12 month are counted fully. Further, the tournament becomes obsolet by 25% each 6 months.</li>
+        </ol>
     </div>
 {% endblock %}
