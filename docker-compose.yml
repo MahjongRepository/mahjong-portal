@@ -3,29 +3,26 @@ version: '2'
 services:
     web:
         build: .
-        image: mahjong-portal
-        volumes:
-            - "./server:/code"
-        links:
-            - "db:db"
         environment:
-            - "PYTHONPATH=/code"
-            - "DJANGO_SETTINGS_MODULE=mahjong_portal.settings_docker"
+            DB_HOST: db
+            DB_NAME: mahjong_portal
+            DB_USER: mahjong_portal
+            DB_PASSWORD: password
         ports:
-            - "8000:8000"
+            - '8000:8000'
         depends_on:
-            - "db"
-        command: "/bin/bash -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000'"
+            - db
+        volumes:
+            - './server:/srv/mahjong-portal'
+        command: ./manage.py runserver 0.0.0.0:8000
     db:
         image: postgres:9.6
         environment:
-            - "POSTGRES_USER=mahjong_portal"
-            - "POSTGRES_DB=mahjong_portal"
-            - "POSTGRES_PASSWORD=password"
+            POSTGRES_USER: mahjong_portal
+            POSTGRES_DB: mahjong_portal
+            POSTGRES_PASSWORD: password
         volumes:
             - "mahjong_portal_pgdata:/var/lib/postgresql/data"
 
 volumes:
     mahjong_portal_pgdata:
-
-
