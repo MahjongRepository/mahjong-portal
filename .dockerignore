@@ -1,0 +1,10 @@
+**/*.py[cod]
+**/__pycache__
+**/collected_static
+**/settings_local.py
+env
+.DS_Store
+.idea
+.git
+Dockerfile
+docker-compose.yml
