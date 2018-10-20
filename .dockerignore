@@ -1,7 +1,7 @@
 **/*.py[cod]
 **/__pycache__
 **/collected_static
-**/settings_local.py
+**/local.py
 env
 .DS_Store
 .idea
