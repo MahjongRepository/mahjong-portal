@@ -3,18 +3,23 @@ language: python
 python:
   - 3.6
 
-services: postgresql
+services:
+  - postgresql
 
 before_install:
-  - export DJANGO_SETTINGS_MODULE=mahjong_portal.travis_settings
+  - export DB_HOST=localhost
+  - export DB_NAME=travis_db
+  - export DB_USER=postgres
+  - export DB_PASSWORD=
 
 install:
   - cd server
   - pip install -r requirements.pip
 
 before_script:
-  - psql -c "CREATE DATABASE travis_db;" -U postgres
+  - psql -c "CREATE DATABASE $DB_NAME;" -U $DB_USER
 
 script:
-  - python manage.py migrate --noinput
-  - python manage.py test --noinput
+  - ../scripts/localize.py < mahjong_portal/settings/local.example.py > mahjong_portal/settings/local.py
+  - ./manage.py migrate --noinput
+  - ./manage.py test --noinput
