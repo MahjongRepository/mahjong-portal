@@ -8,3 +8,4 @@ env
 .git
 Dockerfile
 docker-compose.yml
+initdb.d

@@ -16,3 +16,5 @@ db.sqlite3
 whoosh_index
 
 yakuman
+
+initdb.d/*.sql*
