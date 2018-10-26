@@ -162,6 +162,10 @@ class Command(BaseCommand):
 
             games_count = base_query.count()
 
+            # skip players without games
+            if not games_count:
+                continue
+
             first_place = base_query.filter(place=1).count()
             second_place = base_query.filter(place=2).count()
             third_place = base_query.filter(place=3).count()
