@@ -7,7 +7,7 @@ import socket
 
 def main():
     HOST = environ.get('DB_HOST', 'postgres')
-    PORT = int(environ.get('DB_PORT', 5432))
+    PORT = int(environ.get('DB_PORT'))
     with socket.socket() as s:
         for second in range(60):
             try:

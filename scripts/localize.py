@@ -11,7 +11,7 @@ DEFAULTS = {
     'SECRET_KEY': '--SECRET_KEY--',
     'HOST': '*',
     'DB_HOST': 'postgres',
-    'DB_PORT': '5432',
+    'DB_PORT': '5438',
     'DB_NAME': 'mahjong_portal',
     'DB_USER': 'mahjong_portal',
     'DB_PASSWORD': '--DB_PASSWORD--',
