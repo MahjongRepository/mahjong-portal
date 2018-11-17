@@ -6,7 +6,7 @@ python:
 services: postgresql
 
 before_install:
-- export DJANGO_SETTINGS_MODULE=mahjong_portal.travis_settings
+- export DJANGO_SETTINGS_MODULE=mahjong_portal.settings_travis
 
 install:
 - cd server
