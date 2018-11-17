@@ -8,7 +8,7 @@
 
 collected_static
 env
-local.py
+settings_local.py
 .DS_Store
 .idea
 backups
