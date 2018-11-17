@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n humanize %}
+
+{% block title %}
+    {% trans 'European Riichi Championship 2019 Qualifications' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'European Riichi Championship 2019 Qualifications' %}</h2>
+        <p>{% trans 'List of players sorted by RR rating (on 1st January 2019)' %}</p>
+        {% include 'rating/_results_table.html' %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'European Riichi Championship 2019 Qualifications' %}">
+    <meta property="og:description" content="">
+{% endblock %}

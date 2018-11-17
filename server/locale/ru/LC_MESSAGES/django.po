@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-12 16:45+0000\n"
+"POT-Creation-Date: 2018-11-17 10:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,40 +246,40 @@ msgstr "Имя"
 
 #: templates/club/details.html:51 templates/player/details.html:144
 #: templates/player/details.html:154 templates/player/details.html:248
-#: templates/player/tenhou.html:164 templates/player/tenhou.html:174
-#: templates/player/tenhou.html:227 templates/player/tenhou.html:238
+#: templates/player/tenhou.html:166 templates/player/tenhou.html:176
+#: templates/player/tenhou.html:229 templates/player/tenhou.html:240
 #: templates/tenhou/games_history.html:51 templates/tournament/details.html:41
 msgid "Games"
 msgstr "Игр"
 
 #: templates/club/details.html:54 templates/player/details.html:144
 #: templates/player/details.html:157 templates/player/details.html:251
-#: templates/player/tenhou.html:164 templates/player/tenhou.html:177
-#: templates/player/tenhou.html:227 templates/player/tenhou.html:241
+#: templates/player/tenhou.html:166 templates/player/tenhou.html:179
+#: templates/player/tenhou.html:229 templates/player/tenhou.html:243
 msgid "Avg. place"
 msgstr "Ср. место"
 
 #: templates/club/details.html:57 templates/player/details.html:160
-#: templates/player/details.html:254 templates/player/tenhou.html:180
-#: templates/player/tenhou.html:244
+#: templates/player/details.html:254 templates/player/tenhou.html:182
+#: templates/player/tenhou.html:246
 msgid "1st"
 msgstr "1-e"
 
 #: templates/club/details.html:60 templates/player/details.html:163
-#: templates/player/details.html:257 templates/player/tenhou.html:183
-#: templates/player/tenhou.html:247
+#: templates/player/details.html:257 templates/player/tenhou.html:185
+#: templates/player/tenhou.html:249
 msgid "2nd"
 msgstr "2-е"
 
 #: templates/club/details.html:63 templates/player/details.html:166
-#: templates/player/details.html:260 templates/player/tenhou.html:186
-#: templates/player/tenhou.html:250
+#: templates/player/details.html:260 templates/player/tenhou.html:188
+#: templates/player/tenhou.html:252
 msgid "3rd"
 msgstr "3-е"
 
 #: templates/club/details.html:66 templates/player/details.html:169
-#: templates/player/details.html:263 templates/player/tenhou.html:189
-#: templates/player/tenhou.html:253
+#: templates/player/details.html:263 templates/player/tenhou.html:191
+#: templates/player/tenhou.html:255
 msgid "4th"
 msgstr "4-е"
 
@@ -314,7 +314,7 @@ msgstr "Список и карта всех российских риичи ма
 
 #: templates/player/_changes_table.html:7 templates/player/_deltas_table.html:9
 #: templates/player/details.html:70 templates/player/details.html:211
-#: templates/player/tenhou.html:295 templates/player/tournaments.html:33
+#: templates/player/tenhou.html:297 templates/player/tournaments.html:33
 #: templates/tenhou/latest_yakumans.html:18
 #: templates/tournament/_tournaments_table.html:9
 msgid "Date"
@@ -388,7 +388,7 @@ msgid "all player tournaments"
 msgstr "все турниры игрока"
 
 #: templates/player/details.html:106 templates/player/tenhou.html:5
-#: templates/player/tenhou.html:325 templates/player/tenhou.html:326
+#: templates/player/tenhou.html:327 templates/player/tenhou.html:328
 msgid "Tenhou.net profile"
 msgstr "Tenhou.net профиль"
 
@@ -406,7 +406,7 @@ msgid "Rank"
 msgstr "Ранг"
 
 #: templates/player/details.html:116 templates/player/details.html:144
-#: templates/player/tenhou.html:164 templates/player/tenhou.html:227
+#: templates/player/tenhou.html:166 templates/player/tenhou.html:229
 #: templates/tenhou/tenhou_accounts.html:22
 msgid "Last played date"
 msgstr "Дата последней игры"
@@ -415,30 +415,30 @@ msgstr "Дата последней игры"
 msgid "Latest places:"
 msgstr "Последние игры:"
 
-#: templates/player/details.html:142 templates/player/tenhou.html:162
+#: templates/player/details.html:142 templates/player/tenhou.html:164
 msgid "Current month"
 msgstr "За текущий месяц"
 
-#: templates/player/details.html:151 templates/player/tenhou.html:171
-#: templates/player/tenhou.html:235 templates/tenhou/games_history.html:62
+#: templates/player/details.html:151 templates/player/tenhou.html:173
+#: templates/player/tenhou.html:237 templates/tenhou/games_history.html:62
 msgid "Lobby"
 msgstr "Лобби"
 
-#: templates/player/details.html:206 templates/player/tenhou.html:290
+#: templates/player/details.html:206 templates/player/tenhou.html:292
 msgid "Collected yakumans"
 msgstr "Собранные якуманы"
 
-#: templates/player/details.html:210 templates/player/tenhou.html:294
+#: templates/player/details.html:210 templates/player/tenhou.html:296
 #: templates/tenhou/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
 
-#: templates/player/details.html:212 templates/player/tenhou.html:296
+#: templates/player/details.html:212 templates/player/tenhou.html:298
 #: templates/tenhou/latest_yakumans.html:19
 msgid "Log"
 msgstr "Игра"
 
-#: templates/player/details.html:226 templates/player/tenhou.html:310
+#: templates/player/details.html:226 templates/player/tenhou.html:312
 #: templates/tenhou/latest_yakumans.html:38
 msgid "link"
 msgstr "ссылка"
@@ -472,15 +472,15 @@ msgstr "оригинальный"
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: templates/player/tenhou.html:155
+#: templates/player/tenhou.html:156
 msgid "Rank chart"
 msgstr "График ранга"
 
-#: templates/player/tenhou.html:157
+#: templates/player/tenhou.html:158
 msgid "Pt chart"
 msgstr "График pt"
 
-#: templates/player/tenhou.html:225
+#: templates/player/tenhou.html:227
 msgid "All time"
 msgstr "За всё время"
 
@@ -877,6 +877,15 @@ msgstr "Игроки"
 msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 
+#: templates/website/erc_2019.html:5 templates/website/erc_2019.html:10
+#: templates/website/erc_2019.html:16
+msgid "European Riichi Championship 2019 Qualifications"
+msgstr "Отборочные на Чемпионат Европы 2019 года"
+
+#: templates/website/erc_2019.html:11
+msgid "List of players sorted by RR rating (on 1st January 2019)"
+msgstr "RR рейтинг на 1 января 2019-го года."
+
 #: templates/website/home.html:17
 msgid "Top 16 players"
 msgstr "Лучшие 16 игроков"
@@ -1085,11 +1094,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:132
+#: tournament/views.py:136
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: tournament/views.py:154
+#: tournament/views.py:158
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -1097,11 +1106,11 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:157
+#: tournament/views.py:161
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:163
+#: tournament/views.py:167
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 

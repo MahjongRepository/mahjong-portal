@@ -1,3 +1,5 @@
+import datetime
+
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
@@ -177,4 +179,20 @@ def iormc_2018(request):
 
     return render(request, 'website/iormc.html', {
         'data': data
+    })
+
+
+def erc_qualification_2019(request):
+    rating = Rating.objects.get(type=Rating.RR)
+
+    rating_date = datetime.date(2019, 1, 1)
+    rating_results = (RatingResult.objects
+                      .filter(rating=rating)
+                      .filter(date=rating_date)
+                      .prefetch_related('player')
+                      .prefetch_related('player__city')
+                      .order_by('place'))
+
+    return render(request, 'website/erc_2019.html', {
+        'rating_results': rating_results
     })

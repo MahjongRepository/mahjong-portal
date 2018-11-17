@@ -117,4 +117,13 @@ class Command(BaseCommand):
 
                 calculator.calculate_players_rating_rank(rating, rating_date, is_last)
 
+            # calculate raring on 1st January 2019
+            qualification_date = datetime.date(2019, 1, 1)
+            limited_tournaments = tournaments.filter(end_date__lte=qualification_date)
+
+            for tournament in limited_tournaments:
+                calculator.calculate_players_deltas(tournament, rating, qualification_date, False)
+
+            calculator.calculate_players_rating_rank(rating, qualification_date, False)
+
         print('{0}: End'.format(get_date_string()))
