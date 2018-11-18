@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from website.views import home, about, search, city_page, online_tournament_rules, contacts, \
-    iormc_2018, erc_qualification_2019
+    iormc_2018, erc_qualification_2019, export_tournament_results
 
 urlpatterns = [
     url(r'^$', home, name='home'),
@@ -12,4 +12,7 @@ urlpatterns = [
     url(r'^online/$', online_tournament_rules, name='online'),
     url(r'^search/$', search, name='search'),
     url(r'^city/(?P<slug>[\w\-]+)/$', city_page, name='city_page'),
+    url(r'^export_tournament_results/(?P<tournament_id>\d+)/$',
+        export_tournament_results,
+        name='export_tournament_results'),
 ]

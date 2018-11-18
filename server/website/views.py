@@ -1,6 +1,9 @@
+import csv
 import datetime
+import io
 
-from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.translation import get_language
@@ -196,3 +199,68 @@ def erc_qualification_2019(request):
     return render(request, 'website/erc_2019.html', {
         'rating_results': rating_results
     })
+
+
+@user_passes_test(lambda u: u.is_superuser)
+@login_required
+def export_tournament_results(request, tournament_id):
+    content = io.StringIO()
+    writer = csv.writer(content)
+
+    rows = [
+        [
+            'Tournament name',
+            'Number of participants',
+            'Place',
+            'Player\'s first name',
+            'Player\'s last name',
+            'EMA number',
+            'Table points',
+            'Score',
+            'EMA member',
+            'Country',
+            'Date',
+            'Countrycourt',
+            'city',
+            'mers',
+            'shortname',
+            'rules',
+            'period',
+            'NbDays',
+            'Extra'
+        ]
+    ]
+
+    tournament = Tournament.objects.get(id=tournament_id)
+
+    for result in tournament.results.all().order_by('place'):
+        player = result.player
+
+        rows.append([
+            tournament.name_en,
+            tournament.number_of_players,
+            result.place,
+            player.first_name_en,
+            player.last_name_en,
+            player.ema_id or '',
+            '1',
+            result.scores,
+            player.ema_id and 'YES' or '',
+            'RUS',
+            tournament.end_date.strftime('%m/%d/%Y'),
+            'RUS',
+            tournament.city.name_en,
+            '2',
+            '',
+            'Riichi',
+            '',
+            '2',
+            'NO',
+        ])
+
+    for x in rows:
+        writer.writerow(x)
+
+    response = HttpResponse(content.getvalue(), content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(tournament.slug)
+    return response

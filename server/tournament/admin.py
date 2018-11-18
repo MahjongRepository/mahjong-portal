@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from tournament.models import Tournament, TournamentRegistration, OnlineTournamentRegistration, TournamentApplication, \
     TournamentResult
@@ -16,7 +18,7 @@ class TournamentAdmin(admin.ModelAdmin):
     form = TournamentForm
 
     prepopulated_fields = {'slug': ['name_en']}
-    list_display = ['name', 'country', 'end_date', 'is_upcoming']
+    list_display = ['name', 'country', 'end_date', 'is_upcoming', 'export']
     list_filter = ['tournament_type','need_qualification', 'country']
     search_fields = ['name_ru', 'name_en']
 
@@ -33,6 +35,10 @@ class TournamentAdmin(admin.ModelAdmin):
             request.META['QUERY_STRING'] = request.GET.urlencode()
         return super(TournamentAdmin,self).changelist_view(request, extra_context=extra_context)
 
+    def export(self, obj):
+        return mark_safe('<a href="{}">Export to EMA</a>'.format(
+            reverse('export_tournament_results', kwargs={'tournament_id': obj.id}))
+        )
 
 class TournamentRegistrationAdmin(admin.ModelAdmin):
     list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'phone', 'player',
