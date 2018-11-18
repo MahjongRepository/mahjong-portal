@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 
 from club.club_games.models import ClubRating
 from player.models import Player
@@ -63,7 +64,8 @@ def player_rating_details(request, slug, rating_slug):
     rating = get_object_or_404(Rating, slug=rating_slug)
 
     rating_result = get_object_or_404(RatingResult, rating=rating, player=player, is_last=True)
-    all_rating_results = RatingResult.objects.filter(rating=rating, player=player).order_by('date')
+    today = timezone.now()
+    all_rating_results = RatingResult.objects.filter(rating=rating, player=player).filter(date__lte=today).order_by('date')
     filtered_results = []
 
     tournament_coefficients = TournamentCoefficients.objects.filter(
