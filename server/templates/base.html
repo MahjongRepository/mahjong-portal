@@ -71,8 +71,15 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if page == 'rating' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'rating_list' %}">{% trans 'Ratings' %}</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans 'Ratings' %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'rating_list' %}">{% trans 'Ratings' %}</a>
+                    <a class="dropdown-item" href="{% url 'about' %}">{% trans 'About' %}</a>
+                    <a class="dropdown-item" href="{% url 'erc_qualification_2019' %}">{% trans 'ERC 2019' %}</a>
+                </div>
             </li>
             <li class="nav-item {% if page == 'tournament' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'tournament_list' 2018 %}">{% trans 'Tournaments' %}</a>
