@@ -884,11 +884,11 @@ msgstr "Турниры и игроки в риичи маджонг из"
 #: templates/website/erc_2019.html:5 templates/website/erc_2019.html:10
 #: templates/website/erc_2019.html:17
 msgid "European Riichi Championship 2019 Qualifications"
-msgstr "Отборочные на Чемпионат Европы 2019 года"
+msgstr "Отбор на Чемпионат Европы 2019 года"
 
 #: templates/website/erc_2019.html:11
 msgid "List of players sorted by RR rating (on 1st January 2019)"
-msgstr "RR рейтинг на 1 января 2019-го года."
+msgstr "Рейтинг RR на 1 января 2019 года с учетом устаревания турниров, но без учета еще не завершившихся турниров 2018 года."
 
 #: templates/website/home.html:17
 msgid "Top 16 players"
