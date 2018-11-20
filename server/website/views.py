@@ -131,7 +131,11 @@ def players_api(request):
 
 
 def online_tournament_rules(request):
-    return render(request, 'website/rules.html')
+    template = 'rules_en.html'
+    if get_language() == 'ru':
+        template = 'rules_ru.html'
+
+    return render(request, 'website/{}'.format(template))
 
 
 def iormc_2018(request):

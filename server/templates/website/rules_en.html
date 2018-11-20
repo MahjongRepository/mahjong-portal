@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    Online tournament rules
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Online tournament rules</h1>
+        <ol>
+            <li>Starting points: 30000</li>
+            <li>No nagashi</li>
+            <li>Bankruptcy (getting negative score during a hanchan) is allowed</li>
+            <li>When dealer wins in oorasu game continues even if he is on the 1st place</li>
+            <li>Uma 15/5</li>
+        </ol>
+        <p>After 3rd hanchan there is a 30-minute lunch break. Breaks between every other hanchans are 5 minutes</p>
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="Online tournament rules">
+    <meta property="og:description" content="Online tournament rules">
+{% endblock %}
