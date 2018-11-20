@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    FAQ о рейтинге
+{% endblock %}
+
+{% block additional_css %}
+    <style>
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>FAQ о рейтинге</h1>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: На основании какого рейтинга производится отбор на Чемпионат Мира (или Чемпионат Европы)?
+                </p>
+                <p class="card-text">
+                    A: На основании российского рейтинга RR.
+                </p>
+                <a href="{% url 'about' %}" class="card-link">О рейтинге</a>
+                <a href="{% url 'erc_qualification_2019' %}" class="card-link">Рейтинг на 1 января</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: Влияет ли моя позиция в рейтинге EMA на то, пройду ли я отбор на Чемпионат Мира (или Чемпионат
+                    Европы)?
+                </p>
+                <p class="card-text">
+                    A: Нет, не влияет.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: Каким образом рассчитывается рейтинг RR?
+                </p>
+                <p class="card-text">
+                    A: Подробный разбор формулы расчета рейтинга:
+                </p>
+                <a href="{% url 'about' %}#rr" class="card-link">О рейтинге</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: Где я могу посмотреть свою текущую позицию в рейтинге?
+                </p>
+                <p class="card-text">
+                    <a href="{% url 'rating' 'rr' %}" class="card-link">RR рейтинг</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: Верно ли, что выигрывая небольшие турниры, можно попасть в топ рейтинга?
+                </p>
+                <p class="card-text">
+                    A: Нет, неверно. Чтобы быть в топе рейтинга, нужно хорошо выступать в крупных турнирах. В формуле
+                    рейтинга это обеспечивается знаменателем в части расчёта лучших турниров игрока - для всех игроков
+                    он общий и равен сумме коэффициентов четырёх крупнейших турниров за последние два года.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: У меня изменился рейтинг, хотя я не сыграл новых турниров и у моих прежних турниров не изменился
+                    коэффициент затухания, почему это произошло?
+                </p>
+                <p class="card-text">
+                    A: Это произошло потому, что изменилась сумма коэффициентов четырёх крупнейших турниров последних
+                    двух лет. Случиться это могло по двум причинам: либо только что проведенный турнир вытеснил какой-то
+                    другой из четверки крупнейших, либо у одного из крупнейших турниров изменился коэффициент затухания.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <p class="card-title">
+                    Q: Может ли победа в турнире, коэффициент которого меньше единицы, понизить мой рейтинг?
+                </p>
+                <p class="card-text">
+                    A: Нет, не может, турнир с маленьким коэффициентом будет просто слабо влиять на рейтинг игрока, но
+                    увеличится рейтинг или уменьшится - зависит только от результата турнира.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="FAQ о рейтинге">
+    <meta property="og:description" content="FAQ о рейтинге">
+{% endblock %}
