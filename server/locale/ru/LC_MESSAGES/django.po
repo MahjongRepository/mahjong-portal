@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-17 10:49+0000\n"
+"POT-Creation-Date: 2018-11-20 12:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -497,12 +497,16 @@ msgstr "Рейтинг на дату"
 msgid "What tournaments were included to the rating?"
 msgstr "Список турниров влияющих на этот рейтинг"
 
-#: templates/rating/list.html:16 templates/tournament/announcement.html:26
+#: templates/rating/list.html:11
+msgid "ratings description"
+msgstr "описание рейтингов"
+
+#: templates/rating/list.html:17 templates/tournament/announcement.html:26
 #: templates/website/home.html:18
 msgid "all results"
 msgstr "все результаты"
 
-#: templates/rating/list.html:24 templates/rating/list.html:25
+#: templates/rating/list.html:25 templates/rating/list.html:26
 msgid "All available ratings"
 msgstr "Все доступные рейтинги"
 
@@ -878,7 +882,7 @@ msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 
 #: templates/website/erc_2019.html:5 templates/website/erc_2019.html:10
-#: templates/website/erc_2019.html:16
+#: templates/website/erc_2019.html:17
 msgid "European Riichi Championship 2019 Qualifications"
 msgstr "Отборочные на Чемпионат Европы 2019 года"
 

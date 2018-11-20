@@ -8,6 +8,7 @@
 {% block content %}
     <div>
         <h1>{% trans 'Ratings' %}</h1>
+        <p><a href="{% url 'about' %}">{% trans 'ratings description' %}</a></p>
         {% for rating in ratings %}
             <div class="card mb-4">
                 <div class="card-body">
