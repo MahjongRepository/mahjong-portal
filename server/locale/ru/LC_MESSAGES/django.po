@@ -142,7 +142,7 @@ msgstr "О рейтингах"
 
 #: templates/base.html:81
 msgid "ERC 2019"
-msgstr "Отбор на ЧМ 2019"
+msgstr "Отбор на ЧЕ 2019"
 
 #: templates/base.html:85 templates/base.html:123
 #: templates/club/details.html:27 templates/player/rating_details.html:238
