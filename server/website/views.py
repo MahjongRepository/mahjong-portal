@@ -197,7 +197,7 @@ def iormc_2018(request):
     })
 
 
-def erc_qualification_2019(request):
+def ermc_qualification_2019(request):
     rating = Rating.objects.get(type=Rating.RR)
 
     rating_date = datetime.date(2019, 1, 1)

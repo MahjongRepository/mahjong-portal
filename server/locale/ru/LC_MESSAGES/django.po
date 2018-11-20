@@ -141,7 +141,7 @@ msgid "About"
 msgstr "О рейтингах"
 
 #: templates/base.html:81
-msgid "ERC 2019"
+msgid "ERMC 2019"
 msgstr "Отбор на ЧЕ 2019"
 
 #: templates/base.html:85 templates/base.html:123
