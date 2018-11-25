@@ -204,7 +204,7 @@ def start_games(bot, update):
 def start_failed_games(bot, update):
     logger.info('Start failed games')
 
-    games = TournamentGame.objects.filter(status=Q(TournamentGame.FAILED_TO_START) | Q(TournamentGame.NEW))
+    games = TournamentGame.objects.filter(status=TournamentGame.FAILED_TO_START)
     bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры... \n\n Starting games...')
 
     for game in games:
