@@ -42,15 +42,24 @@ class TournamentHandler(object):
         if not self.status.current_round:
             confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
             if self.status.registration_closed:
-                return 'Игры скоро начнутся. Подтвержденных игроков: {}.'.format(confirmed_players)
+                message = u'Игры скоро начнутся. Подтвержденных игроков: {}.'.format(confirmed_players)
+                message += '\n\n'
+                message += 'Games are starting shortly. Confirmed players: {}'.format(confirmed_players)
+                return message
             else:
-                return 'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
+                message = u'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
+                message += '\n\n'
+                message += 'Players confirmation step is in progress. Confirmed players: {}'.format(confirmed_players)
+                return message
 
         if self.status.end_break_time:
             now = timezone.now()
 
             if now > self.status.end_break_time:
-                return 'Ждём начала нового тура.'
+                message = u'Ждём начала нового тура.'
+                message += '\n\n'
+                message += 'Next game is starting shortly.'
+                return message
 
             minutes_dict = {
                 1: 'минуту',
@@ -96,13 +105,21 @@ class TournamentHandler(object):
                     seconds,
                     seconds_dict.get(seconds, 'секунд'),
                 )
+
+                date_en = '{} minutes {} seconds'.format(minutes, seconds)
             else:
                 date = '{} {}'.format(
                     delta.seconds,
                     seconds_dict.get(delta.seconds, 'секунд'),
                 )
 
-            return 'Перерыв. Следующий тур начнётся через {}.'.format(date)
+                date_en = '{} seconds'.format(delta.seconds)
+
+            message = 'Перерыв. Следующий тур начнётся через {}.'.format(date)
+            message += '\n\n'
+            message += 'Break time. Next game starts in {}'.format(date_en)
+
+            return message
 
         active_games_count = (TournamentGame.objects
                               .filter(tournament=self.tournament)
@@ -118,7 +135,7 @@ class TournamentHandler(object):
                               .count())
 
         if active_games_count or failed_games_count:
-            message = 'Тур {}. '.format(self.status.current_round)
+            message = 'Тур {} из 7. '.format(self.status.current_round)
 
             if active_games_count:
                 message += 'Активных игр на данный момент: {}. Ждём пока они закончатся.'.format(active_games_count)
@@ -126,20 +143,34 @@ class TournamentHandler(object):
             if failed_games_count:
                 message += 'Несколько игр не смогли запуститься. Администратор скоро это исправит.'
 
+            message += '\n\n'
+            message += 'Game {} of ouf 7. '.format(self.status.current_round)
+
+            if active_games_count:
+                message += 'Games in progress: {}.'.format(active_games_count)
+
             return message
 
         if self.status.current_round == self.tournament.number_of_sessions:
-            return 'Турнир завершён. Спасибо за участие!'
+            message = u'Турнир завершён. Спасибо за участие!'
+            message += '\n\n'
+            message += 'Tournament is finished. Thank you for participation!'
+            return message
 
         return ''
 
     def close_registration(self):
         self.status.registration_closed = True
         self.status.save()
-        return 'Этап подтверждения участия завершился. Игры начнутся через 10 минут.'
+        message = u'Этап подтверждения участия завершился. Игры начнутся в 10-30 (МСК, UTC +3).'
+        message += '\n\n'
+        message += 'Confirmation step is done. Games start at 7-30 (UTC +0).'
+        return message
 
     def add_game_log(self, log_link):
         error_message = 'Это не похоже на лог игры.'
+        error_message += '\n\n'
+        error_message += 'It doesn\'t look like a game log link.'
         
         log_link = log_link.strip()
         if not log_link.startswith('http://tenhou.net/'):
@@ -156,10 +187,16 @@ class TournamentHandler(object):
             parser = TenhouParser()
             players = parser.get_player_names(log_id)
         except HTTPError:
-            return 'Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не весь log id.'
+            message = u'Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не весь log id.'
+            message += '\n\n'
+            message += 'Doesn\'t work. Try again in a moment.'
+            return message
         
         if TournamentGame.objects.filter(log_id=log_id).exists():
-            return 'Игра уже была добавлена в систему. Спасибо.'
+            message = u'Игра уже была добавлена в систему. Спасибо.'
+            message += '\n\n'
+            message += 'Game is added. Thanks!'
+            return message
         
         games = (TournamentGame.objects
                                .filter(tournament=self.tournament)
@@ -196,14 +233,24 @@ class TournamentHandler(object):
         game.status = TournamentGame.FINISHED
         game.save()
 
-        return 'Игра была добавлена. Спасибо.'
+        message = 'Игра была добавлена. Спасибо.'
+        message += '\n\n'
+        message += 'Game is added. Thanks!'
+
+        return message
 
     def link_username_and_tenhou_nick(self, telegram_username, tenhou_nickname):
         if self.status.registration_closed:
-            return 'Этап подтверждения участия уже завершился. Зарегистрироваться нельзя.'
+            message = 'Этап подтверждения участия уже завершился. Зарегистрироваться нельзя.'
+            message += '\n\n'
+            message += 'Confirmation step is finished.'
+            return message
 
         if len(tenhou_nickname) > 8:
-            return 'Ник на тенхе не должен быть больше 8 символов.'
+            message = 'Ник на тенхе не должен быть больше 8 символов.'
+            message += '\n\n'
+            message += 'Your tenhou.net nickname shouldn\'t be more than 8 symbols.'
+            return message
 
         try:
             registration = OnlineTournamentRegistration.objects.get(
@@ -211,7 +258,10 @@ class TournamentHandler(object):
                 tournament=self.tournament
             )
         except OnlineTournamentRegistration.DoesNotExist:
-            return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
+            message = 'Этот тенхо ник не был зарегистрирован на турнир заранее. Обратитесь к администратору.'
+            message += '\n\n'
+            message += 'Your tenhou.net nickname hasn\'t been registered. Contact with @Nihisil'
+            return message
 
         if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
             return 'Ник "{}" уже был зарегистрирован на турнир.'.format(tenhou_nickname)
@@ -232,6 +282,8 @@ class TournamentHandler(object):
             )
 
         message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_nickname)
+        message += '\n\n'
+        message += 'Tenhou.net nickname "{}" is associated with your telegram account now. Your tournament participation is confirmed!'.format(tenhou_nickname)
         return message
 
     def prepare_next_round(self):
@@ -290,7 +342,9 @@ class TournamentHandler(object):
             if games:
                 self.status.save()
 
-                message = 'Тур {}. Игры сформированы.'.format(self.status.current_round)
+                message = 'Тур {} из 7 начинается. Игры сформированы.'.format(self.status.current_round)
+                message += '\n\n'
+                message += 'Game {} out of 7 is starting now. Sortition is ready.'.format(self.status.current_round)
             else:
                 message = 'Игры не запустились. Требуется вмешательство администратора.'
 
@@ -336,6 +390,9 @@ class TournamentHandler(object):
 
                 message = 'Стол: {} не получилось запустить.'.format(u', '.join(player_names))
                 message += ' Стол был отодвинут в конец очереди.'
+                message += '\n\n'
+                message += 'Game: {} is not started.'.format(u', '.join(player_names))
+                message += ' The start of this game is delayed. Please wait a moment.'
             elif result.startswith('MEMBER NOT FOUND'):
                 game.status = TournamentGame.FAILED_TO_START
 
@@ -350,10 +407,16 @@ class TournamentHandler(object):
 
                 message += ' Отсутствующие игроки: {}'.format(', '.join(tg_usernames))
                 message += ' Стол был отодвинут в конец очереди.'
+
+                message += 'Game: {} is not started.'.format(u', '.join(player_names))
+                message += ' Missed players: {}'.format(', '.join(tg_usernames))
+                message += ' The start of this game is delayed. Please wait a moment.'
             else:
                 game.status = TournamentGame.STARTED
 
                 message = 'Стол: {} запущен.'.format(u', '.join(player_names))
+                message += '\n\n'
+                message += 'Game: {} started.'.format(u', '.join(player_names))
         except:
             message = 'Стол: {} не получилось запустить. Требуется вмешательство администратора.'.format(
                 u', '.join(player_names)
@@ -375,24 +438,44 @@ class TournamentHandler(object):
 
         if finished_games.count() == games.count() and not self.status.end_break_time:
             if self.status.current_round == self.tournament.number_of_sessions:
-                return 'Все туры были завершены. Спасибо за участие!'
+                message = 'Все туры были завершены. Спасибо за участие!'
+                message += '\n\n'
+                message += 'Tournament is finished. Thank you for participation!'
+
+                return message
             else:
                 index = self.status.current_round - 1
                 break_minutes = TOURNAMENT_BREAKS_TIME[index]
                 self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
                 self.status.save()
-                return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.'.format(break_minutes)
+
+                message = 'Все игры текущего тура успешно завершились. Следующий тур начнётся через {} минут.'.format(break_minutes)
+                message += '\n\n'
+                message += '{} out of 7 games finished. Next game starts in {} minutes'.format(self.status.current_round, break_minutes)
+
+                return message
         else:
             return None
 
     def new_chat_member(self, username):
         if not self.status.current_round:
             message = 'Добро пожаловать в чат онлайн турнира! \n'
+
             if not username:
                 message += u'Для начала установите username в настройках телеграма (Settings -> Username). Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n'
                 message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
             else:
                 message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
+
+            message += '\n\n'
+            message += 'Welcome to our Online Tournament! \n'
+
+            if not username:
+                message += u'Let\'s start with setting your telegram username (Settings -> Username). Instruction: https://telegram.org/faq#q-what-are-usernames-how-do-i-get-one \n'
+                message += u'After that type this command "/me your tenhou.net nickname" to confirm participation.'
+            else:
+                message += u'Type this command "/me your tenhou.net nickname" to confirm participation.'
+
             return message
         else:
             message = 'Добро пожаловать в чат онлайн турнира! \n\n'
