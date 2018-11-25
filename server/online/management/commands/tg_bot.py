@@ -7,6 +7,7 @@ from threading import Thread
 import telegram
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 from telegram.error import Unauthorized, BadRequest, TimedOut, NetworkError, ChatMigrated, TelegramError
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
@@ -188,7 +189,7 @@ def start_games(bot, update):
 def start_failed_games(bot, update):
     logger.info('Start failed games')
 
-    games = TournamentGame.objects.filter(status=TournamentGame.FAILED_TO_START)
+    games = TournamentGame.objects.filter(status=Q(TournamentGame.FAILED_TO_START) | Q(TournamentGame.NEW))
     bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры...')
 
     for game in games:
