@@ -144,7 +144,7 @@ class TournamentHandler(object):
                 message += 'Несколько игр не смогли запуститься. Администратор скоро это исправит.'
 
             message += '\n\n'
-            message += 'Game {} of ouf 7. '.format(self.status.current_round)
+            message += 'Game {} of out 7. '.format(self.status.current_round)
 
             if active_games_count:
                 message += 'Games in progress: {}.'.format(active_games_count)
