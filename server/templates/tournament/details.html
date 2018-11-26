@@ -92,7 +92,7 @@
                                 <a href="{% url 'city_page' result.player.city.slug %}">{{ result.player.city.name }}</a>
                             {% else %}
                                 {% if result.country %}
-                                    {{ result.player.country }}
+                                    {{ result.country }}
                                 {% elif result.player.is_replacement or result.player.is_hide %}
                                     -
                                 {% else %}
