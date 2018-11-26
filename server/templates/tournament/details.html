@@ -40,6 +40,11 @@
                     {% if tournament.is_stage_tournament %}
                         <th scope="col">{% trans 'Games' %}</th>
                     {% endif %}
+                    {% if tournament.is_online %}
+                        <th scope="col">
+                            {% trans 'Tenhou' %}
+                        </th>
+                    {% endif %}
                     <th scope="col">{% trans 'From' context 'location' %}</th>
                 </tr>
                 </thead>
@@ -77,11 +82,18 @@
                                 {{ result.games }}
                             </td>
                         {% endif %}
+                        {% if tournament.is_online %}
+                            <td>
+                                <nobr>{{ result.player.tenhou_object.get_rank_display }}</nobr>
+                            </td>
+                        {% endif %}
                         <td>
                             {% if result.player.city %}
                                 <a href="{% url 'city_page' result.player.city.slug %}">{{ result.player.city.name }}</a>
                             {% else %}
-                                {% if result.player.is_replacement or result.player.is_hide %}
+                                {% if result.country %}
+                                    {{ result.player.country }}
+                                {% elif result.player.is_replacement or result.player.is_hide %}
                                     -
                                 {% else %}
                                     {{ result.player.country }}

@@ -172,6 +172,9 @@ class TournamentResult(BaseModel):
     exclude_from_rating = models.BooleanField(default=False)
     games = models.PositiveSmallIntegerField(default=0)
 
+    # for players without profile
+    country = models.ForeignKey(Country, null=True, blank=True)
+
     def __unicode__(self):
         return self.tournament.name
 
