@@ -18,6 +18,9 @@ class ClubSession(BaseModel):
     pantheon_id = models.CharField(max_length=255, null=True, blank=True)
     pantheon_event_id = models.PositiveIntegerField(null=True, blank=True)
 
+    def __unicode__(self):
+        return self.date
+
 
 class ClubSessionResult(BaseModel):
     club_session = models.ForeignKey(ClubSession, related_name='results')
