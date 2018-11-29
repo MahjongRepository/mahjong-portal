@@ -30,7 +30,9 @@
             {% endfor %}
         </div>
         {% if tournaments %}
-            {% include 'tournament/_tournaments_table.html' %}
+            {% with reverse_counter=True %}
+                {% include 'tournament/_tournaments_table.html' %}
+            {% endwith %}
         {% else %}
             <p class="mt-4">{% trans 'Nothing here' %}</p>
         {% endif %}

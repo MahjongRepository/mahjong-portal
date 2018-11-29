@@ -29,7 +29,11 @@
         <tbody>
         {% for tournament in tournaments %}
             <tr>
-                <th scope="row">{{ forloop.counter }}</th>
+                {% if reverse_counter %}
+                    <th scope="row">{{ forloop.revcounter }}</th>
+                {% else %}
+                    <th scope="row">{{ forloop.counter }}</th>
+                {% endif %}
                 <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
                 <td>
                     {% if tournament.is_upcoming %}
