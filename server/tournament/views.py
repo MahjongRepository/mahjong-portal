@@ -86,7 +86,7 @@ def tournament_announcement(request, slug):
         initial['city'] = tournament.city.name_ru
 
     if tournament.is_online():
-        form = OnlineTournamentRegistrationForm()
+        form = OnlineTournamentRegistrationForm(initial=initial)
     else:
         form = TournamentRegistrationForm(initial=initial)
 
@@ -97,6 +97,8 @@ def tournament_announcement(request, slug):
                                                             .prefetch_related('player')
                                                             .prefetch_related('city_object')
                                                             .order_by('created_on'))
+        if tournament.display_notes:
+            registration_results = registration_results.order_by('notes', 'created_on')
     else:
         registration_results = (TournamentRegistration.objects
                                                       .filter(tournament=tournament)
@@ -123,9 +125,11 @@ def tournament_registration(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     
     if tournament.is_online():
-        form = OnlineTournamentRegistrationForm(request.POST)
+        form = OnlineTournamentRegistrationForm(request.POST, initial={
+            'tournament': tournament
+        })
     else:
-        form = TournamentRegistrationForm(request.POST, initial = {
+        form = TournamentRegistrationForm(request.POST, initial={
             'tournament': tournament
         })
 

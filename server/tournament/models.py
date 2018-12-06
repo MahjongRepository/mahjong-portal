@@ -207,8 +207,7 @@ class TournamentRegistration(BaseModel):
                                           default='', null=True, blank=True)
 
     is_highlighted = models.BooleanField(default=False)
-    notes = models.TextField(null=True, blank=True, default='', verbose_name=_('Notes. Optional'),
-                             help_text=_('Tell us about yourself'))
+    notes = models.TextField(null=True, blank=True, default='', verbose_name=_('Team name'))
 
     player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
     city_object = models.ForeignKey(City, null=True, blank=True)
@@ -238,6 +237,8 @@ class OnlineTournamentRegistration(BaseModel):
     city_object = models.ForeignKey(City, null=True, blank=True)
 
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_('I allow to store my personal data'))
+
+    notes = models.TextField(null=True, blank=True, default='', verbose_name=_('Team name'))
 
     class Meta:
         unique_together = ['tenhou_nickname', 'tournament']

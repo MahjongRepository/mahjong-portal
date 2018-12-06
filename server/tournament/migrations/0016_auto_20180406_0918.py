@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tournamentregistration',
             name='notes',
-            field=models.TextField(blank=True, default='', help_text='Tell us about yourself', null=True, verbose_name='Notes. Optional'),
+            field=models.TextField(blank=True, default='', null=True, verbose_name='Team name'),
         ),
     ]
