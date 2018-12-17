@@ -253,7 +253,7 @@ def export_tournament_results(request, tournament_id):
             tournament.number_of_players,
             result.place,
             player.first_name_en,
-            player.last_name_en,
+            player.last_name_en.upper(),
             player.ema_id or '',
             '1',
             result.scores,
