@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from player.models import Player
+from player.models import Player, PlayerERMC
 from player.tenhou.models import TenhouNickname
 
 
@@ -32,4 +32,12 @@ class PlayerAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return Player.all_objects.all()
 
+
+class PlayerERMCAdmin(admin.ModelAdmin):
+    search_fields = ['player__first_name_ru', 'player__first_name_en', 'player__last_name_ru', 'player__last_name_en']
+    list_display = ['player', 'state', 'federation_member']
+    raw_id_fields = ['player']
+
+
 admin.site.register(Player, PlayerAdmin)
+admin.site.register(PlayerERMC, PlayerERMCAdmin)

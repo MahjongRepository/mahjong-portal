@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize %}
+{% load i18n humanize player_helper %}
 
 {% block title %}
     {% trans 'European Riichi Championship 2019 Qualifications' %}
@@ -14,8 +14,8 @@
                 2019 (<a href="https://www.ermc2019.com" target="_blank">https://www.ermc2019.com</a>)
             </p>
             <p>
-                Точное количество участников от каждой страны будет известно в январе 2019 года. На текущий момент
-                Россия имеет 21 место, и есть основания полагать, что и к январю 2019 года будет не меньше.
+                Точное количество участников от каждой страны будет известно в январе 2019 года. Предварительно Россия
+                имеет 20 квот.
             </p>
             <p>
                 Участники от России будут отбираться по российскому риичи-рейтингу RR. Всем игрокам в топе рейтинга на 1
@@ -39,13 +39,81 @@
                 Если вы уже являетесь членом Федерации маджонга, не забудьте оплатить взнос за 2019 год.
             </p>
             <p>
-                Рейтинг RR на 1 января 2019 года с учетом устаревания турниров, но без учета еще не завершившихся
-                турниров 2018 года:
+                Рейтинг RR на 1 января 2019 года приведен ниже.
+            </p>
+            <p>
+                Игроки в топе таблицы выделены цветами согласно их текущему статусу.
+            </p>
+            <p>
+                <span style="background-color: {{ 'green'|ermc_color }}; padding: 5px;">Зеленый</span> - точно едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'yellow'|ermc_color }}; padding: 5px;">Желтый</span> - скорее всего едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'orange'|ermc_color }}; padding: 5px;">Оранжевый</span> - пока сомневается, но скорее всего не едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'blue'|ermc_color }}; padding: 5px;">Голубой</span> - игрок пока ничего не ответил.
+            </p>
+            <p>
+                <span style="background-color: {{ 'pink'|ermc_color }}; padding: 5px;">Розовый</span> - игрок пока что не проходит, но готов ехать, если появится квота.
+            </p>
+            <p>
+                <span style="background-color: {{ 'gray'|ermc_color }}; padding: 5px;">Серый</span> - точно не едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'dark_green'|ermc_color }}; padding: 5px;">Непонятный темный сине-зеленый цвет</span> - отдельная квота для Михаила Луговкина, Чемпиона Европы 2016.
             </p>
         {% else %}
             <p>{% trans 'List of players sorted by RR rating (on 1st January 2019)' %}</p>
         {% endif %}
-        {% include 'rating/_results_table.html' %}
+
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">
+                        {% trans 'MF' %}
+                    </th>
+                    <th scope="col">{% trans 'Points' %}</th>
+                    <th scope="col">{% trans 'From' context 'location' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for rating_result in rating_results %}
+                    <tr id="{{ rating_result.player.slug }}" style="background-color: {{ rating_result.player.ermc.get_color }}" title="{{ rating_result.player.ermc.get_state_display }}">
+                        <th scope="row">{{ rating_result.place }}</th>
+                        <td>
+                            {% with rating_result.player as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {{ rating_result.player.ermc.federation_member|yesno }}
+                        </td>
+                        <td>{{ rating_result.score|floatformat:0 }}</td>
+                        <td>
+                            {% if rating_result.player.city %}
+                                <a href="{% url 'city_page' rating_result.player.city.slug %}" class="d-print-none">
+                                    {{ rating_result.player.city.name }}
+                                </a>
+                                {# special case for print #}
+                                <span class="d-none d-print-block">
+                                   {{ rating_result.player.city.name }}
+                                </span>
+                            {% else %}
+                                {{ rating_result.player.country }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 {% endblock %}
 

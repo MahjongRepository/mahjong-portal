@@ -10,7 +10,7 @@ from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
-from player.models import Player
+from player.models import Player, PlayerERMC
 from player.tenhou.models import TenhouNickname
 from rating.models import Rating, RatingResult
 from settings.models import City
@@ -206,6 +206,7 @@ def ermc_qualification_2019(request):
                       .filter(date=rating_date)
                       .prefetch_related('player')
                       .prefetch_related('player__city')
+                      .prefetch_related('player__ermc')
                       .order_by('place'))
 
     return render(request, 'website/erc_2019.html', {

@@ -61,3 +61,47 @@ class Player(BaseModel):
     def tenhou_object(self):
         tenhou = self.tenhou.all().order_by('-is_main').first()
         return tenhou
+
+
+class PlayerERMC(BaseModel):
+    GREEN = 0
+    YELLOW = 1
+    ORANGE = 2
+    BLUE = 3
+    PINK = 4
+    GRAY = 5
+    DARK_GREEN = 6
+
+    COLORS = [
+        [GREEN, 'точно едет'],
+        [YELLOW, 'скорее всего едет'],
+        [ORANGE, 'пока сомневается, но скорее всего не едет'],
+        [BLUE, 'игрок пока ничего не ответил'],
+        [PINK, 'игрок пока что не проходит, но готов ехать, если появится квота'],
+        [GRAY, 'точно не едет'],
+        [DARK_GREEN, 'деда']
+    ]
+
+    player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='ermc')
+
+    state = models.PositiveSmallIntegerField(choices=COLORS)
+    federation_member = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.player.__unicode__()
+
+    def get_color(self):
+        return PlayerERMC.color_map(self.state)
+
+    @staticmethod
+    def color_map(index):
+        colors = {
+            PlayerERMC.GREEN: '#93C47D',
+            PlayerERMC.YELLOW: '#FFE599',
+            PlayerERMC.ORANGE: '#F6B26B',
+            PlayerERMC.BLUE: '#C9DAF8',
+            PlayerERMC.PINK: '#D5A6BD',
+            PlayerERMC.GRAY: '#999999',
+            PlayerERMC.DARK_GREEN: '#45818E'
+        }
+        return colors.get(index, '')
