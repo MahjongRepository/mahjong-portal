@@ -5,6 +5,14 @@
     {% trans 'European Riichi Championship 2019 Qualifications' %}
 {% endblock %}
 
+{% block additional_css %}
+    <style>
+        table a {
+            color: rgb(33, 37, 41);
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div>
         <h2>{% trans 'European Riichi Championship 2019 Qualifications' %}</h2>
@@ -64,6 +72,9 @@
             </p>
             <p>
                 <span style="background-color: {{ 'dark_green'|ermc_color }}; padding: 5px;">Непонятный темный сине-зеленый цвет</span> - отдельная квота для Михаила Луговкина, Чемпиона Европы 2016.
+            </p>
+            <p>
+                Точно подтвердилось {{ confirmed_players }} игроков.
             </p>
         {% else %}
             <p>{% trans 'List of players sorted by RR rating (on 1st January 2019)' %}</p>

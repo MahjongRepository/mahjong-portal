@@ -209,8 +209,11 @@ def ermc_qualification_2019(request):
                       .prefetch_related('player__ermc')
                       .order_by('place'))
 
+    confirmed_players = PlayerERMC.objects.filter(state=PlayerERMC.GREEN).count()
+
     return render(request, 'website/erc_2019.html', {
-        'rating_results': rating_results
+        'rating_results': rating_results,
+        'confirmed_players': confirmed_players
     })
 
 

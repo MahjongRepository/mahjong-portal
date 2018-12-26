@@ -36,6 +36,7 @@ class PlayerAdmin(admin.ModelAdmin):
 class PlayerERMCAdmin(admin.ModelAdmin):
     search_fields = ['player__first_name_ru', 'player__first_name_en', 'player__last_name_ru', 'player__last_name_en']
     list_display = ['player', 'state', 'federation_member']
+    list_filter = ['state']
     raw_id_fields = ['player']
 
 
