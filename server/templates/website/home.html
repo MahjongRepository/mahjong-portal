@@ -14,6 +14,13 @@
             {% endwith %}
         {% endif %}
 
+        {% if events %}
+            <h1>{% trans 'Events' %}</h1>
+            {% with tournaments=events is_upcoming=True is_event=True %}
+                {% include 'tournament/_tournaments_table.html' %}
+            {% endwith %}
+        {% endif %}
+
         <h1>{% trans 'Top 16 players' %}</h1>
         <p>{{ rating.name }}, <a href="{% url 'rating' rating.slug %}">{% trans 'all results' %}</a></p>
         {% include 'rating/_results_table.html' %}

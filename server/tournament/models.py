@@ -65,6 +65,7 @@ class Tournament(BaseModel):
 
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
+    is_event = models.BooleanField(default=False)
     # we need it only to EMA rating, probably can be removed
     need_qualification = models.BooleanField(default=False)
 

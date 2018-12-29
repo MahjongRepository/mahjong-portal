@@ -28,15 +28,23 @@ def home(request):
 
     upcoming_tournaments = (Tournament.public
                                       .filter(is_upcoming=True)
+                                      .filter(is_event=False)
                                       .exclude(tournament_type=Tournament.FOREIGN_EMA)
                                       .prefetch_related('city')
                                       .order_by('start_date'))
+
+    events = (Tournament.public
+              .filter(is_upcoming=True)
+              .filter(is_event=True)
+              .prefetch_related('city')
+              .order_by('start_date'))
 
     return render(request, 'website/home.html', {
         'page': 'home',
         'rating_results': rating_results,
         'rating': rating,
-        'upcoming_tournaments': upcoming_tournaments
+        'upcoming_tournaments': upcoming_tournaments,
+        'events': events
     })
 
 

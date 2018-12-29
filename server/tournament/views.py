@@ -42,6 +42,7 @@ def tournament_list(request, tournament_type=None, year=None):
 
     upcoming_tournaments = (Tournament.public
                             .filter(is_upcoming=True)
+                            .filter(is_event=False)
                             .exclude(tournament_type=Tournament.FOREIGN_EMA)
                             .prefetch_related('city')
                             .order_by('start_date'))
