@@ -20,7 +20,7 @@ def tournament_list(request, tournament_type=None, year=None):
     except ValueError:
         current_year = default_year_filter
 
-    years = [2018, 2017, 2016, 2015, 2014, 2013]
+    years = [2019, 2018, 2017, 2016, 2015, 2014, 2013]
 
     if current_year != default_year_filter and current_year not in years:
         current_year = default_year_filter
