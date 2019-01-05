@@ -1,14 +1,8 @@
-import pytz
 from django.core.management.base import BaseCommand
-from django.db import transaction
-from django.db.models import Sum
 from django.utils import timezone
-from django.utils.timezone import make_aware
 
-from club.club_games.models import ClubSession, ClubSessionResult, ClubRating, ClubSessionSyncData
-from club.pantheon_games.models import PantheonEvent, PantheonSession, PantheonSessionResult, PantheonPlayer, \
-    PantheonRound
 from club.models import Club
+from club.pantheon_games.models import PantheonEvent, PantheonSession, PantheonSessionResult, PantheonPlayer
 from player.models import Player
 
 
@@ -74,7 +68,8 @@ class Command(BaseCommand):
                 club.players.add(player)
             except Player.DoesNotExist:
                 try:
-                    Player.all_objects.get(pantheon_id=pantheon_player.id)
+                    player = Player.all_objects.get(pantheon_id=pantheon_player.id)
+                    club.players.add(player)
                 except Player.DoesNotExist:
                     games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
                     if games >= 10:
