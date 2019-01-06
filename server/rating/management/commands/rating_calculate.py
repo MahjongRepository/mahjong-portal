@@ -104,6 +104,13 @@ class Command(BaseCommand):
                 if rating_date > today:
                     continue_work = False
 
+            important_dates = [
+                # ERMC 2019 qualification date
+                datetime.date(2019, 1, 1)
+            ]
+
+            dates_to_process = sorted(dates_to_process + important_dates)
+
             print('Dates to process: {}'.format(len(dates_to_process)))
 
             for i, rating_date in enumerate(dates_to_process):
