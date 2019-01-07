@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
+from django.utils.text import slugify
 from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
@@ -261,7 +262,7 @@ def export_tournament_results(request, tournament_id):
         player = result.player
 
         rows.append([
-            tournament.name_en,
+            '{} {}'.format(tournament.name_en, tournament.end_date.year),
             tournament.number_of_players,
             result.place,
             player.first_name_en,
@@ -285,6 +286,8 @@ def export_tournament_results(request, tournament_id):
     for x in rows:
         writer.writerow(x)
 
+    file_name = slugify('{} {} results.csv'.format(tournament.name_en, tournament.end_date.year))
+
     response = HttpResponse(content.getvalue(), content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(tournament.slug)
+    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
