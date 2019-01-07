@@ -286,8 +286,8 @@ def export_tournament_results(request, tournament_id):
     for x in rows:
         writer.writerow(x)
 
-    file_name = slugify('{} {} results.csv'.format(tournament.name_en, tournament.end_date.year))
+    file_name = slugify('{} {} results'.format(tournament.name_en, tournament.end_date.year))
 
     response = HttpResponse(content.getvalue(), content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(file_name)
     return response
