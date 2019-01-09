@@ -4,13 +4,30 @@ from datetime import datetime
 import pytz
 from django.db.models import Sum
 
+from player.models import Player
 from player.tenhou.models import TenhouGameLog
+from settings.models import City
+from tournament.models import TournamentResult, Tournament
+
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         start_date = datetime(2018, 1, 1, tzinfo=pytz.UTC)
         end_date = datetime(2019, 1, 1, tzinfo=pytz.UTC)
+
+        results = TournamentResult.objects.filter(
+            tournament__end_date__gte=start_date,
+            tournament__end_date__lt=end_date,
+        ).exclude(tournament__tournament_type=Tournament.FOREIGN_EMA)
+
+        player_ids = [x.player_id for x in results]
+        players = Player.objects.filter(id__in=player_ids).distinct()
+        print('Players: {}'.format(players.count()))
+
+        city_ids = [x.city.id for x in players if x.city]
+        cities = City.objects.filter(id__in=city_ids)
+        print('Cities: {}'.format(cities.count()))
 
         games = TenhouGameLog.objects.filter(game_date__gte=start_date, game_date__lt=end_date)
         print('Games: {}'.format(games.count()))
