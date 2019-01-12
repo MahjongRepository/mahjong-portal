@@ -109,10 +109,7 @@ def set_game_log(bot, update, args):
     logger.info('Set game log command. {}, {}'.format(update.message.from_user.username, args))
 
     if not len(args):
-        message = u'Укажите ссылку на ханчан после команды.'
-        message += '\n\n'
-        message += 'Provide a link to hanchan after the command.'
-        update.message.reply_text(message)
+        update.message.reply_text(u'Укажите ссылку на ханчан после команды.')
         return
 
     # it can take some time to add log, so lets show typing notification
@@ -137,15 +134,9 @@ def help_bot(bot, update):
     logger.info('Help')
 
     message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
-    message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat?l=ru \n'.format(settings.PANTHEON_EVENT_ID)
+    message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
     message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10  \n'
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..."'
-
-    message += '\n\n'
-    message += '1. Tournament lobby:\n http://tenhou.net/0/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
-    message += '2. Tournament statistics:\n https://gui.mjtop.net/eid{}/stat?l=en \n'.format(settings.PANTHEON_EVENT_ID)
-    message += '3. Send log with "/log http://tenhou.net..." command'
-
     bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 
@@ -158,14 +149,8 @@ def set_tenhou_nickname(bot, update, args):
 
     username = update.message.from_user.username
     if not username:
-        message = u'Перед привязкой тенхо ника нужно установить username в настройках телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n'
-        message += 'Участие **не было** подтверждено!'
-        message += '\n\n'
-        message += 'Before registration you need to set up your telegram username: https://telegram.org/faq#q-what-are-usernames-how-do-i-get-one \n'
-        message += 'Participation **is not** confirmed!'
-
         update.message.reply_text(
-            text=message,
+            text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/',
             disable_web_page_preview=True
         )
         return
@@ -204,8 +189,8 @@ def start_games(bot, update):
 def start_failed_games(bot, update):
     logger.info('Start failed games')
 
-    games = TournamentGame.objects.filter(status=TournamentGame.FAILED_TO_START)
-    bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры... \n\n Starting games...')
+    games = TournamentGame.objects.filter(status=Q(TournamentGame.FAILED_TO_START) | Q(TournamentGame.NEW))
+    bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры...')
 
     for game in games:
         message = tournament_handler.start_game(game)
