@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django import forms
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from online.models import TournamentStatus, TournamentPlayers, TournamentGame, TournamentGamePlayer
+from player.models import Player
 from tournament.models import Tournament, OnlineTournamentRegistration
 
 
@@ -35,12 +38,18 @@ class TournamentStatusAdmin(admin.ModelAdmin):
 
 class TournamentPlayersAdmin(admin.ModelAdmin):
     form = TournamentPlayersForm
-    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id']
+    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id', 'add_to_pantheon_action']
     list_filter = [
         ['tournament', admin.RelatedOnlyFieldListFilter],
     ]
 
     def player(self, obj):
+        if obj.pantheon_id:
+            try:
+                return Player.objects.get(pantheon_id=obj.pantheon_id)
+            except Player.DoesNotExist:
+                pass
+
         try:
             registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
             if registration.player:
@@ -53,6 +62,16 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
             return u'[{} {}]'.format(result.last_name, result.first_name)
 
         return None
+
+    def add_to_pantheon_action(self, obj):
+        if not obj.pantheon_id:
+            return 'MISSED PANTHEON ID'
+
+        if not obj.added_to_pantheon:
+            url = reverse('add_user_to_the_pantheon', kwargs={'record_id': obj.id})
+            return mark_safe('<a href="{}" class="button">Add to pantheon</a>'.format(url))
+
+        return 'Added'
 
 
 class TournamentGameAdmin(admin.ModelAdmin):

@@ -22,6 +22,7 @@ class TournamentPlayers(BaseModel):
     tenhou_username = models.CharField(max_length=8)
 
     pantheon_id = models.PositiveIntegerField(null=True, blank=True)
+    added_to_pantheon = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.tenhou_username
