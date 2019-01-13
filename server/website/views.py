@@ -218,11 +218,20 @@ def ermc_qualification_2019(request):
                       .prefetch_related('player__ermc')
                       .order_by('place'))
 
-    confirmed_players = PlayerERMC.objects.filter(state=PlayerERMC.GREEN).count()
+    confirmed = 1
+    not_confirmed_colors = [PlayerERMC.GRAY, PlayerERMC.DARK_GREEN]
+    for x in rating_results:
+        try:
+            if x.player.ermc.state in not_confirmed_colors:
+                x.confirmed = None
+            else:
+                x.confirmed = confirmed
+                confirmed += 1
+        except PlayerERMC.DoesNotExist:
+            x.confirmed = None
 
     return render(request, 'website/erc_2019.html', {
         'rating_results': rating_results,
-        'confirmed_players': confirmed_players
     })
 
 

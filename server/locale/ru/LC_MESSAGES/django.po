@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-29 15:09+0000\n"
+"POT-Creation-Date: 2019-01-13 12:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,7 +247,7 @@ msgstr "Сортировка:"
 #: templates/tournament_admin/new_tournaments.html:17
 #: templates/tournament_admin/tournament_manage.html:89
 #: templates/website/city.html:16 templates/website/city.html:46
-#: templates/website/erc_2019.html:85
+#: templates/website/erc_2019.html:81
 msgid "Name"
 msgstr "Имя"
 
@@ -336,7 +336,7 @@ msgid "Place"
 msgstr "Место"
 
 #: templates/player/_changes_table.html:9 templates/player/tenhou.html:84
-#: templates/rating/_results_table.html:14 templates/website/erc_2019.html:89
+#: templates/rating/_results_table.html:14 templates/website/erc_2019.html:85
 msgid "Points"
 msgstr "Очки"
 
@@ -492,7 +492,7 @@ msgid "All time"
 msgstr "За всё время"
 
 #: templates/rating/_results_table.html:15 templates/tournament/details.html:48
-#: templates/website/erc_2019.html:90
+#: templates/website/erc_2019.html:86
 msgctxt "location"
 msgid "From"
 msgstr "Откуда"
@@ -617,7 +617,7 @@ msgstr "Хиросима"
 msgid "Country"
 msgstr "Страна"
 
-#: templates/tournament/_tournaments_table.html:21
+#: templates/tournament/_tournaments_table.html:20
 msgctxt "number of players"
 msgid "Participants"
 msgstr "Участников"
@@ -631,7 +631,7 @@ msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
-#: templates/tournament/_tournaments_table.html:28
+#: templates/tournament/_tournaments_table.html:29
 msgid "Sessions"
 msgstr "Игр"
 
@@ -897,14 +897,18 @@ msgstr "Турниры и игроки в риичи маджонг из"
 msgid "European Riichi Championship 2019 Qualifications"
 msgstr "Отбор на Чемпионат Европы 2019 года"
 
-#: templates/website/erc_2019.html:77 templates/website/erc_2019.html:129
-#: templates/website/erc_2019.html:130
+#: templates/website/erc_2019.html:72 templates/website/erc_2019.html:126
+#: templates/website/erc_2019.html:127
 msgid "List of players sorted by RR rating (on 1st January 2019)"
 msgstr ""
 "Рейтинг RR на 1 января 2019 года с учетом устаревания турниров, но без учета "
 "еще не завершившихся турниров 2018 года."
 
-#: templates/website/erc_2019.html:87
+#: templates/website/erc_2019.html:80 templates/website/erc_2019.html:93
+msgid "is going to participate"
+msgstr "собирается участвовать"
+
+#: templates/website/erc_2019.html:83
 msgid "MF"
 msgstr "Состоит в ФМ"
 

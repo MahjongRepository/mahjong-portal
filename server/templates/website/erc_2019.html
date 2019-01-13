@@ -36,10 +36,6 @@
                 Информация о вступлении в Федерацию и оплате взноса: <a href="https://mahjong.click/ru/contacts/">https://mahjong.click/ru/contacts/</a>
             </p>
             <p>
-                Это можно сделать уже сейчас, не дожидаясь начала года - укажите в заявлении, что хотите стать членом
-                Федерации маджонга с 1 января 2019.
-            </p>
-            <p>
                 Если вы уже являетесь членом Федерации маджонга, не забудьте оплатить взнос за 2019 год.
             </p>
             <p>
@@ -70,8 +66,7 @@
                 <span style="background-color: {{ 'dark_green'|ermc_color }}; padding: 5px;">Непонятный темный сине-зеленый цвет</span> - отдельная квота для Михаила Луговкина, Чемпиона Европы 2016.
             </p>
             <p>
-                Точное количество участников от каждой страны будет известно в январе 2019 года. Предварительно Россия
-                имеет 20 квот. Игроков, точно готовых участвовать: {{ confirmed_players }}.
+                На данный момент (13 января) у России 25 квот. <a href="http://mahjong-europe.org/ranking/quotas_RCR.html" target="_blank">http://mahjong-europe.org/ranking/quotas_RCR.html</a>
             </p>
         {% else %}
             <p>{% trans 'List of players sorted by RR rating (on 1st January 2019)' %}</p>
@@ -81,7 +76,8 @@
             <table class="table table-hover mt-4">
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col" title="RR">#</th>
+                    <th scope="col" title="{% trans 'is going to participate' %}">#</th>
                     <th scope="col">{% trans 'Name' %}</th>
                     <th scope="col">
                         {% trans 'MF' %}
@@ -93,7 +89,8 @@
                 <tbody>
                 {% for rating_result in rating_results %}
                     <tr id="{{ rating_result.player.slug }}" style="background-color: {{ rating_result.player.ermc.get_color }}" title="{{ rating_result.player.ermc.get_state_display }}">
-                        <th scope="row">{{ rating_result.place }}</th>
+                        <th scope="row" title="RR">{{ rating_result.place }}</th>
+                        <th scope="row" title="{% trans 'is going to participate' %}">{{ rating_result.confirmed|default_if_none:"" }}</th>
                         <td>
                             {% with rating_result.player as player %}
                                 {% include 'common/_player_name.html' %}
