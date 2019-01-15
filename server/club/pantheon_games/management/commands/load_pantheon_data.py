@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pytz
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -14,6 +16,7 @@ def get_date_string():
 
 
 class Command(BaseCommand):
+    NUMBER_OF_CLUB_STATISTICS_DAYS = 90
 
     def add_arguments(self, parser):
         parser.add_argument('--rebuild-from-zero', default=False, type=bool)
@@ -157,8 +160,12 @@ class Command(BaseCommand):
 
             session_rounds[round_item.session_id].append(round_item)
 
+        days_ago = timezone.now() - timedelta(days=self.NUMBER_OF_CLUB_STATISTICS_DAYS)
         for player in players:
-            base_query = ClubSessionResult.objects.filter(club_session__club=club, player=player)
+            base_query = (ClubSessionResult
+                          .objects
+                          .filter(club_session__club=club, player=player)
+                          .filter(club_session__date__gte=days_ago))
 
             games_count = base_query.count()
 
@@ -186,6 +193,7 @@ class Command(BaseCommand):
                     player_rounds.extend(session_rounds[session_id])
 
             tenhou_object = player.tenhou_object
+
             ClubRating.objects.create(
                 club=club,
                 player=player,
@@ -199,41 +207,3 @@ class Command(BaseCommand):
             )
 
         print('Calculating completed')
-
-    def _calculate_rounds_count(self, rounds):
-        """
-        All of these code exists because of multi ron format in pantheon
-        """
-        total_rounds_count = 0
-
-        counted_multi_ron = {}
-        for item in rounds:
-            if item.multi_ron:
-                key = '{}_{}'.format(item.session_id, item.round)
-                # we had to count multi ron only once for our stat
-                if key in counted_multi_ron:
-                    continue
-                else:
-                    counted_multi_ron[key] = 1
-
-            total_rounds_count += 1
-
-        return total_rounds_count
-
-    def _get_player_rounds(self, rounds, round_type, player_id):
-        results = []
-
-        counted_multi_ron = {}
-        for item in rounds:
-            if round_type == 'win' and item.winner_id == player_id:
-                results.append(item)
-
-            if round_type == 'lose' and item.loser_id == player_id and (item.outcome == PantheonRound.RON or item.outcome == PantheonRound.MULTI_RON):
-                results.append(item)
-
-            if round_type == 'riichi' and item.riichi:
-                riichi_players = [int(x) for x in item.riichi.split(',')]
-                if player_id in riichi_players:
-                    results.append(item)
-
-        return results

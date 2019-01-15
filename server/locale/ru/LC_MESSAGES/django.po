@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 06:29+0000\n"
+"POT-Creation-Date: 2019-01-15 07:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,15 +32,15 @@ msgstr "Права"
 msgid "Important dates"
 msgstr "Важные даты"
 
-#: club/views.py:38
+#: club/views.py:41
 msgid "Average place (ascending)"
 msgstr "Среднее место (по возрастанию)"
 
-#: club/views.py:39
+#: club/views.py:42
 msgid "Average place (descending)"
 msgstr "Среднее место (по убыванию)"
 
-#: club/views.py:40 templates/base.html:93 templates/club/details.html:48
+#: club/views.py:43 templates/base.html:93 templates/club/details.html:54
 #: templates/rating/_results_table.html:11 templates/tournament/details.html:45
 #: utils/tenhou/yakuman_list.py:18
 msgid "Tenhou"
@@ -146,9 +146,11 @@ msgid "ERMC 2019"
 msgstr "Отбор на ЧЕ 2019"
 
 #: templates/base.html:86 templates/base.html:123
-#: templates/club/details.html:27 templates/player/rating_details.html:238
-#: templates/player/tournaments.html:5 templates/player/tournaments.html:24
-#: templates/player/tournaments.html:71 templates/player/tournaments.html:72
+#: templates/club/tournaments.html:5 templates/club/tournaments.html:27
+#: templates/club/tournaments.html:34 templates/club/tournaments.html:35
+#: templates/player/rating_details.html:238 templates/player/tournaments.html:5
+#: templates/player/tournaments.html:24 templates/player/tournaments.html:71
+#: templates/player/tournaments.html:72
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
 #: templates/tournament_admin/tournament_manage.html:12
@@ -230,19 +232,31 @@ msgstr "Поиск"
 msgid "source code"
 msgstr "исходный код"
 
-#: templates/club/details.html:32 templates/player/details.html:239
+#: templates/club/details.html:27
+msgid "Latest 5 tournaments"
+msgstr "Последние 5 турниров"
+
+#: templates/club/details.html:28
+msgid "all tournaments"
+msgstr "все турниры"
+
+#: templates/club/details.html:33
+msgid "Club rating"
+msgstr "Клубный рейтинг"
+
+#: templates/club/details.html:38 templates/player/details.html:239
 msgid "Club statistics"
 msgstr "Клубная статистика"
 
-#: templates/club/details.html:33
-msgid "We are displaying here players with 10+ club games."
-msgstr "Статистика для игроков с 10+ играми."
+#: templates/club/details.html:39
+msgid "We are displaying here players with 10+ club games from last 90 days."
+msgstr "Статистика для игроков сыгравших 10+ клубных игр за последние 90 дней."
 
-#: templates/club/details.html:34
+#: templates/club/details.html:40
 msgid "Sorting:"
 msgstr "Сортировка:"
 
-#: templates/club/details.html:46 templates/club/list.html:19
+#: templates/club/details.html:52 templates/club/list.html:19
 #: templates/rating/_results_table.html:8
 #: templates/tournament/_tournaments_table.html:8
 #: templates/tournament/announcement.html:60
@@ -255,7 +269,7 @@ msgstr "Сортировка:"
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/details.html:51 templates/player/details.html:144
+#: templates/club/details.html:57 templates/player/details.html:144
 #: templates/player/details.html:154 templates/player/details.html:248
 #: templates/player/tenhou.html:166 templates/player/tenhou.html:176
 #: templates/player/tenhou.html:229 templates/player/tenhou.html:240
@@ -263,46 +277,46 @@ msgstr "Имя"
 msgid "Games"
 msgstr "Игр"
 
-#: templates/club/details.html:54 templates/player/details.html:144
+#: templates/club/details.html:60 templates/player/details.html:144
 #: templates/player/details.html:157 templates/player/details.html:251
 #: templates/player/tenhou.html:166 templates/player/tenhou.html:179
 #: templates/player/tenhou.html:229 templates/player/tenhou.html:243
 msgid "Avg. place"
 msgstr "Ср. место"
 
-#: templates/club/details.html:57 templates/player/details.html:160
+#: templates/club/details.html:63 templates/player/details.html:160
 #: templates/player/details.html:254 templates/player/tenhou.html:182
 #: templates/player/tenhou.html:246
 msgid "1st"
 msgstr "1-e"
 
-#: templates/club/details.html:60 templates/player/details.html:163
+#: templates/club/details.html:66 templates/player/details.html:163
 #: templates/player/details.html:257 templates/player/tenhou.html:185
 #: templates/player/tenhou.html:249
 msgid "2nd"
 msgstr "2-е"
 
-#: templates/club/details.html:63 templates/player/details.html:166
+#: templates/club/details.html:69 templates/player/details.html:166
 #: templates/player/details.html:260 templates/player/tenhou.html:188
 #: templates/player/tenhou.html:252
 msgid "3rd"
 msgstr "3-е"
 
-#: templates/club/details.html:66 templates/player/details.html:169
+#: templates/club/details.html:72 templates/player/details.html:169
 #: templates/player/details.html:263 templates/player/tenhou.html:191
 #: templates/player/tenhou.html:255
 msgid "4th"
 msgstr "4-е"
 
-#: templates/club/details.html:112
+#: templates/club/details.html:118
 msgid "Latest 10 club games"
 msgstr "Последние 10 клубных игр"
 
-#: templates/club/details.html:115
+#: templates/club/details.html:121
 msgid "Total games: "
 msgstr "Всего игр:"
 
-#: templates/club/details.html:116
+#: templates/club/details.html:122
 msgid "Last updated "
 msgstr "Обновлялось"
 

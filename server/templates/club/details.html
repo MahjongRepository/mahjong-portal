@@ -20,17 +20,23 @@
         </p>
 
         {% if club.description %}
-            <p>{{ club.description|linebreaksbr }}</p>
+            <p>{{ club.description|linebreaksbr|urlize }}</p>
         {% endif %}
 
         {% if tournaments %}
-            <h2>{% trans 'Tournaments' %}</h2>
+            <h2>{% trans 'Latest 5 tournaments' %}</h2>
+            <a href="{% url 'club_tournaments' club.slug %}">{% trans 'all tournaments' %}</a>
             {% include 'tournament/_tournaments_table.html' %}
+        {% endif %}
+
+        {% if club.rating_description %}
+            <h2>{% trans 'Club rating' %}</h2>
+            <p>{{ club.rating_description|linebreaksbr|urlize }}</p>
         {% endif %}
 
         {% if club_rating %}
             <h2 id="stat">{% trans 'Club statistics' %}</h2>
-            <p>{% trans 'We are displaying here players with 10+ club games.' %}</p>
+            <p>{% trans 'We are displaying here players with 10+ club games from last 90 days.' %}</p>
             <p> {% trans 'Sorting:' %}
                 <select id="sortingSelect" class="form-control d-inline" style="width: 300px; ">
                     {% for key, value in sorting.items %}

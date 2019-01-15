@@ -21,10 +21,10 @@ class ClubAdmin(admin.ModelAdmin):
     filter_horizontal = ['players']
 
     fieldsets = [
-        [None, {'fields': ['name_ru', 'name_en', 'slug', 'description_ru', 'description_en']}],
+        [None, {'fields': ['name_ru', 'name_en', 'slug', 'description_ru', 'description_en',
+                           'rating_description_ru', 'rating_description_en']}],
         ['Contacts', {'fields': ['website']}],
         ['Location', {'fields': ['country', 'city', 'lat', 'lng', 'timezone']}],
-        ['Players', {'fields': ['players']}],
         ['System', {'fields': ['pantheon_ids']}],
     ]
 

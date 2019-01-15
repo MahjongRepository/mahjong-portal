@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n humanize russian_words_morph meta_tags_helper tz %}
+
+{% block title %}
+    {{ club.name }}. {% trans 'Tournaments' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ club.name }}</h1>
+        {% if club.website %}
+            <p><a href="{{ club.website }}" target="_blank">{{ club.website }}</a></p>
+        {% endif %}
+
+        <p>
+            {% if club.city %}
+                <a href="{% url 'city_page' club.city.slug %}">{{ club.city.name }}</a>,
+            {% endif %}
+            {{ club.country }}
+        </p>
+
+        {% if club.description %}
+            <p>{{ club.description|linebreaksbr|urlize }}</p>
+        {% endif %}
+
+        {% if tournaments %}
+            <h2>{% trans 'Tournaments' %}</h2>
+            {% include 'tournament/_tournaments_table.html' %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% club_page_description club %}. {% trans 'Tournaments' %}">
+    <meta property="og:description" content="{% club_page_description club %}. {% trans 'Tournaments' %}" />
+{% endblock %}

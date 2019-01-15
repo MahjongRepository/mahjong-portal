@@ -22,7 +22,10 @@ def club_list(request):
 
 def club_details(request, slug):
     club = get_object_or_404(Club, slug=slug)
-    tournaments = club.tournament_set.filter(is_hidden=False).order_by('-end_date').prefetch_related('city')
+    tournaments = (club.tournament_set
+                   .filter(is_hidden=False)
+                   .order_by('-end_date')
+                   .prefetch_related('city'))[:5]
 
     club_sessions = (club.club_sessions
                      .all()
@@ -32,7 +35,7 @@ def club_details(request, slug):
                      )[:10]
     total_sessions = club.club_sessions.all().count()
 
-    default_sort = 'average_place'
+    default_sort = 'rank'
     sort = request.GET.get('sort', default_sort)
     sorting = {
         'average_place': _('Average place (ascending)'),
@@ -44,17 +47,18 @@ def club_details(request, slug):
     if sort not in sorting:
         sort = default_sort
 
-    real_sort = sort
+    real_sort = [sort]
     if sort == 'rank':
-        real_sort = F('rank').desc(nulls_last=True)
+        real_sort = [F('rank').desc(nulls_last=True), 'average_place']
 
     club_rating = (club.rating
                    .filter(games_count__gte=10)
-                   .order_by(real_sort)
+                   .order_by(*real_sort)
                    .prefetch_related('player'))
 
     return render(request, 'club/details.html', {
         'club': club,
+        'default_sort': default_sort,
         'tournaments': tournaments,
         'page': 'club',
         'club_sessions': club_sessions,
@@ -62,4 +66,17 @@ def club_details(request, slug):
         'total_sessions': total_sessions,
         'sorting': sorting,
         'sort': sort
+    })
+
+
+def club_tournaments(request, slug):
+    club = get_object_or_404(Club, slug=slug)
+    tournaments = (club.tournament_set
+                   .filter(is_hidden=False)
+                   .order_by('-end_date')
+                   .prefetch_related('city'))
+    return render(request, 'club/tournaments.html', {
+        'club': club,
+        'tournaments': tournaments,
+        'page': 'club',
     })
