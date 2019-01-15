@@ -10,8 +10,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-APP_VERSION = 'v0.4.0'
-
 SCHEME = 'https'
 
 AUTH_USER_MODEL = 'account.User'

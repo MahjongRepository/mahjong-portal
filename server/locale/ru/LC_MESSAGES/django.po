@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-13 12:32+0000\n"
+"POT-Creation-Date: 2019-01-15 06:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,6 +225,10 @@ msgstr "Выйти"
 #: templates/base.html:132 templates/base.html:133
 msgid "Search"
 msgstr "Поиск"
+
+#: templates/base.html:147
+msgid "source code"
+msgstr "исходный код"
 
 #: templates/club/details.html:32 templates/player/details.html:239
 msgid "Club statistics"
