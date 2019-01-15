@@ -60,23 +60,50 @@ class Command(BaseCommand):
             last_name = temp[0].title()
             first_name = len(temp) > 1 and temp[1].title() or ''
 
+            player = None
+
+            # let's try to match player by first and last name
             try:
                 player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
                 player.pantheon_id = pantheon_player.id
                 player.save()
-
-                club.players.add(player)
             except Player.DoesNotExist:
+                pass
+            except Player.MultipleObjectsReturned:
+                # if we have multiple players with same name
+                # let's try to add city to query
+                try:
+                    print(last_name)
+                    player = Player.all_objects.get(
+                        first_name_ru=first_name,
+                        last_name_ru=last_name,
+                        city=club.city
+                    )
+                except (Player.DoesNotExist, Player.MultipleObjectsReturned):
+                    # two players with same name from the same city
+                    # we can't handle it automatically
+                    pass
+
+            # player wasn't found by name
+            # it could be that pantheon and portal has different names
+            # so lets try to load player with pantheon id
+            if not player:
                 try:
                     player = Player.all_objects.get(pantheon_id=pantheon_player.id)
-                    club.players.add(player)
                 except Player.DoesNotExist:
-                    games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
-                    if games >= 10:
-                        print('Missed player: id={}, {}, Games: {} '.format(
-                            pantheon_player.id,
-                            pantheon_player.display_name,
-                            games
-                        ))
+                    pass
+
+            if player:
+                club.players.add(player)
+            else:
+                games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
+                if games >= 10:
+                    print('Missed player: id={}, {}, Games: {} '.format(
+                        pantheon_player.id,
+                        pantheon_player.display_name,
+                        games
+                    ))
+
+
 
         print('Associating completed')
