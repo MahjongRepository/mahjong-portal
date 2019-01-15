@@ -38,9 +38,13 @@ class TournamentStatusAdmin(admin.ModelAdmin):
 
 class TournamentPlayersAdmin(admin.ModelAdmin):
     form = TournamentPlayersForm
-    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id', 'add_to_pantheon_action']
+    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id',
+                    'add_to_pantheon_action', 'disable_in_pantheon_sortition']
+
     list_filter = [
         ['tournament', admin.RelatedOnlyFieldListFilter],
+        'added_to_pantheon',
+        'enabled_in_pantheon',
     ]
 
     def player(self, obj):
@@ -65,7 +69,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
     def add_to_pantheon_action(self, obj):
         if not obj.pantheon_id:
-            return 'MISSED PANTHEON ID'
+            return mark_safe('<span style="background-color: red; padding: 5px;">MISSED PANTHEON ID</span>')
 
         if not obj.added_to_pantheon:
             url = reverse('add_user_to_the_pantheon', kwargs={'record_id': obj.id})
@@ -73,19 +77,44 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
         return 'Added'
 
+    def disable_in_pantheon_sortition(self, obj):
+        if obj.enabled_in_pantheon:
+            url = reverse('disable_user_in_pantheon', kwargs={'record_id': obj.id})
+            return mark_safe('<a href="{}" class="button">Disable</a>'.format(url))
+
+        return mark_safe('<span style="background-color: red; padding: 5px;">Disabled</span>')
+
+
+class TournamentGamePlayerForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        instance = kwargs.get('instance')
+        if instance:
+            self.fields['player'].queryset = TournamentPlayers.objects.filter(
+                tournament=instance.player.tournament
+            ).order_by('-id')
+
+    class Meta:
+        model = TournamentGamePlayer
+        exclude = []
+
+
+class TournamentGamePlayerInline(admin.TabularInline):
+    form = TournamentGamePlayerForm
+    model = TournamentGamePlayer
+    can_delete = False
+    extra = 0
+    readonly_fields = ['wind']
+
 
 class TournamentGameAdmin(admin.ModelAdmin):
     form = TournamentGameForm
+    inlines = [TournamentGamePlayerInline]
     list_display = ['tournament', 'tournament_round', 'status', 'log_id', 'created_on', 'updated_on']
     list_filter = [['tournament', admin.RelatedOnlyFieldListFilter], 'status', 'tournament_round',]
-
-
-class TournamentGamePlayerAdmin(admin.ModelAdmin):
-    list_display = ['player', 'game', 'wind', 'is_active']
-    list_filter = [['game__tournament', admin.RelatedOnlyFieldListFilter], 'game__status']
 
 
 admin.site.register(TournamentStatus, TournamentStatusAdmin)
 admin.site.register(TournamentPlayers, TournamentPlayersAdmin)
 admin.site.register(TournamentGame, TournamentGameAdmin)
-admin.site.register(TournamentGamePlayer, TournamentGamePlayerAdmin)
