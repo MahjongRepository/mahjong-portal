@@ -88,7 +88,7 @@ def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
     clubs = Club.objects.filter(city=city).prefetch_related('city')
-    tournaments = Tournament.public.filter(city=city).order_by('-end_date').prefetch_related('city')
+    tournaments = Tournament.public.filter(city=city, is_event=False).order_by('-end_date').prefetch_related('city')
 
     players = Player.objects.filter(city=city).prefetch_related('city')
     for player in players:

@@ -24,6 +24,7 @@ def club_details(request, slug):
     club = get_object_or_404(Club, slug=slug)
     tournaments = (club.tournament_set
                    .filter(is_hidden=False)
+                   .filter(is_event=False)
                    .order_by('-end_date')
                    .prefetch_related('city'))[:5]
 
@@ -73,6 +74,7 @@ def club_tournaments(request, slug):
     club = get_object_or_404(Club, slug=slug)
     tournaments = (club.tournament_set
                    .filter(is_hidden=False)
+                   .filter(is_event=False)
                    .order_by('-end_date')
                    .prefetch_related('city'))
     return render(request, 'club/tournaments.html', {
