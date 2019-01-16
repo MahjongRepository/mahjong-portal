@@ -249,8 +249,8 @@ msgid "Club statistics"
 msgstr "Клубная статистика"
 
 #: templates/club/details.html:39
-msgid "We are displaying here players with 10+ club games from last 90 days."
-msgstr "Статистика для игроков сыгравших 10+ клубных игр за последние 90 дней."
+msgid "We are displaying here players with 10+ club games from last 180 days."
+msgstr "Статистика для игроков сыгравших 10+ клубных игр за последние 180 дней."
 
 #: templates/club/details.html:40
 msgid "Sorting:"

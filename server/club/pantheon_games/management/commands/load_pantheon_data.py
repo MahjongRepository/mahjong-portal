@@ -16,7 +16,7 @@ def get_date_string():
 
 
 class Command(BaseCommand):
-    NUMBER_OF_CLUB_STATISTICS_DAYS = 90
+    NUMBER_OF_CLUB_STATISTICS_DAYS = 180
 
     def add_arguments(self, parser):
         parser.add_argument('--rebuild-from-zero', default=False, type=bool)
