@@ -7,15 +7,15 @@ from urllib.error import HTTPError
 from urllib.parse import unquote, urlparse, parse_qs
 
 import requests
-from django.db import transaction
 from django.conf import settings
+from django.db import transaction
 from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
-from player.tenhou.models import TenhouNickname
-from utils.general import make_random_letters_and_digit_string
+from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
+from utils.general import make_random_letters_and_digit_string
 
 logger = logging.getLogger()
 
@@ -215,6 +215,12 @@ class TournamentHandler(object):
 
         if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
             return 'Ник "{}" уже был зарегистрирован на турнир.'.format(tenhou_nickname)
+
+        account_started_date = get_started_date_for_account(tenhou_nickname)
+        if not account_started_date:
+            return 'Ником "{}" ещё не играли на тенхе. Вы уверены, что он правильно написан? Регистр важен! Обратитесь к администратору.'.format(
+                tenhou_nickname
+            )
 
         pantheon_id = registration.player and registration.player.pantheon_id or None
 

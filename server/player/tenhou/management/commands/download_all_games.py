@@ -27,16 +27,20 @@ class Command(BaseCommand):
             tenhou_objects = TenhouNickname.objects.all()
 
             for tenhou_object in tenhou_objects:
-                download_all_games_from_arcturus(tenhou_object)
+                player_games = download_all_games_from_arcturus(
+                    tenhou_object.tenhou_username,
+                    tenhou_object.username_created_at
+                )
+                save_played_games(tenhou_object, player_games)
                 recalculate_tenhou_statistics(tenhou_object)
 
         print('{0}: End'.format(get_date_string()))
 
 
-def download_all_games_from_arcturus(tenhou_object):
+def download_all_games_from_arcturus(tenhou_username, username_created_at):
     url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}&d1={}'.format(
-        quote(tenhou_object.tenhou_username, safe=''),
-        tenhou_object.username_created_at.strftime('%Y%m%d'),
+        quote(tenhou_username, safe=''),
+        username_created_at.strftime('%Y%m%d'),
     )
 
     page = requests.get(url)
@@ -61,22 +65,36 @@ def download_all_games_from_arcturus(tenhou_object):
         place = places_dict[temp_array[0].strip()]
         lobby_number = temp_array[1].strip()
 
-        # let's collect stat only from usual games for 4 players
-        if lobby_number == 'L0000' and game_rules[0] == u'四':
+        # we don't have game length for custom lobby
+        try:
             game_length = int(temp_array[2].strip())
-            date = temp_array[3].strip()
-            time = temp_array[4].strip()
-            date = datetime.strptime('{} {} +0900'.format(date, time), '%Y-%m-%d %H:%M %z')
+        except ValueError:
+            game_length = None
 
-            player_games.append({
-                'place': place,
-                'game_rules': game_rules,
-                'game_length': game_length,
-                'game_date': date,
-            })
+        date = temp_array[3].strip()
+        time = temp_array[4].strip()
+        date = datetime.strptime('{} {} +0900'.format(date, time), '%Y-%m-%d %H:%M %z')
+
+        player_games.append({
+            'place': place,
+            'game_rules': game_rules,
+            'game_length': game_length,
+            'game_date': date,
+            'lobby_number': lobby_number
+        })
+
+    return player_games
+
+
+def save_played_games(tenhou_object, player_games):
+    filtered_games = []
+    for game in player_games:
+        # let's collect stat only from usual games for 4 players
+        if game['lobby_number'] == 'L0000' and game['game_rules'][0] == u'四':
+            filtered_games.append(game)
 
     with transaction.atomic():
-        for result in player_games:
+        for result in filtered_games:
             TenhouGameLog.objects.get_or_create(
                 tenhou_object=tenhou_object,
                 place=result['place'],

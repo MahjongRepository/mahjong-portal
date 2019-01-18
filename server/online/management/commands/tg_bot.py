@@ -155,6 +155,9 @@ def set_tenhou_nickname(bot, update, args):
         )
         return
 
+    # it can take some time to validate nickname, so lets show typing notification
+    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+
     tenhou_nickname = args[0]
     message = tournament_handler.link_username_and_tenhou_nick(username, tenhou_nickname)
     update.message.reply_text(message)
@@ -189,7 +192,7 @@ def start_games(bot, update):
 def start_failed_games(bot, update):
     logger.info('Start failed games')
 
-    games = TournamentGame.objects.filter(status=Q(TournamentGame.FAILED_TO_START) | Q(TournamentGame.NEW))
+    games = TournamentGame.objects.filter(Q(status=TournamentGame.FAILED_TO_START) | Q(status=TournamentGame.NEW))
     bot.send_message(chat_id=update.message.chat_id, text='Запускаю игры...')
 
     for game in games:
@@ -227,27 +230,3 @@ def error_callback(bot, update, error):
     except TelegramError as e:
         # handle all other telegram related errors
         pass
-
-
-# we need to run it in the shell before new tournament start (after closed registration)
-def generate_sql():
-    from django.conf import settings
-    from online.models import TournamentPlayers
-
-    players = TournamentPlayers.objects.filter(tournament_id=settings.TOURNAMENT_ID)
-    values = []
-    for player in players:
-        # escape ' symbol
-        username = player.tenhou_username.replace("'", "''")
-        values.append('({}, \'{}\')'.format(player.pantheon_id, username))
-
-    sql = """
-    UPDATE player AS p SET
-      tenhou_id = data_dict.tenhou_id
-    FROM (VALUES
-    {})
-    AS data_dict(id, tenhou_id)
-    WHERE p.id = data_dict.id;
-    """.format(',\n'.join(values))
-
-    print(sql)

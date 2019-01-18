@@ -80,7 +80,7 @@ def add_user_to_the_pantheon(request, record_id):
     record.added_to_pantheon = True
     record.save()
 
-    return redirect('admin:online_tournamentplayers_changelist')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -115,4 +115,4 @@ def disable_user_in_pantheon(request, record_id):
     record.enabled_in_pantheon = False
     record.save()
 
-    return redirect('admin:online_tournamentplayers_changelist')
+    return redirect(request.META.get('HTTP_REFERER'))
