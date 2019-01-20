@@ -140,9 +140,11 @@ class TournamentHandler(object):
 
     def add_game_log(self, log_link):
         error_message = 'Это не похоже на лог игры.'
+
+        log_link = log_link.replace('https://', 'http://')
         
         log_link = log_link.strip()
-        if not log_link.startswith('http://tenhou.net/') and not log_link.startswith('https://tenhou.net/'):
+        if not log_link.startswith('http://tenhou.net/'):
             return error_message
 
         attributes = parse_qs(urlparse(log_link).query)
