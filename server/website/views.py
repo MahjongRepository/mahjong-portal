@@ -7,7 +7,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.text import slugify
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
@@ -227,9 +227,11 @@ def ermc_qualification_2019(request):
             else:
                 x.confirmed = confirmed
                 confirmed += 1
+
+            x.federation_member = x.federation_member and gettext('yes') or gettext('no')
         except PlayerERMC.DoesNotExist:
             x.confirmed = None
-            x.federation_member = None
+            x.federation_member = ''
 
     return render(request, 'website/erc_2019.html', {
         'rating_results': rating_results,
