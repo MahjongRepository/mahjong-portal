@@ -229,6 +229,7 @@ def ermc_qualification_2019(request):
                 confirmed += 1
         except PlayerERMC.DoesNotExist:
             x.confirmed = None
+            x.federation_member = None
 
     return render(request, 'website/erc_2019.html', {
         'rating_results': rating_results,

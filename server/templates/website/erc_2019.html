@@ -97,7 +97,7 @@
                             {% endwith %}
                         </td>
                         <td>
-                            {{ rating_result.player.ermc.federation_member|yesno }}
+                            {{ rating_result.player.ermc.federation_member|yesno:'yes,no,' }}
                         </td>
                         <td>{{ rating_result.score|floatformat:0 }}</td>
                         <td>
