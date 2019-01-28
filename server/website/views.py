@@ -228,7 +228,7 @@ def ermc_qualification_2019(request):
                 x.confirmed = confirmed
                 confirmed += 1
 
-            x.federation_member = x.federation_member and gettext('yes') or gettext('no')
+            x.federation_member = x.player.ermc and gettext('yes') or gettext('no')
         except PlayerERMC.DoesNotExist:
             x.confirmed = None
             x.federation_member = ''
