@@ -1,10 +1,12 @@
 {% load tenhou_helper %}
 
-{% if player.dan >= 18 %}
-    <b>{{ player.dan|display_dan }} R{{ player.rate|floatformat:0 }}</b>
-{% else %}
-    {{ player.dan|display_dan }} R{{ player.rate|floatformat:0 }}
-{% endif %}
+<a href="https://nodocchi.moe/tenhoulog/#!&name={{ player.name }}" style="color: black" target="_blank">
+    {% if player.dan >= 18 %}
+        <b>{{ player.dan|display_dan }} R{{ player.rate|floatformat:0 }}</b>
+    {% else %}
+        {{ player.dan|display_dan }} R{{ player.rate|floatformat:0 }}
+    {% endif %}
+</a>
 
 <br>
 
