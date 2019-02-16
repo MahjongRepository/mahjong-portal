@@ -2,16 +2,17 @@
 import codecs
 import struct
 from urllib.parse import unquote
-from urllib.request import urlopen
 
 import re
+
+import requests
 
 
 class TenhouParser(object):
 
     def get_player_names(self, log_id):
         log_id = self._get_log_name_for_download(log_id)
-        log_content = self._download_log(log_id).decode('utf-8')
+        log_content = self._download_log(log_id)
         rounds = self._parse_rounds(log_content)
 
         players = []
@@ -29,8 +30,9 @@ class TenhouParser(object):
         return players
 
     def _download_log(self, log_id):
-        resp = urlopen('http://e.mjv.jp/0/log/?' + log_id)
-        data = resp.read()
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
+        response = requests.get('http://e.mjv.jp/0/log/?{}'.format(log_id), headers=headers)
+        data = response.text
         return data
 
     def _get_log_name_for_download(self, log_id):
