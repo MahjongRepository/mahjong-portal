@@ -13,7 +13,7 @@ You need to have installed docker and docker compose.
 Steps to run the project:
 
 1. `make build`
-2. `male up`
+2. `make up`
 
 After that you will be able to access website here: http://0.0.0.0:8010/
 
