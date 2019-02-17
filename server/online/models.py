@@ -25,6 +25,9 @@ class TournamentPlayers(BaseModel):
     added_to_pantheon = models.BooleanField(default=False)
     enabled_in_pantheon = models.BooleanField(default=True)
 
+    team_name = models.CharField(max_length=1000, null=True, blank=True)
+    team_number = models.PositiveIntegerField(null=True, blank=True)
+
     def __unicode__(self):
         return self.tenhou_username
 
@@ -61,4 +64,4 @@ class TournamentGamePlayer(BaseModel):
     wind = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
 
     def __unicode__(self):
-        return u'{}, {}'.format(self.player.__unicode__(), self.wind)
+        return u'{}, {}, {}, {}'.format(self.player.__unicode__(), self.wind, self.player.pantheon_id, self.player.team_name)

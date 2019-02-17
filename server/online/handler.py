@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
+from online.team_seating import TeamSeating
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
@@ -225,6 +226,7 @@ class TournamentHandler(object):
             )
 
         pantheon_id = registration.player and registration.player.pantheon_id or None
+        team_name = registration.notes
 
         try:
             TournamentPlayers.objects.get(
@@ -236,7 +238,8 @@ class TournamentHandler(object):
                 telegram_username=telegram_username,
                 tenhou_username=tenhou_nickname,
                 tournament=self.tournament,
-                pantheon_id=pantheon_id
+                pantheon_id=pantheon_id,
+                team_name=team_name
             )
 
         message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_nickname)
@@ -305,6 +308,8 @@ class TournamentHandler(object):
         return games, message
 
     def make_sortition(self, pantheon_ids):
+        return TeamSeating.get_seating_for_round(self.status.current_round)
+
         if self.status.current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:

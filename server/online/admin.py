@@ -38,8 +38,8 @@ class TournamentStatusAdmin(admin.ModelAdmin):
 
 class TournamentPlayersAdmin(admin.ModelAdmin):
     form = TournamentPlayersForm
-    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id',
-                    'add_to_pantheon_action', 'disable_in_pantheon_sortition']
+    list_display = ['tournament', 'player', 'telegram_username', 'tenhou_username', 'pantheon_id', 'team_name',
+                    'team_number', 'add_to_pantheon_action', 'disable_in_pantheon_sortition']
 
     list_filter = [
         ['tournament', admin.RelatedOnlyFieldListFilter],
