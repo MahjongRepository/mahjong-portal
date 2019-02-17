@@ -158,7 +158,7 @@ class TournamentHandler(object):
         try:
             parser = TenhouParser()
             players = parser.get_player_names(log_id)
-        except HTTPError:
+        except Exception:
             return 'Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не весь log id.'
         
         if TournamentGame.objects.filter(log_id=log_id).exists():
