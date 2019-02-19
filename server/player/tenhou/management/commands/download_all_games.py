@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     tenhou_object.username_created_at
                 )
                 save_played_games(tenhou_object, player_games)
-                recalculate_tenhou_statistics(tenhou_object)
+                recalculate_tenhou_statistics(tenhou_object, player_games)
 
         print('{0}: End'.format(get_date_string()))
 

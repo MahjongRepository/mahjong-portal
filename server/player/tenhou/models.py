@@ -10,6 +10,12 @@ from utils.tenhou.points_calculator import PointsCalculator
 from utils.tenhou.yakuman_list import YAKUMAN_CONST
 
 
+class TenhouActiveNicknameManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(TenhouActiveNicknameManager, self).get_queryset()
+        return queryset.filter(is_active=True)
+
+
 class TenhouNickname(BaseModel):
     RANKS = [
         [0, u'新人'],
@@ -35,6 +41,9 @@ class TenhouNickname(BaseModel):
         [20, u'天鳳位']
     ]
 
+    objects = TenhouActiveNicknameManager()
+    all_objects = models.Manager()
+
     player = models.ForeignKey(Player, related_name='tenhou')
 
     tenhou_username = models.CharField(max_length=8)
@@ -53,6 +62,7 @@ class TenhouNickname(BaseModel):
     last_played_date = models.DateField(null=True, blank=True)
 
     is_main = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.tenhou_username

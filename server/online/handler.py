@@ -3,7 +3,6 @@ import logging
 import random
 from datetime import timedelta
 from random import randint
-from urllib.error import HTTPError
 from urllib.parse import unquote, urlparse, parse_qs
 
 import requests

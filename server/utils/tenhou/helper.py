@@ -50,7 +50,7 @@ def parse_log_line(line):
     }
 
 
-def recalculate_tenhou_statistics(tenhou_object):
+def recalculate_tenhou_statistics(tenhou_object, all_games=None):
     with transaction.atomic():
         games = tenhou_object.game_logs.all()
 
@@ -160,10 +160,18 @@ def recalculate_tenhou_statistics(tenhou_object):
 
         rank = PointsCalculator.calculate_rank(games)
 
+        # some players are play sanma only
+        # or in custom lobby only
+        # we still need to keep for them last played date
+        if all_games:
+            last_played_date = all_games and all_games[-1]['game_date'] or None
+        else:
+            last_played_date = games.exists() and games.last().game_date or None
+
         tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
         tenhou_object.pt = rank['pt']
         tenhou_object.end_pt = rank['end_pt']
-        tenhou_object.last_played_date = games.exists() and games.last().game_date or None
+        tenhou_object.last_played_date = last_played_date
         tenhou_object.played_games = total_played_games
         tenhou_object.average_place = total_average_place
         tenhou_object.month_played_games = month_played_games
