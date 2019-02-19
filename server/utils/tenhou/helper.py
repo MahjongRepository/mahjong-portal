@@ -158,7 +158,7 @@ def recalculate_tenhou_statistics(tenhou_object, all_games=None):
         else:
             month_average_place = 0
 
-        rank = PointsCalculator.calculate_rank(games)
+        calculated_rank = PointsCalculator.calculate_rank(games)
 
         # some players are play sanma only
         # or in custom lobby only
@@ -168,15 +168,15 @@ def recalculate_tenhou_statistics(tenhou_object, all_games=None):
         else:
             last_played_date = games.exists() and games.last().game_date or None
 
-        rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
+        rank = [x[0] for x in TenhouNickname.RANKS if x[1] == calculated_rank['rank']][0]
         # 3 or less dan
         if rank <= 12:
             # we need to erase user rate when user lost 4 dan
             tenhou_object.four_games_rate = 0
 
         tenhou_object.rank = rank
-        tenhou_object.pt = rank['pt']
-        tenhou_object.end_pt = rank['end_pt']
+        tenhou_object.pt = calculated_rank['pt']
+        tenhou_object.end_pt = calculated_rank['end_pt']
         tenhou_object.last_played_date = last_played_date
         tenhou_object.played_games = total_played_games
         tenhou_object.average_place = total_average_place
