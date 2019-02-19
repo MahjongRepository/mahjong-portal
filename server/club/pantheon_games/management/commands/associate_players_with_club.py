@@ -62,29 +62,6 @@ class Command(BaseCommand):
 
             player = None
 
-            # let's try to match player by first and last name
-            try:
-                player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
-                player.pantheon_id = pantheon_player.id
-                player.save()
-            except Player.DoesNotExist:
-                pass
-            except Player.MultipleObjectsReturned:
-                # if we have multiple players with same name
-                # let's try to add city to query
-                try:
-                    print(last_name)
-                    player = Player.all_objects.get(
-                        first_name_ru=first_name,
-                        last_name_ru=last_name,
-                        city=club.city
-                    )
-                except (Player.DoesNotExist, Player.MultipleObjectsReturned):
-                    # two players with same name from the same city
-                    # we can't handle it automatically
-                    pass
-
-            # player wasn't found by name
             # it could be that pantheon and portal has different names
             # so lets try to load player with pantheon id
             if not player:
@@ -92,6 +69,29 @@ class Command(BaseCommand):
                     player = Player.all_objects.get(pantheon_id=pantheon_player.id)
                 except Player.DoesNotExist:
                     pass
+
+            # let's try to match player by first and last name
+            if not player:
+                try:
+                    player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                    player.pantheon_id = pantheon_player.id
+                    player.save()
+                except Player.DoesNotExist:
+                    pass
+                except Player.MultipleObjectsReturned:
+                    # if we have multiple players with same name
+                    # let's try to add city to query
+                    try:
+                        print(last_name)
+                        player = Player.all_objects.get(
+                            first_name_ru=first_name,
+                            last_name_ru=last_name,
+                            city=club.city
+                        )
+                    except (Player.DoesNotExist, Player.MultipleObjectsReturned):
+                        # two players with same name from the same city
+                        # we can't handle it automatically
+                        pass
 
             if player:
                 club.players.add(player)
