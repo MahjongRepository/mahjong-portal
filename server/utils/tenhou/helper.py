@@ -168,7 +168,13 @@ def recalculate_tenhou_statistics(tenhou_object, all_games=None):
         else:
             last_played_date = games.exists() and games.last().game_date or None
 
-        tenhou_object.rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
+        rank = [x[0] for x in TenhouNickname.RANKS if x[1] == rank['rank']][0]
+        # 3 or less dan
+        if rank <= 12:
+            # we need to erase user rate when user lost 4 dan
+            tenhou_object.four_games_rate = 0
+
+        tenhou_object.rank = rank
         tenhou_object.pt = rank['pt']
         tenhou_object.end_pt = rank['end_pt']
         tenhou_object.last_played_date = last_played_date
