@@ -13,6 +13,14 @@
     {% endwith %}
 {% endif %}
 
+{% if bot_games %}
+    <h2>{% trans 'Mahjohg bots' %}</h2>
+
+    {% with bot_games as games %}
+        {% include 'tenhou/_tenhou_table.html' %}
+    {% endwith %}
+{% endif %}
+
 {% if high_level_games or high_level_hirosima_games %}
     <h2>{% trans 'Current games with high level players' %}</h2>
     <p>{% trans 'Games with 9 dan, 10 dan and tenhou dan players.' %}</p>

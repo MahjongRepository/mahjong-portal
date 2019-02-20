@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 07:57+0000\n"
+"POT-Creation-Date: 2019-02-20 07:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,15 +32,15 @@ msgstr "Права"
 msgid "Important dates"
 msgstr "Важные даты"
 
-#: club/views.py:41
+#: club/views.py:42
 msgid "Average place (ascending)"
 msgstr "Среднее место (по возрастанию)"
 
-#: club/views.py:42
+#: club/views.py:43
 msgid "Average place (descending)"
 msgstr "Среднее место (по убыванию)"
 
-#: club/views.py:43 templates/base.html:93 templates/club/details.html:54
+#: club/views.py:44 templates/base.html:93 templates/club/details.html:54
 #: templates/rating/_results_table.html:11 templates/tournament/details.html:45
 #: utils/tenhou/yakuman_list.py:18
 msgid "Tenhou"
@@ -85,19 +85,19 @@ msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: player/tenhou/models.py:95
+#: player/tenhou/models.py:105
 msgid "Kyu lobby"
 msgstr "Кю-лобби"
 
-#: player/tenhou/models.py:96
+#: player/tenhou/models.py:106
 msgid "Dan lobby"
 msgstr "Перводан"
 
-#: player/tenhou/models.py:97
+#: player/tenhou/models.py:107
 msgid "Upperdan lobby"
 msgstr "Втородан"
 
-#: player/tenhou/models.py:98
+#: player/tenhou/models.py:108
 msgid "Phoenix lobby"
 msgstr "Феникс"
 
@@ -250,7 +250,8 @@ msgstr "Клубная статистика"
 
 #: templates/club/details.html:39
 msgid "We are displaying here players with 10+ club games from last 180 days."
-msgstr "Статистика для игроков сыгравших 10+ клубных игр за последние 180 дней."
+msgstr ""
+"Статистика для игроков сыгравших 10+ клубных игр за последние 180 дней."
 
 #: templates/club/details.html:40
 msgid "Sorting:"
@@ -265,7 +266,7 @@ msgstr "Сортировка:"
 #: templates/tournament_admin/new_tournaments.html:17
 #: templates/tournament_admin/tournament_manage.html:89
 #: templates/website/city.html:16 templates/website/city.html:46
-#: templates/website/erc_2019.html:81
+#: templates/website/erc_2019.html:84
 msgid "Name"
 msgstr "Имя"
 
@@ -354,7 +355,7 @@ msgid "Place"
 msgstr "Место"
 
 #: templates/player/_changes_table.html:9 templates/player/tenhou.html:84
-#: templates/rating/_results_table.html:14 templates/website/erc_2019.html:85
+#: templates/rating/_results_table.html:14 templates/website/erc_2019.html:88
 msgid "Points"
 msgstr "Очки"
 
@@ -510,7 +511,7 @@ msgid "All time"
 msgstr "За всё время"
 
 #: templates/rating/_results_table.html:15 templates/tournament/details.html:48
-#: templates/website/erc_2019.html:86
+#: templates/website/erc_2019.html:89
 msgctxt "location"
 msgid "From"
 msgstr "Откуда"
@@ -620,14 +621,18 @@ msgid "Games from upperdan and phoenix with portal players."
 msgstr "Игры втородана и феникса с игроками имеющими профиль на портале."
 
 #: templates/tenhou/tenhou_games_async.html:17
+msgid "Mahjohg bots"
+msgstr "Кибер разумы"
+
+#: templates/tenhou/tenhou_games_async.html:25
 msgid "Current games with high level players"
 msgstr "Текущие игры высоких данов"
 
-#: templates/tenhou/tenhou_games_async.html:18
+#: templates/tenhou/tenhou_games_async.html:26
 msgid "Games with 9 dan, 10 dan and tenhou dan players."
 msgstr "Игры с 9, 10 данами и тенходанами."
 
-#: templates/tenhou/tenhou_games_async.html:27
+#: templates/tenhou/tenhou_games_async.html:35
 msgid "Sanma"
 msgstr "Хиросима"
 
@@ -915,18 +920,18 @@ msgstr "Турниры и игроки в риичи маджонг из"
 msgid "European Riichi Championship 2019 Qualifications"
 msgstr "Отбор на Чемпионат Европы 2019 года"
 
-#: templates/website/erc_2019.html:72 templates/website/erc_2019.html:126
-#: templates/website/erc_2019.html:127
+#: templates/website/erc_2019.html:75 templates/website/erc_2019.html:129
+#: templates/website/erc_2019.html:130
 msgid "List of players sorted by RR rating (on 1st January 2019)"
 msgstr ""
 "Рейтинг RR на 1 января 2019 года с учетом устаревания турниров, но без учета "
 "еще не завершившихся турниров 2018 года."
 
-#: templates/website/erc_2019.html:80 templates/website/erc_2019.html:93
+#: templates/website/erc_2019.html:83 templates/website/erc_2019.html:96
 msgid "is going to participate"
 msgstr "собирается участвовать"
 
-#: templates/website/erc_2019.html:83
+#: templates/website/erc_2019.html:86
 msgid "MF"
 msgstr "Состоит в ФМ"
 

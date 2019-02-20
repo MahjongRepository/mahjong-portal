@@ -11,7 +11,11 @@
 <br>
 
 <a href="{{ player.game_link }}" target="_blank">
-    <nobr>{{ player.name }}</nobr>
+    {% if player.is_bot %}
+        <nobr><b>{{ player.name }}</b></nobr>
+    {% else %}
+        <nobr>{{ player.name }}</nobr>
+    {% endif %}
 </a>
 
 {% with player_profiles|get_item:player.name as player_profile %}

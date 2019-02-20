@@ -5,7 +5,6 @@ from django.db.models import F, Sum
 from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
-from django.utils.translation import get_language
 
 from player.tenhou.models import TenhouNickname, CollectedYakuman, TenhouGameLog
 from utils.tenhou.current_tenhou_games import get_latest_wg_games
@@ -28,7 +27,9 @@ def get_current_tenhou_games_async(request):
     our_players_games = {}
 
     high_level_games = {}
-    high_level_hirosima_games = {}
+    high_level_sanma_games = {}
+
+    bot_games = {}
 
     for game in games:
         for player in game['players']:
@@ -37,16 +38,21 @@ def get_current_tenhou_games_async(request):
                 found_players.append(player)
                 our_players_games[game['game_id']] = game
 
+            if player['name'].startswith(u'ⓝ'):
+                player['is_bot'] = True
+                bot_games[game['game_id']] = game
+
             if player['dan'] >= 18:
                 if len(game['players']) == 3:
-                    high_level_hirosima_games[game['game_id']] = game
+                    high_level_sanma_games[game['game_id']] = game
                 else:
                     high_level_games[game['game_id']] = game
 
     return render(request, 'tenhou/tenhou_games_async.html', {
         'our_players_games': our_players_games.values(),
         'high_level_games': high_level_games.values(),
-        'high_level_hirosima_games': high_level_hirosima_games.values(),
+        'high_level_hirosima_games': high_level_sanma_games.values(),
+        'bot_games': bot_games.values(),
         'player_profiles': player_profiles
     })
 
