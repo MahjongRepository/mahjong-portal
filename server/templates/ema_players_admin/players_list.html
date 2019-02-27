@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Игроки с EMA номерами</h2>
+
+        <div>
+            <div class="float-left">
+                <form action="">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" value="{{ query|default:'' }}" placeholder="Поиск (имя или EMA номер)" aria-describedby="button-addon2" name="q">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Найти</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="float-right">
+                <a href="{% url 'download_players_list_csv' %}{% if query %}?q={{ query }}{% endif %}" class="btn btn-warning">
+                    Скачать .CSV
+                </a>
+                <a href="{% url 'add_new_player' %}" class="btn btn-success">Добавить нового игрока</a>
+            </div>
+        </div>
+        <br>
+
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">EMA имя</th>
+                    <th scope="col">Город</th>
+                    <th scope="col">EMA номер</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for player in players %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>
+                            <a href="{% url 'player_details' player.slug %}">
+                                {{ player.full_name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ player.last_name_en|upper }} {{ player.first_name_en }}
+                        </td>
+                        <td>
+                            {{ player.city|default_if_none:'' }}
+                        </td>
+                        <td>{{ player.ema_id }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

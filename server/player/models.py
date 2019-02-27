@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from mahjong_portal.models import BaseModel
@@ -61,6 +62,17 @@ class Player(BaseModel):
     def tenhou_object(self):
         tenhou = self.tenhou.all().order_by('-is_main').first()
         return tenhou
+
+    @property
+    def latest_ema_id(self):
+        return int(Player.ema_queryset().first().ema_id)
+
+    @staticmethod
+    def ema_queryset():
+        return (Player.objects
+                .exclude(Q(ema_id__isnull=True) | Q(ema_id=''))
+                .filter(country__code='RU')
+                .order_by('-ema_id'))
 
 
 class PlayerERMC(BaseModel):

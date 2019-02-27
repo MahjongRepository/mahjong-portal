@@ -122,6 +122,9 @@
                         {% if user.is_tournament_manager %}
                             <a class="dropdown-item" href="{% url 'managed_tournaments' %}">{% trans 'Tournaments' %}</a>
                         {% endif %}
+                        {% if user.is_ema_players_manager %}
+                            <a class="dropdown-item" href="{% url 'list_of_ema_players' %}">EMA игроки</a>
+                        {% endif %}
                         <a class="dropdown-item" href="{% url 'logout' %}">{% trans 'Logout' %}</a>
                     </div>
                 </li>
