@@ -1,4 +1,3 @@
-
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -32,7 +31,8 @@ class Command(BaseCommand):
 
         for player_name, rate in found_players.items():
             tenhou_obj = player_profiles[player_name]
-            tenhou_obj.four_games_rate = rate
-            tenhou_obj.save()
+            stat = tenhou_obj.four_players_aggregated_statistics()
+            stat.rate = rate
+            stat.save()
 
         print('{0}: End'.format(get_date_string()))

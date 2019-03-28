@@ -121,7 +121,7 @@ def player_rating_details(request, slug, rating_slug):
 
 def player_tenhou_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
-    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('-is_main')
+    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('-is_main').prefetch_related('aggregated_statistics')
     return render(request, 'player/tenhou.html', {
         'player': player,
         'tenhou_data': tenhou_data,

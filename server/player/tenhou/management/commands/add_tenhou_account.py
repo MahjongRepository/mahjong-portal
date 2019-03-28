@@ -1,15 +1,10 @@
-from datetime import datetime
-from urllib.parse import quote
-
-import requests
-from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from player.models import Player
-from player.tenhou.management.commands.download_all_games import download_all_games_from_arcturus, save_played_games
 from player.tenhou.models import TenhouNickname
-from utils.tenhou.helper import recalculate_tenhou_statistics
+from utils.tenhou.helper import recalculate_tenhou_statistics_for_four_players, download_all_games_from_arcturus, save_played_games, \
+    get_started_date_for_account
 
 
 def get_date_string():
@@ -46,40 +41,6 @@ class Command(BaseCommand):
         )
         save_played_games(tenhou_object, player_games)
 
-        recalculate_tenhou_statistics(tenhou_object, player_games)
+        recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games)
 
         print('{0}: End'.format(get_date_string()))
-
-
-def get_started_date_for_account(tenhou_nickname):
-    url = 'http://arcturus.su/tenhou/ranking/ranking.pl?name={}'.format(
-        quote(tenhou_nickname, safe='')
-    )
-
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser', from_encoding='utf-8')
-
-    previous_date = None
-    account_start_date = None
-
-    records = soup.find('div', {'id': 'records'}).text.split('\n')
-    for record in records:
-        if not record:
-            continue
-
-        temp_array = record.strip().split('|')
-        date = datetime.strptime(temp_array[3].strip(), '%Y-%m-%d')
-
-        # let's initialize start date with first date in the list
-        if not account_start_date:
-            account_start_date = date
-
-        if previous_date:
-            delta = date - previous_date
-            # it means that account wasn't used long time and was wiped
-            if delta.days > 180:
-                account_start_date = date
-
-        previous_date = date
-
-    return account_start_date

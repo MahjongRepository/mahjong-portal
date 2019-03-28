@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from collections import OrderedDict
 from copy import copy
 from datetime import datetime
 
 import pytz
 
 
-class PointsCalculator(object):
+class FourPlayersPointsCalculator:
     """
     Calculate how much points user will get from games in various lobby's
     """
@@ -34,7 +33,7 @@ class PointsCalculator(object):
         }
     }
 
-    DAN_SETTINGS = OrderedDict({
+    DAN_SETTINGS = {
         '新人': {
             'rank': '新人',
             'start_pt': 0,
@@ -175,7 +174,7 @@ class PointsCalculator(object):
             '東': 120,
             '南': 180,
         }
-    })
+    }
 
     OLD_RANK_LIMITS = {
         '新人': 30,
@@ -189,7 +188,7 @@ class PointsCalculator(object):
 
     @staticmethod
     def calculate_rank(games):
-        rank = copy(PointsCalculator.DAN_SETTINGS['新人'])
+        rank = copy(FourPlayersPointsCalculator.DAN_SETTINGS['新人'])
         rank['pt'] = rank['start_pt']
 
         kyu_lobby_changes_date = datetime(2017, 10, 24, 0, 0, tzinfo=pytz.utc)
@@ -204,16 +203,16 @@ class PointsCalculator(object):
                 if lobby == '般':
                     lobby = '般_old'
 
-                if PointsCalculator.OLD_RANK_LIMITS.get(rank['rank']):
-                    rank['end_pt'] = PointsCalculator.OLD_RANK_LIMITS.get(rank['rank'])
+                if FourPlayersPointsCalculator.OLD_RANK_LIMITS.get(rank['rank']):
+                    rank['end_pt'] = FourPlayersPointsCalculator.OLD_RANK_LIMITS.get(rank['rank'])
 
             delta = 0
             if game.place == 1 or game.place == 2:
-                delta = PointsCalculator.LOBBY[lobby][game.game_type].get(game.place, 0)
+                delta = FourPlayersPointsCalculator.LOBBY[lobby][game.game_type].get(game.place, 0)
             elif game.place == 4:
-                delta = -PointsCalculator.DAN_SETTINGS[rank['rank']][game.game_type]
+                delta = -FourPlayersPointsCalculator.DAN_SETTINGS[rank['rank']][game.game_type]
 
-            rank_index = list(PointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
+            rank_index = list(FourPlayersPointsCalculator.DAN_SETTINGS.keys()).index(rank['rank'])
 
             rank['pt'] += delta
             game.delta = delta
@@ -223,18 +222,18 @@ class PointsCalculator(object):
             # new dan
             if rank['pt'] >= rank['end_pt']:
                 # getting next record from ordered dict
-                next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index + 1]
+                next_rank = list(FourPlayersPointsCalculator.DAN_SETTINGS.keys())[rank_index + 1]
                 game.next_rank = rank_index + 1
 
-                rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
+                rank = copy(FourPlayersPointsCalculator.DAN_SETTINGS[next_rank])
                 rank['pt'] = rank['start_pt']
             # wasted dan
             elif rank['pt'] < 0:
                 if rank['start_pt'] > 0:
                     # getting previous record from ordered dict
-                    next_rank = list(PointsCalculator.DAN_SETTINGS.keys())[rank_index - 1]
+                    next_rank = list(FourPlayersPointsCalculator.DAN_SETTINGS.keys())[rank_index - 1]
                     game.next_rank = rank_index - 1
-                    rank = copy(PointsCalculator.DAN_SETTINGS[next_rank])
+                    rank = copy(FourPlayersPointsCalculator.DAN_SETTINGS[next_rank])
                     rank['pt'] = rank['start_pt']
                 else:
                     # we can't lose first kyu

@@ -36,18 +36,18 @@
                             <nobr>{{ account.get_rank_display }}</nobr>
                         </td>
                         <td>
-                            {% if account.four_games_rate %}
-                                R{{ account.four_games_rate|floatformat:0 }}
+                            {% if account.rate %}
+                                R{{ account.rate|floatformat:0 }}
                             {% endif %}
                         </td>
                         <td>
-                            {{ account.tenhou_username }}
+                            {{ account.tenhou_object.tenhou_username }}
                         </td>
                         <td>
                             <nobr>{{ account.pt }} / {{ account.end_pt }}pt</nobr>
                         </td>
                         <td>
-                            {{ account.last_played_date|date:SHORT_DATE_FORMAT }}
+                            {{ account.tenhou_object.last_played_date|date:SHORT_DATE_FORMAT }}
                         </td>
                         <td>
                             {% if account.player.city %}

@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from player.models import Player
 from player.tenhou.models import TenhouNickname, TenhouGameLog, TenhouStatistics
-from utils.tenhou.points_calculator import PointsCalculator
+from utils.tenhou.points_calculator import FourPlayersPointsCalculator
 
 
 class TenhouCalculatorTestCase(TestCase):
@@ -22,7 +22,7 @@ class TenhouCalculatorTestCase(TestCase):
 
     def test_calculations(self):
         game_records = self._create_game_record(self._generate_game_records([1, 1, 2, 3, 1, 1, 4, 2]))
-        result = PointsCalculator.calculate_rank(game_records)
+        result = FourPlayersPointsCalculator.calculate_rank(game_records)
         self.assertEqual(result['rank'], u'６級')
         self.assertEqual(result['pt'], 15)
 
@@ -35,7 +35,7 @@ class TenhouCalculatorTestCase(TestCase):
             {'date': timezone.now() + timedelta(seconds=4), 'game_rules': u'四般東', 'place': 1},
         ])
 
-        result = PointsCalculator.calculate_rank(game_records)
+        result = FourPlayersPointsCalculator.calculate_rank(game_records)
         self.assertEqual(result['rank'], u'６級')
         self.assertEqual(result['pt'], 20)
 
@@ -45,7 +45,7 @@ class TenhouCalculatorTestCase(TestCase):
             {'date': timezone.now(), 'game_rules': u'四般南', 'place': 2},
         ])
 
-        result = PointsCalculator.calculate_rank(game_records)
+        result = FourPlayersPointsCalculator.calculate_rank(game_records)
         self.assertEqual(result['rank'], u'新人')
         self.assertEqual(result['pt'], 15)
 
@@ -57,7 +57,7 @@ class TenhouCalculatorTestCase(TestCase):
             {'date': datetime(2017, 10, 23, tzinfo=pytz.utc) + timedelta(seconds=4), 'game_rules': u'四般南', 'place': 1},
         ])
 
-        result = PointsCalculator.calculate_rank(game_records)
+        result = FourPlayersPointsCalculator.calculate_rank(game_records)
         self.assertEqual(result['rank'], u'７級')
         self.assertEqual(result['pt'], 45)
 
@@ -65,7 +65,7 @@ class TenhouCalculatorTestCase(TestCase):
         first_places = [1] * 19
         four_places = [4] * 19
         game_records = self._create_game_record(self._generate_game_records(first_places + four_places))
-        result = PointsCalculator.calculate_rank(game_records)
+        result = FourPlayersPointsCalculator.calculate_rank(game_records)
         self.assertEqual(result['rank'], u'１級')
         self.assertEqual(result['pt'], 0)
 

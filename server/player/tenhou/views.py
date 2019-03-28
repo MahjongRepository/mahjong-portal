@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 
-from player.tenhou.models import TenhouNickname, CollectedYakuman, TenhouGameLog
+from player.tenhou.models import TenhouNickname, CollectedYakuman, TenhouGameLog, TenhouAggregatedStatistics
 from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
@@ -68,11 +68,12 @@ def latest_yakumans(request):
 
 
 def tenhou_accounts(request):
-    accounts = (TenhouNickname.objects
-                .all()
-                .order_by('-rank', '-four_games_rate', '-pt')
-                .prefetch_related('player')
-                .prefetch_related('player__city'))
+    accounts = (TenhouAggregatedStatistics.objects
+                .filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
+                .order_by('-rank', '-rate', '-pt')
+                .prefetch_related('tenhou_object')
+                .prefetch_related('tenhou_object__player')
+                .prefetch_related('tenhou_object__player__city'))
     return render(request, 'tenhou/tenhou_accounts.html', {
         'accounts': accounts
     })
@@ -90,9 +91,15 @@ def games_history(request, year=None, month=None, day=None):
 
     games = (TenhouGameLog.objects
              .filter(game_date__date=query_date)
+             .filter(game_players=TenhouGameLog.FOUR_PLAYERS)
              .prefetch_related('tenhou_object')
              .prefetch_related('tenhou_object__player')
              .order_by('-game_date'))
+
+    rank_changes = TenhouGameLog.objects.filter(
+        game_date__date=query_date,
+        game_players=TenhouGameLog.FOUR_PLAYERS
+    ).exclude(rank=F('next_rank'))
 
     return render(request, 'tenhou/games_history.html', {
         'query_date': query_date,
@@ -100,7 +107,5 @@ def games_history(request, year=None, month=None, day=None):
         'games': games,
         'total': games.count(),
         'time_spent': (games.aggregate(Sum('game_length'))['game_length__sum'] or 0) / 60.0,
-        'rank_changes': TenhouGameLog.objects.filter(
-            game_date__date=query_date
-        ).exclude(rank=F('next_rank'))
+        'rank_changes': rank_changes
     })

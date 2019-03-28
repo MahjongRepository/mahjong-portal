@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy
 
 from mahjong_portal.models import BaseModel
 from player.models import Player
-from utils.tenhou.points_calculator import PointsCalculator
+from utils.tenhou.points_calculator import FourPlayersPointsCalculator
 from utils.tenhou.yakuman_list import YAKUMAN_CONST
 
 
@@ -49,7 +49,17 @@ class TenhouNickname(BaseModel):
     tenhou_username = models.CharField(max_length=8)
     username_created_at = models.DateField()
 
+    last_played_date = models.DateField(null=True, blank=True)
+
+    is_main = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+
+    # DEPRECATED
+
     rank = models.PositiveSmallIntegerField(choices=RANKS)
+
+    pt = models.PositiveSmallIntegerField(default=0)
+    end_pt = models.PositiveSmallIntegerField(default=0)
 
     average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     played_games = models.PositiveIntegerField(default=0)
@@ -57,19 +67,15 @@ class TenhouNickname(BaseModel):
     month_played_games = models.PositiveIntegerField(default=0)
     four_games_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
-    pt = models.PositiveSmallIntegerField(default=0)
-    end_pt = models.PositiveSmallIntegerField(default=0)
-    last_played_date = models.DateField(null=True, blank=True)
-
-    is_main = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
-
     def __unicode__(self):
         return self.tenhou_username
 
     class Meta:
         ordering = ['-rank']
         db_table = 'player_tenhounickname'
+
+    def four_players_aggregated_statistics(self):
+        return self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
 
     def all_time_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.ALL_TIME)
@@ -81,10 +87,10 @@ class TenhouNickname(BaseModel):
         return self.yakumans.order_by('-date')
 
     def prepare_latest_places(self):
-        return reversed(self.game_logs.order_by('-game_date')[:20])
+        return reversed(self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by('-game_date')[:20])
 
     def rank_changes(self):
-        return self.game_logs.exclude(rank=F('next_rank')).order_by('game_date')
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).exclude(rank=F('next_rank')).order_by('game_date')
 
     def pt_changes(self):
         last_rank_change_date = self.rank_changes().last()
@@ -92,7 +98,61 @@ class TenhouNickname(BaseModel):
         return self.game_logs.filter(game_date__gte=last_rank_change_date)
 
     def dan_settings(self):
-        return PointsCalculator.DAN_SETTINGS[self.get_rank_display()]
+        return FourPlayersPointsCalculator.DAN_SETTINGS[self.get_rank_display()]
+
+
+class TenhouAggregatedStatistics(models.Model):
+    RANKS = [
+        [0, u'新人'],
+        [1, u'９級'],
+        [2, u'８級'],
+        [3, u'７級'],
+        [4, u'６級'],
+        [5, u'５級'],
+        [6, u'４級'],
+        [7, u'３級'],
+        [8, u'２級'],
+        [9, u'１級'],
+        [10, u'初段'],
+        [11, u'二段'],
+        [12, u'三段'],
+        [13, u'四段'],
+        [14, u'五段'],
+        [15, u'六段'],
+        [16, u'七段'],
+        [17, u'八段'],
+        [18, u'九段'],
+        [19, u'十段'],
+        [20, u'天鳳位']
+    ]
+
+    FOUR_PLAYERS = 0
+    THREE_PLAYERS = 1
+
+    TYPES = [
+        [FOUR_PLAYERS, 'Four players'],
+        [THREE_PLAYERS, 'Three players'],
+    ]
+
+    tenhou_object = models.ForeignKey(TenhouNickname, related_name='aggregated_statistics')
+    rank = models.PositiveSmallIntegerField(choices=RANKS, null=True, blank=True)
+    rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    game_players = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
+
+    played_games = models.PositiveIntegerField(default=0)
+    month_played_games = models.PositiveIntegerField(default=0)
+
+    average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+
+    pt = models.PositiveSmallIntegerField(default=0)
+    end_pt = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        db_table = 'portal_tenhou_aggregated_statistics'
+
+    def player(self):
+        return self.tenhou_object.player
 
 
 class TenhouStatistics(models.Model):
@@ -153,6 +213,14 @@ class CollectedYakuman(models.Model):
 
 
 class TenhouGameLog(models.Model):
+    FOUR_PLAYERS = 0
+    THREE_PLAYERS = 1
+
+    TYPES = [
+        [FOUR_PLAYERS, 'Four players'],
+        [THREE_PLAYERS, 'Three players'],
+    ]
+
     tenhou_object = models.ForeignKey(TenhouNickname, related_name='game_logs')
 
     lobby = models.PositiveSmallIntegerField(choices=TenhouStatistics.LOBBIES)
@@ -163,6 +231,7 @@ class TenhouGameLog(models.Model):
     next_rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
     game_date = models.DateTimeField()
     game_rules = models.CharField(max_length=20)
+    game_players = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
 
     class Meta:
         unique_together = ['tenhou_object', 'game_date']
