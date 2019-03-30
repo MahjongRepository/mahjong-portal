@@ -68,6 +68,7 @@ class Command(BaseCommand):
                 tenhou_object = cached_objects[result['name']]
 
                 TenhouGameLog.objects.get_or_create(
+                    game_players=TenhouGameLog.FOUR_PLAYERS,
                     tenhou_object=tenhou_object,
                     place=result['place'],
                     game_date=result['game_date'],
