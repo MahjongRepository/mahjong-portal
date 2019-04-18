@@ -55,7 +55,6 @@ class TenhouNickname(BaseModel):
     is_active = models.BooleanField(default=True)
 
     # DEPRECATED
-
     rank = models.PositiveSmallIntegerField(choices=RANKS)
 
     pt = models.PositiveSmallIntegerField(default=0)
@@ -99,6 +98,10 @@ class TenhouNickname(BaseModel):
 
     def dan_settings(self):
         return FourPlayersPointsCalculator.DAN_SETTINGS[self.get_rank_display()]
+
+    def get_rank_display(self):
+        stat = self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
+        return stat.get_rank_display()
 
 
 class TenhouAggregatedStatistics(models.Model):

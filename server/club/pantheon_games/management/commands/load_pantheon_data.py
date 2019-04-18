@@ -9,6 +9,7 @@ from club.club_games.models import ClubSession, ClubSessionResult, ClubRating, C
 from club.models import Club
 from club.pantheon_games.models import PantheonSession, PantheonSessionResult, PantheonRound
 from player.models import Player
+from player.tenhou.models import TenhouAggregatedStatistics
 
 
 def get_date_string():
@@ -192,7 +193,10 @@ class Command(BaseCommand):
                 for session_id in player_sessions:
                     player_rounds.extend(session_rounds[session_id])
 
-            tenhou_object = player.tenhou_object
+            stat = (TenhouAggregatedStatistics.objects
+                    .filter(tenhou_object__player=player)
+                    .filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
+                    .last())
 
             ClubRating.objects.create(
                 club=club,
@@ -203,7 +207,7 @@ class Command(BaseCommand):
                 second_place=second_place,
                 third_place=third_place,
                 fourth_place=fourth_place,
-                rank=tenhou_object and tenhou_object.rank or None
+                rank=stat and stat.rank or None
             )
 
         print('Calculating completed')
