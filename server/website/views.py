@@ -219,7 +219,7 @@ def ermc_qualification_2019(request):
                       .order_by('place'))
 
     confirmed = 1
-    not_confirmed_colors = [PlayerERMC.GRAY, PlayerERMC.DARK_GREEN]
+    not_confirmed_colors = [PlayerERMC.GRAY, PlayerERMC.DARK_GREEN, PlayerERMC.DARK_BLUE]
     for x in rating_results:
         try:
             if x.player.ermc.state in not_confirmed_colors:

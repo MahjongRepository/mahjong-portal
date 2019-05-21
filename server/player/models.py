@@ -84,6 +84,7 @@ class PlayerERMC(BaseModel):
     GRAY = 5
     DARK_GREEN = 6
     VIOLET = 7
+    DARK_BLUE = 8
 
     COLORS = [
         [GREEN, 'точно едет'],
@@ -94,6 +95,7 @@ class PlayerERMC(BaseModel):
         [GRAY, 'точно не едет'],
         [DARK_GREEN, 'деда'],
         [VIOLET, 'игрок замены'],
+        [DARK_BLUE, 'не деда (судья)'],
     ]
 
     player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='ermc')
@@ -117,7 +119,7 @@ class PlayerERMC(BaseModel):
             PlayerERMC.PINK: '#D5A6BD',
             PlayerERMC.GRAY: '#999999',
             PlayerERMC.DARK_GREEN: '#45818E',
-            PlayerERMC.VIOLET: '#8E7CC3'
+            PlayerERMC.VIOLET: '#8E7CC3',
+            PlayerERMC.DARK_BLUE: '#000080',
         }
-        # rgb(142, 124, 195);
         return colors.get(index, '')

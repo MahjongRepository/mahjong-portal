@@ -16,6 +16,7 @@ def ermc_color(color):
         'gray': PlayerERMC.GRAY,
         'dark_green': PlayerERMC.DARK_GREEN,
         'violet': PlayerERMC.VIOLET,
+        'dark_blue': PlayerERMC.DARK_BLUE,
     }.get(color)
 
     return PlayerERMC.color_map(index)
