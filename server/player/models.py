@@ -120,6 +120,6 @@ class PlayerERMC(BaseModel):
             PlayerERMC.GRAY: '#999999',
             PlayerERMC.DARK_GREEN: '#45818E',
             PlayerERMC.VIOLET: '#8E7CC3',
-            PlayerERMC.DARK_BLUE: '#000080',
+            PlayerERMC.DARK_BLUE: '#5757f8',
         }
         return colors.get(index, '')
