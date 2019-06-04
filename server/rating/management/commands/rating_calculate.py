@@ -106,7 +106,9 @@ class Command(BaseCommand):
 
             important_dates = [
                 # ERMC 2019 qualification date
-                datetime.date(2019, 1, 1)
+                datetime.date(2019, 1, 1),
+                # WRC 2020 qualification date
+                datetime.date(2020, 1, 1),
             ]
 
             dates_to_process = sorted(dates_to_process + important_dates)
