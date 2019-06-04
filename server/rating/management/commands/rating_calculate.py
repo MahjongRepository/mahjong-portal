@@ -107,8 +107,6 @@ class Command(BaseCommand):
             important_dates = [
                 # ERMC 2019 qualification date
                 datetime.date(2019, 1, 1),
-                # WRC 2020 qualification date
-                datetime.date(2020, 1, 1),
             ]
 
             dates_to_process = sorted(dates_to_process + important_dates)
@@ -125,5 +123,15 @@ class Command(BaseCommand):
                     calculator.calculate_players_deltas(tournament, rating, rating_date, is_last)
 
                 calculator.calculate_players_rating_rank(rating, rating_date, is_last)
+
+            # Remove after 2020 1 1
+            # WRC 2020 qualification date
+            qualification_date = datetime.date(2020, 1, 1)
+            limited_tournaments = tournaments.filter(end_date__lte=qualification_date)
+
+            for tournament in limited_tournaments:
+                calculator.calculate_players_deltas(tournament, rating, qualification_date, False)
+
+            calculator.calculate_players_rating_rank(rating, qualification_date, False)
 
         print('{0}: End'.format(get_date_string()))
