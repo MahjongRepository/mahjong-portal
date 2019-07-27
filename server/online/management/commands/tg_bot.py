@@ -145,7 +145,10 @@ def set_tenhou_nickname(bot, update, args):
     logger.info('Nickname command. {}, {}'.format(update.message.from_user.username, args))
 
     if not len(args):
-        bot.send_message(chat_id=update.message.chat_id, text=u'Укажите ваш тенхо ник после команды.')
+        update.message.reply_text(
+            text=u'Укажите ваш тенхо ник после команды.',
+            disable_web_page_preview=True
+        )
         return
 
     username = update.message.from_user.username

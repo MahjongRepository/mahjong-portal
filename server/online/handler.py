@@ -307,8 +307,6 @@ class TournamentHandler(object):
         return games, message
 
     def make_sortition(self, pantheon_ids):
-        return TeamSeating.get_seating_for_round(self.status.current_round)
-
         if self.status.current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
