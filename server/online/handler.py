@@ -391,7 +391,7 @@ class TournamentHandler(object):
                 break_minutes = TOURNAMENT_BREAKS_TIME[index]
                 self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
                 self.status.save()
-                return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.\n\nИгровое лобби: http://tenhou.net/3/?{}'.format(
+                return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.\n\nИгровое лобби: http://tenhou.net/0/?{}'.format(
                     break_minutes,
                     settings.TOURNAMENT_PUBLIC_LOBBY
                 )

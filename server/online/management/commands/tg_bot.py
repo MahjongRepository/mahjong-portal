@@ -133,7 +133,7 @@ def get_tournament_status(bot, update):
 def help_bot(bot, update):
     logger.info('Help')
 
-    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/3/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
+    message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
     message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
     message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10  \n'
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
