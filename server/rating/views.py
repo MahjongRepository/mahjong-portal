@@ -3,8 +3,9 @@ from datetime import datetime
 import pytz
 from django.http import JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 
-from rating.models import Rating, RatingResult, RatingDelta
+from rating.models import Rating, RatingResult, RatingDelta, TournamentCoefficients
 from tournament.models import Tournament
 
 
@@ -80,8 +81,26 @@ def rating_tournaments(request, slug):
                    .prefetch_related('city')
                    .prefetch_related('country')
                    .order_by('-end_date'))
+    coefficients = TournamentCoefficients.objects.filter(
+        tournament_id__in=tournament_ids,
+        rating=rating,
+        date__lte=timezone.now().date(),
+    ).order_by(
+        'tournament_id',
+        '-date',
+    ).distinct('tournament_id')
+    coefficients_dict = {coef.tournament_id: coef for coef in coefficients}
+    top_tournaments_number = 3 if rating.is_online() else 4  # TODO: Брать из класса подсчета рейтинга
+    top_coefficients = sorted(
+        coefficients,
+        key=lambda t: (float(t.age) / 100.0) * float(t.coefficient),
+        reverse=True,
+    )[:top_tournaments_number]
+    top_tournament_ids = [coef.tournament_id for coef in top_coefficients]
     return render(request, 'rating/rating_tournaments.html', {
         'rating': rating,
         'tournaments': tournaments,
-        'page': 'rating'
+        'page': 'rating',
+        'coefficients': coefficients_dict,
+        'top_tournament_ids': top_tournament_ids,
     })

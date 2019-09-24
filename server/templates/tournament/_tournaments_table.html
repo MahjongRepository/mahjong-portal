@@ -28,11 +28,15 @@
             {% if not is_event %}
                 <th scope="col">{% trans 'Sessions' %}</th>
             {% endif %}
+            {% if coefficients %}
+                <th scope="col">{% trans 'Power' %}</th>
+                <th scope="col">{% trans 'Coefficient' %}</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
         {% for tournament in tournaments %}
-            <tr>
+            <tr {% if tournament.id in top_tournament_ids %}class="table-success" {% endif %}>
                 {% if reverse_counter %}
                     <th scope="row">{{ forloop.revcounter }}</th>
                 {% else %}
@@ -71,6 +75,12 @@
                 {% if not is_event %}
                     <td>{{ tournament.number_of_players|default:'-' }}</td>
                     <td>{{ tournament.number_of_sessions|default:'-' }}</td>
+                    {% if coefficients %}
+                        {% with coefficient=coefficients|get_item:tournament.id %}
+                            <td>{{ coefficient.age|floatformat:0 }}%</td>
+                            <td>{{ coefficient.coefficient|floatformat:2 }}</td>
+                        {% endwith %}
+                    {% endif %}
                 {% endif %}
             </tr>
         {% endfor %}
