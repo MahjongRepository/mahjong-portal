@@ -131,6 +131,14 @@ class Command(BaseCommand):
 
             for tournament in limited_tournaments:
                 calculator.calculate_players_deltas(tournament, rating, qualification_date, False)
+                
+            # Remove after 2020 3 1
+            # WRC 2020 second qualification date
+            qualification_date = datetime.date(2020, 3, 1)
+            limited_tournaments = tournaments.filter(end_date__lte=qualification_date)
+
+            for tournament in limited_tournaments:
+                calculator.calculate_players_deltas(tournament, rating, qualification_date, False)
 
             calculator.calculate_players_rating_rank(rating, qualification_date, False)
 
