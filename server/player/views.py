@@ -107,6 +107,13 @@ def player_rating_details(request, slug, rating_slug):
                      .prefetch_related('tournament')
                      .order_by('-tournament__end_date'))
 
+    top_tournaments_number = 3 if rating.is_online() else 4
+    top_tournament_ids = tuple(d.tournament_id for d in sorted(
+        rating_deltas,
+        reverse=True,
+        key=lambda d: float(d.base_rank) * float(d.coefficient_obj.age) * float(d.coefficient_value)
+    ))[:top_tournaments_number]
+
     last_rating_place = RatingResult.objects.filter(rating=rating, is_last=True).order_by('place').last().place
 
     return render(request, 'player/rating_details.html', {
@@ -116,6 +123,7 @@ def player_rating_details(request, slug, rating_slug):
         'rating_result': rating_result,
         'filtered_results': filtered_results,
         'last_rating_place': last_rating_place,
+        'top_tournament_ids': top_tournament_ids,
     })
 
 

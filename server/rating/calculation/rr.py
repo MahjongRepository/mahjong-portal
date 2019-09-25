@@ -375,18 +375,28 @@ class RatingRRCalculation(object):
 
         rating_calculation = ''
         if is_last:
-            first_part_calculation = '({}) / ({})'.format(
-                ' + '.join(first_part_numerator_calculation), ' + '.join(first_part_denominator_calculation)
+            first_part_calculation = 'p1 = ({}) / ({}) = {}'.format(
+                ' + '.join(first_part_numerator_calculation),
+                ' + '.join(first_part_denominator_calculation),
+                first_part
             )
-            second_part_calculation = '({}) / {}'.format(
-                ' + '.join(second_part_numerator_calculation), max_coefficient
+            second_part_calculation = 'p2 = ({}) / {} = {}'.format(
+                ' + '.join(second_part_numerator_calculation),
+                max_coefficient,
+                second_part
             )
-            rating_calculation = '({}) * {} + ({}) * {}'.format(
-                first_part_calculation,
+            total_calculation = 'score = {} * {} + {} * {}'.format(
+                first_part,
                 self.FIRST_PART_WEIGHT / 100,
-                second_part_calculation,
-                self.SECOND_PART_WEIGHT / 100
+                second_part,
+                self.SECOND_PART_WEIGHT / 100,
+                score
             )
+            rating_calculation = '\n\n'.join((
+                first_part_calculation,
+                second_part_calculation,
+                total_calculation,
+            ))
 
         return rating_calculation, score
 

@@ -16,7 +16,7 @@
         </thead>
         <tbody>
         {% for delta in deltas %}
-            <tr {% if not delta.is_active %}class="table-secondary"{% endif %}>
+            <tr {% if not delta.is_active %}class="table-secondary" {% elif delta.tournament_id in top_tournament_ids %}class="table-success"{% endif %}>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>
                     {% if delta.is_active %}
@@ -39,7 +39,7 @@
                     {{ delta.coefficient_obj.age|floatformat:0 }}%
                 </td>
                 <td>
-                    {{ delta.coefficient_value|floatformat:1 }}
+                    {{ delta.coefficient_value|floatformat:2 }}
                 </td>
                 <td>
                     {% with delta.tournament as tournament %}
