@@ -104,42 +104,49 @@ class Command(BaseCommand):
                 if rating_date > today:
                     continue_work = False
 
+            print('Dates to process: {}'.format(len(dates_to_process)))
+
+            self.calculate_rating(
+                dates_to_process,
+                tournaments,
+                calculator,
+                rating,
+                calculate_last_date=True
+            )
+
             important_dates = [
                 # ERMC 2019 qualification date
                 datetime.date(2019, 1, 1),
+                # WRC 2020 qualification date
+                datetime.date(2020, 1, 1),
+                # WRC 2020 second qualification date
+                datetime.date(2020, 3, 1),
+                # ERMC 2022 qualification date
+                datetime.date(2022, 1, 1),
             ]
 
-            dates_to_process = sorted(dates_to_process + important_dates)
-
-            print('Dates to process: {}'.format(len(dates_to_process)))
-
-            for i, rating_date in enumerate(dates_to_process):
-                is_last = i == len(dates_to_process) - 1
-                limited_tournaments = tournaments.filter(end_date__lte=rating_date)
-
-                print(rating_date, limited_tournaments.count(), is_last)
-
-                for tournament in limited_tournaments:
-                    calculator.calculate_players_deltas(tournament, rating, rating_date, is_last)
-
-                calculator.calculate_players_rating_rank(rating, rating_date, is_last)
-
-            # Remove after 2020 1 1
-            # WRC 2020 qualification date
-            qualification_date = datetime.date(2020, 1, 1)
-            limited_tournaments = tournaments.filter(end_date__lte=qualification_date)
-
-            for tournament in limited_tournaments:
-                calculator.calculate_players_deltas(tournament, rating, qualification_date, False)
-                
-            # Remove after 2020 3 1
-            # WRC 2020 second qualification date
-            qualification_date = datetime.date(2020, 3, 1)
-            limited_tournaments = tournaments.filter(end_date__lte=qualification_date)
-
-            for tournament in limited_tournaments:
-                calculator.calculate_players_deltas(tournament, rating, qualification_date, False)
-
-            calculator.calculate_players_rating_rank(rating, qualification_date, False)
+            self.calculate_rating(
+                important_dates,
+                tournaments,
+                calculator,
+                rating,
+                calculate_last_date=False
+            )
 
         print('{0}: End'.format(get_date_string()))
+
+    def calculate_rating(self, dates_to_process, tournaments, calculator, rating, calculate_last_date=True):
+        for i, rating_date in enumerate(dates_to_process):
+            if calculate_last_date:
+                is_last = i == len(dates_to_process) - 1
+            else:
+                is_last = False
+
+            limited_tournaments = tournaments.filter(end_date__lte=rating_date)
+
+            print(rating_date, limited_tournaments.count(), is_last)
+
+            for tournament in limited_tournaments:
+                calculator.calculate_players_deltas(tournament, rating, rating_date, is_last)
+
+            calculator.calculate_players_rating_rank(rating, rating_date, is_last)
