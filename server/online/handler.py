@@ -272,7 +272,8 @@ class TournamentHandler(object):
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()))
+            # sortition = self.make_sortition(list(pantheon_ids.keys()))
+            sortition = self.make_sortition(self.status.current_round)
 
             games = []
             for item in sortition:
@@ -306,11 +307,22 @@ class TournamentHandler(object):
 
         return games, message
 
-    def make_sortition(self, pantheon_ids):
-        if self.status.current_round == 1:
-            return self._random_sortition(pantheon_ids)
-        else:
-            return self._pantheon_swiss_sortition()
+    def make_sortition(self, round_number):
+        sortition = [
+            [[384, 316, 55, 519],  [9, 249, 321, 473],   [310, 235, 12, 753],  [230, 10, 817, 225], [214, 514, 13, 391]],
+            [[310, 55, 817, 391],  [230, 249, 514, 753], [384, 473, 13, 225],  [10, 316, 12, 321],  [214, 9, 235, 519]],
+            [[384, 321, 391, 753], [9, 316, 817, 514],   [230, 12, 519, 13],   [214, 249, 55, 225], [310, 235, 10, 473]],
+            [[214, 316, 473, 753], [310, 519, 514, 225], [9, 10, 55, 13],      [384, 12, 249, 817], [230, 235, 321, 391]],
+            [[230, 384, 9, 5],     [817, 321, 13, 753],  [12, 55, 473, 514],   [10, 249, 519, 391], [214, 235, 316, 225]],
+            [[384, 235, 10, 514],  [519, 817, 473, 753], [9, 12, 391, 225],    [214, 230, 55, 321], [310, 316, 249, 13]],
+            [[235, 249, 817, 13],  [519, 321, 514, 225], [230, 316, 473, 391], [9, 10, 55, 753],    [214, 384, 310, 12]],
+        ]
+        return sortition[round_number - 1]
+    # def make_sortition(self, pantheon_ids):
+    #     if self.status.current_round == 1:
+    #         return self._random_sortition(pantheon_ids)
+    #     else:
+    #         return self._pantheon_swiss_sortition()
 
     def start_game(self, game):
         """
