@@ -114,24 +114,24 @@ class Command(BaseCommand):
                 calculate_last_date=True
             )
 
-            important_dates = [
-                # ERMC 2019 qualification date
-                datetime.date(2019, 1, 1),
-                # WRC 2020 qualification date
-                datetime.date(2020, 1, 1),
-                # WRC 2020 second qualification date
-                datetime.date(2020, 3, 1),
-                # ERMC 2022 qualification date
-                datetime.date(2022, 1, 1),
-            ]
-
-            self.calculate_rating(
-                important_dates,
-                tournaments,
-                calculator,
-                rating,
-                calculate_last_date=False
-            )
+            # important_dates = [
+            #     # ERMC 2019 qualification date
+            #     datetime.date(2019, 1, 1),
+            #     # WRC 2020 qualification date
+            #     datetime.date(2020, 1, 1),
+            #     # WRC 2020 second qualification date
+            #     datetime.date(2020, 3, 1),
+            #     # ERMC 2022 qualification date
+            #     datetime.date(2022, 1, 1),
+            # ]
+            #
+            # self.calculate_rating(
+            #     important_dates,
+            #     tournaments,
+            #     calculator,
+            #     rating,
+            #     calculate_last_date=False
+            # )
 
         print('{0}: End'.format(get_date_string()))
 
