@@ -1,7 +1,7 @@
-Django==1.11.8
-django-modeltranslation==0.12.1
+Django==2.2.6
+django-modeltranslation==0.13.3
 psycopg2==2.7.3.2
-django-bootstrap4==0.0.6
+django-bootstrap4==1.0.1
 python-dateutil==2.6.1
 python-telegram-bot==9.0.0
 
@@ -9,7 +9,7 @@ pymorphy2==0.8
 pymorphy2-dicts-ru==2.4.404381.4453942
 
 # for search
-django-haystack==2.6.1
+django-haystack==2.8.1
 Whoosh==2.7.4
 
 # for web parsing
