@@ -5,7 +5,7 @@ from tournament.models import Tournament
 
 
 class TournamentStatus(BaseModel):
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
 
     current_round = models.PositiveSmallIntegerField(null=True, blank=True)
     end_break_time = models.DateTimeField(null=True, blank=True)
@@ -16,7 +16,7 @@ class TournamentStatus(BaseModel):
 
 
 class TournamentPlayers(BaseModel):
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
 
     telegram_username = models.CharField(max_length=32)
     tenhou_username = models.CharField(max_length=8)
@@ -45,7 +45,7 @@ class TournamentGame(BaseModel):
         [FINISHED, 'Finished'],
     ]
 
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     tournament_round = models.PositiveSmallIntegerField(null=True, blank=True)
     log_id = models.CharField(max_length=32, null=True, blank=True)
 
@@ -59,8 +59,12 @@ class TournamentGame(BaseModel):
 
 
 class TournamentGamePlayer(BaseModel):
-    player = models.ForeignKey(TournamentPlayers)
-    game = models.ForeignKey(TournamentGame, related_name='game_players')
+    player = models.ForeignKey(TournamentPlayers, on_delete=models.CASCADE)
+    game = models.ForeignKey(
+        TournamentGame,
+        on_delete=models.CASCADE,
+        related_name='game_players',
+    )
     wind = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
 
     def __unicode__(self):

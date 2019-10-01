@@ -44,7 +44,11 @@ class TenhouNickname(BaseModel):
     objects = TenhouActiveNicknameManager()
     all_objects = models.Manager()
 
-    player = models.ForeignKey(Player, related_name='tenhou')
+    player = models.ForeignKey(
+        Player,
+        on_delete=models.CASCADE,
+        related_name='tenhou',
+    )
 
     tenhou_username = models.CharField(max_length=8)
     username_created_at = models.DateField()
@@ -137,7 +141,11 @@ class TenhouAggregatedStatistics(models.Model):
         [THREE_PLAYERS, 'Three players'],
     ]
 
-    tenhou_object = models.ForeignKey(TenhouNickname, related_name='aggregated_statistics')
+    tenhou_object = models.ForeignKey(
+        TenhouNickname,
+        on_delete=models.CASCADE,
+        related_name='aggregated_statistics',
+    )
     rank = models.PositiveSmallIntegerField(choices=RANKS, null=True, blank=True)
     rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     game_players = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
@@ -178,7 +186,11 @@ class TenhouStatistics(models.Model):
         [CURRENT_MONTH, 'Current month'],
     ]
 
-    tenhou_object = models.ForeignKey(TenhouNickname, related_name='statistics')
+    tenhou_object = models.ForeignKey(
+        TenhouNickname,
+        on_delete=models.CASCADE,
+        related_name='statistics',
+    )
     lobby = models.PositiveSmallIntegerField(choices=LOBBIES)
     stat_type = models.PositiveSmallIntegerField(choices=TYPES, default=ALL_TIME)
 
@@ -196,7 +208,11 @@ class TenhouStatistics(models.Model):
 
 
 class CollectedYakuman(models.Model):
-    tenhou_object = models.ForeignKey(TenhouNickname, related_name='yakumans')
+    tenhou_object = models.ForeignKey(
+        TenhouNickname,
+        on_delete=models.CASCADE,
+        related_name='yakumans',
+    )
     date = models.DateTimeField()
     log_id = models.CharField(max_length=44)
     yakuman_list = models.CharField(max_length=60)
@@ -224,7 +240,11 @@ class TenhouGameLog(models.Model):
         [THREE_PLAYERS, 'Three players'],
     ]
 
-    tenhou_object = models.ForeignKey(TenhouNickname, related_name='game_logs')
+    tenhou_object = models.ForeignKey(
+        TenhouNickname,
+        on_delete=models.CASCADE,
+        related_name='game_logs',
+    )
 
     lobby = models.PositiveSmallIntegerField(choices=TenhouStatistics.LOBBIES)
     place = models.PositiveSmallIntegerField()
