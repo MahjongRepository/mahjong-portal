@@ -10,7 +10,7 @@ def tournament_manager_auth_required(view_func):
     def _checklogin(request, *args, **kwargs):
         redirect_url = redirect(reverse('login') + '?next={0}'.format(request.path))
 
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect_url
 
         tournament_id = kwargs['tournament_id']
