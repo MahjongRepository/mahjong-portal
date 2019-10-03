@@ -97,7 +97,7 @@ def city_page(request, slug):
         tenhou_object = player.tenhou_object
         if tenhou_object:
             player.rank = tenhou_object.rank
-            player.rank_display = tenhou_object.get_rank_display()
+            player.rank_display = tenhou_object.get_rank()
 
     players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
