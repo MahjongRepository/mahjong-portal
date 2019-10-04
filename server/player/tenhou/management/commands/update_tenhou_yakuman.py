@@ -97,7 +97,7 @@ class Command(BaseCommand):
             yakuman_data = json.loads(yakuman_data[4:-1].replace('"', '\\"').replace("'", '"'))
         # old format
         else:
-            yakuman_data = yakuman_data.split(';\n')[2]
+            yakuman_data = yakuman_data.split(';\n')[2].strip()
             yakuman_data = yakuman_data[4:].replace('"', '\\"').replace("'", '"').replace('\n', '')
             yakuman_data = json.loads(yakuman_data)
 
