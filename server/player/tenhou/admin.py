@@ -14,7 +14,7 @@ class TenhouStatisticsAdmin(admin.ModelAdmin):
         return obj.tenhou_object.player.city
 
     def rank(self, obj):
-        return obj.tenhou_object.get_rank_display()
+        return obj.tenhou_object.get_rank()
     rank.short_description = 'Rank'
     rank.admin_order_field = 'tenhou_object__rank'
 

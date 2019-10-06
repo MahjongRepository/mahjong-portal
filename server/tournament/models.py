@@ -174,7 +174,11 @@ class TournamentResult(BaseModel):
     games = models.PositiveSmallIntegerField(default=0)
 
     # for players without profile
-    country = models.ForeignKey(Country, null=True, blank=True)
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+    )
 
     def __unicode__(self):
         return self.tournament.name
@@ -210,8 +214,17 @@ class TournamentRegistration(BaseModel):
     is_highlighted = models.BooleanField(default=False)
     notes = models.TextField(null=True, blank=True, default='', verbose_name=_('Team name'))
 
-    player = models.ForeignKey(Player, null=True, blank=True, related_name='tournament_registrations')
-    city_object = models.ForeignKey(City, null=True, blank=True)
+    player = models.ForeignKey(
+        Player,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+        related_name='tournament_registrations',
+    )
+    city_object = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+    )
 
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_('I allow to store my personal data'))
 
@@ -234,8 +247,17 @@ class OnlineTournamentRegistration(BaseModel):
     contact = models.CharField(max_length=255, verbose_name=_('Your contact (email, phone, etc.)'),
                                help_text=_('It will be visible only to the administrator'))
 
-    player = models.ForeignKey(Player, null=True, blank=True, related_name='online_tournament_registrations')
-    city_object = models.ForeignKey(City, null=True, blank=True)
+    player = models.ForeignKey(
+        Player,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+        related_name='online_tournament_registrations',
+    )
+    city_object = models.ForeignKey(
+        City,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+    )
 
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_('I allow to store my personal data'))
 
