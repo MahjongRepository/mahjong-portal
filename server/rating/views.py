@@ -37,7 +37,7 @@ def rating_details(request, slug, year=None, month=None, day=None):
                                   .prefetch_related('player__country')
                                   .order_by('place'))
 
-    closest_date = RatingResult.objects.filter(rating=rating, date__lte=rating_date)
+    closest_date = RatingResult.objects.filter(rating=rating, date__lte=rating_date).order_by('date')
     if closest_date.exists():
         closest_date = closest_date.last().date
     else:
