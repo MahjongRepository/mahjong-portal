@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         file_name = 'data.csv'
         writer = csv.writer(open(file_name, 'w+'))
-        writer.writerow(['place', 'first_name', 'last_name', 'scores'])
+        writer.writerow(['place', 'first_name', 'last_name', 'scores', 'load_player'])
 
         tournament_id = options.get('tournament_id')
 
@@ -47,6 +47,7 @@ class Command(BaseCommand):
                 first_name,
                 last_name,
                 scores,
+                ''
             ])
 
         print('{0}: End'.format(get_date_string()))
