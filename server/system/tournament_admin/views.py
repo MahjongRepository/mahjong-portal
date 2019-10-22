@@ -67,6 +67,9 @@ def upload_results(request, tournament_id):
                     if first_name == 'Замены':
                         first_name = 'замены'
 
+                first_name = first_name.strip()
+                last_name = last_name.strip()
+
                 data = [place, first_name, last_name, scores, ema_id, games, load_player]
                 filtered_results.append(data)
 
