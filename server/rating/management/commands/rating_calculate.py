@@ -125,7 +125,6 @@ class Command(BaseCommand):
                 datetime.date(2020, 3, 1),
                 # just a date
                 datetime.date(2021, 1, 1),
-
             ]
 
             self.calculate_rating(

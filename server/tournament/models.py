@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from club.models import Club
 from mahjong_portal.models import BaseModel
 from player.models import Player
-from rating.calculation.hardcoded_coefficients import AGARI_TOURNAMENT_ID, TNT_TOURNAMENT_ID
+from rating.calculation.hardcoded_coefficients import AGARI_TOURNAMENT_ID
 from settings.models import City, Country
 
 
@@ -155,7 +155,7 @@ class Tournament(BaseModel):
         return self.tournament_type == self.OTHER
 
     def is_stage_tournament(self):
-        return (self.id == AGARI_TOURNAMENT_ID) or (self.id == TNT_TOURNAMENT_ID)
+        return self.id == AGARI_TOURNAMENT_ID
 
     def get_tournament_registrations(self):
         if self.is_online():
