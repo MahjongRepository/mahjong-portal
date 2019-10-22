@@ -117,12 +117,15 @@ class Command(BaseCommand):
             important_dates = [
                 # ERMC 2019 qualification date
                 datetime.date(2019, 1, 1),
-                # WRC 2020 qualification date
+                # WRC 2020 probably qualification date #1
                 datetime.date(2020, 1, 1),
-                # WRC 2020 second qualification date
+                # WRC 2020 probably qualification date #2
+                datetime.date(2020, 2, 1),
+                # WRC 2020 probably qualification date #3
                 datetime.date(2020, 3, 1),
                 # just a date
                 datetime.date(2021, 1, 1),
+
             ]
 
             self.calculate_rating(
