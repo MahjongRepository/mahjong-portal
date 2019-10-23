@@ -1,5 +1,5 @@
-import math
 import itertools
+import math
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
@@ -8,9 +8,7 @@ from django.template.defaultfilters import floatformat
 from django.utils import timezone
 
 from player.models import Player
-from rating.calculation.hardcoded_coefficients import AGARI_TOURNAMENT_ID, AGARI_FIRST_STAGE_COEFFICIENT, \
-    AGARI_SECOND_STAGE_COEFFICIENT, TNT_TOURNAMENT_ID, TNT_2019_SECOND_STAGE_COEFFICIENT, \
-    TNT_2019_THIRD_STAGE_COEFFICIENT
+from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 from rating.models import RatingDelta, RatingResult, TournamentCoefficients
 from tournament.models import TournamentResult, Tournament
 from utils.general import get_tournament_coefficient
@@ -62,6 +60,8 @@ class RatingRRCalculation(object):
 
         base_query = self.get_base_query(rating, two_years_ago, rating_date)
 
+        stages_tournament_ids = HARDCODED_COEFFICIENTS.keys()
+
         tournament_ids = base_query.values_list('tournament_id', flat=True).distinct()
         coefficient_temp = TournamentCoefficients.objects.filter(
             tournament_id__in=tournament_ids,
@@ -73,24 +73,19 @@ class RatingRRCalculation(object):
         for coefficient in coefficient_temp:
             coefficients_cache[coefficient.tournament_id] = coefficient
 
-            c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
-            coefficients.append(c)
+            if coefficient.tournament_id not in stages_tournament_ids:
+                c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
+                coefficients.append(c)
 
-        # TODO: Remove these hardcoded values when tournaments with stages will be implemented
-        if AGARI_TOURNAMENT_ID in tournament_ids:
-            tournament = Tournament.objects.get(id=AGARI_TOURNAMENT_ID)
-            if tournament.end_date >= rating_date:
-                age = self.tournament_age(tournament.end_date, rating_date)
-                coefficients.append(self._calculate_percentage(AGARI_SECOND_STAGE_COEFFICIENT, age))
-                coefficients.append(self._calculate_percentage(AGARI_FIRST_STAGE_COEFFICIENT, age))
-
-        # TODO: Remove these hardcoded values when tournaments with stages will be implemented
-        if TNT_TOURNAMENT_ID in tournament_ids:
-            tournament = Tournament.objects.get(id=TNT_TOURNAMENT_ID)
-            if tournament.end_date >= rating_date:
-                age = self.tournament_age(tournament.end_date, rating_date)
-                coefficients.append(self._calculate_percentage(TNT_2019_SECOND_STAGE_COEFFICIENT, age))
-                coefficients.append(self._calculate_percentage(TNT_2019_THIRD_STAGE_COEFFICIENT, age))
+        # TODO: Remove these when tournaments with stages will be implemented
+        for stage_tournament_id in stages_tournament_ids:
+            if stage_tournament_id in tournament_ids:
+                tournament = Tournament.objects.get(id=stage_tournament_id)
+                if tournament.end_date >= rating_date:
+                    age = self.tournament_age(tournament.end_date, rating_date)
+                    stage_coefficients = list(set(HARDCODED_COEFFICIENTS[stage_tournament_id].values()))
+                    for x in stage_coefficients:
+                        coefficients.append(self._calculate_percentage(x, age))
 
         coefficients = sorted(coefficients, reverse=True)
         max_coefficient = sum(coefficients[:self.SECOND_PART_MIN_TOURNAMENTS])
