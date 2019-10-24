@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'settings',
     'player',
     'player.tenhou',
+    'player.mahjong_soul',
     'tournament',
     'rating',
     'system',
@@ -187,6 +188,9 @@ PANTHEON_ADMIN_TOKEN = None
 TENHOU_WG_URL = None
 TENHOU_LATEST_GAMES_URL = None
 TENHOU_DOWNLOAD_ARCHIVE_URL = None
+
+MS_USERNAME = ''
+MS_PASSWORD = ''
 
 CACHES = {
     'default': {

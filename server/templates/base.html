@@ -78,7 +78,6 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{% url 'rating_list' %}">{% trans 'Ratings' %}</a>
                     <a class="dropdown-item" href="{% url 'about' %}">{% trans 'About' %}</a>
-                    <a class="dropdown-item" href="{% url 'ermc_qualification_2019' %}">{% trans 'ERMC 2019' %}</a>
                     <a class="dropdown-item" href="{% url 'rating_faq' %}">FAQ</a>
                 </div>
             </li>
@@ -90,11 +89,12 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {% trans 'Tenhou' %}
+                    {% trans 'Online' %}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{% url 'get_current_tenhou_games' %}">{% trans 'Current tenhou.net games' %}</a>
                     <a class="dropdown-item" href="{% url 'tenhou_accounts' %}">{% trans 'Tenhou accounts' %}</a>
+                    <a class="dropdown-item" href="{% url 'ms_accounts' %}">{% trans 'Mahjong soul accounts' %}</a>
                     <a class="dropdown-item" href="{% url 'tenhou_games_history' %}">{% trans 'Tenhou games history' %}</a>
                     <a class="dropdown-item" href="{% url 'latest_yakumans' %}">{% trans 'Latest yakumans' %}</a>
                 </div>
