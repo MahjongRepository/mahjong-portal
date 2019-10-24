@@ -4,7 +4,7 @@ psycopg2==2.7.3.2
 django-bootstrap4==1.0.1
 python-dateutil==2.6.1
 python-telegram-bot==9.0.0
-ms-api==0.0.1
+ms-api==0.6.58
 
 pymorphy2==0.8
 pymorphy2-dicts-ru==2.4.404381.4453942
