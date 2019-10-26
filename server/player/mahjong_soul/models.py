@@ -14,6 +14,12 @@ class MSAccount(models.Model):
         related_name='ms',
     )
 
+    def __unicode__(self):
+        return '{}, id={}'.format(self.account_name, self.account_id)
+
+    def __str__(self):
+        return self.__unicode__()
+
 
 class MSAccountStatistic(models.Model):
     FOUR_PLAYERS = 0
@@ -51,3 +57,19 @@ class MSAccountStatistic(models.Model):
 
     def max_pt(self):
         return NEXT_LEVEL_POINTS.get(self.rank)
+
+    def __unicode__(self):
+        return '{}, {}'.format(self.account.__unicode__(), self.get_rank_display())
+
+    def __str__(self):
+        return self.__unicode__()
+
+
+class MSPointsHistory(models.Model):
+    rank_index = models.PositiveSmallIntegerField()
+
+    stat_object = models.ForeignKey(MSAccountStatistic, on_delete=models.CASCADE)
+    rank = models.PositiveSmallIntegerField()
+    points = models.PositiveSmallIntegerField()
+
+    created_on = models.DateTimeField(auto_now_add=True)
