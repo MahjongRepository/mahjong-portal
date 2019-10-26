@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render
 
@@ -9,15 +10,15 @@ def ms_accounts(request, stat_type='four'):
         raise Http404
 
     four_players = False
-    filter_type = MSAccountStatistic.THREE_PLAYERS
+    statistics = MSAccountStatistic.objects.filter(rank__isnull=False)
     if stat_type == 'four':
         four_players = True
-        filter_type = MSAccountStatistic.FOUR_PLAYERS
+        statistics = statistics.filter(game_type=MSAccountStatistic.FOUR_PLAYERS)
+    else:
+        statistics = statistics.filter(game_type=MSAccountStatistic.THREE_PLAYERS)
 
-    statistics = MSAccountStatistic.objects.filter(
-        game_type=filter_type,
-        rank__isnull=False
-    ).select_related('account', 'account__player').order_by('-rank', '-points')
+    statistics = statistics.filter(Q(tonpusen_games__gt=0) | Q(hanchan_games__gt=0))
+    statistics = statistics.select_related('account', 'account__player').order_by('-rank', '-points')
 
     return render(request, 'ms/ms_accounts.html', {
         'statistics': statistics,
