@@ -237,6 +237,28 @@
             {% endfor %}
         {% endif %}
 
+        {% if ms_data %}
+            <h4 id="ms">{% trans 'Mahjong Soul profile' %}</h4>
+            <p><a href="{% url 'player_tenhou_details' player.slug %}">{% trans 'more information' %}</a></p>
+            <h5>{% trans 'Statistics for' %} {{ ms_data.account_name }}</h5>
+
+            {% with ms_data.four_players_statistics as stat %}
+                {% if stat %}
+                    <p class="mt-3">
+                        {% trans 'Four players' %}: {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}pt
+                    </p>
+                {% endif %}
+            {% endwith %}
+
+            {% with ms_data.three_players_statistics as stat %}
+                {% if stat %}
+                    <p class="mt-3">
+                        {% trans 'Sanma' %}: {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}pt
+                    </p>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+
         {% if club_ratings %}
             <h4 class="mb-3" id="club">{% trans 'Club statistics' %}</h4>
             {% for item in club_ratings %}

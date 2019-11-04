@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 from player.mahjong_soul.constants import NEXT_LEVEL_POINTS, RANK_LABELS
 from player.models import Player
@@ -19,6 +20,20 @@ class MSAccount(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
+    def four_players_statistics(self):
+        return (MSAccountStatistic.objects
+                .filter(account=self)
+                .filter(game_type=MSAccountStatistic.FOUR_PLAYERS)
+                .filter(Q(hanchan_games__gt=0) | Q(tonpusen_games__gt=0))
+                .first())
+
+    def three_players_statistics(self):
+        return (MSAccountStatistic.objects
+                .filter(account=self)
+                .filter(game_type=MSAccountStatistic.THREE_PLAYERS)
+                .filter(Q(hanchan_games__gt=0) | Q(tonpusen_games__gt=0))
+                .first())
 
 
 class MSAccountStatistic(models.Model):
