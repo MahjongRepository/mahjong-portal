@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-24 16:14+0000\n"
+"POT-Creation-Date: 2019-11-23 02:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -168,8 +168,7 @@ msgstr "Онлайн"
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: templates/base.html:96 templates/ms/ms_accounts.html:71
-#: templates/ms/ms_accounts.html:72 templates/tenhou/tenhou_accounts.html:5
+#: templates/base.html:96 templates/tenhou/tenhou_accounts.html:5
 #: templates/tenhou/tenhou_accounts.html:10
 #: templates/tenhou/tenhou_accounts.html:72
 #: templates/tenhou/tenhou_accounts.html:73
@@ -177,7 +176,8 @@ msgid "Tenhou accounts"
 msgstr "Аккаунты на тенхе"
 
 #: templates/base.html:97 templates/ms/ms_accounts.html:5
-#: templates/ms/ms_accounts.html:10
+#: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:71
+#: templates/ms/ms_accounts.html:72
 msgid "Mahjong soul accounts"
 msgstr "Аккаунты на Mahjong Soul"
 
@@ -353,11 +353,13 @@ msgstr ""
 "Статистика обновляется раз в час. Добавить свой аккаунт можно написав в "
 "личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
 
-#: templates/ms/ms_accounts.html:15
+#: templates/ms/ms_accounts.html:15 templates/ms/ms_accounts.html:71
+#: templates/ms/ms_accounts.html:72
 msgid "four players"
 msgstr "четыре игрока"
 
-#: templates/ms/ms_accounts.html:18
+#: templates/ms/ms_accounts.html:18 templates/ms/ms_accounts.html:71
+#: templates/ms/ms_accounts.html:72
 msgid "sanma"
 msgstr "хиросима"
 
@@ -536,6 +538,10 @@ msgstr "оригинальный"
 #: templates/player/rating_details.html:228
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
+
+#: templates/player/rating_details.html:232
+msgid "Show"
+msgstr "Показать"
 
 #: templates/player/tenhou.html:164
 msgid "Rank chart"
