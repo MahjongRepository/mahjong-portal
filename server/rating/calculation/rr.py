@@ -74,8 +74,12 @@ class RatingRRCalculation(object):
             coefficients_cache[coefficient.tournament_id] = coefficient
 
             if coefficient.tournament_id not in stages_tournament_ids:
-                c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
-                coefficients.append(c)
+                value = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
+                coefficients.append({
+                    'coefficient': coefficient.coefficient,
+                    'age': coefficient.age,
+                    'value': value
+                })
 
         # TODO: Remove these when tournaments with stages will be implemented
         for stage_tournament_id in stages_tournament_ids:
@@ -85,13 +89,26 @@ class RatingRRCalculation(object):
                     age = self.tournament_age(tournament.end_date, rating_date)
                     stage_coefficients = list(set(HARDCODED_COEFFICIENTS[stage_tournament_id].values()))
                     for x in stage_coefficients:
-                        coefficients.append(self._calculate_percentage(x, age))
+                        value = self._calculate_percentage(x, age)
+                        coefficients.append({
+                            'coefficient': x,
+                            'age': age,
+                            'value': value
+                        })
 
-        coefficients = sorted(coefficients, reverse=True)
-        max_coefficient = sum(coefficients[:self.SECOND_PART_MIN_TOURNAMENTS])
+        coefficients = sorted(coefficients, key=lambda x: x['value'], reverse=True)
+        selected_coefficients = coefficients[:self.SECOND_PART_MIN_TOURNAMENTS]
 
-        if len(coefficients) < self.SECOND_PART_MIN_TOURNAMENTS:
-            max_coefficient += self.SECOND_PART_MIN_TOURNAMENTS - len(coefficients)
+        if len(selected_coefficients) < self.SECOND_PART_MIN_TOURNAMENTS:
+            missed_tournaments = self.SECOND_PART_MIN_TOURNAMENTS - len(selected_coefficients)
+            for x in range(missed_tournaments):
+                selected_coefficients.append({
+                    'coefficient': 1,
+                    'age': 100,
+                    'value': 1
+                })
+
+        max_coefficient = sum([x['value'] for x in selected_coefficients])
 
         for player in self.players:
             # we need to reduce SQL queries with this filter
@@ -113,7 +130,8 @@ class RatingRRCalculation(object):
                 tournaments_results = deltas
                 best_rating_calculation, best_score = self._calculate_player_rating(player, tournaments_results,
                                                                                     deltas, coefficients_cache,
-                                                                                    max_coefficient, is_last)
+                                                                                    max_coefficient,
+                                                                                    selected_coefficients, is_last)
                 best_tournament_results_option = tournaments_results
             else:
                 best_score = 0
@@ -123,7 +141,7 @@ class RatingRRCalculation(object):
                 for tournaments_results_option in itertools.combinations(deltas, num_tournaments):
                     rating_calculation, score = self._calculate_player_rating(player, tournaments_results_option, deltas,
                                                                               coefficients_cache, max_coefficient,
-                                                                              is_last)
+                                                                              selected_coefficients, is_last)
                     if score >= best_score:
                         best_score = score
                         best_rating_calculation = rating_calculation
@@ -316,7 +334,7 @@ class RatingRRCalculation(object):
             return 0
 
     def _calculate_player_rating(self, player, tournaments_results, deltas, coefficients_cache,
-                                 max_coefficient, is_last):
+                                 max_coefficient, selected_coefficients, is_last):
         first_part_numerator_calculation = []
         first_part_denominator_calculation = []
 
@@ -374,19 +392,29 @@ class RatingRRCalculation(object):
 
         second_part = second_part_numerator / second_part_denominator
 
-        score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(second_part,
-                                                                                                            self.SECOND_PART_WEIGHT)
+        score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(
+            second_part, self.SECOND_PART_WEIGHT
+        )
 
         rating_calculation = ''
         if is_last:
+            max_coefficient_calculation = []
+            for x in selected_coefficients:
+                max_coefficient_calculation.append('{} * {}'.format(
+                    floatformat(x['coefficient'], -2),
+                    floatformat(x['age'] / 100, -2)
+                ))
+            max_coefficient_template = 'max_coefficients = ({}) = {}'.format(
+                ' + '.join(max_coefficient_calculation),
+                max_coefficient
+            )
             first_part_calculation = 'p1 = ({}) / ({}) = {}'.format(
                 ' + '.join(first_part_numerator_calculation),
                 ' + '.join(first_part_denominator_calculation),
                 first_part
             )
-            second_part_calculation = 'p2 = ({}) / {} = {}'.format(
+            second_part_calculation = 'p2 = ({}) / max_coefficients = {}'.format(
                 ' + '.join(second_part_numerator_calculation),
-                max_coefficient,
                 second_part
             )
             total_calculation = 'score = {} * {} + {} * {}'.format(
@@ -397,6 +425,7 @@ class RatingRRCalculation(object):
                 score
             )
             rating_calculation = '\n\n'.join((
+                max_coefficient_template,
                 first_part_calculation,
                 second_part_calculation,
                 total_calculation,
