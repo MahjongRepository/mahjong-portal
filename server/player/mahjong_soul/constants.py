@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 NEXT_LEVEL_POINTS = {
     ### Four players ###
 
@@ -21,6 +23,8 @@ NEXT_LEVEL_POINTS = {
     10501: 4000,
     10502: 6000,
     10503: 9000,
+    # Celestial,
+    10601: u'∞',
 
     ### Three players ###
 
@@ -44,6 +48,8 @@ NEXT_LEVEL_POINTS = {
     20501: 4000,
     20502: 6000,
     20503: 9000,
+    # Celestial,
+    20601: u'∞'
 }
 
 RANK_LABELS = {
@@ -69,6 +75,8 @@ RANK_LABELS = {
     10501: 'Saint I',
     10502: 'Saint II',
     10503: 'Saint III',
+    # Celestial,
+    10601: u'Celestial 😎',
 
     ### Three players ###
 
@@ -92,5 +100,7 @@ RANK_LABELS = {
     20501: 'Saint I',
     20502: 'Saint II',
     20503: 'Saint III',
+    # Celestial,
+    20601: u'Celestial 😎',
 }
 
