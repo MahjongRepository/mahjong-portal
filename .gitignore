@@ -18,5 +18,3 @@ whoosh_index
 yakuman
 temp
 .ms
-
-initdb.d/*.sql*

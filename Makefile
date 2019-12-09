@@ -1,22 +1,27 @@
+COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), local.yml)
+GREEN = $(shell echo -e '\033[1;32m')
+NC = $(shell echo -e '\033[0m') # No Color
+
+console:
+	${MAKE} up
+	docker-compose -f $(COMPOSE_FILE) run --rm web bash
+
 build:
-	docker-compose build
+	docker-compose -f $(COMPOSE_FILE) build --no-cache
+
+initial_data:
+#	docker-compose -f local.yml run --rm web python manage.py migrate --noinput
+	docker-compose -f local.yml run --rm web python manage.py initial_data
 
 up:
-	docker-compose up -d
+	docker-compose -f $(COMPOSE_FILE) up -d
+	@echo "${GREEN}Project live at http://127.0.0.1:8060/${NC}"
 
 stop:
-	docker-compose stop
+	docker-compose -f $(COMPOSE_FILE) stop
 
-logs:
-	docker-compose logs -f web_portal
+permissions:
+	sudo chown -R $$USER:$$USER .
 
-restore_db:
-	${MAKE} up
-	sleep 5
-	docker-compose exec db_portal psql -U postgres mahjong_portal -c "REVOKE CONNECT ON DATABASE mahjong_portal FROM public; SELECT pid, pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = current_database() AND pid <> pg_backend_pid();"
-	docker-compose exec db_portal dropdb -U postgres mahjong_portal
-	docker-compose exec db_portal createdb -U postgres mahjong_portal
-	docker-compose exec db_portal sh -c "psql -U postgres mahjong_portal < /files/latest.sql"
-	docker-compose exec web_portal python manage.py migrate --noinput
-	${MAKE} stop
-	${MAKE} up
+django_logs:
+	docker-compose -f $(COMPOSE_FILE) logs -f web
