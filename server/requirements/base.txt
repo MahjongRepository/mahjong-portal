@@ -16,7 +16,7 @@ Whoosh==2.7.4
 
 # for web parsing
 beautifulsoup4==4.6.0
-requests==2.18.4
+requests==2.20.0
 
 # for monitoring
 raven==6.4.0
