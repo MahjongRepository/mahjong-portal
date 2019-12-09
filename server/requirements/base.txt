@@ -1,4 +1,4 @@
-Django==2.2.6
+Django==2.2.8
 django-modeltranslation==0.13.3
 psycopg2==2.7.3.2
 django-bootstrap4==1.0.1
