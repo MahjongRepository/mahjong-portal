@@ -18,4 +18,4 @@ RUN chmod +x /start
 COPY . /app
 WORKDIR /app/server
 
-ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/entrypoint.sh"]

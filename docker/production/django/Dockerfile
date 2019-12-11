@@ -23,4 +23,4 @@ RUN chmod 0644 /etc/cron.d/crontab
 COPY . /app
 WORKDIR /app/server
 
-ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/entrypoint.sh"]
