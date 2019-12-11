@@ -19,4 +19,5 @@ yakuman
 temp
 .ms
 
+.env
 .envs/.production.env
