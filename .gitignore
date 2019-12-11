@@ -20,4 +20,5 @@ temp
 .ms
 
 .env
+etc
 .envs/.production.env
