@@ -1,2 +1,3 @@
 DEBUG=true
 SECRET_KEY=hA(HD78f9ahf98ashf9924h&&das7dasfhiuasf9
+ALLOWED_HOSTS=0.0.0.0
