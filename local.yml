@@ -11,8 +11,6 @@ services:
     image: portal_local_web
     depends_on:
       - db
-    volumes:
-      - .:/app
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
