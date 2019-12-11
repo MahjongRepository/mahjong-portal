@@ -167,11 +167,17 @@ YANDEX_METRIKA_ID = os.environ.get('YANDEX_METRIKA_ID', None)
 GOOGLE_VERIFICATION_CODE = os.environ.get('GOOGLE_VERIFICATION_CODE', None)
 YANDEX_VERIFICATION_CODE = os.environ.get('YANDEX_VERIFICATION_CODE', None)
 
+# online tournaments
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', None)
 PANTHEON_URL = os.environ.get('PANTHEON_URL', None)
 PANTHEON_EVENT_ID = os.environ.get('PANTHEON_EVENT_ID', None)
 PANTHEON_ADMIN_TOKEN = os.environ.get('PANTHEON_ADMIN_TOKEN', None)
+TOURNAMENT_ID = os.environ.get('TOURNAMENT_ID', None)
+TOURNAMENT_PUBLIC_LOBBY = os.environ.get('TOURNAMENT_PUBLIC_LOBBY', None)
+TOURNAMENT_PRIVATE_LOBBY = os.environ.get('TOURNAMENT_PRIVATE_LOBBY', None)
+TOURNAMENT_GAME_TYPE = os.environ.get('TOURNAMENT_GAME_TYPE', None)
 
+# mahjong soul statistics fetching
 MS_USERNAME = os.environ.get('MS_USERNAME', None)
 MS_PASSWORD = os.environ.get('MS_PASSWORD', None)
 

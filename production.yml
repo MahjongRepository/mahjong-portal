@@ -13,11 +13,6 @@ services:
       - db
     volumes:
       - .:/app
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    ports:
-      - '8060:8000'
     command: /start
 
   db:
@@ -27,11 +22,7 @@ services:
     image: portal_postgresql
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - ./.envs/.local/.postgres
-    ports:
-      - '5462:5432'
-        
+
   nginx:
     build:
       context: .
