@@ -23,7 +23,7 @@ services:
       - web
     env_file:
       - ./.envs/.production.env
-    entrypoint: ./docker/production/django/cron_entrypoint.sh
+    entrypoint: /cron_entrypoint.sh
     command: ['cron', '-f']
 
   db:

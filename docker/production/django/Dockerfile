@@ -7,13 +7,17 @@ COPY ./server/requirements /requirements
 RUN pip install --upgrade pip
 RUN pip install -r /requirements/production.txt
 
-COPY ./docker/production/django/entrypoint /entrypoint
-RUN sed -i 's/\r//' /entrypoint
-RUN chmod +x /entrypoint
+COPY ./docker/production/django/entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r//' /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-COPY ./docker/production/django/start /start
-RUN sed -i 's/\r//' /start
-RUN chmod +x /start
+COPY ./docker/production/django/start.sh /start.sh
+RUN sed -i 's/\r//' /start.sh
+RUN chmod +x /start.sh
+
+COPY ./docker/production/django/cron_entrypoint.sh /cron_entrypoint.sh
+RUN sed -i 's/\r//' /cron_entrypoint.sh
+RUN chmod +x /cron_entrypoint.sh
 
 RUN apt-get update
 RUN apt-get -y install cron
