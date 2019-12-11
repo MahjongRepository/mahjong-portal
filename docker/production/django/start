@@ -6,4 +6,5 @@ set -o nounset
 /usr/local/bin/gunicorn mahjong_portal.wsgi \
 --bind=0.0.0.0:${GUNICORN_PORT} \
 --workers=${GUNICORN_WORKERS} \
+--log-level=info
 --chdir=/app/server
