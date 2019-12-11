@@ -15,6 +15,7 @@ COPY ./docker/production/django/start /start
 RUN sed -i 's/\r//' /start
 RUN chmod +x /start
 
+RUN apt-get update
 RUN apt-get -y install cron
 ADD ./docker/production/django/crontab /etc/cron.d/crontab
 RUN chmod 0644 /etc/cron.d/crontab
