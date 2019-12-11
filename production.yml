@@ -13,6 +13,8 @@ services:
       - ./.envs/.production.env
     depends_on:
       - db
+    volumes:
+      - ./server/collected_static:/app/server/collected_static
     command: /start
 
   db:
