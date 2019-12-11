@@ -1,0 +1,50 @@
+version: '3'
+
+volumes:
+  postgres_data: {}
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
+    image: portal_web
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - '8060:8000'
+    command: /start
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    image: portal_postgresql
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/.local/.postgres
+    ports:
+      - '5462:5432'
+        
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    restart: always
+    image: protal_nginx
+    depends_on:
+      - web
+    volumes:
+      - ./etc/ssl:/etc/nginx/ssl
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      - TZ=UTC
+      - LETSENCRYPT=true

@@ -18,3 +18,5 @@ whoosh_index
 yakuman
 temp
 .ms
+
+.envs/.production.env

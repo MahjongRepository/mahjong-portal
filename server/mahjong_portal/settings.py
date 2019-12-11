@@ -12,9 +12,9 @@ LOGIN_URL = '/login/'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = os.environ.get('SECRET_KEY', None)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
 
 ALLOWED_HOSTS = []
 
@@ -163,17 +163,17 @@ TENHOU_WG_URL = 'https://mjv.jp/0/wg/0.js'
 TENHOU_LATEST_GAMES_URL = 'http://tenhou.net/sc/raw/list.cgi'
 TENHOU_DOWNLOAD_ARCHIVE_URL = 'http://tenhou.net/sc/raw/dat/'
 
-YANDEX_METRIKA_ID = None
-GOOGLE_VERIFICATION_CODE = None
-YANDEX_VERIFICATION_CODE = None
+YANDEX_METRIKA_ID = os.environ.get('YANDEX_METRIKA_ID', None)
+GOOGLE_VERIFICATION_CODE = os.environ.get('GOOGLE_VERIFICATION_CODE', None)
+YANDEX_VERIFICATION_CODE = os.environ.get('YANDEX_VERIFICATION_CODE', None)
 
-TELEGRAM_TOKEN = None
-PANTHEON_URL = None
-PANTHEON_EVENT_ID = None
-PANTHEON_ADMIN_TOKEN = None
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', None)
+PANTHEON_URL = os.environ.get('PANTHEON_URL', None)
+PANTHEON_EVENT_ID = os.environ.get('PANTHEON_EVENT_ID', None)
+PANTHEON_ADMIN_TOKEN = os.environ.get('PANTHEON_ADMIN_TOKEN', None)
 
-MS_USERNAME = ''
-MS_PASSWORD = ''
+MS_USERNAME = os.environ.get('MS_USERNAME', None)
+MS_PASSWORD = os.environ.get('MS_PASSWORD', None)
 
 CACHES = {
     'default': {
