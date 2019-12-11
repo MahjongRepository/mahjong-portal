@@ -21,7 +21,9 @@ services:
     image: portal_web
     depends_on:
       - web
-    command: ["cron", "-f"]
+    env_file:
+      - ./.envs/.production.env
+    command: ['cron', '-f']
 
   db:
     build:
