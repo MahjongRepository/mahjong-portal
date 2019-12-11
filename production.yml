@@ -15,7 +15,7 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/server/collected_static
-    command: /start
+    command: /start.sh
 
   cronjobs:
     image: portal_web

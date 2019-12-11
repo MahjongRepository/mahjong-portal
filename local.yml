@@ -16,7 +16,7 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - '8060:8060'
-    command: /start
+    command: /start.sh
 
   db:
     build:
