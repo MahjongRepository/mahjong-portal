@@ -9,6 +9,8 @@ services:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
     image: portal_web
+    env_file:
+      - ./.envs/.production.env
     depends_on:
       - db
     volumes:
@@ -20,6 +22,8 @@ services:
       context: .
       dockerfile: ./docker/postgres/Dockerfile
     image: portal_postgresql
+    env_file:
+      - ./.envs/.production.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -29,6 +33,8 @@ services:
       dockerfile: ./docker/production/nginx/Dockerfile
     restart: always
     image: protal_nginx
+    env_file:
+      - ./.envs/.production.env
     depends_on:
       - web
     volumes:
@@ -36,6 +42,3 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    environment:
-      - TZ=UTC
-      - LETSENCRYPT=true

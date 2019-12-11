@@ -8,11 +8,6 @@ target_cert=/etc/nginx/ssl/le-crt.pem
 # 30 days
 renew_before=2592000
 
-if [ "$LETSENCRYPT" != "true" ]; then
-    echo "letsencrypt disabled"
-    return 1
-fi
-
 # redirection to /dev/null to remove "Certificate will not expire" output
 if [ -f ${target_cert} ] && openssl x509 -checkend ${renew_before} -noout -in ${target_cert} > /dev/null ; then
     # egrep to remove leading whitespaces
