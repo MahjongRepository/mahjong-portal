@@ -17,6 +17,12 @@ services:
       - ./server/collected_static:/app/server/collected_static
     command: /start
 
+  cronjobs:
+    image: portal_web
+    depends_on:
+      - web
+    command: ["cron", "-f"]
+
   db:
     build:
       context: .
