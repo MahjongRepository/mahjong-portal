@@ -159,6 +159,12 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# https://sentry.io
+if os.environ.get('RAVEN_CONFIG'):
+    RAVEN_CONFIG = {
+        'dsn': os.environ.get('RAVEN_CONFIG'),
+    }
+
 TENHOU_WG_URL = 'https://mjv.jp/0/wg/0.js'
 TENHOU_LATEST_GAMES_URL = 'http://tenhou.net/sc/raw/list.cgi'
 TENHOU_DOWNLOAD_ARCHIVE_URL = 'http://tenhou.net/sc/raw/dat/'
