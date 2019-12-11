@@ -13,8 +13,6 @@ services:
       - ./.envs/.production.env
     depends_on:
       - db
-    volumes:
-      - ./server/collected_static:/collected_static
     command: /start
 
   db:
@@ -39,7 +37,6 @@ services:
       - web
     volumes:
       - ./etc/ssl:/etc/nginx/ssl
-      - ./server/collected_static:/collected_static
     ports:
       - '80:80'
       - '443:443'
