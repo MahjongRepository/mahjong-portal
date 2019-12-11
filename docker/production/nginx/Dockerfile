@@ -1,11 +1,11 @@
 # based on https://github.com/umputun/nginx-le
 FROM nginx:1.17.6-alpine
 
-ADD docker/production/ngingx/nginx.conf /etc/nginx/nginx.conf
-ADD docker/production/ngingx/service.conf /etc/nginx/service.conf
+ADD ./docker/production/nginx/nginx.conf /etc/nginx/nginx.conf
+ADD ./docker/production/nginx/service.conf /etc/nginx/service.conf
 
-ADD docker/production/ngingx/entrypoint.sh /entrypoint.sh
-ADD docker/production/ngingx/le.sh /le.sh
+ADD ./docker/production/nginx/entrypoint.sh /entrypoint.sh
+ADD ./docker/production/nginx/le.sh /le.sh
 
 RUN \
  rm /etc/nginx/conf.d/default.conf && \

@@ -3,7 +3,7 @@ FROM python:3.7.3
 ENV PYTHONUNBUFFERED 1
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./requirements /requirements
+COPY ./server/requirements /requirements
 RUN pip install -r /requirements/production.txt
 
 COPY ./docker/production/django/entrypoint /entrypoint
