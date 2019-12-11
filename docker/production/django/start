@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 
 python /app/server/manage.py migrate
-python /app/server/manage.py collectstatic --noinput --clear
+python /app/server/manage.py collectstatic --noinput --clear --verbosity 0
 python /app/server/manage.py rebuild_index --noinput
 
 /usr/local/bin/gunicorn mahjong_portal.wsgi \
