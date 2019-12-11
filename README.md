@@ -28,11 +28,15 @@ The configuration will get SSL certificate automatically, and everything should 
 
 If needed, restore the database backup for the new installation.
 
-## Backups
+## DB Backups
 
 On your host machine you can set up these cron commands to get backups:
 
 ```
-0 * * * * 
-0 0 * * 0 
+# once a hour
+0 * * * * /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh hourly
+# once a week
+0 0 * * 0 /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh weekly
+# once a month
+0 0 1 * * /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh monthly
 ```
