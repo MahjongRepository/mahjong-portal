@@ -4,7 +4,7 @@ from django.core.management import BaseCommand, call_command
 from django.utils import timezone
 
 from player.models import Player
-from rating.models import Rating, RatingDelta, RatingResult
+from rating.models import Rating
 from settings.models import Country
 from tournament.models import Tournament, TournamentResult
 
@@ -13,17 +13,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         year = timezone.now().year
-
-        RatingResult.objects.all().delete()
-        RatingDelta.objects.all().delete()
-        Rating.objects.all().delete()
-        TournamentResult.objects.all().delete()
-        Player.objects.all().delete()
-        Tournament.objects.all().delete()
-
-        if Rating.objects.filter(type=Rating.RR).exists():
-            print('It looks like initial data already exists.')
-            return
 
         country = Country.objects.create(name='Russia', code='RU')
         Rating.objects.create(name='RR', slug='rr', type=Rating.RR)

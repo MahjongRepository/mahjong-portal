@@ -14,6 +14,7 @@ build:
 	docker-compose -f $(COMPOSE_FILE) build --no-cache
 
 initial_data:
+	docker-compose -f local.yml run --rm web python manage.py flush --noinput
 	docker-compose -f local.yml run --rm web python manage.py migrate --noinput
 	docker-compose -f local.yml run --rm web python manage.py initial_data
 

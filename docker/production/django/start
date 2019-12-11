@@ -3,6 +3,9 @@
 set -o errexit
 set -o nounset
 
+python /app/server/manage.py migrate
+python /app/server/manage.py collectstatic --noinput --clear
+
 /usr/local/bin/gunicorn mahjong_portal.wsgi \
 --bind=0.0.0.0:${GUNICORN_PORT} \
 --workers=${GUNICORN_WORKERS} \
