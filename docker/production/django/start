@@ -5,6 +5,7 @@ set -o nounset
 
 python /app/server/manage.py migrate
 python /app/server/manage.py collectstatic --noinput --clear
+python /app/server/manage.py rebuild_index --noinput
 
 /usr/local/bin/gunicorn mahjong_portal.wsgi \
 --bind=0.0.0.0:${GUNICORN_PORT} \

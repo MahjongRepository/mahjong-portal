@@ -140,6 +140,55 @@ USE_L10N = True
 
 USE_TZ = True
 
+def skip_site_packages_logs(record):
+    # This skips the log records that are generated from libraries
+    # installed in site packages.
+    if 'site-packages' in record.pathname:
+        return False
+    return True
+
+
+DJANGO_LOG_LEVEL = os.environ.get('DJANGO_LOG_LEVEL')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'filters': {
+        'skip_site_packages_logs': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_site_packages_logs,
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s django %(levelname)s: %(message)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': DJANGO_LOG_LEVEL,
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'django.template': {
+            'handlers': ['console'],
+            'filters': ['skip_site_packages_logs'],
+            'level': DJANGO_LOG_LEVEL,
+            'propagate': False,
+        }
+    }
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
