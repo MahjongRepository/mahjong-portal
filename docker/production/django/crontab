@@ -1,5 +1,4 @@
 # each one hour
-#0 * * * * /root/backup.sh
 0 * * * * python /app/server/manage.py update_ms_statistics
 
 # once a day

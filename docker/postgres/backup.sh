@@ -10,7 +10,7 @@ if [[ "$TYPE" == "hourly" ]]; then
     FILENAME=$DIR/hourly/`date +%Y-%m-%d-%H-%M-%S.sql.gz`
 
     # keep latest 24 hourly backups only
-    cd $DIR/hourly/ && ls -t1 | tail -n +25 | xargs rm -r
+    cd $DIR/hourly/ && ls -t1 | tail -n +25 | xargs rm -r -v 0ls
 else
     FILENAME=$DIR/$TYPE/`date +%Y-%m-%d.sql.gz`
 fi

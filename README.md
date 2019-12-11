@@ -16,7 +16,9 @@ Steps to run the project:
 
 After these steps you will be able to access website here: http://0.0.0.0:8060/
 
-# Production Docker set up
+# Production
+
+## Docker set up
 
 You need to have installed docker and docker compose.
 
@@ -25,3 +27,12 @@ Copy `.envs/.production.env.example` file and fill it with real data, but don't 
 The configuration will get SSL certificate automatically, and everything should work out of the box. 
 
 If needed, restore the database backup for the new installation.
+
+## Backups
+
+On your host machine you can set up these cron commands to get backups:
+
+```
+0 * * * * 
+0 0 * * 0 
+```

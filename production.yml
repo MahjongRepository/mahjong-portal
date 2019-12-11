@@ -35,6 +35,7 @@ services:
       - ./.envs/.production.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
 
   nginx:
     build:
