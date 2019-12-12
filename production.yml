@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 volumes:
   postgres_data: {}
@@ -16,10 +16,10 @@ services:
     volumes:
       - ./server/collected_static:/app/server/collected_static
     logging:
-      driver: 'json-file'
+      driver: json-file
       options:
-        max-file: 5
         max-size: '10m'
+        max-file: '5'
     command: /start.sh
 
   cronjobs:
@@ -31,10 +31,10 @@ services:
     volumes:
       - ./tmp:/tmp
     logging:
-      driver: 'json-file'
+      driver: json-file
       options:
-        max-file: 5
         max-size: '10m'
+        max-file: '5'
     entrypoint: /cron_entrypoint.sh
     command: ['cron', '-f']
 
@@ -46,10 +46,10 @@ services:
     env_file:
       - ./.envs/.production.env
     logging:
-      driver: 'json-file'
+      driver: json-file
       options:
-        max-file: 5
         max-size: '10m'
+        max-file: '5'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
@@ -65,10 +65,10 @@ services:
     depends_on:
       - web
     logging:
-      driver: 'json-file'
+      driver: json-file
       options:
-        max-file: 5
         max-size: '10m'
+        max-file: '5'
     volumes:
       - ./etc/ssl:/etc/nginx/ssl
       - ./server/collected_static:/collected_static
