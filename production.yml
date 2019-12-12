@@ -15,7 +15,6 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/server/collected_static
-      - ./tmp:/tmp
     command: /start.sh
 
   cronjobs:
@@ -24,6 +23,8 @@ services:
       - web
     env_file:
       - ./.envs/.production.env
+    volumes:
+      - ./tmp:/tmp
     entrypoint: /cron_entrypoint.sh
     command: ['cron', '-f']
 
