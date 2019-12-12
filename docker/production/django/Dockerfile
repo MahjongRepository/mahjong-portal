@@ -24,9 +24,6 @@ RUN apt-get -y install cron
 ADD ./docker/production/django/crontab /etc/cron.d/crontab
 RUN chmod 0644 /etc/cron.d/crontab
 
-# we need to save variables in file special for cron
-RUN /bin/bash -c declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' > /cron.env
-
 COPY . /app
 WORKDIR /app/server
 
