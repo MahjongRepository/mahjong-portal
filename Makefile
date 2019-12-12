@@ -11,7 +11,7 @@ console:
 	docker-compose -f $(COMPOSE_FILE) run --rm web bash
 
 build:
-	docker-compose -f $(COMPOSE_FILE) build --no-cache
+	docker-compose -f $(COMPOSE_FILE) build
 
 initial_data:
 	docker-compose -f local.yml run --rm web python manage.py flush --noinput
