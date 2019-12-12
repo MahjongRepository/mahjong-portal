@@ -16,7 +16,7 @@ db.sqlite3
 whoosh_index
 
 yakuman
-temp
+tmp
 .ms
 
 .env

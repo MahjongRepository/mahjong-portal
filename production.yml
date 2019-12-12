@@ -15,6 +15,7 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/server/collected_static
+      - ./tmp:/tmp
     command: /start.sh
 
   cronjobs:
