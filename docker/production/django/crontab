@@ -1,4 +1,4 @@
-* * * * * root echo hello > /proc/1/fd/1 2>/proc/1/fd/2
+* * * * * root python -c "print(1)" > /proc/1/fd/1 2>/proc/1/fd/2
 
 # each one hour
 #0 * * * * /usr/local/bin/python /app/server/manage.py update_ms_statistics > /proc/1/fd/1 2>/proc/1/fd/2
