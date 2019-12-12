@@ -96,8 +96,10 @@ WSGI_APPLICATION = 'mahjong_portal.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(),
-    'pantheon': dj_database_url.config(),
 }
+
+if os.environ.get('PANTHEON_DB_URL'):
+    DATABASES['pantheon'] = dj_database_url.parse(os.environ.get('PANTHEON_DB_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
