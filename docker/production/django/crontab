@@ -1,5 +1,4 @@
-BASH_ENV=/cron.env
-* * * * * . /cron.env; root python -c "import os; print(os.environ.get('POSTGRES_DB'))" > /proc/1/fd/1 2>/proc/1/fd/2
+* * * * * . /cron.env; python -c "import os; print(os.environ.get('POSTGRES_DB'))" > /proc/1/fd/1 2>/proc/1/fd/2
 
 # each one hour
 #0 * * * * /usr/local/bin/python /app/server/manage.py update_ms_statistics > /proc/1/fd/1 2>/proc/1/fd/2
