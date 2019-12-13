@@ -124,7 +124,7 @@ def tournament_registration(request, tournament_id):
     Let's disable it for now, because it is not really important action
     """
     tournament = get_object_or_404(Tournament, id=tournament_id)
-    
+
     if tournament.is_online():
         form = OnlineTournamentRegistrationForm(request.POST, initial={
             'tournament': tournament
@@ -137,22 +137,25 @@ def tournament_registration(request, tournament_id):
     if form.is_valid():
         if tournament.is_online():
             tenhou_nickname = form.cleaned_data.get('tenhou_nickname')
-            if OnlineTournamentRegistration.objects.filter(tournament=tournament, tenhou_nickname=tenhou_nickname).exists():
+            exists = OnlineTournamentRegistration.objects.filter(
+                tournament=tournament, tenhou_nickname=tenhou_nickname
+            ).exists()
+            if exists:
                 messages.success(request, _('You already registered to the tournament!'))
                 return redirect(tournament.get_url())
 
         instance = form.save(commit=False)
         instance.tournament = tournament
-        
+
         # it supports auto load objects only for Russian tournaments right now
-        
+
         try:
-            instance.player = Player.objects.get(first_name_ru=instance.first_name.title(), 
+            instance.player = Player.objects.get(first_name_ru=instance.first_name.title(),
                                                  last_name_ru=instance.last_name.title())
         except (Player.DoesNotExist, Player.MultipleObjectsReturned):
             # TODO if multiple players are here, let's try to filter by city
             pass
-        
+
         try:
             instance.city_object = City.objects.get(name_ru=instance.city)
         except City.DoesNotExist:
@@ -160,13 +163,15 @@ def tournament_registration(request, tournament_id):
 
         if tournament.registrations_pre_moderation:
             instance.is_approved = False
-            message = _('Your registration was accepted! It will be visible on the page after administrator approvement.')
+            message = _(
+                'Your registration was accepted! It will be visible on the page after administrator approvement.'
+            )
         else:
             instance.is_approved = True
             message = _('Your registration was accepted!')
 
         instance.save()
-        
+
         messages.success(request, message)
     else:
         messages.success(request, _('Please, allow to store personal data'))

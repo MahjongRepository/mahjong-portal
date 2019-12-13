@@ -166,7 +166,8 @@ class Tournament(BaseModel):
 
 class TournamentResult(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='results', on_delete=models.PROTECT)
-    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results', null=True, blank=True)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results',
+                               null=True, blank=True)
     player_string = models.CharField(max_length=512, null=True, blank=True)
     place = models.PositiveSmallIntegerField()
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
@@ -305,7 +306,7 @@ class TournamentApplication(BaseModel):
     number_of_games = models.PositiveSmallIntegerField(verbose_name=_('Number of hanchans'))
     entry_fee = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Entry fee'),
                                                  help_text=_('Leave empty if it is free tournament'))
-    pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1, 
+    pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1,
                                                        verbose_name=_('Pantheon needed'))
     rules = models.PositiveSmallIntegerField(
         verbose_name=_('Tournament rules'),
@@ -314,7 +315,7 @@ class TournamentApplication(BaseModel):
     registration_type = models.PositiveSmallIntegerField(choices=[[0, _('Open')], [1, _('Closed')], [2, _('Limited')]],
                                                          verbose_name=_('Registration type'),
                                                          default=0)
-    additional_info = models.TextField(verbose_name=_('Additional info'), 
+    additional_info = models.TextField(verbose_name=_('Additional info'),
                                        help_text=_('More information about tournament'))
     allow_to_save_data = models.BooleanField(help_text=_('I allow to store my personal data'))
 

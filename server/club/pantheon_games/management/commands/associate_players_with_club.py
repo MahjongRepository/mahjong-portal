@@ -104,6 +104,4 @@ class Command(BaseCommand):
                         games
                     ))
 
-
-
         print('Associating completed')

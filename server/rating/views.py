@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import pytz
 from django.http import JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
@@ -27,7 +26,7 @@ def rating_details(request, slug, year=None, month=None, day=None):
         try:
             rating_date = datetime(int(year), int(month), int(day)).date()
             is_last = False
-        except:
+        except ValueError:
             raise Http404
 
     rating_results = (RatingResult.objects

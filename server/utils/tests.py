@@ -28,4 +28,3 @@ class ParseLogLinesTestCase(TestCase):
         self.assertEqual(results['players'][0]['name'], u'烏龍茶(黒)')
         self.assertEqual(results['players'][1]['name'], u'misery20')
         self.assertEqual(results['players'][2]['name'], u'NoName')
-

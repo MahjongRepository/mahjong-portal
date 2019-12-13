@@ -2,7 +2,6 @@ import datetime
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.db.models import Q
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
@@ -36,10 +35,9 @@ class Command(BaseCommand):
 
             calculator = RatingRRCalculation()
             rating = Rating.objects.get(type=Rating.RR)
+            types = [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
             tournaments = Tournament.public.filter(
-                Q(tournament_type=Tournament.RR) |
-                Q(tournament_type=Tournament.EMA) |
-                Q(tournament_type=Tournament.FOREIGN_EMA)
+                tournament_type__in=types
             ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'crr':
@@ -47,11 +45,9 @@ class Command(BaseCommand):
 
             calculator = RatingCRRCalculation()
             rating = Rating.objects.get(type=Rating.CRR)
+            types = [Tournament.CRR, Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
             tournaments = Tournament.public.filter(
-                Q(tournament_type=Tournament.CRR) |
-                Q(tournament_type=Tournament.RR) |
-                Q(tournament_type=Tournament.EMA) |
-                Q(tournament_type=Tournament.FOREIGN_EMA)
+                tournament_type__in=types
             ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'online':

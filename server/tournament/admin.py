@@ -19,7 +19,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
     prepopulated_fields = {'slug': ['name_en']}
     list_display = ['name', 'country', 'end_date', 'is_upcoming', 'export']
-    list_filter = ['is_event', 'tournament_type','need_qualification', 'country']
+    list_filter = ['is_event', 'tournament_type', 'need_qualification', 'country']
     search_fields = ['name_ru', 'name_en']
 
     ordering = ['-end_date']
@@ -27,18 +27,19 @@ class TournamentAdmin(admin.ModelAdmin):
     filter_horizontal = ['clubs']
 
     def changelist_view(self, request, extra_context=None):
-        ref = request.META.get('HTTP_REFERER','')
+        ref = request.META.get('HTTP_REFERER', '')
         if '/?' not in ref:
             q = request.GET.copy()
             q['country__id__exact'] = 9
             request.GET = q
             request.META['QUERY_STRING'] = request.GET.urlencode()
-        return super(TournamentAdmin,self).changelist_view(request, extra_context=extra_context)
+        return super(TournamentAdmin, self).changelist_view(request, extra_context=extra_context)
 
     def export(self, obj):
         return mark_safe('<a href="{}">Export to EMA</a>'.format(
             reverse('export_tournament_results', kwargs={'tournament_id': obj.id}))
         )
+
 
 class TournamentRegistrationAdmin(admin.ModelAdmin):
     list_display = ['id', 'is_approved', 'tournament', 'first_name', 'last_name', 'city', 'phone', 'player',

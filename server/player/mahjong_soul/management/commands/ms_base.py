@@ -50,33 +50,33 @@ class MSBaseCommand(BaseCommand):
             async with session.get('{}/1/version.json'.format(MS_HOST)) as res:
                 version = await res.json()
                 version = version['version']
-    
+
             async with session.get('{}/1/v{}/config.json'.format(MS_HOST, version)) as res:
                 config = await res.json()
                 url = config['ip'][0]['region_urls']['mainland']
-    
+
             async with session.get(url + '?service=ws-gateway&protocol=ws&ssl=true') as res:
                 servers = await res.json()
                 servers = servers['servers']
                 server = random.choice(servers)
                 endpoint = 'wss://{}/'.format(server)
-    
+
         print('Chosen endpoint: {}'.format(endpoint))
         channel = MSRPCChannel(endpoint)
-    
+
         lobby = Lobby(channel)
         lobby.version = version
-    
+
         await channel.connect(MS_HOST)
         print('Connection was established')
-    
+
         return lobby, channel
 
     async def login(self, lobby, username, password):
         print('Login with username and password')
-    
+
         uuid_key = str(uuid.uuid1())
-    
+
         req = pb.ReqLogin()
         req.account = username
         req.password = hmac.new(b'lailai', password.encode(), hashlib.sha256).hexdigest()
@@ -86,7 +86,7 @@ class MSBaseCommand(BaseCommand):
         req.client_version = lobby.version
         req.gen_access_token = True
         req.currency_platforms.append(2)
-    
+
         res = await lobby.login(req)
         token = res.access_token
         if not token:
@@ -97,7 +97,7 @@ class MSBaseCommand(BaseCommand):
         with open(self.TOKEN_PATH, 'w') as f:
             print('Saving access token...')
             json.dump({'random_key': uuid_key, 'access_token': token}, f)
-    
+
         return True
 
     async def re_login(self, lobby):

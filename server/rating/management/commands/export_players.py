@@ -1,7 +1,6 @@
 import csv
 
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
 from player.models import Player
 

@@ -166,7 +166,9 @@ def tournament_manage(request, tournament_id, **kwargs):
     tournament = kwargs['tournament']
 
     if tournament.is_online():
-        tournament_registrations = OnlineTournamentRegistration.objects.filter(tournament=tournament).order_by('-created_on')
+        tournament_registrations = OnlineTournamentRegistration.objects.filter(
+            tournament=tournament
+        ).order_by('-created_on')
     else:
         tournament_registrations = TournamentRegistration.objects.filter(tournament=tournament).order_by('-created_on')
 

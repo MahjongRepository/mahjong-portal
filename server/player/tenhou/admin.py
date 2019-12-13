@@ -4,7 +4,8 @@ from player.tenhou.models import TenhouStatistics
 
 
 class TenhouStatisticsAdmin(admin.ModelAdmin):
-    list_display = ['player', 'player_city', 'tenhou_object', 'rank', 'lobby', 'played_games', 'average_place', 'last_played_date']
+    list_display = ['player', 'player_city', 'tenhou_object', 'rank', 'lobby', 'played_games', 'average_place',
+                    'last_played_date']
     list_filter = ['lobby', 'stat_type']
 
     def player(self, obj):
