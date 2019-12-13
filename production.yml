@@ -15,6 +15,7 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/server/collected_static
+    restart: always
     logging:
       driver: json-file
       options:
@@ -30,6 +31,7 @@ services:
       - ./.envs/.production.env
     volumes:
       - ./tmp:/tmp
+    restart: always
     logging:
       driver: json-file
       options:
@@ -45,6 +47,7 @@ services:
     image: portal_postgresql
     env_file:
       - ./.envs/.production.env
+    restart: always
     logging:
       driver: json-file
       options:
