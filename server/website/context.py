@@ -6,7 +6,6 @@ def context(request):
     language = get_language()
 
     return {
-        'YANDEX_METRIKA_ID': settings.YANDEX_METRIKA_ID,
         'GOOGLE_VERIFICATION_CODE': settings.GOOGLE_VERIFICATION_CODE,
         'YANDEX_VERIFICATION_CODE': settings.YANDEX_VERIFICATION_CODE,
         'SCHEME': settings.SCHEME,
