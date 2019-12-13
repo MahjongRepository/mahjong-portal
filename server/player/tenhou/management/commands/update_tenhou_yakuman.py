@@ -54,7 +54,7 @@ class Command(BaseCommand):
         stop_year = current_year
         months = ['{:02}'.format(x) for x in range(1, 13)]
 
-        folder = os.path.join(settings.BASE_DIR, 'yakuman')
+        folder = os.path.join('/tmp', 'yakuman')
         if not os.path.exists(folder):
             os.mkdir(folder)
 

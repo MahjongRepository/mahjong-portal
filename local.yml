@@ -11,14 +11,12 @@ services:
     image: portal_local_web
     depends_on:
       - db
-    volumes:
-      - .:/app
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - '8060:8000'
-    command: /start
+      - '8060:8060'
+    command: /start.sh
 
   db:
     build:

@@ -12,11 +12,11 @@ LOGIN_URL = '/login/'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = os.environ.get('SECRET_KEY', None)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 SITE_ID = 1
 
@@ -96,8 +96,10 @@ WSGI_APPLICATION = 'mahjong_portal.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(),
-    'pantheon': dj_database_url.config(),
 }
+
+if os.environ.get('PANTHEON_DB_URL'):
+    DATABASES['pantheon'] = dj_database_url.parse(os.environ.get('PANTHEON_DB_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -140,6 +142,55 @@ USE_L10N = True
 
 USE_TZ = True
 
+def skip_site_packages_logs(record):
+    # This skips the log records that are generated from libraries
+    # installed in site packages.
+    if 'site-packages' in record.pathname:
+        return False
+    return True
+
+
+DJANGO_LOG_LEVEL = os.environ.get('DJANGO_LOG_LEVEL')
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'filters': {
+        'skip_site_packages_logs': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_site_packages_logs,
+        },
+    },
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s django %(levelname)s: %(message)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': DJANGO_LOG_LEVEL,
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'django.template': {
+            'handlers': ['console'],
+            'filters': ['skip_site_packages_logs'],
+            'level': DJANGO_LOG_LEVEL,
+            'propagate': False,
+        }
+    }
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
@@ -159,21 +210,33 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# https://sentry.io
+if os.environ.get('RAVEN_CONFIG'):
+    RAVEN_CONFIG = {
+        'dsn': os.environ.get('RAVEN_CONFIG'),
+    }
+
 TENHOU_WG_URL = 'https://mjv.jp/0/wg/0.js'
 TENHOU_LATEST_GAMES_URL = 'http://tenhou.net/sc/raw/list.cgi'
 TENHOU_DOWNLOAD_ARCHIVE_URL = 'http://tenhou.net/sc/raw/dat/'
 
-YANDEX_METRIKA_ID = None
-GOOGLE_VERIFICATION_CODE = None
-YANDEX_VERIFICATION_CODE = None
+YANDEX_METRIKA_ID = os.environ.get('YANDEX_METRIKA_ID', None)
+GOOGLE_VERIFICATION_CODE = os.environ.get('GOOGLE_VERIFICATION_CODE', None)
+YANDEX_VERIFICATION_CODE = os.environ.get('YANDEX_VERIFICATION_CODE', None)
 
-TELEGRAM_TOKEN = None
-PANTHEON_URL = None
-PANTHEON_EVENT_ID = None
-PANTHEON_ADMIN_TOKEN = None
+# online tournaments
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', None)
+PANTHEON_URL = os.environ.get('PANTHEON_URL', None)
+PANTHEON_EVENT_ID = os.environ.get('PANTHEON_EVENT_ID', None)
+PANTHEON_ADMIN_TOKEN = os.environ.get('PANTHEON_ADMIN_TOKEN', None)
+TOURNAMENT_ID = os.environ.get('TOURNAMENT_ID', None)
+TOURNAMENT_PUBLIC_LOBBY = os.environ.get('TOURNAMENT_PUBLIC_LOBBY', None)
+TOURNAMENT_PRIVATE_LOBBY = os.environ.get('TOURNAMENT_PRIVATE_LOBBY', None)
+TOURNAMENT_GAME_TYPE = os.environ.get('TOURNAMENT_GAME_TYPE', None)
 
-MS_USERNAME = ''
-MS_PASSWORD = ''
+# mahjong soul statistics fetching
+MS_USERNAME = os.environ.get('MS_USERNAME', None)
+MS_PASSWORD = os.environ.get('MS_PASSWORD', None)
 
 CACHES = {
     'default': {
