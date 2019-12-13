@@ -65,7 +65,9 @@ def player_rating_details(request, slug, rating_slug):
 
     rating_result = get_object_or_404(RatingResult, rating=rating, player=player, is_last=True)
     today = timezone.now()
-    all_rating_results = RatingResult.objects.filter(rating=rating, player=player).filter(date__lte=today).order_by('date')
+    all_rating_results = RatingResult.objects.filter(
+        rating=rating, player=player
+    ).filter(date__lte=today).order_by('date')
     filtered_results = []
 
     tournament_coefficients = TournamentCoefficients.objects.filter(
@@ -129,7 +131,9 @@ def player_rating_details(request, slug, rating_slug):
 
 def player_tenhou_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
-    tenhou_data = TenhouNickname.objects.filter(player=player).order_by('-is_main').prefetch_related('aggregated_statistics')
+    tenhou_data = TenhouNickname.objects.filter(
+        player=player
+    ).order_by('-is_main').prefetch_related('aggregated_statistics')
     return render(request, 'player/tenhou.html', {
         'player': player,
         'tenhou_data': tenhou_data,

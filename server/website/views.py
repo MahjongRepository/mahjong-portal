@@ -7,12 +7,11 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.text import slugify
-from django.utils.translation import get_language, gettext
+from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
 from player.models import Player, PlayerERMC
-from player.tenhou.models import TenhouNickname
 from rating.models import Rating, RatingResult
 from settings.models import City
 from tournament.models import Tournament, TournamentResult

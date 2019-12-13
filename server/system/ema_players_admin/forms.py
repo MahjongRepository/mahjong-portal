@@ -36,7 +36,9 @@ class AddPlayerForm(forms.ModelForm):
             try:
                 player = Player.objects.get(first_name_ru=first_name_ru, last_name_ru=last_name_ru)
                 if player.ema_id:
-                    raise forms.ValidationError('Игрок с таким именем уже существует и у него есть ema id {}.'.format(player.ema_id))
+                    raise forms.ValidationError('Игрок с таким именем уже существует и у него есть ema id {}.'.format(
+                        player.ema_id
+                    ))
                 else:
                     message = 'Игрок с таким именем уже существует.'
                     if player.city:

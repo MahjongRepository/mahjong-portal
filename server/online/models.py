@@ -68,4 +68,9 @@ class TournamentGamePlayer(BaseModel):
     wind = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
 
     def __unicode__(self):
-        return u'{}, {}, {}, {}'.format(self.player.__unicode__(), self.wind, self.player.pantheon_id, self.player.team_name)
+        return u'{}, {}, {}, {}'.format(
+            self.player.__unicode__(),
+            self.wind,
+            self.player.pantheon_id,
+            self.player.team_name
+        )

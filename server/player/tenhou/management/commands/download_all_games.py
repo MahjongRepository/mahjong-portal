@@ -3,7 +3,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from player.tenhou.models import TenhouStatistics, TenhouNickname
-from utils.tenhou.helper import recalculate_tenhou_statistics_for_four_players, download_all_games_from_arcturus, save_played_games
+from utils.tenhou.helper import recalculate_tenhou_statistics_for_four_players, download_all_games_from_arcturus, \
+    save_played_games
 
 
 def get_date_string():

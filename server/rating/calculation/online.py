@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q
-from django.utils import timezone
 
 from player.models import Player
 from rating.calculation.rr import RatingRRCalculation

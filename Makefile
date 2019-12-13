@@ -6,12 +6,23 @@ up:
 stop:
 	docker-compose -f $(COMPOSE_FILE) stop
 
-console:
+logs:
+	docker-compose -f $(COMPOSE_FILE) logs -f
+
+web:
 	${MAKE} up
 	docker-compose -f $(COMPOSE_FILE) run --rm web bash
 
 build:
 	docker-compose -f $(COMPOSE_FILE) build
+
+test:
+	${MAKE} up
+	docker-compose -f local.yml run --rm web python manage.py test --noinput
+
+lint:
+	${MAKE} up
+	docker-compose -f local.yml run --rm web flake8 --config=../.flake8
 
 initial_data:
 	docker-compose -f local.yml run --rm web python manage.py flush --noinput
@@ -20,6 +31,3 @@ initial_data:
 
 permissions:
 	sudo chown -R $$USER:$$USER .
-
-django_logs:
-	docker-compose -f $(COMPOSE_FILE) logs -f web

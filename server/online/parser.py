@@ -59,7 +59,8 @@ class TenhouParser(object):
                 index = x % (33 - y)
             first = (a ^ b ^ table[index]) & 0xFFFF
             second = (b ^ c ^ table[index] ^ table[index + 1]) & 0xFFFF
-            return log_id[:code_pos] + codecs.getencoder('hex_codec')(struct.pack(">HH", first, second))[0].decode('ASCII')
+            result = codecs.getencoder('hex_codec')(struct.pack(">HH", first, second))[0].decode('ASCII')
+            return log_id[:code_pos] + result
         else:
             return log_id
 
@@ -70,7 +71,7 @@ class TenhouParser(object):
         game_round = []
         for x in range(0, len(log_content)):
             if log_content[x] == '>':
-                tag = log_content[tag_start:x+1]
+                tag = log_content[tag_start:x + 1]
                 tag_start = x + 1
 
             # not useful tags

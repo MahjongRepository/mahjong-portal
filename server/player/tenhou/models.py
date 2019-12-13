@@ -93,7 +93,9 @@ class TenhouNickname(BaseModel):
         return reversed(self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by('-game_date')[:20])
 
     def rank_changes(self):
-        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).exclude(rank=F('next_rank')).order_by('game_date')
+        return self.game_logs.filter(
+            game_players=TenhouGameLog.FOUR_PLAYERS
+        ).exclude(rank=F('next_rank')).order_by('game_date')
 
     def pt_changes(self):
         last_rank_change_date = self.rank_changes().last()

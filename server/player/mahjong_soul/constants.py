@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 NEXT_LEVEL_POINTS = {
-    ### Four players ###
-
     # Novice
     10101: 20,
     10102: 80,
@@ -26,35 +24,31 @@ NEXT_LEVEL_POINTS = {
     # Celestial,
     10601: u'∞',
 
-    ### Three players ###
-
-    # Novice
+    # Sanma Novice
     20101: 20,
     20102: 80,
     20103: 200,
-    # Adept
+    # Sanma Adept
     20201: 600,
     20202: 800,
     20203: 1000,
-    # Expert
+    # Sanma Expert
     20301: 1200,
     20302: 1400,
     20303: 2000,
-    # Master
+    # Sanma Master
     20401: 2800,
     20402: 3200,
     20403: 3600,
-    # Saint
+    # Sanma Saint
     20501: 4000,
     20502: 6000,
     20503: 9000,
-    # Celestial,
+    # Sanma Celestial,
     20601: u'∞'
 }
 
 RANK_LABELS = {
-    ### Four players ###
-
     # Novice
     10101: 'Novice I',
     10102: 'Novice II',
@@ -78,29 +72,26 @@ RANK_LABELS = {
     # Celestial,
     10601: u'Celestial 😎',
 
-    ### Three players ###
-
-    # Novice
+    # Sanma Novice
     20101: 'Novice I',
     20102: 'Novice II',
     20103: 'Novice III',
-    # Adept
+    # Sanma Adept
     20201: 'Adept I',
     20202: 'Adept II',
     20203: 'Adept III',
-    # Expert
+    # Sanma Expert
     20301: 'Expert I',
     20302: 'Expert II',
     20303: 'Expert III',
-    # Master
+    # Sanma Master
     20401: 'Master I',
     20402: 'Master II',
     20403: 'Master III',
-    # Saint
+    # Sanma Saint
     20501: 'Saint I',
     20502: 'Saint II',
     20503: 'Saint III',
-    # Celestial,
+    # Sanma Celestial,
     20601: u'Celestial 😎',
 }
-

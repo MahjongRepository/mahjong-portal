@@ -12,7 +12,6 @@ from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
-from online.team_seating import TeamSeating
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
@@ -44,7 +43,8 @@ class TournamentHandler(object):
             if self.status.registration_closed:
                 return 'Игры скоро начнутся. Подтвержденных игроков: {}.'.format(confirmed_players)
             else:
-                return 'Идёт этап подтверждения участия. На данный момент {} подтвержденных игроков.'.format(confirmed_players)
+                return 'Идёт этап подтверждения участия. ' \
+                       'На данный момент {} подтвержденных игроков.'.format(confirmed_players)
 
         if self.status.end_break_time:
             now = timezone.now()
@@ -142,13 +142,13 @@ class TournamentHandler(object):
         error_message = 'Это не похоже на лог игры.'
 
         log_link = log_link.replace('https://', 'http://')
-        
+
         log_link = log_link.strip()
         if not log_link.startswith('http://tenhou.net/'):
             return error_message
 
         attributes = parse_qs(urlparse(log_link).query)
-        
+
         if 'log' not in attributes:
             return error_message
 
@@ -159,10 +159,10 @@ class TournamentHandler(object):
             players = parser.get_player_names(log_id)
         except Exception:
             return 'Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не весь log id.'
-        
+
         if TournamentGame.objects.filter(log_id=log_id).exists():
             return 'Игра уже была добавлена в систему. Спасибо.'
-        
+
         games = (TournamentGame.objects
                                .filter(tournament=self.tournament)
                                .filter(game_players__player__tenhou_username__in=players)
@@ -171,9 +171,9 @@ class TournamentHandler(object):
         if games.count() >= 2:
             logger.error('Log add. Too much games.')
             return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
-        
+
         game = games.first()
-        
+
         data = {
             'jsonrpc': '2.0',
             'method': 'addOnlineReplay',
@@ -183,12 +183,12 @@ class TournamentHandler(object):
             },
             'id': make_random_letters_and_digit_string()
         }
-        
+
         response = requests.post(settings.PANTHEON_URL, json=data)
         if response.status_code == 500:
             logger.error('Log add. Pantheon 500.')
             return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
-        
+
         content = response.json()
         if content.get('error'):
             logger.error('Log add. Pantheon error. {}'.format(content.get('error')))
@@ -220,9 +220,8 @@ class TournamentHandler(object):
 
         account_started_date = get_started_date_for_account(tenhou_nickname)
         if not account_started_date:
-            return 'Ником "{}" ещё не играли на тенхе. Вы уверены, что он правильно написан? Регистр важен! Обратитесь к администратору.'.format(
-                tenhou_nickname
-            )
+            return 'Ником "{}" ещё не играли на тенхе. Вы уверены, что он правильно написан? ' \
+                   'Регистр важен! Обратитесь к администратору.'.format(tenhou_nickname)
 
         pantheon_id = registration.player and registration.player.pantheon_id or None
         team_name = registration.notes
@@ -294,7 +293,7 @@ class TournamentHandler(object):
                                                             player_id=player_id,
                                                             wind=wind)
                     games.append(game)
-                except Exception as e:
+                except Exception:
                     logger.error('Failed to prepare a game. Pantheon ids={}'.format(item), exc_info=1)
 
             # we was able to generate games
@@ -307,30 +306,19 @@ class TournamentHandler(object):
 
         return games, message
 
-    def make_sortition(self, round_number):
-        sortition = [
-            [[384, 316, 55, 519],  [9, 249, 321, 473],   [310, 235, 12, 753],  [230, 10, 817, 225], [214, 514, 13, 391]],
-            [[310, 55, 817, 391],  [230, 249, 514, 753], [384, 473, 13, 225],  [10, 316, 12, 321],  [214, 9, 235, 519]],
-            [[384, 321, 391, 753], [9, 316, 817, 514],   [230, 12, 519, 13],   [214, 249, 55, 225], [310, 235, 10, 473]],
-            [[214, 316, 473, 753], [310, 519, 514, 225], [9, 10, 55, 13],      [384, 12, 249, 817], [230, 235, 321, 391]],
-            [[230, 384, 9, 310],   [817, 321, 13, 753],  [12, 55, 473, 514],   [10, 249, 519, 391], [214, 235, 316, 225]],
-            [[384, 235, 10, 514],  [519, 817, 473, 753], [9, 12, 391, 225],    [214, 230, 55, 321], [310, 316, 249, 13]],
-            [[235, 249, 817, 13],  [519, 321, 514, 225], [230, 316, 473, 391], [9, 10, 55, 753],    [214, 384, 310, 12]],
-        ]
-        return sortition[round_number - 1]
-    # def make_sortition(self, pantheon_ids):
-    #     if self.status.current_round == 1:
-    #         return self._random_sortition(pantheon_ids)
-    #     else:
-    #         return self._pantheon_swiss_sortition()
+    def make_sortition(self, pantheon_ids):
+        if self.status.current_round == 1:
+            return self._random_sortition(pantheon_ids)
+        else:
+            return self._pantheon_swiss_sortition()
 
     def start_game(self, game):
         """
         Send request to tenhou.net and start a new game in lobby
         """
-        
+
         players = game.game_players.all().order_by('wind')
-        
+
         player_names = [x.player.tenhou_username for x in players]
 
         url = 'http://tenhou.net/cs/edit/start.cgi'
@@ -341,13 +329,13 @@ class TournamentHandler(object):
             'WG': 1,
             'M': '\r\n'.join([x for x in player_names])
         }
-        
+
         headers = {
             'Origin': 'http://tenhou.net',
             'Content-Type': 'application/x-www-form-urlencoded',
             'Referer': 'http://tenhou.net/cs/edit/?{}'.format(self.lobby),
         }
-        
+
         try:
             response = requests.post(url, data=data, headers=headers, allow_redirects=False)
             location = unquote(response.headers['location'])
@@ -376,14 +364,12 @@ class TournamentHandler(object):
                 game.status = TournamentGame.STARTED
 
                 message = 'Стол: {} запущен.'.format(u', '.join(player_names))
-        except:
+        except Exception:
             message = 'Стол: {} не получилось запустить. Требуется вмешательство администратора.'.format(
                 u', '.join(player_names)
             )
             game.status = TournamentGame.FAILED_TO_START
-        
         game.save()
-        
         return message
 
     def check_round_was_finished(self):
@@ -403,10 +389,8 @@ class TournamentHandler(object):
                 break_minutes = TOURNAMENT_BREAKS_TIME[index]
                 self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
                 self.status.save()
-                return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.\n\nИгровое лобби: http://tenhou.net/0/?{}'.format(
-                    break_minutes,
-                    settings.TOURNAMENT_PUBLIC_LOBBY
-                )
+                return 'Все игры успешно завершились. Следующий тур начнётся через {} минут.\n\n' \
+                       'Игровое лобби: http://tenhou.net/0/?{}'.format(break_minutes, settings.TOURNAMENT_PUBLIC_LOBBY)
         else:
             return None
 
@@ -414,14 +398,17 @@ class TournamentHandler(object):
         if not self.status.current_round:
             message = 'Добро пожаловать в чат онлайн турнира! \n'
             if not username:
-                message += u'Для начала установите username в настройках телеграма (Settings -> Username). Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n'
+                message += u'Для начала установите username в настройках телеграма (Settings -> Username). ' \
+                           u'Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n'
                 message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
             else:
                 message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
             return message
         else:
             message = 'Добро пожаловать в чат онлайн турнира! \n\n'
-            message += 'Статистику турнира можно посмотреть вот тут: https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
+            message += 'Статистику турнира можно посмотреть вот тут: https://gui.mjtop.net/eid{}/stat \n'.format(
+                settings.PANTHEON_EVENT_ID
+            )
             return message
 
     def _pantheon_swiss_sortition(self):

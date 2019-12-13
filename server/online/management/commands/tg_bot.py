@@ -153,8 +153,10 @@ def set_tenhou_nickname(bot, update, args):
 
     username = update.message.from_user.username
     if not username:
+        text = u'Перед привязкой тенхо ника нужно установить username в настройках ' \
+               u'телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/'
         update.message.reply_text(
-            text=u'Перед привязкой тенхо ника нужно установить username в настройках телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/',
+            text=text,
             disable_web_page_preview=True
         )
         return
@@ -216,21 +218,21 @@ def error_callback(bot, update, error):
 
     try:
         raise error
-    except Unauthorized as e:
+    except Unauthorized:
         # remove update.message.chat_id from conversation list
         pass
-    except BadRequest as e:
+    except BadRequest:
         # handle malformed requests - read more below!
         pass
-    except TimedOut as e:
+    except TimedOut:
         # handle slow connection problems
         pass
-    except NetworkError as e:
+    except NetworkError:
         # handle other connection problems
         pass
-    except ChatMigrated as e:
+    except ChatMigrated:
         # the chat_id of a group has changed, use e.new_chat_id instead
         pass
-    except TelegramError as e:
+    except TelegramError:
         # handle all other telegram related errors
         pass

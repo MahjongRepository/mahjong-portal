@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls[:2])),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
-    url(r'^sitemap\.xml$', cache_page(86400)(sitemap), {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^sitemap\.xml$', cache_page(86400)(sitemap),
+        {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     url('^api/v0/players/$', players_api),
     url(r'^online/', include('online.urls')),

@@ -7,7 +7,7 @@ from settings.models import Country, City
 
 
 class PlayerManager(models.Manager):
-    
+
     def get_queryset(self):
         # don't show hidden players in the lists
         return (super(PlayerManager, self).get_queryset()
@@ -24,7 +24,7 @@ class Player(BaseModel):
         [MALE, 'm'],
         [NONE, ''],
     ]
-    
+
     objects = PlayerManager()
     all_objects = models.Manager()
 
@@ -55,7 +55,7 @@ class Player(BaseModel):
     def full_name(self):
         if self.is_hide:
             return _('Substitution player')
-        
+
         return u'{} {}'.format(self.last_name, self.first_name)
 
     @property

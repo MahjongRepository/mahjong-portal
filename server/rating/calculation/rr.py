@@ -37,11 +37,10 @@ class RatingRRCalculation(object):
         return list(Player.objects.filter(country__code='RU'))
 
     def get_base_query(self, rating, start_date, rating_date):
+        types = [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
         base_query = (RatingDelta.objects
                       .filter(rating=rating)
-                      .filter(Q(tournament__tournament_type=Tournament.RR) |
-                              Q(tournament__tournament_type=Tournament.EMA) |
-                              Q(tournament__tournament_type=Tournament.FOREIGN_EMA))
+                      .filter(tournament__tournament_type__in=types)
                       .filter(Q(tournament__end_date__gt=start_date) & Q(tournament__end_date__lte=rating_date))
                       .filter(date=rating_date))
         return base_query
@@ -139,7 +138,8 @@ class RatingRRCalculation(object):
                 best_tournament_results_option = None
 
                 for tournaments_results_option in itertools.combinations(deltas, num_tournaments):
-                    rating_calculation, score = self._calculate_player_rating(player, tournaments_results_option, deltas,
+                    rating_calculation, score = self._calculate_player_rating(player, tournaments_results_option,
+                                                                              deltas,
                                                                               coefficients_cache, max_coefficient,
                                                                               selected_coefficients, is_last)
                     if score >= best_score:
@@ -151,14 +151,14 @@ class RatingRRCalculation(object):
                 RatingDelta.objects.filter(id__in=[x.id for x in best_tournament_results_option]).update(is_active=True)
 
             results.append(RatingResult(
-                    rating=rating,
-                    player=player,
-                    score=best_score,
-                    place=0,
-                    rating_calculation=best_rating_calculation,
-                    date=rating_date,
-                    is_last=is_last
-                ))
+                rating=rating,
+                player=player,
+                score=best_score,
+                place=0,
+                rating_calculation=best_rating_calculation,
+                date=rating_date,
+                is_last=is_last
+            ))
 
         place = 1
         results = sorted(results, key=lambda x: x.score, reverse=True)

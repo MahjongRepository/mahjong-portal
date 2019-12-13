@@ -1,11 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+
 from django.test import TestCase
 from django.utils import timezone
 
 from rating.calculation.online import RatingOnlineCalculation
-from rating.calculation.rr import RatingRRCalculation
 from rating.mixins import RatingTestMixin
-from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
 
 
 class InnerRatingTestCase(TestCase, RatingTestMixin):
