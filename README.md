@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/MahjongRepository/mahjong-portal.svg?branch=master)](https://travis-ci.org/MahjongRepository/mahjong-portal)
-
 It is working with Python **3.6+** only.
 
 The project is web-application to accumulate, calculate and display russian riichi-mahjong tournaments and ratings.
