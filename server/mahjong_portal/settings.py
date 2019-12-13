@@ -220,7 +220,6 @@ TENHOU_WG_URL = 'https://mjv.jp/0/wg/0.js'
 TENHOU_LATEST_GAMES_URL = 'http://tenhou.net/sc/raw/list.cgi'
 TENHOU_DOWNLOAD_ARCHIVE_URL = 'http://tenhou.net/sc/raw/dat/'
 
-YANDEX_METRIKA_ID = os.environ.get('YANDEX_METRIKA_ID', None)
 GOOGLE_VERIFICATION_CODE = os.environ.get('GOOGLE_VERIFICATION_CODE', None)
 YANDEX_VERIFICATION_CODE = os.environ.get('YANDEX_VERIFICATION_CODE', None)
 
