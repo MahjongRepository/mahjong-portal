@@ -55,11 +55,11 @@
                         <td>
                             {% if result.player.is_replacement or result.player.is_hide %}
                                 <span class="d-none d-md-block">
-                                {{ result.player.full_name }}
-                            </span>
+                                    {{ result.player.full_name }}
+                                </span>
                                 <span class="d-block d-md-none">
-                                <nobr>{% trans 'Substitution' %}</nobr>
-                            </span>
+                                    <nobr>{% trans 'Substitution' %}</nobr>
+                                </span>
                             {% else %}
                                 {% with result.player as player %}
                                     {% if player %}

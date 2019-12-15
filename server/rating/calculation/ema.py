@@ -14,7 +14,7 @@ class RatingEMACalculation(RatingRRCalculation):
     IS_EMA = True
 
     def get_players(self):
-        return list(Player.objects.exclude(ema_id='').exclude(ema_id=None))
+        return list(Player.objects.exclude(ema_id='').exclude(ema_id=None).exclude(is_hide=True))
 
     def get_base_query(self, rating, start_date, rating_date):
         types = [Tournament.EMA, Tournament.FOREIGN_EMA]
