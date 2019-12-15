@@ -63,22 +63,15 @@ class EMARatingTestCase(TestCase, RatingTestMixin):
         self.create_tournament_result(tournament, 3, self.create_player(country_code='3'))
         self.create_tournament_result(tournament, 4, self.create_player(country_code='4'))
         self.create_tournament_result(tournament, 5, self.create_player(country_code='5'))
-
         self.assertEqual(calculator.countries_coefficient(tournament), 0)
 
         self.create_tournament_result(tournament, 6, self.create_player(country_code='6'))
-
-        self.assertEqual(calculator.countries_coefficient(tournament), 0.5)
-
         self.create_tournament_result(tournament, 7, self.create_player(country_code='7'))
         self.create_tournament_result(tournament, 8, self.create_player(country_code='8'))
         self.create_tournament_result(tournament, 9, self.create_player(country_code='9'))
-        self.create_tournament_result(tournament, 10, self.create_player(country_code='10'))
-
         self.assertEqual(calculator.countries_coefficient(tournament), 0.5)
 
-        self.create_tournament_result(tournament, 11, self.create_player(country_code='11'))
-
+        self.create_tournament_result(tournament, 10, self.create_player(country_code='10'))
         self.assertEqual(calculator.countries_coefficient(tournament), 1)
 
     def test_tournament_coefficient_and_qualification(self):

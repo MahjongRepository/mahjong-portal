@@ -110,14 +110,16 @@ class RatingEMACalculation(RatingRRCalculation):
         first_part_denominator_calculation = []
 
         second_part_numerator_calculation = []
-        second_part_denominator_calculation  = []
+        second_part_denominator_calculation = []
 
         first_part_numerator = 0
         first_part_denominator = 0
 
         for result in tournaments_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             first_part_numerator += float(result.delta)
             first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
@@ -151,7 +153,9 @@ class RatingEMACalculation(RatingRRCalculation):
         best_results = sorted(deltas, key=lambda x: x.base_rank, reverse=True)[:self.SECOND_PART_MIN_TOURNAMENTS]
         for result in best_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             second_part_numerator += float(result.delta)
             second_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
@@ -233,7 +237,7 @@ class RatingEMACalculation(RatingRRCalculation):
         number_of_countries = len(results)
         if number_of_countries <= 5:
             return 0.0
-        elif 5 < number_of_countries <= 10:
+        elif 5 < number_of_countries < 10:
             return 0.5
         else:
             return 1.0

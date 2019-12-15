@@ -345,7 +345,9 @@ class RatingRRCalculation(object):
 
         for result in tournaments_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             first_part_numerator += float(result.delta)
             first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
@@ -379,7 +381,9 @@ class RatingRRCalculation(object):
         best_results = sorted(deltas, key=lambda x: x.delta, reverse=True)[:self.SECOND_PART_MIN_TOURNAMENTS]
         for result in best_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             second_part_numerator += float(result.delta)
 
