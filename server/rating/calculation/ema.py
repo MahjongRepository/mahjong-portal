@@ -174,6 +174,14 @@ class RatingEMACalculation(RatingRRCalculation):
                     floatformat(coefficient_obj.age / 100, -2))
                 )
 
+        if len(tournaments_results) < self.SECOND_PART_MIN_TOURNAMENTS:
+            fill_missed_data = self.SECOND_PART_MIN_TOURNAMENTS - len(best_results)
+            second_part_denominator += fill_missed_data
+
+            for x in range(0, fill_missed_data):
+                second_part_numerator_calculation.append('0')
+                second_part_denominator_calculation.append('1')
+
         second_part = second_part_numerator / second_part_denominator
 
         score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(
