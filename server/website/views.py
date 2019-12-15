@@ -270,7 +270,7 @@ def export_tournament_results(request, tournament_id):
     tournament = Tournament.objects.get(id=tournament_id)
 
     for result in tournament.results.all().order_by('place'):
-        player = Player.all_objects.get(id=result.player_id)
+        player = Player.objects.get(id=result.player_id)
 
         rows.append([
             '{} {}'.format(tournament.name_en, tournament.end_date.year),

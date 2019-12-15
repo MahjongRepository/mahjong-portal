@@ -225,7 +225,12 @@ class RatingEMACalculation(RatingRRCalculation):
         return days
 
     def countries_coefficient(self, tournament):
-        results = TournamentResult.objects.filter(tournament=tournament).values_list('player__country__code', flat=True).distinct()
+        results = (TournamentResult.objects
+                   .filter(tournament=tournament)
+                   .filter(player__country__isnull=False)
+                   .values_list('player__country__code', flat=True)
+                   .distinct())
+        print(results)
         number_of_countries = len(results)
         if number_of_countries <= 5:
             return 0.0

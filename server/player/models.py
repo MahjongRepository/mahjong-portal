@@ -6,15 +6,6 @@ from mahjong_portal.models import BaseModel
 from settings.models import Country, City
 
 
-class PlayerManager(models.Manager):
-
-    def get_queryset(self):
-        # don't show hidden players in the lists
-        return (super(PlayerManager, self).get_queryset()
-                                          .exclude(is_hide=True)
-                                          .exclude(is_replacement=True))
-
-
 class Player(BaseModel):
     FEMALE = 0
     MALE = 1
@@ -24,9 +15,6 @@ class Player(BaseModel):
         [MALE, 'm'],
         [NONE, ''],
     ]
-
-    objects = PlayerManager()
-    all_objects = models.Manager()
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
