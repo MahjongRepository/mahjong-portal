@@ -150,7 +150,9 @@ class RatingEMACalculation(RatingRRCalculation):
         second_part_numerator = 0
         second_part_denominator = 0
 
-        best_results = sorted(deltas, key=lambda x: x.base_rank, reverse=True)[:self.SECOND_PART_MIN_TOURNAMENTS]
+        best_results = sorted(
+            deltas, key=lambda x: (x.base_rank, -coefficients_cache[x.tournament_id].coefficient), reverse=True
+        )[:self.SECOND_PART_MIN_TOURNAMENTS]
         for result in best_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
             coefficient = get_tournament_coefficient(
