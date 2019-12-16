@@ -282,7 +282,7 @@ def export_tournament_results(request, tournament_id):
             '1',
             result.scores,
             player.ema_id and 'YES' or '',
-            player.country.name_en == 'Russia' and 'RUS' or '',
+            player.country and player.country.name_en == 'Russia' and 'RUS' or '',
             tournament.end_date.strftime('%m/%d/%Y'),
             'RUS',
             tournament.city.name_en,
