@@ -4,6 +4,10 @@ from django.http import JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
+from rating.calculation.crr import RatingCRRCalculation
+from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
+from rating.calculation.online import RatingOnlineCalculation
+from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingResult, RatingDelta, TournamentCoefficients
 from tournament.models import Tournament
 
@@ -80,6 +84,7 @@ def rating_tournaments(request, slug):
                    .prefetch_related('city')
                    .prefetch_related('country')
                    .order_by('-end_date'))
+
     coefficients = TournamentCoefficients.objects.filter(
         tournament_id__in=tournament_ids,
         rating=rating,
@@ -88,14 +93,47 @@ def rating_tournaments(request, slug):
         'tournament_id',
         '-date',
     ).distinct('tournament_id')
-    coefficients_dict = {coef.tournament_id: coef for coef in coefficients}
-    top_tournaments_number = 3 if rating.is_online() else 4  # TODO: Брать из класса подсчета рейтинга
-    top_coefficients = sorted(
-        coefficients,
-        key=lambda t: (float(t.age) / 100.0) * float(t.coefficient),
-        reverse=True,
-    )[:top_tournaments_number]
-    top_tournament_ids = [coef.tournament_id for coef in top_coefficients]
+
+    if rating.type == Rating.EMA:
+        coefficients_dict = {}
+        top_tournament_ids = []
+    else:
+        stages_tournament_ids = HARDCODED_COEFFICIENTS.keys()
+
+        coefficients_dict = {}
+        for coefficient in coefficients:
+            coefficients_dict[coefficient.tournament_id] = {
+                'value': (float(coefficient.age) / 100.0) * float(coefficient.coefficient),
+                'age': coefficient.age,
+                'coefficient': coefficient.coefficient,
+                'tournament_id': coefficient.tournament_id
+            }
+
+            if coefficient.tournament_id in stages_tournament_ids:
+                stage_coefficients = list(set(HARDCODED_COEFFICIENTS[coefficient.tournament_id].values()))
+                for x in stage_coefficients:
+                    value = (float(coefficient.age) / 100.0) * float(x)
+                    coefficients_dict[coefficient.tournament_id] = {
+                        'coefficient': x,
+                        'age': coefficient.age,
+                        'value': value,
+                        'tournament_id': coefficient.tournament_id
+                    }
+
+        top_tournaments_number = {
+            Rating.RR: RatingRRCalculation.SECOND_PART_MIN_TOURNAMENTS,
+            Rating.CRR: RatingCRRCalculation.SECOND_PART_MIN_TOURNAMENTS,
+            Rating.ONLINE: RatingOnlineCalculation.SECOND_PART_MIN_TOURNAMENTS,
+        }.get(rating.type)
+
+        top_coefficients = sorted(
+            coefficients_dict.values(),
+            key=lambda t: t['value'],
+            reverse=True,
+        )[:top_tournaments_number]
+
+        top_tournament_ids = [c['tournament_id'] for c in top_coefficients]
+
     return render(request, 'rating/rating_tournaments.html', {
         'rating': rating,
         'tournaments': tournaments,
