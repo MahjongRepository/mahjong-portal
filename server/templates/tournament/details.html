@@ -51,7 +51,7 @@
                 <tbody>
                 {% for result in results %}
                     <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
+                        <th scope="row">{{ result.place }}</th>
                         <td>
                             {% if result.player.is_replacement or result.player.is_hide %}
                                 <span class="d-none d-md-block">
