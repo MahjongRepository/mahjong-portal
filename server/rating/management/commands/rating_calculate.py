@@ -34,13 +34,6 @@ class Command(BaseCommand):
         rating_date = None
         today = datetime.datetime.now().date()
 
-        if not Rating.objects.filter(type=Rating.EMA).exists():
-            Rating.objects.create(
-                name='EMA',
-                slug='ema',
-                type=Rating.EMA
-            )
-
         if rating_type == 'ema':
             if latest:
                 rating_date = today

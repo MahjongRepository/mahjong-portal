@@ -75,12 +75,19 @@ class RatingEMACalculation(RatingRRCalculation):
                 tournaments_results = deltas
             else:
                 limit = self._determine_tournaments_number(total_tournaments)
-                tournaments_results = sorted(deltas, key=lambda x: x.base_rank, reverse=True)[:limit]
+                tournaments_results = sorted(
+                    deltas, key=lambda x: (x.base_rank, x.tournament.end_date), reverse=True
+                )[:limit]
 
-            best_rating_calculation, best_score = self._calculate_player_rating(player, tournaments_results,
-                                                                                deltas, coefficients_cache,
-                                                                                max_coefficient,
-                                                                                selected_coefficients, is_last)
+            best_rating_calculation, best_score = self._calculate_player_rating(
+                player,
+                tournaments_results,
+                deltas,
+                coefficients_cache,
+                max_coefficient,
+                selected_coefficients,
+                is_last
+            )
             best_tournament_results_option = tournaments_results
 
             if is_last:
@@ -151,7 +158,7 @@ class RatingEMACalculation(RatingRRCalculation):
         second_part_denominator = 0
 
         best_results = sorted(
-            deltas, key=lambda x: (x.base_rank, -coefficients_cache[x.tournament_id].coefficient), reverse=True
+            deltas, key=lambda x: (x.base_rank, x.tournament.end_date), reverse=True
         )[:self.SECOND_PART_MIN_TOURNAMENTS]
         for result in best_results:
             coefficient_obj = coefficients_cache[result.tournament_id]

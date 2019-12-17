@@ -75,10 +75,11 @@ class Command(BaseCommand):
                         format_player(ema_player)
                     ))
 
-                if player['first_name'] != ema_player['first_name'] or player['last_name'] != ema_player['last_name']:
-                    print('Not identical names: our={} ema={}'.format(
-                        format_player(player),
-                        format_player(ema_player)
+                if player['first_name'].title() != ema_player['first_name'].title() \
+                        or player['last_name'].title() != ema_player['last_name'].title():
+                    print('Names mismatch: id= {} {}'.format(
+                        '{}'.format(ema_id),
+                        'f= {} l= {}'.format(ema_player['first_name'], ema_player['last_name'])
                     ))
             else:
                 missed.append(ema_player)
