@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 
 from rating.models import RatingResult, Rating
@@ -25,9 +27,16 @@ def ema_quotas(request):
 
     ema_ratings = RatingResult.objects.filter(
         rating__type=Rating.EMA,
-        is_last=True
+        date=datetime.date(2020, 1, 1)
     ).prefetch_related('player', 'rating', 'player__country')
     countries_data = _get_countries_data(ema_ratings)
+
+    for rank, data in enumerate(countries_data):
+        data['b_quota'] = 0
+        data['country_players'] = len(data['players_rating'])
+        data['country_required_rating_players'] = len(
+            [x for x in data['players_rating'] if x['score'] >= scores_required]
+        )
 
     quotas = {}
 
@@ -42,12 +51,6 @@ def ema_quotas(request):
             'rank': rank + 1,
             'seats': 1
         }
-
-        data['b_quota'] = 0
-        data['country_players'] = len(data['players_rating'])
-        data['country_required_rating_players'] = len(
-            [x for x in data['players_rating'] if x['score'] >= scores_required]
-        )
 
     # After this, seats will be given to all countries with a player with >700 points, in
     # descending order of country ranking (part A3)
@@ -84,21 +87,16 @@ def ema_quotas(request):
             b3 = (b1 + b2) / 2
             data['b_coefficient'] = b3 * n
 
-            # round_digits = 2
-            # b1 = round(country_players / total_players, round_digits)
-            # b2 = round(country_required_rating_players / total_required_rating_players, round_digits)
-            # b3 = round((b1 + b2) / 2, round_digits)
-            # data['b_coefficient'] = round(b3 * n, round_digits)
-
         # Increase the B-quota of the country with the largest B3*N that is also smaller than its
         # current B-quota by 1
-        countries_data = sorted(countries_data, key=lambda x: x['b_coefficient'], reverse=True)
+        countries_data = sorted(countries_data, key=lambda x: x['b_coefficient'] - x['b_quota'], reverse=True)
         for data in countries_data:
-            if data['b_quota'] < data['b_coefficient']:
+            if data['b_quota'] <= data['b_coefficient']:
                 data['b_quota'] += 1
                 break
 
     total_quotas = 0
+    countries_data = sorted(countries_data, key=lambda x: x['country_rating'])
     for data in countries_data:
         country = data['country']
         quotas[country.code]['seats'] += data['b_quota']

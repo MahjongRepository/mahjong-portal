@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-17 08:13+0000\n"
+"POT-Creation-Date: 2019-12-17 12:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,7 +141,7 @@ msgstr "Рейтинги"
 msgid "About"
 msgstr "О рейтингах"
 
-#: templates/base.html:56 templates/base.html:103
+#: templates/base.html:56 templates/base.html:104
 #: templates/club/tournaments.html:5 templates/club/tournaments.html:27
 #: templates/club/tournaments.html:34 templates/club/tournaments.html:35
 #: templates/player/rating_details.html:238 templates/player/tournaments.html:5
@@ -165,69 +165,73 @@ msgstr "Рейтинг"
 msgid "EMA Countries Ranking"
 msgstr "EMA рейтинг стран"
 
-#: templates/base.html:68 templates/club/list.html:10
+#: templates/base.html:65
+msgid "EMA Quotas"
+msgstr "EMA квоты"
+
+#: templates/base.html:69 templates/club/list.html:10
 #: templates/website/city.html:11
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:72
+#: templates/base.html:73
 msgid "Online"
 msgstr "Онлайн"
 
-#: templates/base.html:75 templates/tenhou/tenhou_games.html:5
+#: templates/base.html:76 templates/tenhou/tenhou_games.html:5
 #: templates/tenhou/tenhou_games.html:15 templates/tenhou/tenhou_games.html:16
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: templates/base.html:76 templates/tenhou/tenhou_accounts.html:5
+#: templates/base.html:77 templates/tenhou/tenhou_accounts.html:5
 #: templates/tenhou/tenhou_accounts.html:10
 #: templates/tenhou/tenhou_accounts.html:72
 #: templates/tenhou/tenhou_accounts.html:73
 msgid "Tenhou accounts"
 msgstr "Аккаунты на тенхе"
 
-#: templates/base.html:77 templates/ms/ms_accounts.html:5
+#: templates/base.html:78 templates/ms/ms_accounts.html:5
 #: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:71
 #: templates/ms/ms_accounts.html:72
 msgid "Mahjong soul accounts"
 msgstr "Аккаунты на Mahjong Soul"
 
-#: templates/base.html:78 templates/tenhou/games_history.html:5
+#: templates/base.html:79 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
 #: templates/tenhou/games_history.html:106
 #: templates/tenhou/games_history.html:107
 msgid "Tenhou games history"
 msgstr "История игр на tenhou.net"
 
-#: templates/base.html:79 templates/tenhou/latest_yakumans.html:5
+#: templates/base.html:80 templates/tenhou/latest_yakumans.html:5
 #: templates/tenhou/latest_yakumans.html:10
 #: templates/tenhou/latest_yakumans.html:50
 #: templates/tenhou/latest_yakumans.html:51
 msgid "Latest yakumans"
 msgstr "Якуманы"
 
-#: templates/base.html:84 templates/tournament/application.html:85
+#: templates/base.html:85 templates/tournament/application.html:85
 #: tournament/models.py:313
 msgid "Other"
 msgstr "Другое"
 
-#: templates/base.html:87 templates/website/contacts_en.html:5
+#: templates/base.html:88 templates/website/contacts_en.html:5
 #: templates/website/contacts_ru.html:5
 msgid "Contacts"
 msgstr "Развитие"
 
-#: templates/base.html:88 templates/tournament/application.html:5
+#: templates/base.html:89 templates/tournament/application.html:5
 #: templates/tournament/application.html:10
 #: templates/tournament/application.html:105
 #: templates/tournament/application.html:106
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: templates/base.html:98
+#: templates/base.html:99
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:99 templates/ema_players_admin/add_player.html:5
+#: templates/base.html:100 templates/ema_players_admin/add_player.html:5
 #: templates/ema_players_admin/players_list.html:5
 #: templates/system_index.html:5
 #: templates/tournament_admin/managed_tournaments.html:5
@@ -239,15 +243,15 @@ msgstr "Django админка"
 msgid "Admin page"
 msgstr "Админка"
 
-#: templates/base.html:108
+#: templates/base.html:109
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:115 templates/base.html:116
+#: templates/base.html:116 templates/base.html:117
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/base.html:130
+#: templates/base.html:131
 msgid "source code"
 msgstr "исходный код"
 
@@ -358,7 +362,7 @@ msgstr "Город"
 msgid "List with map of all russian riichi mahjong clubs"
 msgstr "Список и карта всех российских риичи маджонг клубов"
 
-#: templates/ema/best_countries.html:16
+#: templates/ema/best_countries.html:16 templates/ema/quotas.html:16
 #: templates/tournament/_tournaments_table.html:12
 msgid "Country"
 msgstr "Страна"
@@ -372,19 +376,38 @@ msgid "Avg. rank of best 3"
 msgstr "Ср. трёх лучших игроков"
 
 #: templates/ema/best_countries.html:19
-#| msgid "Player"
 msgid "Player #1"
 msgstr "Игрок #1"
 
 #: templates/ema/best_countries.html:20
-#| msgid "Player"
 msgid "Player #2"
 msgstr "Игрок #2"
 
 #: templates/ema/best_countries.html:21
-#| msgid "Player"
 msgid "Player #3"
 msgstr "Игрок #3"
+
+#: templates/ema/quotas.html:5 templates/ema/quotas.html:10
+msgid "EMA Quotas for RCR Events"
+msgstr "EMA квоты"
+
+#: templates/ema/quotas.html:11
+msgid "Calculated quotas number on the 1st January 2020."
+msgstr "Количество квот для каждой страны на 1 января 2010 года."
+
+#: templates/ema/quotas.html:17
+#| msgid "Country"
+msgid "Country Rank"
+msgstr "Ранг страны"
+
+#: templates/ema/quotas.html:18
+msgid "Seats available"
+msgstr "Количество квот"
+
+#: templates/ema/quotas.html:30
+#| msgid "Total"
+msgid "Total Quota"
+msgstr "Всего квот"
 
 #: templates/ms/ms_accounts.html:12
 msgid "Statistics is updating once a hour."
@@ -1289,3 +1312,7 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
+
+#~| msgid "Country"
+#~ msgid "Rankig Country"
+#~ msgstr "Страна"
