@@ -40,6 +40,7 @@ urlpatterns += i18n_patterns(
     url(r'^tenhou/', include('player.tenhou.urls')),
     url(r'^ms/', include('player.mahjong_soul.urls')),
     url(r'^system/', include('system.urls')),
+    url(r'^ema/', include('ema.urls')),
 
     url(r'^login/$', auth_views.LoginView.as_view(template_name='account/login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
