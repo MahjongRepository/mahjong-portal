@@ -62,6 +62,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{% url 'rating' 'ema' %}">{% trans 'Rating' %}</a>
                     <a class="dropdown-item" href="{% url 'best_countries' %}">{% trans 'EMA Countries Ranking' %}</a>
+                    <a class="dropdown-item" href="{% url 'ema_quotas' %}">{% trans 'EMA Quotas' %}</a>
                 </div>
             </li>
             <li class="nav-item {% if page == 'club' %}active{% endif %}">
