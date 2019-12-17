@@ -393,7 +393,7 @@ msgstr "EMA квоты"
 
 #: templates/ema/quotas.html:11
 msgid "Calculated quotas number on the 1st January 2020."
-msgstr "Количество квот для каждой страны на 1 января 2010 года."
+msgstr "Количество квот для каждой страны на 1 января 2020 года."
 
 #: templates/ema/quotas.html:17
 #| msgid "Country"
