@@ -35,6 +35,8 @@ class Command(BaseCommand):
         today = datetime.datetime.now().date()
 
         if rating_type == 'ema':
+            today = datetime.date(2019, 12, 11)
+            # today = today - datetime.timedelta(days=2)
             if latest:
                 rating_date = today
             else:
