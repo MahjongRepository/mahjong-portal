@@ -46,7 +46,7 @@ def ema_quotas(request):
         data['b_quota'] = 0
         data['country_players'] = len(data['players_rating'])
         data['country_required_rating_players'] = len(
-            [x for x in data['players_rating'] if x['score'] > scores_required]
+            [x for x in data['players_rating'] if x['score'] >= scores_required]
         )
 
     # After this, seats will be given to all countries with a player with >700 points, in
@@ -68,10 +68,8 @@ def ema_quotas(request):
         quotas[country.code]['seats'] += 1
 
     # Finally, any leftover seats will be distributed using part B of the quota formula.
-    total_players = sum([len(x['players_rating']) for x in countries_data])
-    total_required_rating_players = sum([len(
-        [y for y in x['players_rating'] if y['score'] > scores_required]
-    ) for x in countries_data])
+    total_players = sum([data['country_players'] for data in countries_data])
+    total_required_rating_players = sum([data['country_required_rating_players'] for data in countries_data])
 
     n = 0
     while n < available_seats:
