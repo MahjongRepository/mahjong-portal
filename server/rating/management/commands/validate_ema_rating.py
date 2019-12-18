@@ -1,3 +1,6 @@
+import datetime
+import os
+
 import requests
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
@@ -13,6 +16,20 @@ class Command(BaseCommand):
 
         page = requests.get(url)
         soup = BeautifulSoup(page.content, 'html.parser', from_encoding='utf-8')
+
+        date_block = soup.find('span', {'class': 'createdate'})
+        if not date_block:
+            print('no rating date')
+            return
+
+        try:
+            rating_date = ' '.join([x.strip() for x in date_block.text.split(',')[1:]])
+            rating_date = datetime.datetime.strptime(rating_date, '%B %d %Y').date()
+        except Exception:
+            print('Cant parse: {}'.format(date_block.text))
+            return
+
+        print('Rating date: {}'.format(rating_date))
 
         ranking_list = soup.findAll('div', {'class': 'Tableau_CertifiedTournament'})
         ranking_list = ranking_list[1]
@@ -32,8 +49,7 @@ class Command(BaseCommand):
             first_name = data[5].text.strip()
             scores = int(data[7].text.strip())
 
-            if last_name == 'Wo&Zacute;Niak':
-                last_name = 'Woźniak'
+            country_code = os.path.basename(data[6].find('img')['src']).replace('.png', '').upper()
 
             ema_players[ema_id] = {
                 'place': place,
@@ -41,17 +57,23 @@ class Command(BaseCommand):
                 'first_name': first_name,
                 'scores': scores,
                 'ema_id': ema_id,
+                'country_code': country_code,
             }
 
+        results = (RatingResult.objects
+                   .filter(rating__type=Rating.EMA, is_last=True)
+                   .filter(date=rating_date)
+                   .prefetch_related('player', 'player__country'))
         players = {}
-        for result in RatingResult.objects.filter(rating__type=Rating.EMA, is_last=True):
-            players[result.player.ema_id] = {
+        for result in results:
+            player = result.player
+            players[player.ema_id] = {
                 'place': result.place,
-                'last_name': result.player.last_name_en,
-                'first_name': result.player.first_name_en,
-                # round didn't work as ema for 0.5 scores
+                'last_name': player.last_name_en,
+                'first_name': player.first_name_en,
                 'scores': int(floatformat(result.score, 0)),
-                'ema_id': result.player.ema_id,
+                'ema_id': player.ema_id,
+                'country_code': player.country.code,
             }
 
         missed = []
@@ -72,6 +94,13 @@ class Command(BaseCommand):
                     print('Not correct place: {} {}. For {}'.format(
                         ema_player['place'],
                         player['place'],
+                        format_player(ema_player)
+                    ))
+
+                if player['country_code'] != ema_player['country_code']:
+                    print('Not correct country: {} {}. For {}'.format(
+                        ema_player['country_code'],
+                        player['country_code'],
                         format_player(ema_player)
                     ))
 
