@@ -43,9 +43,9 @@ class Command(BaseCommand):
 
             calculator = RatingEMACalculation()
             rating = Rating.objects.get(type=Rating.EMA)
-            types = [Tournament.EMA, Tournament.FOREIGN_EMA]
+            types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
             tournaments = Tournament.public.filter(
-                Q(tournament_type__in=types) | Q(need_qualification=True)
+                Q(tournament_type__in=types)
             ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'rr':

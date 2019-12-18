@@ -26,6 +26,7 @@ class Tournament(BaseModel):
     FOREIGN_EMA = 'fema'
     OTHER = 'other'
     ONLINE = 'online'
+    CHAMPIONSHIP = 'champ'
 
     GAME_TYPES = [
         [RIICHI, 'Riichi'],
@@ -39,6 +40,7 @@ class Tournament(BaseModel):
         [FOREIGN_EMA, 'fema'],
         [OTHER, 'other'],
         [ONLINE, 'online'],
+        [CHAMPIONSHIP, 'champ.'],
     ]
 
     objects = models.Manager()
@@ -66,8 +68,8 @@ class Tournament(BaseModel):
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
     is_event = models.BooleanField(default=False)
-    # we need it only to EMA rating, probably can be removed
-    need_qualification = models.BooleanField(default=False)
+
+    russian_cup = models.BooleanField(default=False)
 
     # tournament setting, tournament admin can change them
     fill_city_in_registration = models.BooleanField(default=True)
@@ -103,6 +105,9 @@ class Tournament(BaseModel):
         if self.is_online():
             return 'warning'
 
+        if self.is_championship():
+            return 'championship'
+
         return 'info'
 
     @property
@@ -130,7 +135,7 @@ class Tournament(BaseModel):
 
     @property
     def rating_link(self):
-        if self.is_other() or self.is_ema():
+        if self.is_other() or self.is_championship():
             return ''
 
         tournament_type = self.tournament_type
@@ -154,6 +159,9 @@ class Tournament(BaseModel):
     def is_other(self):
         return self.tournament_type == self.OTHER
 
+    def is_championship(self):
+        return self.tournament_type == self.CHAMPIONSHIP
+
     def is_stage_tournament(self):
         return self.id == AGARI_TOURNAMENT_ID
 
@@ -162,6 +170,14 @@ class Tournament(BaseModel):
             return self.online_tournament_registrations.filter(is_approved=True)
         else:
             return self.tournament_registrations.filter(is_approved=True)
+
+    def championship_tournament_results(self):
+        results = TournamentResult.objects.filter(tournament=self).order_by('place')
+        if self.tournament_type == Tournament.CHAMPIONSHIP:
+            results = results.filter(player__country__code='RU')
+        else:
+            results = results[:8]
+        return results
 
 
 class TournamentResult(BaseModel):

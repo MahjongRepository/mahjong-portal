@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Hall of Fame' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'Championships' %}</h2>
+        <p>{% trans 'Hall of Fame' %}.</p>
+
+        {% for tournament in championships %}
+            <h4>
+                <a href="{% url 'tournament_details' tournament.slug %}">{{ tournament.name }}</a>
+            </h4>
+            {% include 'tournament/_tournament_top_header.html' %}
+            {% include 'tournament/_tournament_header.html' %}
+            {% with tournament.championship_tournament_results as results %}
+                {% include 'tournament/_tournament_results.html' %}
+            {% endwith %}
+        {% endfor %}
+    </div>
+{% endblock %}

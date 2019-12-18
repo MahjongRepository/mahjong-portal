@@ -88,6 +88,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{% url 'contacts' %}">{% trans 'Contacts' %}</a>
                     <a class="dropdown-item" href="{% url 'tournament_application' %}">{% trans 'Tournament application' %}</a>
+                    <a class="dropdown-item" href="{% url 'championships' %}">{% trans 'Championships' %}</a>
                 </div>
             </li>
             {% if user.is_authenticated %}

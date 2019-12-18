@@ -17,10 +17,10 @@ class RatingEMACalculation(RatingRRCalculation):
         return list(Player.objects.exclude(ema_id='').exclude(ema_id=None).exclude(is_hide=True))
 
     def get_base_query(self, rating, start_date, rating_date):
-        types = [Tournament.EMA, Tournament.FOREIGN_EMA]
+        types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
         base_query = (RatingDelta.objects
                       .filter(rating=rating)
-                      .filter(Q(tournament__tournament_type__in=types) | Q(tournament__need_qualification=True))
+                      .filter(tournament__tournament_type__in=types)
                       .filter(Q(tournament__end_date__gt=start_date) & Q(tournament__end_date__lte=rating_date))
                       .filter(date=rating_date))
         return base_query
@@ -260,7 +260,7 @@ class RatingEMACalculation(RatingRRCalculation):
             return 1.0
 
     def qualification_coefficient(self, tournament):
-        return tournament.need_qualification and 1 or 0
+        return tournament.tournament_type == Tournament.CHAMPIONSHIP and 1 or 0
 
     def tournament_age(self, end_date, rating_date):
         diff = relativedelta(rating_date, end_date)

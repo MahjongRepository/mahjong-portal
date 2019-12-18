@@ -3,6 +3,7 @@ import datetime
 import io
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
@@ -55,6 +56,16 @@ def about(request):
 
     return render(request, 'website/{}'.format(template), {
         'page': 'about'
+    })
+
+
+def championships(request):
+    championships = Tournament.objects.filter(
+        Q(tournament_type=Tournament.CHAMPIONSHIP) | Q(russian_cup=True)
+    ).order_by('-end_date')
+
+    return render(request, 'website/championships.html', {
+        'championships': championships
     })
 
 

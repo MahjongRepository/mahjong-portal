@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from rating.calculation.ema import RatingEMACalculation
 from rating.mixins import RatingTestMixin
+from tournament.models import Tournament
 
 
 class EMARatingTestCase(TestCase, RatingTestMixin):
@@ -77,8 +78,8 @@ class EMARatingTestCase(TestCase, RatingTestMixin):
     def test_tournament_coefficient_and_qualification(self):
         calculator = RatingEMACalculation()
 
-        tournament = self.create_tournament(need_qualification=False)
+        tournament = self.create_tournament(tournament_type=Tournament.EMA)
         self.assertEqual(calculator.qualification_coefficient(tournament), 0)
 
-        tournament = self.create_tournament(need_qualification=True)
+        tournament = self.create_tournament(tournament_type=Tournament.CHAMPIONSHIP)
         self.assertEqual(calculator.qualification_coefficient(tournament), 1)
