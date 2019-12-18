@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'system.tournament_admin',
     'account',
     'online',
+    'ema'
 ]
 
 MIDDLEWARE = [

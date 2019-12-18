@@ -59,7 +59,12 @@ class RatingDelta(BaseModel):
     @property
     def coefficient_value(self):
         coefficient_obj = self.coefficient_obj
-        return get_tournament_coefficient(self.tournament_id, self.player, coefficient_obj.coefficient)
+        return get_tournament_coefficient(
+            self.rating.type == Rating.EMA,
+            self.tournament_id,
+            self.player,
+            coefficient_obj.coefficient
+        )
 
 
 class RatingResult(BaseModel):

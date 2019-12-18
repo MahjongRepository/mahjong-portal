@@ -30,7 +30,7 @@ class PlayerAdmin(admin.ModelAdmin):
     search_fields = ['first_name_ru', 'first_name_en', 'last_name_ru', 'last_name_en', 'ema_id']
 
     def get_queryset(self, request):
-        return Player.all_objects.all()
+        return Player.objects.all()
 
 
 class PlayerERMCAdmin(admin.ModelAdmin):

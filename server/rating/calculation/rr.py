@@ -250,7 +250,7 @@ class RatingRRCalculation(object):
         Determine player delta and tournament properties
         """
         tournament_coefficient = self.tournament_coefficient(tournament)
-        tournament_coefficient = get_tournament_coefficient(tournament.id, player, tournament_coefficient)
+        tournament_coefficient = get_tournament_coefficient(self.IS_EMA, tournament.id, player, tournament_coefficient)
 
         base_rank = self.calculate_base_rank(tournament_result, tournament)
         # for ema we had to round base rank
@@ -345,7 +345,9 @@ class RatingRRCalculation(object):
 
         for result in tournaments_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             first_part_numerator += float(result.delta)
             first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
@@ -379,7 +381,9 @@ class RatingRRCalculation(object):
         best_results = sorted(deltas, key=lambda x: x.delta, reverse=True)[:self.SECOND_PART_MIN_TOURNAMENTS]
         for result in best_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             second_part_numerator += float(result.delta)
 
@@ -417,7 +421,7 @@ class RatingRRCalculation(object):
                 ' + '.join(second_part_numerator_calculation),
                 second_part
             )
-            total_calculation = 'score = {} * {} + {} * {}'.format(
+            total_calculation = 'score = {} * {} + {} * {} = {}'.format(
                 first_part,
                 self.FIRST_PART_WEIGHT / 100,
                 second_part,

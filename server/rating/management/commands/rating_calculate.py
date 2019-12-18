@@ -2,9 +2,11 @@ import datetime
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
+from rating.calculation.ema import RatingEMACalculation
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingDelta, RatingResult
@@ -19,19 +21,38 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('rating_type', type=str)
+        parser.add_argument('--latest', type=bool, default=False)
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
         rating_type = options['rating_type']
+        latest = options['latest']
         rating = None
         tournaments = None
         calculator = None
         rating_date = None
         today = datetime.datetime.now().date()
 
+        if rating_type == 'ema':
+            # today = datetime.date(2019, 12, 11)
+            if latest:
+                rating_date = today
+            else:
+                rating_date = today - datetime.timedelta(days=365 * 2)
+
+            calculator = RatingEMACalculation()
+            rating = Rating.objects.get(type=Rating.EMA)
+            types = [Tournament.EMA, Tournament.FOREIGN_EMA]
+            tournaments = Tournament.public.filter(
+                Q(tournament_type__in=types) | Q(need_qualification=True)
+            ).filter(is_upcoming=False).order_by('end_date')
+
         if rating_type == 'rr':
-            rating_date = today - datetime.timedelta(days=365 * 2)
+            if latest:
+                rating_date = today
+            else:
+                rating_date = today - datetime.timedelta(days=365 * 2)
 
             calculator = RatingRRCalculation()
             rating = Rating.objects.get(type=Rating.RR)
@@ -41,7 +62,10 @@ class Command(BaseCommand):
             ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'crr':
-            rating_date = today - datetime.timedelta(days=365 * 2)
+            if latest:
+                rating_date = today
+            else:
+                rating_date = today - datetime.timedelta(days=365 * 2)
 
             calculator = RatingCRRCalculation()
             rating = Rating.objects.get(type=Rating.CRR)
@@ -51,7 +75,10 @@ class Command(BaseCommand):
             ).filter(is_upcoming=False).order_by('end_date')
 
         if rating_type == 'online':
-            rating_date = today - datetime.timedelta(days=913)
+            if latest:
+                rating_date = today
+            else:
+                rating_date = today - datetime.timedelta(days=913)
 
             calculator = RatingOnlineCalculation()
             rating = Rating.objects.get(type=Rating.ONLINE)
@@ -110,26 +137,27 @@ class Command(BaseCommand):
                 calculate_last_date=True
             )
 
-            important_dates = [
-                # ERMC 2019 qualification date
-                datetime.date(2019, 1, 1),
-                # WRC 2020 probably qualification date #1
-                datetime.date(2020, 1, 1),
-                # WRC 2020 probably qualification date #2
-                datetime.date(2020, 2, 1),
-                # WRC 2020 probably qualification date #3
-                datetime.date(2020, 3, 1),
-                # just a date
-                datetime.date(2021, 1, 1),
-            ]
+            if not latest:
+                important_dates = [
+                    # ERMC 2019 qualification date
+                    datetime.date(2019, 1, 1),
+                    # WRC 2020 probably qualification date #1
+                    datetime.date(2020, 1, 1),
+                    # WRC 2020 probably qualification date #2
+                    datetime.date(2020, 2, 1),
+                    # WRC 2020 probably qualification date #3
+                    datetime.date(2020, 3, 1),
+                    # just a date
+                    datetime.date(2021, 1, 1),
+                ]
 
-            self.calculate_rating(
-                important_dates,
-                tournaments,
-                calculator,
-                rating,
-                calculate_last_date=False
-            )
+                self.calculate_rating(
+                    important_dates,
+                    tournaments,
+                    calculator,
+                    rating,
+                    calculate_last_date=False
+                )
 
         print('{0}: End'.format(get_date_string()))
 

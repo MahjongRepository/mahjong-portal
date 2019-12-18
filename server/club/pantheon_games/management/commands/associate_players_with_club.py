@@ -66,14 +66,14 @@ class Command(BaseCommand):
             # so lets try to load player with pantheon id
             if not player:
                 try:
-                    player = Player.all_objects.get(pantheon_id=pantheon_player.id)
+                    player = Player.objects.get(pantheon_id=pantheon_player.id)
                 except Player.DoesNotExist:
                     pass
 
             # let's try to match player by first and last name
             if not player:
                 try:
-                    player = Player.all_objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                    player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
                     player.pantheon_id = pantheon_player.id
                     player.save()
                 except Player.DoesNotExist:
@@ -83,7 +83,7 @@ class Command(BaseCommand):
                     # let's try to add city to query
                     try:
                         print(last_name)
-                        player = Player.all_objects.get(
+                        player = Player.objects.get(
                             first_name_ru=first_name,
                             last_name_ru=last_name,
                             city=club.city
