@@ -2,14 +2,9 @@ import csv
 import datetime
 
 from django.core.management.base import BaseCommand
-from django.db import transaction
-from django.db.models import Q
 from django.utils import timezone
 
 from player.models import Player
-from rating.calculation.crr import RatingCRRCalculation
-from rating.calculation.ema import RatingEMACalculation
-from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
 from tournament.models import Tournament, TournamentResult
