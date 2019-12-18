@@ -25,7 +25,11 @@
                 {% for item in countries %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ item.country.name }}</td>
+                        <td>
+                            <a href="{% url 'rating' 'ema' item.country.code %}">
+                                {{ item.country }}
+                            </a>
+                        </td>
                         <td>{{ item.number_of_players }}</td>
                         <td>{{ item.country_rating|floatformat:-2 }}</td>
                         <td>

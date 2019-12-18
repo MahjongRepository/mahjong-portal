@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-17 12:57+0000\n"
+"POT-Creation-Date: 2019-12-18 03:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -396,7 +396,6 @@ msgid "Calculated quotas number on the 1st January 2020."
 msgstr "Количество квот для каждой страны на 1 января 2020 года."
 
 #: templates/ema/quotas.html:17
-#| msgid "Country"
 msgid "Country Rank"
 msgstr "Ранг страны"
 
@@ -405,7 +404,6 @@ msgid "Seats available"
 msgstr "Количество квот"
 
 #: templates/ema/quotas.html:30
-#| msgid "Total"
 msgid "Total Quota"
 msgstr "Всего квот"
 
@@ -618,11 +616,16 @@ msgctxt "location"
 msgid "From"
 msgstr "Откуда"
 
-#: templates/rating/details.html:17
+#: templates/rating/details.html:18
 msgid "Rating date"
-msgstr "Рейтинг на дату"
+msgstr "Рейтинг на"
 
-#: templates/rating/details.html:22
+#: templates/rating/details.html:18
+#| msgid "Rating changes"
+msgid "latest changes"
+msgstr "последние изменения"
+
+#: templates/rating/details.html:23
 msgid "What tournaments were included to the rating?"
 msgstr "Список турниров влияющих на этот рейтинг"
 

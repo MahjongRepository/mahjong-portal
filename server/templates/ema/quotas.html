@@ -10,7 +10,7 @@
         <h2>{% trans 'EMA Quotas for RCR Events' %}</h2>
         <p>{% trans 'Calculated quotas number on the 1st January 2020.' %}</p>
         <div class="table-responsive-sm">
-            <table class="table table-hover mt-4" style="max-width: 400px">
+            <table class="table table-hover mt-4" style="max-width: 500px">
                 <thead>
                 <tr>
                     <th scope="col">{% trans 'Country' %}</th>
@@ -21,7 +21,11 @@
                 <tbody>
                 {% for item in quotas %}
                     <tr>
-                        <td>{{ item.country.code }}</td>
+                        <td>
+                            <a href="{% url 'rating' 'ema' item.country.code %}">
+                                {{ item.country }}
+                            </a>
+                        </td>
                         <td>{{ item.rank }}</td>
                         <td>{{ item.seats }}</td>
                     </tr>

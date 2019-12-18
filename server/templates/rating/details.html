@@ -14,7 +14,7 @@
         {% endif %}
 
         {% if rating_results %}
-            <p>{% trans 'Rating date' %} {{ rating_date }}</p>
+            <p>{% trans 'Rating date' %} {{ rating_date }} ({% trans 'latest changes' %} {{ closest_date }})</p>
 
             {% if is_last %}
                 <p class="d-print-none">
@@ -23,6 +23,14 @@
                     </a>
                 </p>
             {% endif %}
+
+            {% for country_data in countries_data %}
+                <a href="{% url 'rating' 'ema' country_data.country.code %}">
+                    <span class="badge badge-{% if country_data.country.code == country_code %}success{% else %}primary{% endif %}">
+                        {{ country_data.country }} ({{ country_data.players }})
+                    </span>
+                </a>
+            {% endfor %}
 
             {% include 'rating/_results_table.html' %}
         {% endif %}

@@ -9,6 +9,7 @@ from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingResult, RatingDelta, TournamentCoefficients
+from settings.models import Country
 from tournament.models import Tournament
 
 
@@ -21,7 +22,7 @@ def rating_list(request):
     })
 
 
-def rating_details(request, slug, year=None, month=None, day=None):
+def rating_details(request, slug, year=None, month=None, day=None, country_code=None):
     rating = get_object_or_404(Rating, slug=slug)
 
     rating_date = datetime.now().date()
@@ -34,11 +35,11 @@ def rating_details(request, slug, year=None, month=None, day=None):
             raise Http404
 
     rating_results = (RatingResult.objects
-                                  .filter(rating=rating)
-                                  .prefetch_related('player')
-                                  .prefetch_related('player__city')
-                                  .prefetch_related('player__country')
-                                  .order_by('place'))
+                      .filter(rating=rating)
+                      .prefetch_related('player')
+                      .prefetch_related('player__city')
+                      .prefetch_related('player__country')
+                      .order_by('place'))
 
     closest_date = RatingResult.objects.filter(rating=rating, date__lte=rating_date).order_by('date')
     if closest_date.exists():
@@ -50,6 +51,28 @@ def rating_details(request, slug, year=None, month=None, day=None):
 
     if rating.is_online():
         rating_results = rating_results.prefetch_related('player__tenhou')
+
+    countries_data = {}
+    if rating.type == Rating.EMA:
+        countries_data = {}
+        for rating_result in rating_results:
+            country = rating_result.player.country
+            if country.code not in countries_data:
+                countries_data[country.code] = {
+                    'players': 0,
+                    'country': country
+                }
+
+            countries_data[country.code]['players'] += 1
+
+        countries_data = sorted(countries_data.values(), key=lambda x: x['players'], reverse=True)
+
+        if country_code:
+            try:
+                country = Country.objects.get(code=country_code)
+                rating_results = rating_results.filter(player__country=country)
+            except Country.DoesNotExist:
+                pass
 
     render_as_json = request.GET.get('json')
     if render_as_json is not None:
@@ -69,7 +92,10 @@ def rating_details(request, slug, year=None, month=None, day=None):
         'rating_results': rating_results,
         'rating_date': rating_date,
         'is_last': is_last,
-        'page': 'rating'
+        'page': 'rating',
+        'countries_data': countries_data,
+        'closest_date': closest_date,
+        'country_code': country_code
     })
 
 
