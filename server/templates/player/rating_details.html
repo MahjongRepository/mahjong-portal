@@ -185,15 +185,7 @@
 {% block content %}
     <div>
         <h1>{{ player.full_name }}</h1>
-        <p>
-            {% trans 'From' %}
-            {% if player.city %}
-                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>,
-                {{ player.country.name }}
-            {% else %}
-                {{ player.country.name|genitive|title }}
-            {% endif %}
-        </p>
+        {% include 'player/_player_header.html' %}
 
         <p><a href="{% url 'player_details' player.slug %}">{% trans 'Player page' %}</a></p>
 

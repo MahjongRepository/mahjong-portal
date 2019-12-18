@@ -8,19 +8,7 @@
 {% block content %}
     <div>
         <h1>{{ player.full_name }}</h1>
-        <p>
-            {% trans 'From' %}
-            {% if player.city %}
-                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>,
-                {{ player.country.name }}
-            {% else %}
-                {{ player.country.name|genitive|title }}
-            {% endif %}
-        </p>
-
-        {% if player.ema_id %}
-            <p>EMA: <a href="http://mahjong-europe.org/ranking/Players/{{ player.ema_id }}.html" target="_blank">{{ player.ema_id }}</a></p>
-        {% endif %}
+        {% include 'player/_player_header.html' %}
 
         {% if rating_results %}
             <h4>{% trans 'Ratings' %}</h4>

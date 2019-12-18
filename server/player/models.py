@@ -63,6 +63,20 @@ class Player(BaseModel):
                 .order_by('-ema_id'))
 
 
+class PlayerTitle(BaseModel):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='titles')
+    text = models.CharField(max_length=255)
+    background_color = models.CharField(max_length=7)
+    text_color = models.CharField(max_length=7)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __unicode__(self):
+        return self.text
+
+
 class PlayerERMC(BaseModel):
     GREEN = 0
     YELLOW = 1

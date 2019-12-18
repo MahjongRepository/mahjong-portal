@@ -1,0 +1,28 @@
+{% load i18n russian_words_morph %}
+
+{% with player.titles.all as titles %}
+    {% if titles %}
+        <p>
+            {% for title in titles %}
+                <span class="badge badge-primary" style="background-color: {{ title.background_color }}; color: {{ title.text_color }}">
+                    {{ title.text }}
+                </span>
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endwith %}
+
+<p>
+    {% trans 'From' %}
+    {% if player.city %}
+        <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>, {{ player.country.name }}
+    {% else %}
+        {{ player.country.name|genitive|title }}
+    {% endif %}
+</p>
+
+{% if player.ema_id %}
+    <p>
+        EMA: <a href="http://mahjong-europe.org/ranking/Players/{{ player.ema_id }}.html" target="_blank">{{ player.ema_id }}</a>
+    </p>
+{% endif %}

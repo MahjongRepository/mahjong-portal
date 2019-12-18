@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from player.models import Player, PlayerERMC
+from player.models import Player, PlayerERMC, PlayerTitle
 from player.tenhou.models import TenhouNickname
 
 
@@ -33,6 +33,21 @@ class PlayerAdmin(admin.ModelAdmin):
         return Player.objects.all()
 
 
+class PlayerTitleForm(forms.ModelForm):
+
+    class Meta:
+        model = Player
+        exclude = ['text']
+
+
+class PlayerTitleAdmin(admin.ModelAdmin):
+    form = PlayerTitleForm
+
+    search_fields = ['player__last_name', 'player__first_name']
+    list_display = ['player', 'text', 'background_color', 'text_color']
+    raw_id_fields = ['player']
+
+
 class PlayerERMCAdmin(admin.ModelAdmin):
     search_fields = ['player__first_name_ru', 'player__first_name_en', 'player__last_name_ru', 'player__last_name_en']
     list_display = ['player', 'state', 'federation_member']
@@ -42,3 +57,4 @@ class PlayerERMCAdmin(admin.ModelAdmin):
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(PlayerERMC, PlayerERMCAdmin)
+admin.site.register(PlayerTitle, PlayerTitleAdmin)
