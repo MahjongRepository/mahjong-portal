@@ -29,8 +29,6 @@ class Command(BaseCommand):
             print('Cant parse: {}'.format(date_block.text))
             return
 
-        print('Rating date: {}'.format(rating_date))
-
         ranking_list = soup.findAll('div', {'class': 'Tableau_CertifiedTournament'})
         ranking_list = ranking_list[1]
 
@@ -49,6 +47,9 @@ class Command(BaseCommand):
             first_name = data[5].text.strip()
             scores = int(data[7].text.strip())
 
+            if last_name == 'Wo&Zacute;Niak':
+                last_name = 'Woźniak'
+
             country_code = os.path.basename(data[6].find('img')['src']).replace('.png', '').upper()
 
             ema_players[ema_id] = {
@@ -60,10 +61,15 @@ class Command(BaseCommand):
                 'country_code': country_code,
             }
 
+        closest_date = RatingResult.objects.filter(rating__type=Rating.EMA, date__gt=rating_date).order_by('date')
+        closest_date = closest_date.first().date
+
         results = (RatingResult.objects
-                   .filter(rating__type=Rating.EMA, is_last=True)
-                   .filter(date=rating_date)
-                   .prefetch_related('player', 'player__country'))
+                   .filter(rating__type=Rating.EMA)
+                   .filter(date=closest_date)
+                   .prefetch_related('player', 'player__country')
+                   .order_by('score'))
+
         players = {}
         for result in results:
             player = result.player
@@ -122,6 +128,10 @@ class Command(BaseCommand):
             if ema_id not in ema_players:
                 player = players[ema_id]
                 print('User had to be removed from rating: {}'.format(format_player(player)))
+
+        print('')
+        print('EMA rating date: {}'.format(rating_date))
+        print('Our rating date: {}'.format(closest_date))
 
 
 def format_player(player):
