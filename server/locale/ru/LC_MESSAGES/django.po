@@ -1006,7 +1006,7 @@ msgstr "Успех!"
 
 #: templates/website/championships.html:5
 #: templates/website/championships.html:11
-msgid "Hall of Fame"
+msgid "Hall of Fame."
 msgstr "Зал славы. Чемпионаты России, Европы и Мира."
 
 #: templates/website/city.html:39
