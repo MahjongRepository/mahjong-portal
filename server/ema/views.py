@@ -3,12 +3,15 @@ import datetime
 from django.shortcuts import render
 
 from rating.models import RatingResult, Rating
+from rating.utils import get_latest_rating_date
 
 
 def best_countries(request):
+    rating = Rating.objects.get(type=Rating.EMA)
+    today, rating_date = get_latest_rating_date(rating)
     ema_ratings = RatingResult.objects.filter(
-        rating__type=Rating.EMA,
-        is_last=True
+        rating=rating,
+        date=rating_date
     ).prefetch_related('player', 'rating', 'player__country')
     countries = _get_countries_data(ema_ratings)
     return render(request, 'ema/best_countries.html', {'countries': countries})

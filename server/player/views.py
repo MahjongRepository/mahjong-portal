@@ -2,7 +2,6 @@ from collections import defaultdict
 
 from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
 
 from club.club_games.models import ClubRating
 from player.models import Player
