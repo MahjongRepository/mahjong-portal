@@ -41,7 +41,6 @@ class RatingDelta(BaseModel):
     player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='rating_delta')
     tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name='rating_delta')
     is_active = models.BooleanField(default=False)
-    is_last = models.BooleanField(default=False)
 
     base_rank = models.DecimalField(decimal_places=2, max_digits=10)
     delta = models.DecimalField(decimal_places=2, max_digits=10)
@@ -74,7 +73,6 @@ class RatingResult(BaseModel):
     score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
-    is_last = models.BooleanField(default=False, db_index=True)
 
     rating_calculation = models.TextField(null=True, blank=True)
 
@@ -101,3 +99,15 @@ class TournamentCoefficients(BaseModel):
 
     def __unicode__(self):
         return self.rating.name
+
+
+class RatingDate(BaseModel):
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
+    date = models.DateField(db_index=True)
+    is_future = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __unicode__(self):
+        return self.rating.__unicode__()

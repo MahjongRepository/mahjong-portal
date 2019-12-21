@@ -73,7 +73,7 @@ class Command(BaseCommand):
                 rating
             )
 
-            results = RatingResult.objects.filter(rating=rating, is_last=True)[:15]
+            results = RatingResult.objects.filter(rating=rating, date=rating_date)[:15]
             for result in results:
                 data.append([
                     result.player.last_name_ru,

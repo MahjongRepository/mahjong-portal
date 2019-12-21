@@ -25,7 +25,7 @@ class RatingEMACalculation(RatingRRCalculation):
                       .filter(date=rating_date))
         return base_query
 
-    def calculate_players_rating_rank(self, rating, rating_date, is_last):
+    def calculate_players_rating_rank(self, rating, rating_date):
         results = []
         two_years_ago = self.get_date(rating_date)
 
@@ -86,12 +86,10 @@ class RatingEMACalculation(RatingRRCalculation):
                 coefficients_cache,
                 max_coefficient,
                 selected_coefficients,
-                is_last
             )
             best_tournament_results_option = tournaments_results
 
-            if is_last:
-                RatingDelta.objects.filter(id__in=[x.id for x in best_tournament_results_option]).update(is_active=True)
+            RatingDelta.objects.filter(id__in=[x.id for x in best_tournament_results_option]).update(is_active=True)
 
             results.append(RatingResult(
                 rating=rating,
@@ -100,7 +98,6 @@ class RatingEMACalculation(RatingRRCalculation):
                 place=0,
                 rating_calculation=best_rating_calculation,
                 date=rating_date,
-                is_last=is_last
             ))
 
         place = 1
@@ -112,7 +109,7 @@ class RatingEMACalculation(RatingRRCalculation):
         RatingResult.objects.bulk_create(results)
 
     def _calculate_player_rating(self, player, tournaments_results, deltas, coefficients_cache,
-                                 max_coefficient, selected_coefficients, is_last):
+                                 max_coefficient, selected_coefficients):
         first_part_numerator_calculation = []
         first_part_denominator_calculation = []
 
@@ -131,26 +128,24 @@ class RatingEMACalculation(RatingRRCalculation):
             first_part_numerator += float(result.delta)
             first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
 
-            if is_last:
-                first_part_numerator_calculation.append('{} * {} * {}'.format(
-                    floatformat(result.base_rank, -2),
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2)
-                ))
+            first_part_numerator_calculation.append('{} * {} * {}'.format(
+                floatformat(result.base_rank, -2),
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2)
+            ))
 
-                first_part_denominator_calculation.append('{} * {}'.format(
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2)
-                ))
+            first_part_denominator_calculation.append('{} * {}'.format(
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2)
+            ))
 
         if len(tournaments_results) < self.FIRST_PART_MIN_TOURNAMENTS:
             fill_missed_data = self.FIRST_PART_MIN_TOURNAMENTS - len(tournaments_results)
             first_part_denominator += fill_missed_data
 
-            if is_last:
-                for x in range(0, fill_missed_data):
-                    first_part_numerator_calculation.append('0')
-                    first_part_denominator_calculation.append('1')
+            for x in range(0, fill_missed_data):
+                first_part_numerator_calculation.append('0')
+                first_part_denominator_calculation.append('1')
 
         first_part = first_part_numerator / first_part_denominator
 
@@ -169,17 +164,16 @@ class RatingEMACalculation(RatingRRCalculation):
             second_part_numerator += float(result.delta)
             second_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
 
-            if is_last:
-                second_part_numerator_calculation.append('{} * {} * {}'.format(
-                    floatformat(result.base_rank, -2),
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2)
-                ))
+            second_part_numerator_calculation.append('{} * {} * {}'.format(
+                floatformat(result.base_rank, -2),
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2)
+            ))
 
-                second_part_denominator_calculation.append('{} * {}'.format(
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2))
-                )
+            second_part_denominator_calculation.append('{} * {}'.format(
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2))
+            )
 
         if len(tournaments_results) < self.SECOND_PART_MIN_TOURNAMENTS:
             fill_missed_data = self.SECOND_PART_MIN_TOURNAMENTS - len(best_results)
@@ -195,30 +189,28 @@ class RatingEMACalculation(RatingRRCalculation):
             second_part, self.SECOND_PART_WEIGHT
         )
 
-        rating_calculation = ''
-        if is_last:
-            first_part_calculation = 'p1 = ({}) / ({}) = {}'.format(
-                ' + '.join(first_part_numerator_calculation),
-                ' + '.join(first_part_denominator_calculation),
-                first_part
-            )
-            second_part_calculation = 'p2 = ({}) / ({}) = {}'.format(
-                ' + '.join(second_part_numerator_calculation),
-                ' + '.join(second_part_denominator_calculation),
-                second_part
-            )
-            total_calculation = 'score = {} * {} + {} * {} = {}'.format(
-                first_part,
-                self.FIRST_PART_WEIGHT / 100,
-                second_part,
-                self.SECOND_PART_WEIGHT / 100,
-                score
-            )
-            rating_calculation = '\n\n'.join((
-                first_part_calculation,
-                second_part_calculation,
-                total_calculation,
-            ))
+        first_part_calculation = 'p1 = ({}) / ({}) = {}'.format(
+            ' + '.join(first_part_numerator_calculation),
+            ' + '.join(first_part_denominator_calculation),
+            first_part
+        )
+        second_part_calculation = 'p2 = ({}) / ({}) = {}'.format(
+            ' + '.join(second_part_numerator_calculation),
+            ' + '.join(second_part_denominator_calculation),
+            second_part
+        )
+        total_calculation = 'score = {} * {} + {} * {} = {}'.format(
+            first_part,
+            self.FIRST_PART_WEIGHT / 100,
+            second_part,
+            self.SECOND_PART_WEIGHT / 100,
+            score
+        )
+        rating_calculation = '\n\n'.join((
+            first_part_calculation,
+            second_part_calculation,
+            total_calculation,
+        ))
 
         return rating_calculation, score
 
