@@ -8,7 +8,8 @@ from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
-from rating.models import Rating, RatingResult, RatingDelta, TournamentCoefficients
+from rating.models import Rating, RatingResult, RatingDelta, TournamentCoefficients, RatingDate
+from rating.utils import get_latest_rating_date, parse_rating_date
 from settings.models import Country
 from tournament.models import Tournament
 
@@ -25,14 +26,9 @@ def rating_list(request):
 def rating_details(request, slug, year=None, month=None, day=None, country_code=None):
     rating = get_object_or_404(Rating, slug=slug)
 
-    rating_date = datetime.now().date()
-    is_last = True
-    if year and month and day:
-        try:
-            rating_date = datetime(int(year), int(month), int(day)).date()
-            is_last = False
-        except ValueError:
-            raise Http404
+    today, rating_date, is_last = parse_rating_date(year, month, day)
+    if not rating_date:
+        today, rating_date = get_latest_rating_date(rating)
 
     rating_results = (RatingResult.objects
                       .filter(rating=rating)
@@ -43,11 +39,11 @@ def rating_details(request, slug, year=None, month=None, day=None, country_code=
 
     closest_date = RatingResult.objects.filter(rating=rating, date__lte=rating_date).order_by('date')
     if closest_date.exists():
-        closest_date = closest_date.last().date
+        rating_date = closest_date.last().date
     else:
         raise Http404
 
-    rating_results = rating_results.filter(date=closest_date)
+    rating_results = rating_results.filter(date=rating_date)
 
     if rating.is_online():
         rating_results = rating_results.prefetch_related('player__tenhou')
@@ -95,7 +91,17 @@ def rating_details(request, slug, year=None, month=None, day=None, country_code=
         'page': 'rating',
         'countries_data': countries_data,
         'closest_date': closest_date,
-        'country_code': country_code
+        'country_code': country_code,
+        'today': today,
+    })
+
+
+def rating_dates(request, slug):
+    rating = get_object_or_404(Rating, slug=slug)
+    rating_dates = RatingDate.objects.filter(rating=rating).order_by('-date')
+    return render(request, 'rating/dates.html', {
+        'rating': rating,
+        'rating_dates': rating_dates
     })
 
 

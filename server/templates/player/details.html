@@ -27,9 +27,15 @@
                     {% for rating_result in rating_results %}
                         <tr>
                             <td width="250px">
-                                <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
-                                    {{ rating_result.rating.name }}
-                                </a>
+                                {% if rating_date %}
+                                    <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug rating_date.year rating_date.month rating_date.day %}">
+                                        {{ rating_result.rating.name }}
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
+                                        {{ rating_result.rating.name }}
+                                    </a>
+                                {% endif %}
                             </td>
                             <td>
                                 {{ rating_result.place }}

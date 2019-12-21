@@ -17,13 +17,13 @@
 
         {% for x in filtered_results %}
             labels.push('{{ x.result.date|date:SHORT_DATE_FORMAT }}');
-            tournaments = []
+            tournaments = [];
             {% for c in x.coefficients %}
                 tournaments.push({
                     'name': '{{ c.tournament_name }}',
                     'age': '{{ c.age|floatformat:"0" }}',
                     'previous_age': '{{ c.previous_age|floatformat:"0" }}',
-                })
+                });
             {% endfor %}
             rating_data.push(
                 {
@@ -191,8 +191,12 @@
 
         <h2>{{ rating.name }}</h2>
 
+        <p class="small mt-0">
+            {% trans 'Rating date' %} {{ today }} ({% trans 'latest changes' %} {{ rating_date }}).
+        </p>
+
         <p>
-            {{ rating_result.place }} {% trans 'place' %}  ({{ rating_result.score }})
+            {{ rating_result.place }} {% trans 'place' %}  ({{ rating_result.score }}).
         </p>
 
         <p class="mb-2">
@@ -227,6 +231,7 @@
         <div class="collapse" id="ChangesTableCollapse">
           {% include 'player/_changes_table.html' %}
         </div>
+
         <h4 class="mt-4">{% trans 'Tournaments' %}</h4>
         {% with deltas=rating_deltas %}
             {% include 'player/_deltas_table.html' %}

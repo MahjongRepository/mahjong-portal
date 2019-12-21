@@ -14,15 +14,17 @@ from haystack.forms import ModelSearchForm
 from club.models import Club
 from player.models import Player, PlayerERMC
 from rating.models import Rating, RatingResult
+from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
 
 
 def home(request):
     rating = Rating.objects.get(type=Rating.RR)
+    today, rating_date = get_latest_rating_date(rating)
     rating_results = (RatingResult.objects
                                   .filter(rating=rating)
-                                  .filter(is_last=True)
+                                  .filter(date=rating_date)
                                   .prefetch_related('player')
                                   .prefetch_related('player__city')
                                   .order_by('place'))[:16]
@@ -45,7 +47,9 @@ def home(request):
         'rating_results': rating_results,
         'rating': rating,
         'upcoming_tournaments': upcoming_tournaments,
-        'events': events
+        'events': events,
+        'rating_date': rating_date,
+        'today': today,
     })
 
 
