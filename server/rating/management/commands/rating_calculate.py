@@ -157,7 +157,6 @@ class Command(BaseCommand):
             ).delete()
 
             limited_tournaments = tournaments.filter(end_date__lte=rating_date)
-
             print(rating_date, limited_tournaments.count())
 
             for tournament in limited_tournaments:
