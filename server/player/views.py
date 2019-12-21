@@ -113,6 +113,27 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
     })
 
 
+def player_rating_changes(request, slug, rating_slug, year=None, month=None, day=None):
+    player = get_object_or_404(Player, slug=slug)
+    rating = get_object_or_404(Rating, slug=rating_slug)
+
+    today, rating_date, is_last = parse_rating_date(year, month, day)
+    if not rating_date:
+        today, rating_date = get_latest_rating_date(rating)
+
+    rating_result = get_object_or_404(RatingResult, rating=rating, player=player, date=rating_date)
+    filtered_results = reversed(_get_rating_changes(rating, player, today))
+
+    return render(request, 'player/rating_changes.html', {
+        'player': player,
+        'rating': rating,
+        'results': filtered_results,
+        'rating_date': rating_date,
+        'today': today,
+        'rating_result': rating_result,
+    })
+
+
 def _get_rating_changes(rating, player, today):
     tournament_coefficients = TournamentCoefficients.objects.filter(
         tournament__results__player=player,

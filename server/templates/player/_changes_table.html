@@ -11,7 +11,7 @@
         </tr>
         </thead>
         <tbody>
-            {% for x in filtered_results|slice:":-11:-1" %}
+            {% for x in results %}
                 <tr>
                     <td nowrap>
                         {{ x.result.date|date:SHORT_DATE_FORMAT }}
@@ -20,14 +20,22 @@
                         {% if x.previous_place == x.result.place %}
                             {{ x.result.place }}
                         {% else %}
-                            {{ x.previous_place }} -> {{ x.result.place }}
+                            {% if x.previous_place == -1 %}
+                                {{ x.result.place }}
+                            {% else %}
+                                {{ x.previous_place }} -> {{ x.result.place }}
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td nowrap>
                         {% if x.previous_score == x.result.score %}
                             {{ x.previous_score }}
                         {% else %}
-                            {{ x.previous_score }} -> {{ x.result.score }}
+                            {% if x.previous_score == -1 %}
+                                {{ x.result.score }}
+                            {% else %}
+                                {{ x.previous_score }} -> {{ x.result.score }}
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td>

@@ -229,7 +229,20 @@
           </a>
         </p>
         <div class="collapse" id="ChangesTableCollapse">
-          {% include 'player/_changes_table.html' %}
+            <div class="mb-2">
+                {% if is_last %}
+                    <a href="{% url 'player_rating_changes' player.slug rating.slug rating_date.year rating_date.month rating_date.day %}">
+                        {% trans 'all results' %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'player_rating_changes' player.slug rating.slug %}">
+                        {% trans 'all results' %}
+                    </a>
+                {% endif %}
+            </div>
+            {% with filtered_results|slice:":-11:-1" as results %}
+                {% include 'player/_changes_table.html' %}
+            {% endwith %}
         </div>
 
         <h4 class="mt-4">{% trans 'Tournaments' %}</h4>
