@@ -52,7 +52,10 @@ def ema_quotas(request):
         quotas[country.code] = {
             'country': country,
             'rank': rank + 1,
-            'seats': 1
+            'base_seat': 1,
+            'scores_700_seat': 0,
+            'top_3_seats': 0,
+            'b_part_seats': 0,
         }
 
     # After this, seats will be given to all countries with a player with >700 points, in
@@ -63,7 +66,7 @@ def ema_quotas(request):
             continue
 
         available_seats -= 1
-        quotas[country.code]['seats'] += 1
+        quotas[country.code]['scores_700_seat'] = 1
 
     # Then seats will be given to the top 3 ranked countries in the EMA, in descending
     # order of country ranking (part A2)
@@ -71,7 +74,7 @@ def ema_quotas(request):
     for data in countries_data[:top_countries]:
         country = data['country']
         available_seats -= 1
-        quotas[country.code]['seats'] += 1
+        quotas[country.code]['top_3_seats'] = 1
 
     # Finally, any leftover seats will be distributed using part B of the quota formula.
     total_players = sum([data['country_players'] for data in countries_data])
@@ -102,7 +105,14 @@ def ema_quotas(request):
     countries_data = sorted(countries_data, key=lambda x: x['country_rating'])
     for data in countries_data:
         country = data['country']
-        quotas[country.code]['seats'] += data['b_quota']
+        quotas[country.code]['b_part_seats'] = data['b_quota']
+
+        quotas[country.code]['seats'] = sum([
+            quotas[country.code]['scores_700_seat'],
+            quotas[country.code]['base_seat'],
+            quotas[country.code]['top_3_seats'],
+            quotas[country.code]['b_part_seats'],
+        ])
 
         total_quotas += quotas[country.code]['seats']
 

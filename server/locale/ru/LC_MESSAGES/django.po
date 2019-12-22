@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-22 02:28+0000\n"
+"POT-Creation-Date: 2019-12-22 09:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -406,10 +406,24 @@ msgid "Country Rank"
 msgstr "Ранг страны"
 
 #: templates/ema/quotas.html:18
-msgid "Seats available"
-msgstr "Количество квот"
+#| msgid "Base rank"
+msgid "Base"
+msgstr "База"
 
-#: templates/ema/quotas.html:34
+#: templates/ema/quotas.html:19
+#| msgid "Club rating"
+msgid "700+ rating"
+msgstr "700+ рейтинга"
+
+#: templates/ema/quotas.html:20
+msgid "Top 3"
+msgstr "Топ 3"
+
+#: templates/ema/quotas.html:21
+msgid "B part"
+msgstr "Б часть"
+
+#: templates/ema/quotas.html:42
 msgid "Total Quota"
 msgstr "Всего квот"
 
@@ -637,7 +651,6 @@ msgid "All time"
 msgstr "За всё время"
 
 #: templates/rating/_results_table.html:7
-#| msgid "All time"
 msgid "All dates"
 msgstr "Все даты"
 
@@ -649,7 +662,6 @@ msgid "From"
 msgstr "Откуда"
 
 #: templates/rating/dates.html:11
-#| msgid "Club rating"
 msgid "current rating"
 msgstr "текущий рейтинг"
 
@@ -1343,6 +1355,9 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
+
+#~ msgid "Seats available"
+#~ msgstr "Количество квот"
 
 #~| msgid "Country"
 #~ msgid "Rankig Country"
