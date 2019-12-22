@@ -50,6 +50,7 @@ def home(request):
         'events': events,
         'rating_date': rating_date,
         'today': today,
+        'is_last': True
     })
 
 

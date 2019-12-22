@@ -109,6 +109,7 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
         'top_tournament_ids': top_tournament_ids,
         'rating_date': rating_date,
         'today': today,
+        'is_last': is_last,
     })
 
 
