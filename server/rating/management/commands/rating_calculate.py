@@ -71,14 +71,8 @@ class Command(BaseCommand):
                        .order_by('end_date'))
 
         if specified_date:
-            specified_date = datetime.datetime.strptime(specified_date, '%Y-%m-%d')
+            specified_date = datetime.datetime.strptime(specified_date, '%Y-%m-%d').date()
             RatingDate.objects.filter(
-                rating=rating, date=specified_date
-            ).delete()
-            RatingResult.objects.filter(
-                rating=rating, date=specified_date
-            ).delete()
-            RatingDelta.objects.filter(
                 rating=rating, date=specified_date
             ).delete()
 

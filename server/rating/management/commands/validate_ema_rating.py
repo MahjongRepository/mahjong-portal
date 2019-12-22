@@ -12,11 +12,11 @@ from rating.models import RatingResult, Rating
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('--date', type=str)
+        parser.add_argument('date', type=str)
 
     def handle(self, *args, **options):
         our_rating_date = options['date']
-        our_rating_date = datetime.datetime.strptime(our_rating_date, '%Y-%m-%d')
+        our_rating_date = datetime.datetime.strptime(our_rating_date, '%Y-%m-%d').date()
 
         url = 'http://mahjong-europe.org/ranking/rcr.html'
 
