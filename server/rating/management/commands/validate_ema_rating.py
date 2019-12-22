@@ -11,7 +11,13 @@ from rating.models import RatingResult, Rating
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument('--date', type=str)
+
     def handle(self, *args, **options):
+        our_rating_date = options['date']
+        our_rating_date = datetime.datetime.strptime(our_rating_date, '%Y-%m-%d')
+
         url = 'http://mahjong-europe.org/ranking/rcr.html'
 
         page = requests.get(url)
@@ -61,14 +67,15 @@ class Command(BaseCommand):
                 'country_code': country_code,
             }
 
-        closest_date = RatingResult.objects.filter(rating__type=Rating.EMA, date__gt=rating_date).order_by('date')
-        closest_date = closest_date.first().date
-
         results = (RatingResult.objects
                    .filter(rating__type=Rating.EMA)
-                   .filter(date=closest_date)
+                   .filter(date=our_rating_date)
                    .prefetch_related('player', 'player__country')
                    .order_by('score'))
+
+        if not results.exists():
+            print('No rating results on {}'.format(our_rating_date))
+            return
 
         players = {}
         for result in results:
@@ -131,7 +138,7 @@ class Command(BaseCommand):
 
         print('')
         print('EMA rating date: {}'.format(rating_date))
-        print('Our rating date: {}'.format(closest_date))
+        print('Our rating date: {}'.format(our_rating_date))
 
 
 def format_player(player):

@@ -17,7 +17,7 @@ class Command(BaseCommand):
         tournament = Tournament.objects.get(id=tournament_id)
 
         today = datetime.datetime.now().date()
-        tournament_date = tournament.end_date - datetime.timedelta(days=1)
+        tournament_date = tournament.end_date
         calculator = RatingRRCalculation()
 
         tournaments_diff = {}

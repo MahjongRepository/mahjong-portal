@@ -20,11 +20,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('rating_type', type=str)
+        parser.add_argument('--date', type=str)
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
         rating_type = options['rating_type']
+        specified_date = options['date']
 
         today = datetime.datetime.now().date()
 
@@ -67,6 +69,26 @@ class Command(BaseCommand):
                        .filter(tournament_type__in=rating_data['tournament_types'])
                        .filter(is_upcoming=False)
                        .order_by('end_date'))
+
+        if specified_date:
+            specified_date = datetime.datetime.strptime(specified_date, '%Y-%m-%d')
+            RatingDate.objects.filter(
+                rating=rating, date=specified_date
+            ).delete()
+            RatingResult.objects.filter(
+                rating=rating, date=specified_date
+            ).delete()
+            RatingDelta.objects.filter(
+                rating=rating, date=specified_date
+            ).delete()
+
+            dates_to_recalculate = [datetime.datetime.strptime(specified_date, '%Y-%m-%d')]
+            self.calculate_rating(
+                dates_to_recalculate,
+                tournaments,
+                calculator,
+                rating
+            )
 
         print('Calculating dates...')
 
