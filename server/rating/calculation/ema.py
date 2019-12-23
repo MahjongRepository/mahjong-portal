@@ -14,7 +14,11 @@ class RatingEMACalculation(RatingRRCalculation):
     IS_EMA = True
 
     def get_players(self):
-        return list(Player.objects.exclude(ema_id='').exclude(ema_id=None).exclude(is_replacement=True, is_hide=True))
+        return list(Player.objects
+                    .exclude(ema_id='')
+                    .exclude(ema_id=None)
+                    .exclude(is_replacement=True)
+                    .exclude(is_hide=True))
 
     def get_base_query(self, rating, start_date, rating_date):
         types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
@@ -179,7 +183,7 @@ class RatingEMACalculation(RatingRRCalculation):
             fill_missed_data = self.SECOND_PART_MIN_TOURNAMENTS - len(best_results)
             second_part_denominator += fill_missed_data
 
-            for x in range(0, fill_missed_data):
+            for _ in range(0, fill_missed_data):
                 second_part_numerator_calculation.append('0')
                 second_part_denominator_calculation.append('1')
 

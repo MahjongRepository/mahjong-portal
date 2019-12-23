@@ -21,12 +21,14 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('rating_type', type=str)
         parser.add_argument('--date', type=str)
+        parser.add_argument('--from-zero', type=bool, default=False)
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
 
         rating_type = options['rating_type']
         specified_date = options['date']
+        from_zero = options['from_zero']
 
         today = datetime.datetime.now().date()
 
@@ -87,6 +89,12 @@ class Command(BaseCommand):
         print('Calculating dates...')
 
         with transaction.atomic():
+            if from_zero:
+                print('Erasing dates...')
+                RatingDate.objects.filter(rating=rating).delete()
+                RatingResult.objects.filter(rating=rating).delete()
+                RatingDelta.objects.filter(rating=rating).delete()
+
             dates_to_process, rating_date = self.find_tournament_dates_changes(
                 rating_date,
                 today,
@@ -126,18 +134,7 @@ class Command(BaseCommand):
                 datetime.date(2020, 2, 1),
             ]
 
-            first_future_date = future_dates[0]
             latest_future_date = future_dates[-1]
-
-            RatingDate.objects.filter(
-                rating=rating, date__gte=first_future_date
-            ).delete()
-            RatingResult.objects.filter(
-                rating=rating, date__gte=first_future_date
-            ).delete()
-            RatingDelta.objects.filter(
-                rating=rating, date__gte=first_future_date
-            ).delete()
 
             dates_to_process, _ = self.find_tournament_dates_changes(
                 rating_date,
@@ -148,6 +145,17 @@ class Command(BaseCommand):
 
             dates_to_recalculate = sorted(list(set(dates_to_process + future_dates)))
             print('Dates to process: {}'.format(len(dates_to_recalculate)))
+
+            first_future_date = dates_to_recalculate[0]
+            RatingDate.objects.filter(
+                rating=rating, date__gte=first_future_date
+            ).delete()
+            RatingResult.objects.filter(
+                rating=rating, date__gte=first_future_date
+            ).delete()
+            RatingDelta.objects.filter(
+                rating=rating, date__gte=first_future_date
+            ).delete()
 
             self.calculate_rating(
                 dates_to_recalculate,
