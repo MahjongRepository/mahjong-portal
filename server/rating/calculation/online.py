@@ -26,7 +26,7 @@ class RatingOnlineCalculation(RatingRRCalculation):
         player_ids = (TournamentResult.objects
                       .filter(tournament__tournament_type=Tournament.ONLINE)
                       .values_list('player_id', flat=True))
-        return Player.objects.filter(id__in=player_ids).exclude(is_replacement=True)
+        return Player.objects.filter(id__in=player_ids).exclude(is_replacement=True, is_hide=True)
 
     def tournament_age(self, end_date, rating_date):
         diff = relativedelta(rating_date, end_date)
