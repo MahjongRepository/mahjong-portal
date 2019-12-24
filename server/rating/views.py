@@ -105,7 +105,9 @@ def rating_dates(request, slug):
 
 def rating_tournaments(request, slug):
     rating = get_object_or_404(Rating, slug=slug)
+    today, rating_date = get_latest_rating_date(rating)
     tournament_ids = (RatingDelta.objects
+                      .filter(date=rating_date)
                       .filter(rating=rating)
                       .filter(is_active=True)
                       .values_list('tournament_id', flat=True))
