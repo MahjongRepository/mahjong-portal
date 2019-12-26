@@ -30,6 +30,7 @@ class Command(BaseCommand):
         specified_date = options['date']
         from_zero = options['from_zero']
 
+        tournaments_diff = {}
         today = datetime.datetime.now().date()
 
         rating_options = {
@@ -99,7 +100,8 @@ class Command(BaseCommand):
                 rating_date,
                 today,
                 tournaments,
-                calculator
+                calculator,
+                tournaments_diff
             )
 
             important_dates = [
@@ -140,7 +142,8 @@ class Command(BaseCommand):
                 rating_date,
                 latest_future_date,
                 tournaments,
-                calculator
+                calculator,
+                tournaments_diff
             )
 
             dates_to_recalculate = sorted(list(set(dates_to_process + future_dates)))
@@ -188,9 +191,8 @@ class Command(BaseCommand):
 
             calculator.calculate_players_rating_rank(rating, rating_date)
 
-    def find_tournament_dates_changes(self, start_date, stop_date, tournaments, calculator):
+    def find_tournament_dates_changes(self, start_date, stop_date, tournaments, calculator, tournaments_diff):
         continue_work = True
-        tournaments_diff = {}
         dates_to_process = []
         while continue_work:
             need_to_recalculate = False
