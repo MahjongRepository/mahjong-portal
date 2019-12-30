@@ -20,10 +20,10 @@ class Command(BaseCommand):
         rating_date = datetime.date(2020, 2, 1)
         add_coefficient = True
 
-        players = 24
-        sessions = 8
+        players = 40
+        sessions = 10
 
-        tournament = Tournament.objects.get(id=380)
+        tournament = Tournament.objects.get(id=431)
         tournament.is_upcoming = False
         tournament.number_of_players = players
         tournament.number_of_sessions = sessions
@@ -36,9 +36,9 @@ class Command(BaseCommand):
         # Леонтьев 154
         # Алексеева 389
         # Монаков 70
-        player_id = 154
+        player_id = 70
 
-        places = [1, 6, 10, 16, 18, 24]
+        places = [1, 6, 10, 16, 20, 24, 30, 40]
         for place in places:
             print(place)
             data.append([''])
@@ -73,7 +73,7 @@ class Command(BaseCommand):
                 rating
             )
 
-            results = RatingResult.objects.filter(rating=rating, date=rating_date)[:15]
+            results = RatingResult.objects.filter(rating=rating, date=rating_date).order_by('place')[:15]
             for result in results:
                 data.append([
                     result.player.last_name_ru,
@@ -101,6 +101,6 @@ class Command(BaseCommand):
             limited_tournaments = tournaments.filter(end_date__lte=rating_date)
 
             for tournament in limited_tournaments:
-                calculator.calculate_players_deltas(tournament, rating, rating_date, True)
+                calculator.calculate_players_deltas(tournament, rating, rating_date)
 
-            calculator.calculate_players_rating_rank(rating, rating_date, True)
+            calculator.calculate_players_rating_rank(rating, rating_date)
