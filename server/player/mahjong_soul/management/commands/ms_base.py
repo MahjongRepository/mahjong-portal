@@ -57,6 +57,10 @@ class MSBaseCommand(BaseCommand):
 
             async with session.get(url + '?service=ws-gateway&protocol=ws&ssl=true') as res:
                 servers = await res.json()
+                # maintenance mode
+                if not servers.get('servers'):
+                    return
+
                 servers = servers['servers']
                 server = random.choice(servers)
                 endpoint = 'wss://{}/'.format(server)
