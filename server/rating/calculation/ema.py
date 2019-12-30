@@ -18,7 +18,7 @@ class RatingEMACalculation(RatingRRCalculation):
                     .exclude(ema_id='')
                     .exclude(ema_id=None)
                     .exclude(is_replacement=True)
-                    .exclude(is_hide=True))
+                    .exclude(is_hide=True).order_by('-last_name'))
 
     def get_base_query(self, rating, start_date, rating_date):
         types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]

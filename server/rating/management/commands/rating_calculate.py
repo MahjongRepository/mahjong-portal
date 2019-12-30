@@ -79,13 +79,15 @@ class Command(BaseCommand):
                 rating=rating, date=specified_date
             ).delete()
 
-            dates_to_recalculate = [datetime.datetime.strptime(specified_date, '%Y-%m-%d')]
+            dates_to_recalculate = [specified_date]
             self.calculate_rating(
                 dates_to_recalculate,
                 tournaments,
                 calculator,
                 rating
             )
+
+            return
 
         print('Calculating dates...')
 
