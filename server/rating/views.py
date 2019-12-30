@@ -92,7 +92,8 @@ def rating_details(request, slug, year=None, month=None, day=None, country_code=
         'closest_date': closest_date,
         'country_code': country_code,
         'today': today,
-        'is_ema': is_ema
+        'is_ema': is_ema,
+        'show_tournaments_numbers': True
     })
 
 

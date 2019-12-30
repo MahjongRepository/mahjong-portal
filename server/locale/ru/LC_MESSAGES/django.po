@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-22 09:24+0000\n"
+"POT-Creation-Date: 2019-12-30 13:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -406,12 +406,10 @@ msgid "Country Rank"
 msgstr "Ранг страны"
 
 #: templates/ema/quotas.html:18
-#| msgid "Base rank"
 msgid "Base"
 msgstr "База"
 
 #: templates/ema/quotas.html:19
-#| msgid "Club rating"
 msgid "700+ rating"
 msgstr "700+ рейтинга"
 
@@ -423,7 +421,7 @@ msgstr "Топ 3"
 msgid "B part"
 msgstr "Б часть"
 
-#: templates/ema/quotas.html:42
+#: templates/ema/quotas.html:22 templates/ema/quotas.html:42
 msgid "Total Quota"
 msgstr "Всего квот"
 
@@ -655,6 +653,12 @@ msgid "All dates"
 msgstr "Все даты"
 
 #: templates/rating/_results_table.html:21
+#| msgid "Tournaments"
+msgctxt "tournaments number"
+msgid "Tournaments"
+msgstr "Турниров"
+
+#: templates/rating/_results_table.html:22
 #: templates/tournament/_tournament_results.html:18
 #: templates/website/erc_2019.html:92
 msgctxt "location"
@@ -1276,11 +1280,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:144
+#: tournament/views.py:142
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: tournament/views.py:167
+#: tournament/views.py:165
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -1288,11 +1292,11 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:171
+#: tournament/views.py:169
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:177
+#: tournament/views.py:175
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 

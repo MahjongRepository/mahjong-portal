@@ -18,6 +18,9 @@
                 </th>
             {% endif %}
             <th scope="col">{% trans 'Points' %}</th>
+            {% if show_tournaments_numbers %}
+                <th scope="col">{% trans 'Tournaments' context 'tournaments number' %}</th>
+            {% endif %}
             <th scope="col">{% trans 'From' context 'location' %}</th>
         </tr>
         </thead>
@@ -36,6 +39,9 @@
                     </td>
                 {% endif %}
                 <td>{{ rating_result.score|floatformat:0 }}</td>
+                {% if show_tournaments_numbers %}
+                    <td>{{ rating_result.tournament_numbers|default:'' }}</td>
+                {% endif %}
                 <td>
                     {% if is_ema or not rating_result.player.city %}
                         {{ rating_result.player.country }}
