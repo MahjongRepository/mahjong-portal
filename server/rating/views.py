@@ -28,6 +28,7 @@ def rating_details(request, slug, year=None, month=None, day=None, country_code=
     if not rating_date:
         today, rating_date = get_latest_rating_date(rating)
 
+    is_ema = rating.type == Rating.EMA
     rating_results = (RatingResult.objects
                       .filter(rating=rating)
                       .prefetch_related('player')
@@ -91,6 +92,7 @@ def rating_details(request, slug, year=None, month=None, day=None, country_code=
         'closest_date': closest_date,
         'country_code': country_code,
         'today': today,
+        'is_ema': is_ema
     })
 
 

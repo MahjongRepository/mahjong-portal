@@ -37,16 +37,16 @@
                 {% endif %}
                 <td>{{ rating_result.score|floatformat:0 }}</td>
                 <td>
-                    {% if rating_result.player.city %}
+                    {% if is_ema or not rating_result.player.city %}
+                        {{ rating_result.player.country }}
+                    {% else %}
                         <a href="{% url 'city_page' rating_result.player.city.slug %}" class="d-print-none">
                             {{ rating_result.player.city.name }}
                         </a>
                         {# special case for print #}
                         <span class="d-none d-print-block">
-                           {{ rating_result.player.city.name }}
+                            {{ rating_result.player.city.name }}
                         </span>
-                    {% else %}
-                        {{ rating_result.player.country }}
                     {% endif %}
                 </td>
             </tr>
