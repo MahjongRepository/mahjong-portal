@@ -73,6 +73,7 @@ class RatingResult(BaseModel):
     score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
+    tournament_numbers = models.PositiveIntegerField(null=True, blank=True)
 
     rating_calculation = models.TextField(null=True, blank=True)
 

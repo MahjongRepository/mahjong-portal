@@ -102,6 +102,7 @@ class RatingEMACalculation(RatingRRCalculation):
                 place=0,
                 rating_calculation=best_rating_calculation,
                 date=rating_date,
+                tournament_numbers=len(deltas)
             ))
 
         place = 1

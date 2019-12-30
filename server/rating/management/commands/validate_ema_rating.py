@@ -52,6 +52,7 @@ class Command(BaseCommand):
             last_name = data[4].text.strip().title()
             first_name = data[5].text.strip()
             scores = int(data[7].text.strip())
+            tournament_numbers = int(data[8].text.strip())
 
             if last_name == 'Wo&Zacute;Niak':
                 last_name = 'Woźniak'
@@ -65,6 +66,7 @@ class Command(BaseCommand):
                 'scores': scores,
                 'ema_id': ema_id,
                 'country_code': country_code,
+                'tournament_numbers': tournament_numbers
             }
 
         results = (RatingResult.objects
@@ -87,6 +89,7 @@ class Command(BaseCommand):
                 'scores': int(floatformat(result.score, 0)),
                 'ema_id': player.ema_id,
                 'country_code': player.country.code,
+                'tournament_numbers': result.tournament_numbers,
             }
 
         missed = []
@@ -107,6 +110,13 @@ class Command(BaseCommand):
                     print('Not correct place: {} {}. For {}'.format(
                         ema_player['place'],
                         player['place'],
+                        format_player(ema_player)
+                    ))
+
+                if player['tournament_numbers'] != ema_player['tournament_numbers']:
+                    print('Not correct tournament numbers: {} {}. For {}'.format(
+                        ema_player['tournament_numbers'],
+                        player['tournament_numbers'],
                         format_player(ema_player)
                     ))
 

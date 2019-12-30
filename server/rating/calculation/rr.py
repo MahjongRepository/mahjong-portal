@@ -156,6 +156,7 @@ class RatingRRCalculation(object):
                 place=0,
                 rating_calculation=best_rating_calculation,
                 date=rating_date,
+                tournament_numbers=total_tournaments
             ))
 
         place = 1
