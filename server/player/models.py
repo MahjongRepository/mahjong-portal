@@ -52,6 +52,13 @@ class Player(BaseModel):
         return tenhou
 
     @property
+    def ms_object(self):
+        ms_obj = self.ms.all().order_by('statistics__rank').first()
+        if not ms_obj:
+            return None
+        return ms_obj.statistics.all().order_by('rank').first()
+
+    @property
     def latest_ema_id(self):
         return int(Player.ema_queryset().first().ema_id)
 

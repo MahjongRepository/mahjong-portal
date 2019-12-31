@@ -97,12 +97,8 @@
                                 <td>{{ registration_item.tenhou_nickname }}</td>
                             {% endif %}
                             <td>
-                                {% with registration_item.player.tenhou_object as tenhou_object %}
-                                    {% if tenhou_object %}
-                                        <a href="{% url 'player_details' registration_item.player.slug %}#tenhou">
-                                            <nobr>{{ tenhou_object.get_rank }}</nobr>
-                                        </a>
-                                    {% endif %}
+                                {% with registration_item.player as player %}
+                                    {% include 'player/_online_account.html' %}
                                 {% endwith %}
                             </td>
                             {% if tournament.display_notes %}

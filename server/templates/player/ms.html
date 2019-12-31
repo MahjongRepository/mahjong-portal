@@ -1,22 +1,99 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper tz staticfiles %}
+{% load i18n russian_words_morph meta_tags_helper tenhou_helper tz staticfiles %}
 
 {% block title %}
     {{ player.full_name }}. {% trans 'Mahjong Soul profile' %}
 {% endblock %}
 
+{% block additional_js %}
+    <script src="{% static 'js/сhart.bundle.min.js' %}"></script>
+    <script>
+        var four_players_pt_data = [];
+        var four_players_pt_labels = [];
+        {% for c in ms_data.four_players_statistics.get_points_history_for_latest_rank %}
+            four_players_pt_data.push({{ c.points }});
+            four_players_pt_labels.push("{{ c.created_on|date:'Y-m-d' }}");
+        {% endfor %}
+
+        if (four_players_pt_data) {
+            var ptChart = new Chart('pt_chart_four', {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: '{% trans 'Points' %}',
+                            data: four_players_pt_data,
+                            fill: false,
+                            borderColor: 'green',
+                            backgroundColor: 'green',
+                            cubicInterpolationMode: 'monotone'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'category',
+                            labels: four_players_pt_labels
+                        }],
+                        yAxes: [{
+                            type: 'linear',
+                            ticks: {
+                                min: 0,
+                                max: {{ ms_data.four_players_statistics.max_pt_for_chart|default:0 }}
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        var three_players_pt_data = [];
+        var three_players_pt_labels = [];
+        {% for c in ms_data.three_players_statistics.get_points_history_for_latest_rank %}
+            three_players_pt_data.push({{ c.points }});
+            three_players_pt_labels.push("{{ c.created_on|date:'Y-m-d' }}");
+        {% endfor %}
+
+        if (three_players_pt_data) {
+            var ptChart = new Chart('pt_chart_three', {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: '{% trans 'Points' %}',
+                            data: three_players_pt_data,
+                            fill: false,
+                            borderColor: 'green',
+                            backgroundColor: 'green',
+                            cubicInterpolationMode: 'monotone'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'category',
+                            labels: three_players_pt_labels
+                        }],
+                        yAxes: [{
+                            type: 'linear',
+                            ticks: {
+                                min: 0,
+                                max: {{ ms_data.three_players_statistics.max_pt_for_chart|default:0 }}
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
     <div>
         <h1>{{ player.full_name }}</h1>
-        <p>
-            {% trans 'From' %}
-            {% if player.city %}
-                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>,
-                {{ player.country.name }}
-            {% else %}
-                {{ player.country.name|genitive|title }}
-            {% endif %}
-        </p>
+        {% include 'player/_player_header.html' %}
 
         <p><a href="{% url 'player_details' player.slug %}">{% trans 'Player page' %}</a></p>
 
@@ -25,14 +102,23 @@
 
             {% with ms_data.four_players_statistics as stat %}
                 {% if stat %}
+                    <h5>{% trans 'Four players' %}</h5>
                     <p class="mt-3">
-                        {% trans 'Four players' %}: {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}pt
+                        {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}
                     </p>
+                    <p>
+                        {% trans 'Last played date' %}: {{ stat.last_played_date|date:SHORT_DATE_FORMAT }}
+                    </p>
+                    <div class="d-none d-md-block d-print-none">
+                        <h5>{% trans "Pt chart" %}</h5>
+                        <canvas id="pt_chart_four" class="d-none d-md-block d-print-none"></canvas>
+                    </div>
 
                     <div class="table-responsive-sm">
                         <table class="table table-hover mt-4">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th scope="col">
                                     {% trans 'Games' %}
                                 </th>
@@ -54,27 +140,139 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>
-                                    {{ stat_item.played_games }}
-                                </td>
-                                <td>
-                                    {{ stat_item.average_place|floatformat:2 }}
-                                </td>
-                                <td>
-                                    {{ stat_item.first_place|floatformat:2 }}
-                                </td>
-                                <td>
-                                    {{ stat_item.second_place|floatformat:2 }}
-                                </td>
-                                <td>
-                                    {{ stat_item.third_place|floatformat:2 }}
-                                </td>
-                                <td>
-                                    {{ stat_item.fourth_place|floatformat:2 }}
-                                </td>
-                            </tr>
+                            {% if stat.tonpusen_games %}
+                                <tr>
+                                    <td>{% trans 'Tonpusen' %}</td>
+                                    <td>
+                                        {{ stat.tonpusen_games }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_average_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_first_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_second_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_third_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_fourth_place }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if stat.hanchan_games %}
+                                <tr>
+                                    <td>
+                                        {% trans 'Hanchan' %}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_average_place|floatformat:2 }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_first_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_second_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_third_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_fourth_place }}
+                                    </td>
+                                </tr>
+                            {% endif %}
                             </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% with ms_data.three_players_statistics as stat %}
+                {% if stat %}
+                    <h5>{% trans 'Sanma' %}</h5>
+                    <p class="mt-3">
+                        {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}
+                    </p>
+                    <p>
+                        {% trans 'Last played date' %}: {{ stat.last_played_date|date:SHORT_DATE_FORMAT }}
+                    </p>
+
+                    <div class="d-none d-md-block d-print-none">
+                        <h6>{% trans "Pt chart" %}</h6>
+                        <canvas id="pt_chart_three" class="d-none d-md-block d-print-none"></canvas>
+                    </div>
+
+                    <div class="table-responsive-sm">
+                        <table class="table table-hover mt-4">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th scope="col">
+                                    {% trans 'Games' %}
+                                </th>
+                                <th scope="col">
+                                    <nobr>{% trans 'Avg. place' %}</nobr>
+                                </th>
+                                <th scope="col">
+                                    {% trans '1st' %}
+                                </th>
+                                <th scope="col">
+                                    {% trans '2nd' %}
+                                </th>
+                                <th scope="col">
+                                    {% trans '3rd' %}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if stat.tonpusen_games %}
+                                <tr>
+                                    <td>{% trans 'Tonpusen' %}</td>
+                                    <td>
+                                        {{ stat.tonpusen_games }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_average_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_first_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_second_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.tonpusen_games|percentage:stat.tonpusen_third_place }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {% if stat.hanchan_games %}
+                                <tr>
+                                    <td>
+                                        {% trans 'Hanchan' %}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_average_place|floatformat:2 }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_first_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_second_place }}
+                                    </td>
+                                    <td>
+                                        {{ stat.hanchan_games|percentage:stat.hanchan_third_place }}
+                                    </td>
+                                </tr>
+                            {% endif %}
                         </table>
                     </div>
                 {% endif %}
