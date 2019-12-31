@@ -29,7 +29,9 @@ class TournamentPlayersForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['tournament'].queryset = Tournament.objects.filter(tournament_type=Tournament.ONLINE).order_by('-start_date')
+        self.fields['tournament'].queryset = Tournament.objects.filter(
+            tournament_type=Tournament.ONLINE
+        ).order_by('-start_date')
 
 
 class TournamentStatusAdmin(admin.ModelAdmin):
@@ -58,7 +60,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
             registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
             if registration.player:
                 return registration.player
-        except:
+        except (OnlineTournamentRegistration.DoesNotExist, Player.DoesNotExist):
             pass
 
         result = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
@@ -112,7 +114,7 @@ class TournamentGameAdmin(admin.ModelAdmin):
     form = TournamentGameForm
     inlines = [TournamentGamePlayerInline]
     list_display = ['tournament', 'tournament_round', 'status', 'log_id', 'created_on', 'updated_on']
-    list_filter = [['tournament', admin.RelatedOnlyFieldListFilter], 'status', 'tournament_round',]
+    list_filter = [['tournament', admin.RelatedOnlyFieldListFilter], 'status', 'tournament_round']
 
 
 admin.site.register(TournamentStatus, TournamentStatusAdmin)

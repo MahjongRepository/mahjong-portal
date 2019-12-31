@@ -89,9 +89,8 @@ class Command(MSBaseCommand):
 
         four_tonpusen_data = [x for x in games_statistics if x['mode'] == four_tonpusen_type]
         if four_tonpusen_data:
-            first_place, second_place, third_place, fourth_place, games_count, average_place = self.calculate_places_from_raw_data(
-                four_tonpusen_data
-            )
+            result = self.calculate_places_from_raw_data(four_tonpusen_data)
+            first_place, second_place, third_place, fourth_place, games_count, average_place = result
 
             four_people_stat.tonpusen_games = games_count
             four_people_stat.tonpusen_average_place = average_place
@@ -102,9 +101,8 @@ class Command(MSBaseCommand):
 
         four_hanchan_data = [x for x in games_statistics if x['mode'] == four_hanchan_type]
         if four_hanchan_data:
-            first_place, second_place, third_place, fourth_place, games_count, average_place = self.calculate_places_from_raw_data(
-                four_hanchan_data
-            )
+            result = self.calculate_places_from_raw_data(four_hanchan_data)
+            first_place, second_place, third_place, fourth_place, games_count, average_place = result
 
             four_people_stat.hanchan_games = games_count
             four_people_stat.hanchan_average_place = average_place
@@ -147,5 +145,3 @@ class Command(MSBaseCommand):
         average_place = (first_place + second_place * 2 + third_place * 3 + fourth_place * 4) / games_count
 
         return first_place, second_place, third_place, fourth_place, games_count, average_place
-
-

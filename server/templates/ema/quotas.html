@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'EMA Quotas for RCR Events' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'EMA Quotas for RCR Events' %}</h2>
+        <p>{% trans 'Calculated quotas number on the 1st January 2020.' %}</p>
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4 text-center">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans 'Country' %}</th>
+                    <th scope="col">{% trans 'Country Rank' %}</th>
+                    <th scope="col">{% trans 'Base' %}</th>
+                    <th scope="col">{% trans '700+ rating' %}</th>
+                    <th scope="col">{% trans 'Top 3' %}</th>
+                    <th scope="col">{% trans 'B part' %}</th>
+                    <th scope="col">{% trans 'Total Quota' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in quotas %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'rating' 'ema' item.country.code %}">
+                                {{ item.country }}
+                            </a>
+                        </td>
+                        <td>{{ item.rank }}</td>
+                        <td>{{ item.base_seat }}</td>
+                        <td>{{ item.scores_700_seat }}</td>
+                        <td>{{ item.top_3_seats }}</td>
+                        <td>{{ item.b_part_seats }}</td>
+                        <td>{{ item.seats }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="6" class="text-right">{% trans 'Total Quota' %}</td>
+                    <td>{{ total_quotas }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

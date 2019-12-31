@@ -1,10 +1,9 @@
-import json
 import datetime
+import json
 import os
 
 import pytz
 import requests
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
@@ -54,7 +53,7 @@ class Command(BaseCommand):
         stop_year = current_year
         months = ['{:02}'.format(x) for x in range(1, 13)]
 
-        folder = os.path.join(settings.BASE_DIR, 'yakuman')
+        folder = os.path.join('/tmp', 'yakuman')
         if not os.path.exists(folder):
             os.mkdir(folder)
 

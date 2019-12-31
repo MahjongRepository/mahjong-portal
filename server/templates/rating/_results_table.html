@@ -1,7 +1,13 @@
 {% load i18n %}
 
 <div class="table-responsive-sm">
-    <table class="table table-hover mt-4">
+    <div class="text-right mb-0 {% if countries_data %}mt-3{% endif %}">
+        <p class="small mb-0">
+            {% trans 'Rating date' %} {{ today }} ({% trans 'latest changes' %} {{ rating_date }}).
+            <a href="{% url 'rating_dates' rating.slug %}">{% trans 'All dates' %}</a>
+        </p>
+    </div>
+    <table class="table table-hover mt-2">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -12,6 +18,9 @@
                 </th>
             {% endif %}
             <th scope="col">{% trans 'Points' %}</th>
+            {% if show_tournaments_numbers %}
+                <th scope="col">{% trans 'Tournaments' context 'tournaments number' %}</th>
+            {% endif %}
             <th scope="col">{% trans 'From' context 'location' %}</th>
         </tr>
         </thead>
@@ -30,17 +39,20 @@
                     </td>
                 {% endif %}
                 <td>{{ rating_result.score|floatformat:0 }}</td>
+                {% if show_tournaments_numbers %}
+                    <td>{{ rating_result.tournament_numbers|default:'' }}</td>
+                {% endif %}
                 <td>
-                    {% if rating_result.player.city %}
+                    {% if is_ema or not rating_result.player.city %}
+                        {{ rating_result.player.country }}
+                    {% else %}
                         <a href="{% url 'city_page' rating_result.player.city.slug %}" class="d-print-none">
                             {{ rating_result.player.city.name }}
                         </a>
                         {# special case for print #}
                         <span class="d-none d-print-block">
-                           {{ rating_result.player.city.name }}
+                            {{ rating_result.player.city.name }}
                         </span>
-                    {% else %}
-                        {{ rating_result.player.country }}
                     {% endif %}
                 </td>
             </tr>

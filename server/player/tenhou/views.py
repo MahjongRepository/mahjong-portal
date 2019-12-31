@@ -85,7 +85,7 @@ def games_history(request, year=None, month=None, day=None):
     if year and month and day:
         try:
             query_date = datetime(year=int(year), month=int(month), day=int(day), tzinfo=pytz.utc)
-        except:
+        except ValueError:
             raise Http404
 
     previous_day = query_date - timedelta(days=1)

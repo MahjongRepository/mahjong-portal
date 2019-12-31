@@ -34,14 +34,13 @@ class RatingRRCalculation(object):
         Determine what players should be participated in the rating
         :return:
         """
-        return list(Player.objects.filter(country__code='RU'))
+        return list(Player.objects.filter(country__code='RU').exclude(is_replacement=True).exclude(is_hide=True))
 
     def get_base_query(self, rating, start_date, rating_date):
+        types = [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
         base_query = (RatingDelta.objects
                       .filter(rating=rating)
-                      .filter(Q(tournament__tournament_type=Tournament.RR) |
-                              Q(tournament__tournament_type=Tournament.EMA) |
-                              Q(tournament__tournament_type=Tournament.FOREIGN_EMA))
+                      .filter(tournament__tournament_type__in=types)
                       .filter(Q(tournament__end_date__gt=start_date) & Q(tournament__end_date__lte=rating_date))
                       .filter(date=rating_date))
         return base_query
@@ -50,7 +49,7 @@ class RatingRRCalculation(object):
         # two years ago
         return rating_date - timedelta(days=365 * 2)
 
-    def calculate_players_rating_rank(self, rating, rating_date, is_last):
+    def calculate_players_rating_rank(self, rating, rating_date):
         results = []
         two_years_ago = self.get_date(rating_date)
 
@@ -74,8 +73,12 @@ class RatingRRCalculation(object):
             coefficients_cache[coefficient.tournament_id] = coefficient
 
             if coefficient.tournament_id not in stages_tournament_ids:
-                c = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
-                coefficients.append(c)
+                value = self._calculate_percentage(float(coefficient.coefficient), coefficient.age)
+                coefficients.append({
+                    'coefficient': coefficient.coefficient,
+                    'age': coefficient.age,
+                    'value': value
+                })
 
         # TODO: Remove these when tournaments with stages will be implemented
         for stage_tournament_id in stages_tournament_ids:
@@ -85,13 +88,26 @@ class RatingRRCalculation(object):
                     age = self.tournament_age(tournament.end_date, rating_date)
                     stage_coefficients = list(set(HARDCODED_COEFFICIENTS[stage_tournament_id].values()))
                     for x in stage_coefficients:
-                        coefficients.append(self._calculate_percentage(x, age))
+                        value = self._calculate_percentage(x, age)
+                        coefficients.append({
+                            'coefficient': x,
+                            'age': age,
+                            'value': value
+                        })
 
-        coefficients = sorted(coefficients, reverse=True)
-        max_coefficient = sum(coefficients[:self.SECOND_PART_MIN_TOURNAMENTS])
+        coefficients = sorted(coefficients, key=lambda x: x['value'], reverse=True)
+        selected_coefficients = coefficients[:self.SECOND_PART_MIN_TOURNAMENTS]
 
-        if len(coefficients) < self.SECOND_PART_MIN_TOURNAMENTS:
-            max_coefficient += self.SECOND_PART_MIN_TOURNAMENTS - len(coefficients)
+        if len(selected_coefficients) < self.SECOND_PART_MIN_TOURNAMENTS:
+            missed_tournaments = self.SECOND_PART_MIN_TOURNAMENTS - len(selected_coefficients)
+            for x in range(missed_tournaments):
+                selected_coefficients.append({
+                    'coefficient': 1,
+                    'age': 100,
+                    'value': 1
+                })
+
+        max_coefficient = sum([x['value'] for x in selected_coefficients])
 
         for player in self.players:
             # we need to reduce SQL queries with this filter
@@ -113,7 +129,8 @@ class RatingRRCalculation(object):
                 tournaments_results = deltas
                 best_rating_calculation, best_score = self._calculate_player_rating(player, tournaments_results,
                                                                                     deltas, coefficients_cache,
-                                                                                    max_coefficient, is_last)
+                                                                                    max_coefficient,
+                                                                                    selected_coefficients)
                 best_tournament_results_option = tournaments_results
             else:
                 best_score = 0
@@ -121,26 +138,26 @@ class RatingRRCalculation(object):
                 best_tournament_results_option = None
 
                 for tournaments_results_option in itertools.combinations(deltas, num_tournaments):
-                    rating_calculation, score = self._calculate_player_rating(player, tournaments_results_option, deltas,
+                    rating_calculation, score = self._calculate_player_rating(player, tournaments_results_option,
+                                                                              deltas,
                                                                               coefficients_cache, max_coefficient,
-                                                                              is_last)
+                                                                              selected_coefficients)
                     if score >= best_score:
                         best_score = score
                         best_rating_calculation = rating_calculation
                         best_tournament_results_option = tournaments_results_option
 
-            if is_last:
-                RatingDelta.objects.filter(id__in=[x.id for x in best_tournament_results_option]).update(is_active=True)
+            RatingDelta.objects.filter(id__in=[x.id for x in best_tournament_results_option]).update(is_active=True)
 
             results.append(RatingResult(
-                    rating=rating,
-                    player=player,
-                    score=best_score,
-                    place=0,
-                    rating_calculation=best_rating_calculation,
-                    date=rating_date,
-                    is_last=is_last
-                ))
+                rating=rating,
+                player=player,
+                score=best_score,
+                place=0,
+                rating_calculation=best_rating_calculation,
+                date=rating_date,
+                tournament_numbers=total_tournaments
+            ))
 
         place = 1
         results = sorted(results, key=lambda x: x.score, reverse=True)
@@ -150,7 +167,7 @@ class RatingRRCalculation(object):
 
         RatingResult.objects.bulk_create(results)
 
-    def calculate_players_deltas(self, tournament, rating, rating_date, is_last):
+    def calculate_players_deltas(self, tournament, rating, rating_date):
         """
         Load all tournament results and recalculate players rating position
         :param tournament: Tournament model
@@ -169,7 +186,9 @@ class RatingRRCalculation(object):
         if rating_date <= tournament.end_date:
             coefficient_obj.previous_age = 0
         else:
-            coefficient_obj.previous_age = self.tournament_age(tournament.end_date, rating_date - timedelta(days=1))
+            coefficient_obj.previous_age = self.tournament_age(
+                tournament.end_date, rating_date - timedelta(days=1)
+            )
         coefficient_obj.save()
 
         results = (TournamentResult.objects
@@ -188,7 +207,9 @@ class RatingRRCalculation(object):
             if not player:
                 continue
 
-            delta, base_rank = self.calculate_rating_delta(result, rating_date, tournament, player)
+            delta, base_rank = self.calculate_rating_delta(
+                result, rating_date, tournament, player
+            )
 
             deltas.append(RatingDelta(
                 tournament=tournament,
@@ -197,8 +218,7 @@ class RatingRRCalculation(object):
                 player=player,
                 delta=delta,
                 base_rank=base_rank,
-                date=rating_date,
-                is_last=is_last
+                date=rating_date
             ))
 
         RatingDelta.objects.bulk_create(deltas)
@@ -232,7 +252,7 @@ class RatingRRCalculation(object):
         Determine player delta and tournament properties
         """
         tournament_coefficient = self.tournament_coefficient(tournament)
-        tournament_coefficient = get_tournament_coefficient(tournament.id, player, tournament_coefficient)
+        tournament_coefficient = get_tournament_coefficient(self.IS_EMA, tournament.id, player, tournament_coefficient)
 
         base_rank = self.calculate_base_rank(tournament_result, tournament)
         # for ema we had to round base rank
@@ -316,7 +336,7 @@ class RatingRRCalculation(object):
             return 0
 
     def _calculate_player_rating(self, player, tournaments_results, deltas, coefficients_cache,
-                                 max_coefficient, is_last):
+                                 max_coefficient, selected_coefficients):
         first_part_numerator_calculation = []
         first_part_denominator_calculation = []
 
@@ -327,31 +347,31 @@ class RatingRRCalculation(object):
 
         for result in tournaments_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             first_part_numerator += float(result.delta)
             first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
 
-            if is_last:
-                first_part_numerator_calculation.append('{} * {} * {}'.format(
-                    floatformat(result.base_rank, -2),
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2)
-                ))
+            first_part_numerator_calculation.append('{} * {} * {}'.format(
+                floatformat(result.base_rank, -2),
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2)
+            ))
 
-                first_part_denominator_calculation.append('{} * {}'.format(
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2)
-                ))
+            first_part_denominator_calculation.append('{} * {}'.format(
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2)
+            ))
 
         if len(tournaments_results) < self.FIRST_PART_MIN_TOURNAMENTS:
             fill_missed_data = self.FIRST_PART_MIN_TOURNAMENTS - len(tournaments_results)
             first_part_denominator += fill_missed_data
 
-            if is_last:
-                for x in range(0, fill_missed_data):
-                    first_part_numerator_calculation.append('0')
-                    first_part_denominator_calculation.append('1')
+            for x in range(0, fill_missed_data):
+                first_part_numerator_calculation.append('0')
+                first_part_denominator_calculation.append('1')
 
         first_part = first_part_numerator / first_part_denominator
 
@@ -361,46 +381,56 @@ class RatingRRCalculation(object):
         best_results = sorted(deltas, key=lambda x: x.delta, reverse=True)[:self.SECOND_PART_MIN_TOURNAMENTS]
         for result in best_results:
             coefficient_obj = coefficients_cache[result.tournament_id]
-            coefficient = get_tournament_coefficient(coefficient_obj.tournament_id, player, coefficient_obj.coefficient)
+            coefficient = get_tournament_coefficient(
+                self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
+            )
 
             second_part_numerator += float(result.delta)
 
-            if is_last:
-                second_part_numerator_calculation.append('{} * {} * {}'.format(
-                    floatformat(result.base_rank, -2),
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2)
-                ))
+            second_part_numerator_calculation.append('{} * {} * {}'.format(
+                floatformat(result.base_rank, -2),
+                floatformat(coefficient, -2),
+                floatformat(coefficient_obj.age / 100, -2)
+            ))
 
         second_part = second_part_numerator / second_part_denominator
 
-        score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(second_part,
-                                                                                                            self.SECOND_PART_WEIGHT)
+        score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(
+            second_part, self.SECOND_PART_WEIGHT
+        )
 
-        rating_calculation = ''
-        if is_last:
-            first_part_calculation = 'p1 = ({}) / ({}) = {}'.format(
-                ' + '.join(first_part_numerator_calculation),
-                ' + '.join(first_part_denominator_calculation),
-                first_part
-            )
-            second_part_calculation = 'p2 = ({}) / {} = {}'.format(
-                ' + '.join(second_part_numerator_calculation),
-                max_coefficient,
-                second_part
-            )
-            total_calculation = 'score = {} * {} + {} * {}'.format(
-                first_part,
-                self.FIRST_PART_WEIGHT / 100,
-                second_part,
-                self.SECOND_PART_WEIGHT / 100,
-                score
-            )
-            rating_calculation = '\n\n'.join((
-                first_part_calculation,
-                second_part_calculation,
-                total_calculation,
+        max_coefficient_calculation = []
+        for x in selected_coefficients:
+            max_coefficient_calculation.append('{} * {}'.format(
+                floatformat(x['coefficient'], -2),
+                floatformat(x['age'] / 100, -2)
             ))
+        max_coefficient_template = 'max_coefficients = ({}) = {}'.format(
+            ' + '.join(max_coefficient_calculation),
+            max_coefficient
+        )
+        first_part_calculation = 'p1 = ({}) / ({}) = {}'.format(
+            ' + '.join(first_part_numerator_calculation),
+            ' + '.join(first_part_denominator_calculation),
+            first_part
+        )
+        second_part_calculation = 'p2 = ({}) / max_coefficients = {}'.format(
+            ' + '.join(second_part_numerator_calculation),
+            second_part
+        )
+        total_calculation = 'score = {} * {} + {} * {} = {}'.format(
+            first_part,
+            self.FIRST_PART_WEIGHT / 100,
+            second_part,
+            self.SECOND_PART_WEIGHT / 100,
+            score
+        )
+        rating_calculation = '\n\n'.join((
+            max_coefficient_template,
+            first_part_calculation,
+            second_part_calculation,
+            total_calculation,
+        ))
 
         return rating_calculation, score
 

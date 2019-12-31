@@ -152,12 +152,14 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
                     stat_object.save()
 
         if total_played_games:
-            total_average_place = (total_first_place + total_second_place * 2 + total_third_place * 3 + total_fourth_place * 4) / total_played_games
+            total_average_place = (total_first_place + total_second_place * 2 +
+                                   total_third_place * 3 + total_fourth_place * 4) / total_played_games
         else:
             total_average_place = 0
 
         if month_played_games:
-            month_average_place = (month_first_place + month_second_place * 2 + month_third_place * 3 + month_fourth_place * 4) / month_played_games
+            month_average_place = (month_first_place + month_second_place * 2 +
+                                   month_third_place * 3 + month_fourth_place * 4) / month_played_games
         else:
             month_average_place = 0
 

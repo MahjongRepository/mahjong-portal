@@ -2,12 +2,11 @@ from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q
-from django.utils import timezone
 
 from player.models import Player
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import RatingDelta
-from tournament.models import Tournament
+from tournament.models import Tournament, TournamentResult
 
 
 class RatingOnlineCalculation(RatingRRCalculation):
@@ -24,7 +23,10 @@ class RatingOnlineCalculation(RatingRRCalculation):
         return base_query
 
     def get_players(self):
-        return Player.objects.all()
+        player_ids = (TournamentResult.objects
+                      .filter(tournament__tournament_type=Tournament.ONLINE)
+                      .values_list('player_id', flat=True))
+        return Player.objects.filter(id__in=player_ids).exclude(is_replacement=True).exclude(is_hide=True)
 
     def tournament_age(self, end_date, rating_date):
         diff = relativedelta(rating_date, end_date)

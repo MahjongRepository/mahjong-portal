@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls[:2])),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
-    url(r'^sitemap\.xml$', cache_page(86400)(sitemap), {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^sitemap\.xml$', cache_page(86400)(sitemap),
+        {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     url('^api/v0/players/$', players_api),
     url(r'^online/', include('online.urls')),
@@ -39,6 +40,7 @@ urlpatterns += i18n_patterns(
     url(r'^tenhou/', include('player.tenhou.urls')),
     url(r'^ms/', include('player.mahjong_soul.urls')),
     url(r'^system/', include('system.urls')),
+    url(r'^ema/', include('ema.urls')),
 
     url(r'^login/$', auth_views.LoginView.as_view(template_name='account/login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),

@@ -3,8 +3,8 @@ from django.utils import timezone
 
 from player.models import Player
 from player.tenhou.models import TenhouNickname
-from utils.tenhou.helper import recalculate_tenhou_statistics_for_four_players, download_all_games_from_arcturus, save_played_games, \
-    get_started_date_for_account
+from utils.tenhou.helper import recalculate_tenhou_statistics_for_four_players, download_all_games_from_arcturus, \
+    save_played_games, get_started_date_for_account
 
 
 def get_date_string():

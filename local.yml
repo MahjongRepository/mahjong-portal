@@ -1,0 +1,33 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
+    image: portal_local_web
+    depends_on:
+      - db
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    volumes:
+      - .:/app
+    ports:
+      - '8060:8060'
+    command: /start.sh
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    image: portal_local_postgresql
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/.local/.postgres
+    ports:
+      - '5462:5432'

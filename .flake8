@@ -1,0 +1,9 @@
+[flake8]
+ignore=Q003,W504
+max-line-length=120
+inline-quotes=single
+exclude=
+        */migrations/*,
+        mahjong_portal/settings.py,
+        online/parser.py,
+        manage.py,

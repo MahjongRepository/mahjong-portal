@@ -1,22 +1,33 @@
-build:
-	docker-compose build
+COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), local.yml)
 
 up:
-	docker-compose up -d
+	docker-compose -f $(COMPOSE_FILE) up -d
 
 stop:
-	docker-compose stop
+	docker-compose -f $(COMPOSE_FILE) stop
 
 logs:
-	docker-compose logs -f web_portal
+	docker-compose -f $(COMPOSE_FILE) logs -f
 
-restore_db:
+web:
 	${MAKE} up
-	sleep 5
-	docker-compose exec db_portal psql -U postgres mahjong_portal -c "REVOKE CONNECT ON DATABASE mahjong_portal FROM public; SELECT pid, pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = current_database() AND pid <> pg_backend_pid();"
-	docker-compose exec db_portal dropdb -U postgres mahjong_portal
-	docker-compose exec db_portal createdb -U postgres mahjong_portal
-	docker-compose exec db_portal sh -c "psql -U postgres mahjong_portal < /files/latest.sql"
-	docker-compose exec web_portal python manage.py migrate --noinput
-	${MAKE} stop
+	docker-compose -f $(COMPOSE_FILE) run --rm web bash
+
+build:
+	docker-compose -f $(COMPOSE_FILE) build
+
+test:
 	${MAKE} up
+	docker-compose -f local.yml run --rm web python manage.py test --noinput
+
+lint:
+	${MAKE} up
+	docker-compose -f local.yml run --rm web flake8 --config=../.flake8
+
+initial_data:
+	docker-compose -f local.yml run --rm web python manage.py flush --noinput
+	docker-compose -f local.yml run --rm web python manage.py migrate --noinput
+	docker-compose -f local.yml run --rm web python manage.py initial_data
+
+permissions:
+	sudo chown -R $$USER:$$USER .

@@ -25,15 +25,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print('{0}: Start'.format(get_date_string()))
-        
+
         rebuild_from_zero = options.get('rebuild_from_zero')
         club_id = options.get('club_id')
-        
+
         if club_id:
             clubs = Club.objects.filter(id=club_id)
         else:
             clubs = Club.objects.exclude(pantheon_ids__isnull=True)
-            
+
         for club in clubs:
             event_ids = club.pantheon_ids.split(',')
             print('')
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             with transaction.atomic():
                 self.download_game_results(club, event_ids, rebuild_from_zero)
                 self.calculate_club_rating(club, event_ids)
-            
+
         print('')
         print('{0}: End'.format(get_date_string()))
 
@@ -133,11 +133,11 @@ class Command(BaseCommand):
     def calculate_club_rating(self, club, event_ids):
         print('')
         print('Calculating club rating...')
-        
+
         players = club.players.all()
 
         ClubRating.objects.filter(club=club).delete()
-        
+
         # let's query all data once
         # ro reduce queries count
         all_session_results = (PantheonSessionResult.objects
@@ -146,14 +146,14 @@ class Command(BaseCommand):
         all_rounds = (PantheonRound.objects
                       .filter(event__id__in=event_ids)
                       .filter(session__status=PantheonSession.FINISHED))
-        
+
         players_sessions = {}
         for session_result in all_session_results:
             if session_result.player_id not in players_sessions:
                 players_sessions[session_result.player_id] = []
 
             players_sessions[session_result.player_id].append(session_result.session_id)
-        
+
         session_rounds = {}
         for round_item in all_rounds:
             if round_item.session_id not in session_rounds:
@@ -188,7 +188,7 @@ class Command(BaseCommand):
 
             if player and player.pantheon_id:
                 player_sessions = players_sessions[player.pantheon_id]
-                
+
                 player_rounds = []
                 for session_id in player_sessions:
                     player_rounds.extend(session_rounds[session_id])

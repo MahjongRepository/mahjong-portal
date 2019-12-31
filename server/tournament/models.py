@@ -26,6 +26,7 @@ class Tournament(BaseModel):
     FOREIGN_EMA = 'fema'
     OTHER = 'other'
     ONLINE = 'online'
+    CHAMPIONSHIP = 'champ'
 
     GAME_TYPES = [
         [RIICHI, 'Riichi'],
@@ -39,6 +40,7 @@ class Tournament(BaseModel):
         [FOREIGN_EMA, 'fema'],
         [OTHER, 'other'],
         [ONLINE, 'online'],
+        [CHAMPIONSHIP, 'champ.'],
     ]
 
     objects = models.Manager()
@@ -66,8 +68,8 @@ class Tournament(BaseModel):
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
     is_event = models.BooleanField(default=False)
-    # we need it only to EMA rating, probably can be removed
-    need_qualification = models.BooleanField(default=False)
+
+    russian_cup = models.BooleanField(default=False)
 
     # tournament setting, tournament admin can change them
     fill_city_in_registration = models.BooleanField(default=True)
@@ -103,6 +105,9 @@ class Tournament(BaseModel):
         if self.is_online():
             return 'warning'
 
+        if self.is_championship():
+            return 'championship'
+
         return 'info'
 
     @property
@@ -130,7 +135,7 @@ class Tournament(BaseModel):
 
     @property
     def rating_link(self):
-        if self.is_other() or self.is_ema():
+        if self.is_other() or self.is_championship():
             return ''
 
         tournament_type = self.tournament_type
@@ -154,6 +159,9 @@ class Tournament(BaseModel):
     def is_other(self):
         return self.tournament_type == self.OTHER
 
+    def is_championship(self):
+        return self.tournament_type == self.CHAMPIONSHIP
+
     def is_stage_tournament(self):
         return self.id == AGARI_TOURNAMENT_ID
 
@@ -163,10 +171,19 @@ class Tournament(BaseModel):
         else:
             return self.tournament_registrations.filter(is_approved=True)
 
+    def championship_tournament_results(self):
+        results = TournamentResult.objects.filter(tournament=self).order_by('place')
+        if self.tournament_type == Tournament.CHAMPIONSHIP:
+            results = results.filter(player__country__code='RU')
+        else:
+            results = results[:8]
+        return results
+
 
 class TournamentResult(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name='results', on_delete=models.PROTECT)
-    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results', null=True, blank=True)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='tournament_results',
+                               null=True, blank=True)
     player_string = models.CharField(max_length=512, null=True, blank=True)
     place = models.PositiveSmallIntegerField()
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
@@ -305,7 +322,7 @@ class TournamentApplication(BaseModel):
     number_of_games = models.PositiveSmallIntegerField(verbose_name=_('Number of hanchans'))
     entry_fee = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=_('Entry fee'),
                                                  help_text=_('Leave empty if it is free tournament'))
-    pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1, 
+    pantheon_needed = models.PositiveSmallIntegerField(choices=[[0, _('No')], [1, _('Yes')]], default=1,
                                                        verbose_name=_('Pantheon needed'))
     rules = models.PositiveSmallIntegerField(
         verbose_name=_('Tournament rules'),
@@ -314,7 +331,7 @@ class TournamentApplication(BaseModel):
     registration_type = models.PositiveSmallIntegerField(choices=[[0, _('Open')], [1, _('Closed')], [2, _('Limited')]],
                                                          verbose_name=_('Registration type'),
                                                          default=0)
-    additional_info = models.TextField(verbose_name=_('Additional info'), 
+    additional_info = models.TextField(verbose_name=_('Additional info'),
                                        help_text=_('More information about tournament'))
     allow_to_save_data = models.BooleanField(help_text=_('I allow to store my personal data'))
 

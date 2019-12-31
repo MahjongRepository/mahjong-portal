@@ -1,7 +1,6 @@
 import csv
 
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
 from player.models import Player
 
@@ -12,7 +11,7 @@ class Command(BaseCommand):
         with open('export_players.csv', 'w') as f:
             writer = csv.writer(f)
 
-            players = Player.all_objects.filter(country__code='RU')
+            players = Player.objects.filter(country__code='RU')
 
             rows = [
                 [

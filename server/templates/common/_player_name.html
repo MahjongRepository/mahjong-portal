@@ -1,4 +1,8 @@
-<a href="{% url 'player_details' player.slug %}" class="d-print-none">
+{% if is_last or not rating_date %}
+    <a href="{% url 'player_details' player.slug %}" class="d-print-none">
+{% else %}
+    <a href="{% url 'player_details' player.slug rating_date.year rating_date.month rating_date.day %}" class="d-print-none">
+{% endif %}
     {# on large screns show full name #}
     <span class="d-none d-md-block d-print-none">
         {{ player.full_name }}

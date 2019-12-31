@@ -6,15 +6,6 @@ from mahjong_portal.models import BaseModel
 from settings.models import Country, City
 
 
-class PlayerManager(models.Manager):
-    
-    def get_queryset(self):
-        # don't show hidden players in the lists
-        return (super(PlayerManager, self).get_queryset()
-                                          .exclude(is_hide=True)
-                                          .exclude(is_replacement=True))
-
-
 class Player(BaseModel):
     FEMALE = 0
     MALE = 1
@@ -24,9 +15,6 @@ class Player(BaseModel):
         [MALE, 'm'],
         [NONE, ''],
     ]
-    
-    objects = PlayerManager()
-    all_objects = models.Manager()
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -55,7 +43,7 @@ class Player(BaseModel):
     def full_name(self):
         if self.is_hide:
             return _('Substitution player')
-        
+
         return u'{} {}'.format(self.last_name, self.first_name)
 
     @property
@@ -73,6 +61,20 @@ class Player(BaseModel):
                 .exclude(Q(ema_id__isnull=True) | Q(ema_id=''))
                 .filter(country__code='RU')
                 .order_by('-ema_id'))
+
+
+class PlayerTitle(BaseModel):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='titles')
+    text = models.CharField(max_length=255)
+    background_color = models.CharField(max_length=7)
+    text_color = models.CharField(max_length=7)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __unicode__(self):
+        return self.text
 
 
 class PlayerERMC(BaseModel):

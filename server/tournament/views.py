@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -31,12 +30,11 @@ def tournament_list(request, tournament_type=None, year=None):
         tournaments = tournaments.filter(end_date__year=current_year)
 
     if tournament_type == 'ema':
-        tournaments = (tournaments
-                       .filter(Q(tournament_type=Tournament.EMA) | Q(tournament_type=Tournament.FOREIGN_EMA)))
+        tournament_types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
+        tournaments = tournaments.filter(tournament_type__in=tournament_types)
     else:
-        tournaments = (tournaments
-                       .exclude(tournament_type=Tournament.FOREIGN_EMA)
-                       .exclude(tournament_type=Tournament.OTHER))
+        tournament_types = [Tournament.EMA, Tournament.RR, Tournament.CRR, Tournament.OTHER, Tournament.ONLINE]
+        tournaments = tournaments.filter(tournament_type__in=tournament_types)
 
     tournaments = tournaments.order_by('-end_date').prefetch_related('city').prefetch_related('country')
 
@@ -124,7 +122,7 @@ def tournament_registration(request, tournament_id):
     Let's disable it for now, because it is not really important action
     """
     tournament = get_object_or_404(Tournament, id=tournament_id)
-    
+
     if tournament.is_online():
         form = OnlineTournamentRegistrationForm(request.POST, initial={
             'tournament': tournament
@@ -137,22 +135,25 @@ def tournament_registration(request, tournament_id):
     if form.is_valid():
         if tournament.is_online():
             tenhou_nickname = form.cleaned_data.get('tenhou_nickname')
-            if OnlineTournamentRegistration.objects.filter(tournament=tournament, tenhou_nickname=tenhou_nickname).exists():
+            exists = OnlineTournamentRegistration.objects.filter(
+                tournament=tournament, tenhou_nickname=tenhou_nickname
+            ).exists()
+            if exists:
                 messages.success(request, _('You already registered to the tournament!'))
                 return redirect(tournament.get_url())
 
         instance = form.save(commit=False)
         instance.tournament = tournament
-        
+
         # it supports auto load objects only for Russian tournaments right now
-        
+
         try:
-            instance.player = Player.objects.get(first_name_ru=instance.first_name.title(), 
+            instance.player = Player.objects.get(first_name_ru=instance.first_name.title(),
                                                  last_name_ru=instance.last_name.title())
         except (Player.DoesNotExist, Player.MultipleObjectsReturned):
             # TODO if multiple players are here, let's try to filter by city
             pass
-        
+
         try:
             instance.city_object = City.objects.get(name_ru=instance.city)
         except City.DoesNotExist:
@@ -160,13 +161,15 @@ def tournament_registration(request, tournament_id):
 
         if tournament.registrations_pre_moderation:
             instance.is_approved = False
-            message = _('Your registration was accepted! It will be visible on the page after administrator approvement.')
+            message = _(
+                'Your registration was accepted! It will be visible on the page after administrator approvement.'
+            )
         else:
             instance.is_approved = True
             message = _('Your registration was accepted!')
 
         instance.save()
-        
+
         messages.success(request, message)
     else:
         messages.success(request, _('Please, allow to store personal data'))

@@ -19,4 +19,3 @@ class Command(BaseCommand):
         ms_id = options.get('ms_id')
 
         MSAccount.objects.get_or_create(player=player, account_id=ms_id)
-

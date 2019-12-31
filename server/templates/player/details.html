@@ -8,19 +8,7 @@
 {% block content %}
     <div>
         <h1>{{ player.full_name }}</h1>
-        <p>
-            {% trans 'From' %}
-            {% if player.city %}
-                <a href="{% url 'city_page' player.city.slug %}">{{ player.city.name|genitive|title }}</a>,
-                {{ player.country.name }}
-            {% else %}
-                {{ player.country.name|genitive|title }}
-            {% endif %}
-        </p>
-
-        {% if player.ema_id %}
-            <p>EMA: <a href="http://mahjong-europe.org/ranking/Players/{{ player.ema_id }}.html" target="_blank">{{ player.ema_id }}</a></p>
-        {% endif %}
+        {% include 'player/_player_header.html' %}
 
         {% if rating_results %}
             <h4>{% trans 'Ratings' %}</h4>
@@ -39,9 +27,15 @@
                     {% for rating_result in rating_results %}
                         <tr>
                             <td width="250px">
-                                <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
-                                    {{ rating_result.rating.name }}
-                                </a>
+                                {% if rating_date %}
+                                    <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug rating_date.year rating_date.month rating_date.day %}">
+                                        {{ rating_result.rating.name }}
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'player_rating_details' player.slug rating_result.rating.slug %}">
+                                        {{ rating_result.rating.name }}
+                                    </a>
+                                {% endif %}
                             </td>
                             <td>
                                 {{ rating_result.place }}

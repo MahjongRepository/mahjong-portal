@@ -1,0 +1,81 @@
+version: '2'
+
+volumes:
+  postgres_data: {}
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/production/django/Dockerfile
+    image: portal_web
+    env_file:
+      - ./.envs/.production.env
+    depends_on:
+      - db
+    volumes:
+      - ./server/collected_static:/app/server/collected_static
+      - .:/app
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+    command: /start.sh
+
+  cronjobs:
+    image: portal_web
+    depends_on:
+      - web
+    env_file:
+      - ./.envs/.production.env
+    volumes:
+      - ./tmp:/tmp
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+    entrypoint: /cron_entrypoint.sh
+    command: ['cron', '-f']
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    image: portal_postgresql
+    env_file:
+      - ./.envs/.production.env
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/production/nginx/Dockerfile
+    restart: always
+    image: protal_nginx
+    env_file:
+      - ./.envs/.production.env
+    depends_on:
+      - web
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+    volumes:
+      - ./etc/ssl:/etc/nginx/ssl
+      - ./server/collected_static:/collected_static
+    ports:
+      - '80:80'
+      - '443:443'

@@ -3,26 +3,28 @@ import datetime
 import io
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import translation
 from django.utils.text import slugify
-from django.utils.translation import get_language, gettext
+from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
 from player.models import Player, PlayerERMC
-from player.tenhou.models import TenhouNickname
 from rating.models import Rating, RatingResult
+from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
 
 
 def home(request):
     rating = Rating.objects.get(type=Rating.RR)
+    today, rating_date = get_latest_rating_date(rating)
     rating_results = (RatingResult.objects
                                   .filter(rating=rating)
-                                  .filter(is_last=True)
+                                  .filter(date=rating_date)
                                   .prefetch_related('player')
                                   .prefetch_related('player__city')
                                   .order_by('place'))[:16]
@@ -45,7 +47,10 @@ def home(request):
         'rating_results': rating_results,
         'rating': rating,
         'upcoming_tournaments': upcoming_tournaments,
-        'events': events
+        'events': events,
+        'rating_date': rating_date,
+        'today': today,
+        'is_last': True
     })
 
 
@@ -56,6 +61,16 @@ def about(request):
 
     return render(request, 'website/{}'.format(template), {
         'page': 'about'
+    })
+
+
+def championships(request):
+    championships = Tournament.objects.filter(
+        Q(tournament_type=Tournament.CHAMPIONSHIP) | Q(russian_cup=True)
+    ).order_by('-end_date')
+
+    return render(request, 'website/championships.html', {
+        'championships': championships
     })
 
 
@@ -271,7 +286,7 @@ def export_tournament_results(request, tournament_id):
     tournament = Tournament.objects.get(id=tournament_id)
 
     for result in tournament.results.all().order_by('place'):
-        player = result.player
+        player = Player.objects.get(id=result.player_id)
 
         rows.append([
             '{} {}'.format(tournament.name_en, tournament.end_date.year),
@@ -283,15 +298,15 @@ def export_tournament_results(request, tournament_id):
             '1',
             result.scores,
             player.ema_id and 'YES' or '',
-            'RUS',
+            player.country and player.country.name_en == 'Russia' and 'RUS' or '',
             tournament.end_date.strftime('%m/%d/%Y'),
             'RUS',
             tournament.city.name_en,
-            '2',
+            '',
             '',
             'Riichi',
             '',
-            '2',
+            '',
             'NO',
         ])
 
