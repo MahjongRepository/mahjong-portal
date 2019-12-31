@@ -96,7 +96,7 @@ class Command(MSBaseCommand):
             four_people_stat.tonpusen_average_place = average_place
             four_people_stat.tonpusen_first_place = first_place
             four_people_stat.tonpusen_second_place = second_place
-            four_people_stat.tonpusen_third_place_place = third_place
+            four_people_stat.tonpusen_third_place = third_place
             four_people_stat.tonpusen_fourth_place = fourth_place
 
         four_hanchan_data = [x for x in games_statistics if x['mode'] == four_hanchan_type]
@@ -108,7 +108,7 @@ class Command(MSBaseCommand):
             four_people_stat.hanchan_average_place = average_place
             four_people_stat.hanchan_first_place = first_place
             four_people_stat.hanchan_second_place = second_place
-            four_people_stat.hanchan_third_place_place = third_place
+            four_people_stat.hanchan_third_place = third_place
             four_people_stat.hanchan_fourth_place = fourth_place
 
         three_tonpusen_data = [x for x in games_statistics if x['mode'] == three_tonpusen_type]
@@ -121,7 +121,7 @@ class Command(MSBaseCommand):
             three_people_stat.tonpusen_average_place = average_place
             three_people_stat.tonpusen_first_place = first_place
             three_people_stat.tonpusen_second_place = second_place
-            three_people_stat.tonpusen_third_place_place = third_place
+            three_people_stat.tonpusen_third_place = third_place
 
         three_hanchan_data = [x for x in games_statistics if x['mode'] == three_hanchan_type]
         if three_hanchan_data:
@@ -133,7 +133,7 @@ class Command(MSBaseCommand):
             three_people_stat.hanchan_average_place = average_place
             three_people_stat.hanchan_first_place = first_place
             three_people_stat.hanchan_second_place = second_place
-            three_people_stat.hanchan_third_place_place = third_place
+            three_people_stat.hanchan_third_place = third_place
 
     def calculate_places_from_raw_data(self, data):
         first_place = data[0]['gameFinalPosition'][0]

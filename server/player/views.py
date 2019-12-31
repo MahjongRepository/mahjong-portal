@@ -4,6 +4,7 @@ from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
 
 from club.club_games.models import ClubRating
+from player.mahjong_soul.models import MSAccount
 from player.models import Player
 from player.tenhou.models import TenhouNickname
 from rating.models import RatingDelta, Rating, RatingResult, TournamentCoefficients
@@ -44,6 +45,7 @@ def player_details(request, slug, year=None, month=None, day=None):
                           .order_by('-tournament__end_date'))[:10]
 
     tenhou_data = TenhouNickname.objects.filter(player=player, is_main=True)
+    ms_data = MSAccount.objects.filter(player=player).first()
     club_ratings = (ClubRating.objects
                     .filter(player=player)
                     .prefetch_related('club', 'club__city')
@@ -54,8 +56,9 @@ def player_details(request, slug, year=None, month=None, day=None):
         'rating_results': rating_results,
         'tournament_results': tournament_results,
         'tenhou_data': tenhou_data,
-        'club_ratings': club_ratings,
-        'rating_date': entered_date
+        'rating_date': entered_date,
+        'ms_data': ms_data,
+        'club_ratings': club_ratings
     })
 
 
@@ -184,4 +187,13 @@ def player_tenhou_details(request, slug):
     return render(request, 'player/tenhou.html', {
         'player': player,
         'tenhou_data': tenhou_data,
+    })
+
+
+def player_ms_details(request, slug):
+    player = get_object_or_404(Player, slug=slug)
+    ms_data = MSAccount.objects.filter(player=player).first()
+    return render(request, 'player/ms.html', {
+        'player': player,
+        'ms_data': ms_data,
     })

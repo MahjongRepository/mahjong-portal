@@ -97,7 +97,7 @@
         {% endif %}
 
         {% if tenhou_data %}
-            <h4 id="tenhou">{% trans 'Tenhou.net profile' %}</h4>
+            <h4 id="tenhou" class="mt-4">{% trans 'Tenhou.net profile' %}</h4>
             <p><a href="{% url 'player_tenhou_details' player.slug %}">{% trans 'more information' %}</a></p>
 
             {% for tenhou_item in tenhou_data %}
@@ -231,8 +231,30 @@
             {% endfor %}
         {% endif %}
 
+        {% if ms_data %}
+            <h4 id="ms" class="mt-4">{% trans 'Mahjong Soul profile' %}</h4>
+            <p><a href="{% url 'player_ms_details' player.slug %}">{% trans 'more information' %}</a></p>
+            <h5>{% trans 'Statistics for' %} {{ ms_data.account_name }}</h5>
+
+            {% with ms_data.four_players_statistics as stat %}
+                {% if stat %}
+                    <p class="mt-3">
+                        {% trans 'Four players' %}: {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}
+                    </p>
+                {% endif %}
+            {% endwith %}
+
+            {% with ms_data.three_players_statistics as stat %}
+                {% if stat %}
+                    <p class="mt-3">
+                        {% trans 'Sanma' %}: {{ stat.get_rank_display }}, {{ stat.points }} / {{ stat.max_pt }}
+                    </p>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+
         {% if club_ratings %}
-            <h4 class="mb-3" id="club">{% trans 'Club statistics' %}</h4>
+            <h4 class="mb-3 mt-4" id="club">{% trans 'Club statistics' %}</h4>
             {% for item in club_ratings %}
                 <h5><a href="{% url 'club_details' item.club.slug %}#stat">{{ item.club.name }}</a></h5>
                 <p>{{ item.club.city }}</p>
