@@ -13,13 +13,17 @@ from tournament.models import TournamentResult, Tournament
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        start_date = datetime(2018, 1, 1, tzinfo=pytz.UTC)
-        end_date = datetime(2019, 1, 1, tzinfo=pytz.UTC)
+        start_date = datetime(2019, 1, 1, tzinfo=pytz.UTC)
+        end_date = datetime(2020, 1, 1, tzinfo=pytz.UTC)
 
         results = TournamentResult.objects.filter(
             tournament__end_date__gte=start_date,
             tournament__end_date__lt=end_date,
-        ).exclude(tournament__tournament_type=Tournament.FOREIGN_EMA)
+        ).exclude(
+            tournament__tournament_type=Tournament.FOREIGN_EMA
+        ).exclude(
+            tournament__tournament_type=Tournament.CHAMPIONSHIP
+        )
 
         player_ids = [x.player_id for x in results]
         players = Player.objects.filter(id__in=player_ids).distinct()
