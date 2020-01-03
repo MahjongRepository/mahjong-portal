@@ -109,6 +109,8 @@ class Command(BaseCommand):
             important_dates = [
                 # ERMC 2019 qualification date
                 datetime.date(2019, 1, 1),
+                # 1st January is a good date point to have
+                datetime.date(2020, 1, 1),
             ]
 
             dates_to_process = dates_to_process + important_dates
@@ -133,7 +135,6 @@ class Command(BaseCommand):
             print('Calculating future dates...')
 
             future_dates = [
-                datetime.date(2020, 1, 1),
                 # WRC 2020 qualification date
                 datetime.date(2020, 2, 1),
             ]
