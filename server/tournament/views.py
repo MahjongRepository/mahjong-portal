@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.translation import gettext as _
@@ -11,23 +12,17 @@ from tournament.models import Tournament, TournamentResult, TournamentRegistrati
 
 
 def tournament_list(request, tournament_type=None, year=None):
-    default_year_filter = 'all'
+    current_year = timezone.now().year
     try:
-        current_year = year or default_year_filter
-        if current_year != default_year_filter:
-            current_year = int(current_year)
+        selected_year = year and int(year)
     except ValueError:
-        current_year = default_year_filter
+        selected_year = current_year
 
-    years = [2019, 2018, 2017, 2016, 2015, 2014, 2013]
+    years = []
+    for x in range(10):
+        years.append(current_year - x)
 
-    if current_year != default_year_filter and current_year not in years:
-        current_year = default_year_filter
-
-    tournaments = Tournament.public.all()
-
-    if current_year != default_year_filter:
-        tournaments = tournaments.filter(end_date__year=current_year)
+    tournaments = Tournament.objects.filter(end_date__year=selected_year)
 
     if tournament_type == 'ema':
         tournament_types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
@@ -51,7 +46,7 @@ def tournament_list(request, tournament_type=None, year=None):
         'upcoming_tournaments': upcoming_tournaments,
         'tournament_type': tournament_type,
         'years': years,
-        'current_year': current_year,
+        'selected_year': selected_year,
         'page': tournament_type or 'tournament',
     })
 

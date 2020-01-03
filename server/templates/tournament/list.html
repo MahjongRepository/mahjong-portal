@@ -2,7 +2,7 @@
 {% load i18n meta_tags_helper %}
 
 {% block title %}
-    {% tournaments_list_title tournament_type current_year %}
+    {% tournaments_list_title tournament_type selected_year %}
 {% endblock %}
 
 {% block content %}
@@ -14,17 +14,17 @@
             {% endwith %}
         {% endif %}
 
-        <h1>{% tournaments_list_title tournament_type current_year %}</h1>
+        <h1>{% tournaments_list_title tournament_type selected_year %}</h1>
 
         <div class="filters">
             {% for year in years %}
                 {% if tournament_type %}
                     <a href="{% url 'tournament_ema_list' 'ema' year %}">
-                        <span class="badge badge-{% if current_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
+                        <span class="badge badge-{% if selected_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
                     </a>
                 {% else %}
                     <a href="{% url 'tournament_list' year %}">
-                        <span class="badge badge-{% if current_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
+                        <span class="badge badge-{% if selected_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
                     </a>
                 {% endif %}
             {% endfor %}
@@ -40,6 +40,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="{% tournaments_list_description tournament_type current_year %}">
-    <meta property="og:description" content="{% tournaments_list_description tournament_type current_year %}">
+    <meta name="description" content="{% tournaments_list_description tournament_type selected_year %}">
+    <meta property="og:description" content="{% tournaments_list_description tournament_type selected_year %}">
 {% endblock %}
