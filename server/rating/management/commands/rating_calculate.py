@@ -65,6 +65,8 @@ class Command(BaseCommand):
             print('Unknown rating type: {}'.format(rating_type))
             return
 
+        print('Calculating "{}" rating...'.format(rating_type.upper()))
+
         calculator = rating_data['calculator']()
         rating_date = rating_data['rating_date']
         rating = Rating.objects.get(type=rating_data['rating_type'])
@@ -72,6 +74,9 @@ class Command(BaseCommand):
                        .filter(tournament_type__in=rating_data['tournament_types'])
                        .filter(is_upcoming=False)
                        .order_by('end_date'))
+
+        print('Today =', today)
+        print('Rating date =', rating_date)
 
         if specified_date:
             specified_date = datetime.datetime.strptime(specified_date, '%Y-%m-%d').date()
@@ -116,6 +121,9 @@ class Command(BaseCommand):
             dates_to_process = dates_to_process + important_dates
             # make sure that all dates are unique
             dates_to_process = sorted(list(set(dates_to_process)))
+            # it is important to skip the first date here
+            # otherwise this date will be always added to the rating
+            dates_to_process = dates_to_process[1:]
 
             print('Found dates: {}'.format(len(dates_to_process)))
 
@@ -131,7 +139,6 @@ class Command(BaseCommand):
                 rating
             )
 
-            print('')
             print('Calculating future dates...')
 
             future_dates = [
@@ -153,6 +160,7 @@ class Command(BaseCommand):
             print('Dates to process: {}'.format(len(dates_to_recalculate)))
 
             first_future_date = dates_to_recalculate[0]
+            print('First future date =', first_future_date)
             RatingDate.objects.filter(
                 rating=rating, date__gte=first_future_date
             ).delete()
