@@ -12,7 +12,7 @@ from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
-from player.models import Player, PlayerERMC
+from player.models import Player, PlayerERMC, PlayerWRC
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
@@ -237,18 +237,54 @@ def ermc_qualification_2019(request):
     not_confirmed_colors = [PlayerERMC.GRAY, PlayerERMC.DARK_GREEN, PlayerERMC.DARK_BLUE]
     for x in rating_results:
         try:
-            if x.player.ermc.state in not_confirmed_colors:
+            ermc = x.player.ermc
+
+            if ermc.state in not_confirmed_colors:
                 x.confirmed = None
             else:
                 x.confirmed = confirmed
                 confirmed += 1
 
-            x.federation_member = x.player.ermc.federation_member and 'да' or 'нет'
+            x.federation_member = ermc.federation_member and 'да' or 'нет'
         except PlayerERMC.DoesNotExist:
             x.confirmed = None
             x.federation_member = ''
 
     return render(request, 'website/erc_2019.html', {
+        'rating_results': rating_results,
+    })
+
+
+def wrc_qualification_2020(request):
+    rating = Rating.objects.get(type=Rating.RR)
+    rating_date = datetime.date(2020, 2, 1)
+    rating_results = (RatingResult.objects
+                      .filter(rating=rating)
+                      .filter(date=rating_date)
+                      .prefetch_related('player')
+                      .prefetch_related('player__city')
+                      .prefetch_related('player__wrc')
+                      .order_by('place'))[:40]
+
+    confirmed = 1
+    not_confirmed_colors = [PlayerWRC.GRAY, PlayerWRC.DARK_GREEN, PlayerWRC.DARK_BLUE]
+    for x in rating_results:
+        x.wrc = None
+        try:
+            wrc = x.player.wrc
+
+            if wrc.state in not_confirmed_colors:
+                x.confirmed = None
+            else:
+                x.confirmed = confirmed
+                confirmed += 1
+
+            x.federation_member = wrc.federation_member and 'да' or 'нет'
+        except PlayerWRC.DoesNotExist:
+            x.confirmed = None
+            x.federation_member = ''
+
+    return render(request, 'website/wrc_2020.html', {
         'rating_results': rating_results,
     })
 

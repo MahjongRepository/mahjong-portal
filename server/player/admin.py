@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from player.models import Player, PlayerERMC, PlayerTitle
+from player.models import Player, PlayerERMC, PlayerTitle, PlayerWRC
 from player.tenhou.models import TenhouNickname
 
 
@@ -55,6 +55,8 @@ class PlayerERMCAdmin(admin.ModelAdmin):
     raw_id_fields = ['player']
 
 
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(PlayerERMC, PlayerERMCAdmin)
+admin.site.register(PlayerWRC, PlayerERMCAdmin)
 admin.site.register(PlayerTitle, PlayerTitleAdmin)

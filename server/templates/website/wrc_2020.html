@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load i18n humanize player_helper %}
+
+{% block title %}
+    {% trans 'World Riichi Championship 2020 Qualifications' %}
+{% endblock %}
+
+{% block additional_css %}
+    <style>
+        table a {
+            color: rgb(33, 37, 41);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'World Riichi Championship 2020 Qualifications' %}</h2>
+        {% if LANGUAGE_CODE == 'ru' %}
+            <p>
+                26-30 августа 2020 года в Вене пройдёт Чемпионат Мира - 2020 World Riichi Championship
+                (<a href="https://wrc2020vienna.com/" target="_blank">https://wrc2020vienna.com/</a>)
+            </p>
+            <p>
+                Участники от России будут отбираться по российскому риичи-рейтингу RR. Всем игрокам в топе рейтинга на 1
+                февраля 2020 года (в соответствии с количеством выделенных для России мест) будет предложено участие в
+                ЧМ. Если кто-то откажется от участия в ЧМ, возможность поехать на турнир получит следующий по
+                зафиксированному на 1 февраля рейтингу игрок.
+            </p>
+            <p>
+                В Чемпионате Мира смогут принять участие только те игроки, которые в 2020 году будут являться
+                действующими членами Федерации маджонга, поэтому игрокам, которые планируют принять участие в Чемпионате
+                Мира, нужно вступить в Федерацию маджонга и оплатить членский взнос за 2020 год.
+            </p>
+            <p>
+                Информация о вступлении в Федерацию и оплате взноса: <a href="https://mahjong.click/ru/contacts/">https://mahjong.click/ru/contacts/</a>
+            </p>
+            <p>
+                Если вы уже являетесь членом Федерации маджонга, не забудьте оплатить взнос за 2020 год.
+            </p>
+            <p>
+                Рейтинг RR на 1 февраля 2020 года приведен ниже.
+            </p>
+            <p>
+                Игроки в топе таблицы выделены цветами согласно их текущему статусу.
+            </p>
+            <p>
+                <span style="background-color: {{ 'green'|ermc_color }}; padding: 5px;">Зеленый</span> - точно едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'yellow'|ermc_color }}; padding: 5px;">Желтый</span> - скорее всего едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'orange'|ermc_color }}; padding: 5px;">Оранжевый</span> - пока сомневается, но скорее всего не едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'blue'|ermc_color }}; padding: 5px;">Голубой</span> - игрок пока ничего не ответил.
+            </p>
+            <p>
+                <span style="background-color: {{ 'pink'|ermc_color }}; padding: 5px;">Розовый</span> - игрок пока что не проходит, но готов ехать, если появится квота.
+            </p>
+            <p>
+                <span style="background-color: {{ 'gray'|ermc_color }}; padding: 5px;">Серый</span> - точно не едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'dark_green'|ermc_color }}; padding: 5px;">Непонятный темный сине-зеленый цвет</span> - отдельная квота для Владимира Наданьяна, Чемпиона Европы 2019.
+            </p>
+            <p>
+                <span style="background-color: {{ 'violet'|ermc_color }}; padding: 5px;">Фиолетовый</span> - игрок замены, готовый ехать если представится случай.
+            </p>
+            <p>
+                На 1 февраля у России 10 квот. <a href="http://mahjong-europe.org/ranking/quotas_RCR.html" target="_blank">http://mahjong-europe.org/ranking/quotas_RCR.html</a>
+            </p>
+        {% else %}
+            <p>{% trans 'List of players sorted by RR rating (on 1st February 2020)' %}</p>
+        {% endif %}
+
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col" title="RR">#</th>
+                    <th scope="col" title="{% trans 'is going to participate' %}">#</th>
+                    <th scope="col">{% trans 'Name' %}</th>
+                    <th scope="col">
+                        {% trans 'MF' %}
+                    </th>
+                    <th scope="col">{% trans 'Points' %}</th>
+                    <th scope="col">{% trans 'From' context 'location' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for rating_result in rating_results %}
+                    <tr id="{{ rating_result.player.slug }}" style="background-color: {{ rating_result.player.wrc.get_color }}" title="{{ rating_result.player.wrc.get_state_display }}">
+                        <th scope="row" title="RR">{{ rating_result.place }}</th>
+                        <th scope="row" title="{% trans 'is going to participate' %}">{{ rating_result.confirmed|default_if_none:"" }}</th>
+                        <td>
+                            {% with rating_result.player as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {{ rating_result.federation_member }}
+                        </td>
+                        <td>{{ rating_result.score|floatformat:0 }}</td>
+                        <td>
+                            {% if rating_result.player.city %}
+                                <a href="{% url 'city_page' rating_result.player.city.slug %}" class="d-print-none">
+                                    {{ rating_result.player.city.name }}
+                                </a>
+                                {# special case for print #}
+                                <span class="d-none d-print-block">
+                                   {{ rating_result.player.city.name }}
+                                </span>
+                            {% else %}
+                                {{ rating_result.player.country }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'List of players sorted by RR rating (on 1st February 2020)' %}">
+    <meta property="og:description" content="{% trans 'List of players sorted by RR rating (on 1st February 2020)' %}">
+{% endblock %}

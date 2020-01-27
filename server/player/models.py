@@ -132,3 +132,52 @@ class PlayerERMC(BaseModel):
             PlayerERMC.DARK_BLUE: '#5757f8',
         }
         return colors.get(index, '')
+
+class PlayerWRC(BaseModel):
+    GREEN = 0
+    YELLOW = 1
+    ORANGE = 2
+    BLUE = 3
+    PINK = 4
+    GRAY = 5
+    DARK_GREEN = 6
+    VIOLET = 7
+    DARK_BLUE = 8
+
+    COLORS = [
+        [GREEN, 'точно едет'],
+        [YELLOW, 'скорее всего едет'],
+        [ORANGE, 'пока сомневается, но скорее всего не едет'],
+        [BLUE, 'игрок пока ничего не ответил'],
+        [PINK, 'игрок пока что не проходит, но готов ехать, если появится квота'],
+        [GRAY, 'точно не едет'],
+        [DARK_GREEN, 'чемпион европы'],
+        [VIOLET, 'игрок замены'],
+        [DARK_BLUE, 'не деда (судья)'],
+    ]
+
+    player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='wrc')
+
+    state = models.PositiveSmallIntegerField(choices=COLORS)
+    federation_member = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.player.__unicode__()
+
+    def get_color(self):
+        return PlayerWRC.color_map(self.state)
+
+    @staticmethod
+    def color_map(index):
+        colors = {
+            PlayerWRC.GREEN: '#93C47D',
+            PlayerWRC.YELLOW: '#FFE599',
+            PlayerWRC.ORANGE: '#F6B26B',
+            PlayerWRC.BLUE: '#C9DAF8',
+            PlayerWRC.PINK: '#D5A6BD',
+            PlayerWRC.GRAY: '#999999',
+            PlayerWRC.DARK_GREEN: '#45818E',
+            PlayerWRC.VIOLET: '#8E7CC3',
+            PlayerWRC.DARK_BLUE: '#5757f8',
+        }
+        return colors.get(index, '')
