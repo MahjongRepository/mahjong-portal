@@ -55,7 +55,6 @@ class PlayerERMCAdmin(admin.ModelAdmin):
     raw_id_fields = ['player']
 
 
-
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(PlayerERMC, PlayerERMCAdmin)
 admin.site.register(PlayerWRC, PlayerERMCAdmin)

@@ -133,6 +133,7 @@ class PlayerERMC(BaseModel):
         }
         return colors.get(index, '')
 
+
 class PlayerWRC(BaseModel):
     GREEN = 0
     YELLOW = 1
