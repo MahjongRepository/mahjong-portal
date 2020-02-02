@@ -94,14 +94,14 @@ class Command(BaseCommand):
 
             return
 
-        print('Calculating dates...')
-
         with transaction.atomic():
             if from_zero:
                 print('Erasing dates...')
                 RatingDate.objects.filter(rating=rating).delete()
                 RatingResult.objects.filter(rating=rating).delete()
                 RatingDelta.objects.filter(rating=rating).delete()
+
+            print('Calculating dates...')
 
             dates_to_process, rating_date = self.find_tournament_dates_changes(
                 rating_date,
@@ -114,8 +114,8 @@ class Command(BaseCommand):
             important_dates = [
                 # ERMC 2019 qualification date
                 datetime.date(2019, 1, 1),
-                # 1st January is a good date point to have
-                datetime.date(2020, 1, 1),
+                # WRC 2020 qualification date
+                datetime.date(2020, 2, 1),
             ]
 
             dates_to_process = dates_to_process + important_dates
@@ -139,45 +139,43 @@ class Command(BaseCommand):
                 rating
             )
 
-            print('Calculating future dates...')
-
-            future_dates = [
-                # WRC 2020 qualification date
-                datetime.date(2020, 2, 1),
-            ]
-
-            latest_future_date = future_dates[-1]
-
-            dates_to_process, _ = self.find_tournament_dates_changes(
-                rating_date,
-                latest_future_date,
-                tournaments,
-                calculator,
-                tournaments_diff
-            )
-
-            dates_to_recalculate = sorted(list(set(dates_to_process + future_dates)))
-            print('Dates to process: {}'.format(len(dates_to_recalculate)))
-
-            first_future_date = dates_to_recalculate[0]
-            print('First future date =', first_future_date)
-            RatingDate.objects.filter(
-                rating=rating, date__gte=first_future_date
-            ).delete()
-            RatingResult.objects.filter(
-                rating=rating, date__gte=first_future_date
-            ).delete()
-            RatingDelta.objects.filter(
-                rating=rating, date__gte=first_future_date
-            ).delete()
-
-            self.calculate_rating(
-                dates_to_recalculate,
-                tournaments,
-                calculator,
-                rating,
-                is_future=True
-            )
+            # print('Calculating future dates...')
+            #
+            # future_dates = [
+            # ]
+            #
+            # latest_future_date = future_dates[-1]
+            #
+            # dates_to_process, _ = self.find_tournament_dates_changes(
+            #     rating_date,
+            #     latest_future_date,
+            #     tournaments,
+            #     calculator,
+            #     tournaments_diff
+            # )
+            #
+            # dates_to_recalculate = sorted(list(set(dates_to_process + future_dates)))
+            # print('Dates to process: {}'.format(len(dates_to_recalculate)))
+            #
+            # first_future_date = dates_to_recalculate[0]
+            # print('First future date =', first_future_date)
+            # RatingDate.objects.filter(
+            #     rating=rating, date__gte=first_future_date
+            # ).delete()
+            # RatingResult.objects.filter(
+            #     rating=rating, date__gte=first_future_date
+            # ).delete()
+            # RatingDelta.objects.filter(
+            #     rating=rating, date__gte=first_future_date
+            # ).delete()
+            #
+            # self.calculate_rating(
+            #     dates_to_recalculate,
+            #     tournaments,
+            #     calculator,
+            #     rating,
+            #     is_future=True
+            # )
 
         print('{0}: End'.format(get_date_string()))
 
