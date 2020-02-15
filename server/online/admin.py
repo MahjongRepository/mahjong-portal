@@ -58,7 +58,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
         try:
             registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
-            if registration.player:
+            if registration and registration.player:
                 return registration.player
         except (OnlineTournamentRegistration.DoesNotExist, Player.DoesNotExist):
             pass

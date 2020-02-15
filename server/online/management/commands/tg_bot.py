@@ -18,7 +18,7 @@ from online.models import TournamentGame
 from tournament.models import Tournament
 
 logger = logging.getLogger()
-tournament_handler = None
+tournament_handler = TournamentHandler()
 
 
 class Command(BaseCommand):
@@ -35,9 +35,7 @@ class Command(BaseCommand):
             return
 
         tournament = Tournament.objects.get(id=tournament_id)
-
-        global tournament_handler
-        tournament_handler = TournamentHandler(tournament, lobby, game_type)
+        tournament_handler.init(tournament, lobby, game_type)
 
         updater = Updater(token=settings.TELEGRAM_TOKEN)
         dispatcher = updater.dispatcher
@@ -59,16 +57,24 @@ class Command(BaseCommand):
         help_handler = CommandHandler('help', help_bot)
 
         # admin commands
-        dispatcher.add_handler(CommandHandler('restart', restart,
-                                              filters=Filters.user(username='@Nihisil')))
-        dispatcher.add_handler(CommandHandler('prepare_next_round', prepare_next_round,
-                                              filters=Filters.user(username='@Nihisil')))
-        dispatcher.add_handler(CommandHandler('start_failed_games', start_failed_games,
-                                              filters=Filters.user(username='@Nihisil')))
-        dispatcher.add_handler(CommandHandler('start_games', start_games,
-                                              filters=Filters.user(username='@Nihisil')))
-        dispatcher.add_handler(CommandHandler('close_registration', close_registration,
-                                              filters=Filters.user(username='@Nihisil')))
+        dispatcher.add_handler(CommandHandler(
+            'restart', restart, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+        )
+        dispatcher.add_handler(CommandHandler(
+            'prepare_next_round', prepare_next_round, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+        )
+        dispatcher.add_handler(CommandHandler(
+            'start_failed_games', start_failed_games, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+        )
+        dispatcher.add_handler(CommandHandler(
+            'start_games', start_games, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+        )
+        dispatcher.add_handler(CommandHandler(
+            'close_registration', close_registration, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+        )
+        dispatcher.add_handler(CommandHandler(
+            'send_team_names_to_pantheon', send_team_names_to_pantheon, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+        )
 
         dispatcher.add_handler(start_handler)
         dispatcher.add_handler(log_handler)
@@ -135,9 +141,13 @@ def help_bot(bot, update):
 
     message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
     message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
-    message += '3. Как получить ссылку на лог игры?\n http://telegra.ph/Kak-poluchit-ssylku-na-log-igry-02-10  \n'
+    message += '3. Текущие игры в лобби:\n https://tenhou.net/wg/?C{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY[:4])
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
-    message += '5. Регламент турнира https://mahjong.click/ru/online/ '
+    message += '5. Регламент турнира:\n https://mahjong.click/ru/online/ \n'
+    message += '6. Как получить ссылку на лог игры для flash\windows клиентов?\n https://imgur.com/gallery/7Hv52md \n'
+    message += '7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx \n'
+    message += '8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n'
+    message += '9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e'
     bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 
@@ -145,15 +155,12 @@ def set_tenhou_nickname(bot, update, args):
     logger.info('Nickname command. {}, {}'.format(update.message.from_user.username, args))
 
     if not len(args):
-        update.message.reply_text(
-            text=u'Укажите ваш тенхо ник после команды.',
-            disable_web_page_preview=True
-        )
+        update.message.reply_text(text=u'Укажите ваш tenhou.net ник после команды.')
         return
 
     username = update.message.from_user.username
     if not username:
-        text = u'Перед привязкой тенхо ника нужно установить username в настройках ' \
+        text = u'Перед привязкой tenhou.net ника нужно установить username в настройках ' \
                u'телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/'
         update.message.reply_text(
             text=text,
@@ -210,6 +217,13 @@ def close_registration(bot, update):
     logger.info('Close registration')
 
     message = tournament_handler.close_registration()
+    bot.send_message(chat_id=update.message.chat_id, text=message)
+
+
+def send_team_names_to_pantheon(bot, update):
+    logger.info('Send team names to pantheon')
+
+    message = tournament_handler.send_team_names_to_pantheon()
     bot.send_message(chat_id=update.message.chat_id, text=message)
 
 

@@ -15,6 +15,9 @@ backups
 db.sqlite3
 whoosh_index
 
+initial_seating.txt
+team_seating.json
+
 yakuman
 tmp
 .ms

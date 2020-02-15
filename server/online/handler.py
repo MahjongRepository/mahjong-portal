@@ -12,6 +12,7 @@ from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
+from online.team_seating import TeamSeating
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
@@ -29,9 +30,15 @@ TOURNAMENT_BREAKS_TIME = [
 ]
 
 
-class TournamentHandler(object):
+class TournamentHandler:
+    TG_ADMIN_USERNAME = '@Nihisil'
 
-    def __init__(self, tournament, lobby, game_type='0001'):
+    tournament = None
+    lobby = None
+    game_type = None
+    status = None
+
+    def init(self, tournament, lobby, game_type):
         self.tournament = tournament
         self.lobby = lobby
         self.game_type = game_type
@@ -138,6 +145,41 @@ class TournamentHandler(object):
         self.status.save()
         return 'Этап подтверждения участия завершился. Игры начнутся через 10 минут.'
 
+    def send_team_names_to_pantheon(self):
+        registrations = TournamentPlayers.objects.filter(
+            tournament=self.tournament
+        )
+
+        team_names = {}
+        for registration in registrations:
+            team_names[registration.pantheon_id] = registration.team_name
+
+        data = {
+            'jsonrpc': '2.0',
+            'method': 'updatePlayersTeams',
+            'params': {
+                'eventId': settings.PANTHEON_EVENT_ID,
+                'teamNameMap': team_names
+            },
+            'id': make_random_letters_and_digit_string()
+        }
+
+        headers = {
+            'X-Auth-Token': settings.PANTHEON_ADMIN_TOKEN,
+        }
+
+        response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+        if response.status_code == 500:
+            logger.error('Log add. Pantheon 500.')
+            return 'Pantheon 500 error'
+
+        content = response.json()
+        if content.get('error'):
+            logger.error('Log add. Pantheon error. {}'.format(content.get('error')))
+            return 'Pantheon {} error'.format(content.get('error'))
+
+        return 'Готово'
+
     def add_game_log(self, log_link):
         error_message = 'Это не похоже на лог игры.'
 
@@ -168,9 +210,12 @@ class TournamentHandler(object):
                                .filter(game_players__player__tenhou_username__in=players)
                                .filter(tournament_round=self.status.current_round)
                                .distinct())
+        error_message = 'Призошла ошибка при добавлении лога. Обратитесь к администратору {}'.format(
+            TournamentHandler.TG_ADMIN_USERNAME
+        )
         if games.count() >= 2:
             logger.error('Log add. Too much games.')
-            return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
+            return error_message
 
         game = games.first()
 
@@ -187,12 +232,12 @@ class TournamentHandler(object):
         response = requests.post(settings.PANTHEON_URL, json=data)
         if response.status_code == 500:
             logger.error('Log add. Pantheon 500.')
-            return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
+            return error_message
 
         content = response.json()
         if content.get('error'):
             logger.error('Log add. Pantheon error. {}'.format(content.get('error')))
-            return 'Призошла ошибка при добавлении лога. Обратитесь к администратору.'
+            return error_message
 
         game.log_id = log_id
         game.status = TournamentGame.FINISHED
@@ -202,10 +247,10 @@ class TournamentHandler(object):
 
     def link_username_and_tenhou_nick(self, telegram_username, tenhou_nickname):
         if self.status.registration_closed:
-            return 'Этап подтверждения участия уже завершился. Зарегистрироваться нельзя.'
+            return 'Этап подтверждения участия уже завершился. Зарегистрироваться больше нельзя.'
 
         if len(tenhou_nickname) > 8:
-            return 'Ник на тенхе не должен быть больше 8 символов.'
+            return 'Ник на тенхе не должен быть длинее 8 символов.'
 
         try:
             registration = OnlineTournamentRegistration.objects.get(
@@ -213,7 +258,9 @@ class TournamentHandler(object):
                 tournament=self.tournament
             )
         except OnlineTournamentRegistration.DoesNotExist:
-            return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору.'
+            return 'Вы не были зарегистрированы на турнир заранее. Обратитесь к администратору {}'.format(
+                TournamentHandler.TG_ADMIN_USERNAME
+            )
 
         if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
             return 'Ник "{}" уже был зарегистрирован на турнир.'.format(tenhou_nickname)
@@ -221,24 +268,30 @@ class TournamentHandler(object):
         account_started_date = get_started_date_for_account(tenhou_nickname)
         if not account_started_date:
             return 'Ником "{}" ещё не играли на тенхе. Вы уверены, что он правильно написан? ' \
-                   'Регистр важен! Обратитесь к администратору.'.format(tenhou_nickname)
+                   'Регистр важен! Обратитесь к администратору {}'.format(
+                    tenhou_nickname,
+                    TournamentHandler.TG_ADMIN_USERNAME
+            )
 
         pantheon_id = registration.player and registration.player.pantheon_id or None
         team_name = registration.notes
 
         try:
-            TournamentPlayers.objects.get(
+            old_record = TournamentPlayers.objects.get(
                 telegram_username=telegram_username,
                 tournament=self.tournament,
             )
+            old_record.delete()
         except TournamentPlayers.DoesNotExist:
-            TournamentPlayers.objects.create(
-                telegram_username=telegram_username,
-                tenhou_username=tenhou_nickname,
-                tournament=self.tournament,
-                pantheon_id=pantheon_id,
-                team_name=team_name
-            )
+            pass
+
+        TournamentPlayers.objects.create(
+            telegram_username=telegram_username,
+            tenhou_username=tenhou_nickname,
+            tournament=self.tournament,
+            pantheon_id=pantheon_id,
+            team_name=team_name
+        )
 
         message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_nickname)
         return message
@@ -271,7 +324,6 @@ class TournamentHandler(object):
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            # sortition = self.make_sortition(list(pantheon_ids.keys()))
             sortition = self.make_sortition(self.status.current_round)
 
             games = []
@@ -307,6 +359,8 @@ class TournamentHandler(object):
         return games, message
 
     def make_sortition(self, pantheon_ids):
+        return TeamSeating.get_seating_for_round(self.status.current_round)
+
         if self.status.current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
