@@ -58,22 +58,34 @@ class Command(BaseCommand):
 
         # admin commands
         dispatcher.add_handler(CommandHandler(
-            'restart', restart, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+            'restart',
+            restart,
+            filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
         dispatcher.add_handler(CommandHandler(
-            'prepare_next_round', prepare_next_round, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+            'prepare_next_round',
+            prepare_next_round,
+            filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
         dispatcher.add_handler(CommandHandler(
-            'start_failed_games', start_failed_games, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+            'start_failed_games',
+            start_failed_games,
+            filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
         dispatcher.add_handler(CommandHandler(
-            'start_games', start_games, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+            'start_games',
+            start_games,
+            filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
         dispatcher.add_handler(CommandHandler(
-            'close_registration', close_registration, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+            'close_registration',
+            close_registration,
+            filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
         dispatcher.add_handler(CommandHandler(
-            'send_team_names_to_pantheon', send_team_names_to_pantheon, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
+            'send_team_names_to_pantheon',
+            send_team_names_to_pantheon,
+            filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
 
         dispatcher.add_handler(start_handler)
@@ -141,10 +153,10 @@ def help_bot(bot, update):
 
     message = '1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY)
     message += '2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n'.format(settings.PANTHEON_EVENT_ID)
-    message += '3. Текущие игры в лобби:\n https://tenhou.net/wg/?C{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY[:4])
+    message += '3. Текущие игры в лобби:\n https://tenhou.net/wg/?{} \n'.format(settings.TOURNAMENT_PUBLIC_LOBBY[:5])
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
     message += '5. Регламент турнира:\n https://mahjong.click/ru/online/ \n'
-    message += '6. Как получить ссылку на лог игры для flash\windows клиентов?\n https://imgur.com/gallery/7Hv52md \n'
+    message += '6. Как получить ссылку на лог игры для flash/windows клиентов?\n https://imgur.com/gallery/7Hv52md \n'
     message += '7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx \n'
     message += '8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n'
     message += '9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e'

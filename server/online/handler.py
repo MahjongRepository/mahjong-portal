@@ -268,10 +268,8 @@ class TournamentHandler:
         account_started_date = get_started_date_for_account(tenhou_nickname)
         if not account_started_date:
             return 'Ником "{}" ещё не играли на тенхе. Вы уверены, что он правильно написан? ' \
-                   'Регистр важен! Обратитесь к администратору {}'.format(
-                    tenhou_nickname,
-                    TournamentHandler.TG_ADMIN_USERNAME
-            )
+                   'Регистр важен! Обратитесь к администратору {}'.format(tenhou_nickname,
+                                                                          TournamentHandler.TG_ADMIN_USERNAME)
 
         pantheon_id = registration.player and registration.player.pantheon_id or None
         team_name = registration.notes
