@@ -213,7 +213,7 @@ def start_games(bot, update):
     for game in games:
         message = tournament_handler.start_game(game)
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        sleep(1)
+        sleep(2)
 
 
 def start_failed_games(bot, update):
@@ -225,7 +225,6 @@ def start_failed_games(bot, update):
     for game in games:
         message = tournament_handler.start_game(game)
         bot.send_message(chat_id=update.message.chat_id, text=message)
-        sleep(1)
 
 
 def close_registration(bot, update):
