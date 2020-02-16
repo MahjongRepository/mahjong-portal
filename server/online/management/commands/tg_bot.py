@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 from threading import Thread
+from time import sleep
 
 import telegram
 from django.conf import settings
@@ -212,6 +213,7 @@ def start_games(bot, update):
     for game in games:
         message = tournament_handler.start_game(game)
         bot.send_message(chat_id=update.message.chat_id, text=message)
+        sleep(2)
 
 
 def start_failed_games(bot, update):
@@ -223,6 +225,7 @@ def start_failed_games(bot, update):
     for game in games:
         message = tournament_handler.start_game(game)
         bot.send_message(chat_id=update.message.chat_id, text=message)
+        sleep(2)
 
 
 def close_registration(bot, update):
