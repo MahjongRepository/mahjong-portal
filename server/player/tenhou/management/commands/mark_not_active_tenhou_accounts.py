@@ -20,7 +20,20 @@ class Command(BaseCommand):
             delta = now - tenhou_object.last_played_date
             if delta.days > 181:
                 print('{} days {}'.format(tenhou_object.tenhou_username, delta.days))
+
                 tenhou_object.is_active = False
                 tenhou_object.save()
+
+                # we disabled main account for the player
+                # maybe there is another account to be main one
+                if tenhou_object.is_main:
+                    other_objects = TenhouNickname.objects.filter(
+                        player=tenhou_object.player,
+                        is_active=True
+                    ).first()
+
+                    if other_objects:
+                        other_objects.is_main = True
+                        other_objects.save()
 
         print('{0}: End'.format(get_date_string()))
