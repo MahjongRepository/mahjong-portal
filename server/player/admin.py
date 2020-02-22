@@ -46,7 +46,7 @@ class PlayerTitleAdmin(admin.ModelAdmin):
 
 class PlayerQuotaEventAdmin(admin.ModelAdmin):
     search_fields = ["player__first_name_ru", "player__first_name_en", "player__last_name_ru", "player__last_name_en"]
-    list_display = ["player", "type", "state", "federation_member"]
+    list_display = ["player", "type", "place", "state", "federation_member"]
     list_filter = ["type", "state"]
     raw_id_fields = ["player"]
 
