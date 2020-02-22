@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.db import transaction
 
-from player.tenhou.models import TenhouStatistics, TenhouNickname, TenhouGameLog, TenhouAggregatedStatistics
+from player.tenhou.models import TenhouStatistics, TenhouGameLog, TenhouAggregatedStatistics
 from utils.general import get_month_first_day, get_month_last_day
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.points_calculator import FourPlayersPointsCalculator
@@ -169,7 +169,7 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
             game_players=TenhouAggregatedStatistics.FOUR_PLAYERS, tenhou_object=tenhou_object
         )
 
-        rank = [x[0] for x in TenhouNickname.RANKS if x[1] == calculated_rank["rank"]][0]
+        rank = [x[0] for x in TenhouAggregatedStatistics.RANKS if x[1] == calculated_rank["rank"]][0]
         # 3 or less dan
         if rank <= 12:
             # we need to erase user rate when user lost 4 dan

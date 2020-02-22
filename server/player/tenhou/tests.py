@@ -13,7 +13,7 @@ class TenhouCalculatorTestCase(TestCase):
     def setUp(self):
         player = Player.objects.create()
         self.tenhou_object = TenhouNickname.objects.create(
-            player=player, tenhou_username="test", username_created_at=timezone.now(), rank=0
+            player=player, tenhou_username="test", username_created_at=timezone.now()
         )
 
     def test_calculations(self):

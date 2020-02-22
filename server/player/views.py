@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from club.club_games.models import ClubRating
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
-from player.tenhou.models import TenhouNickname
+from player.tenhou.models import TenhouNickname, TenhouAggregatedStatistics
 from rating.models import RatingDelta, Rating, RatingResult, TournamentCoefficients
 from rating.utils import get_latest_rating_date, parse_rating_date
 from tournament.models import TournamentResult
@@ -189,7 +189,11 @@ def player_tenhou_details(request, slug):
     tenhou_data = (
         TenhouNickname.objects.filter(player=player).order_by("-is_main").prefetch_related("aggregated_statistics")
     )
-    return render(request, "player/tenhou.html", {"player": player, "tenhou_data": tenhou_data})
+    return render(
+        request,
+        "player/tenhou.html",
+        {"player": player, "tenhou_data": tenhou_data, "RANKS": TenhouAggregatedStatistics.RANKS},
+    )
 
 
 def player_ms_details(request, slug):

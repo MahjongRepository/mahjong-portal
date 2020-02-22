@@ -33,11 +33,7 @@ class Command(BaseCommand):
 
         is_main = TenhouNickname.objects.filter(player=player, is_active=True).count() == 0
         tenhou_object = TenhouNickname.objects.create(
-            is_main=is_main,
-            player=player,
-            tenhou_username=tenhou_nickname,
-            rank=TenhouNickname.RANKS[0][0],
-            username_created_at=account_start_date,
+            is_main=is_main, player=player, tenhou_username=tenhou_nickname, username_created_at=account_start_date
         )
 
         player_games = download_all_games_from_arcturus(

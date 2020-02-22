@@ -1,14 +1,14 @@
 from django import template
 from django.template.defaultfilters import floatformat
 
-from player.tenhou.models import TenhouNickname
+from player.tenhou.models import TenhouAggregatedStatistics
 
 register = template.Library()
 
 
 @register.filter
 def display_dan(dan):
-    return [x[1] for x in TenhouNickname.RANKS if x[0] == dan][0]
+    return [x[1] for x in TenhouAggregatedStatistics.RANKS if x[0] == dan][0]
 
 
 @register.filter

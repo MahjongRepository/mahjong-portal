@@ -72,6 +72,7 @@ def tenhou_accounts(request):
     accounts = (
         TenhouAggregatedStatistics.objects.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
         .filter(tenhou_object__is_active=True)
+        .exclude(played_games=0)
         .order_by("-rank", "-rate", "-pt")
         .prefetch_related("tenhou_object")
         .prefetch_related("tenhou_object__player")

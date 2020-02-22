@@ -17,30 +17,6 @@ class TenhouActiveNicknameManager(models.Manager):
 
 
 class TenhouNickname(BaseModel):
-    RANKS = [
-        [0, "新人"],
-        [1, "９級"],
-        [2, "８級"],
-        [3, "７級"],
-        [4, "６級"],
-        [5, "５級"],
-        [6, "４級"],
-        [7, "３級"],
-        [8, "２級"],
-        [9, "１級"],
-        [10, "初段"],
-        [11, "二段"],
-        [12, "三段"],
-        [13, "四段"],
-        [14, "五段"],
-        [15, "六段"],
-        [16, "七段"],
-        [17, "八段"],
-        [18, "九段"],
-        [19, "十段"],
-        [20, "天鳳位"],
-    ]
-
     objects = TenhouActiveNicknameManager()
     all_objects = models.Manager()
 
@@ -54,23 +30,11 @@ class TenhouNickname(BaseModel):
     is_main = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
 
-    # DEPRECATED
-    rank = models.PositiveSmallIntegerField(choices=RANKS)
-
-    pt = models.PositiveSmallIntegerField(default=0)
-    end_pt = models.PositiveSmallIntegerField(default=0)
-
-    average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-    played_games = models.PositiveIntegerField(default=0)
-    month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-    month_played_games = models.PositiveIntegerField(default=0)
-    four_games_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-
     def __unicode__(self):
         return self.tenhou_username
 
     class Meta:
-        ordering = ["-rank"]
+        ordering = ["-username_created_at"]
         db_table = "player_tenhounickname"
 
     def four_players_aggregated_statistics(self):
@@ -225,8 +189,12 @@ class TenhouGameLog(models.Model):
     place = models.PositiveSmallIntegerField()
     game_length = models.PositiveSmallIntegerField()
     delta = models.SmallIntegerField(default=0)
-    rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
-    next_rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
+    rank = models.PositiveSmallIntegerField(
+        choices=TenhouAggregatedStatistics.RANKS, null=True, blank=True, default=None
+    )
+    next_rank = models.PositiveSmallIntegerField(
+        choices=TenhouAggregatedStatistics.RANKS, null=True, blank=True, default=None
+    )
     game_date = models.DateTimeField()
     game_rules = models.CharField(max_length=20)
     game_players = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)

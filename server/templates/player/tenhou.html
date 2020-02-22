@@ -10,7 +10,7 @@
     <script>
         var rank_changes = [];
         var ranks = [];
-        {% for rank in tenhou_data.0.RANKS reversed %}
+        {% for rank in RANKS reversed %}
             ranks.push('{{ rank.1 }}');
         {% endfor %}
 
