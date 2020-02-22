@@ -13,7 +13,7 @@ class AddPlayerForm(forms.ModelForm):
 
     class Meta:
         model = Player
-        fields = ["last_name_ru", "first_name_ru", "last_name_en", "first_name_en"]
+        fields = ["last_name_ru", "first_name_ru", "last_name_en", "first_name_en", "city"]
 
     def __init__(self, *args, **kwargs):
         super(AddPlayerForm, self).__init__(*args, **kwargs)
