@@ -1,6 +1,6 @@
 from django import template
 
-from player.models import PlayerERMC
+from player.models import PlayerQuotaEvent
 
 register = template.Library()
 
@@ -8,15 +8,15 @@ register = template.Library()
 @register.filter
 def ermc_color(color):
     index = {
-        "green": PlayerERMC.GREEN,
-        "yellow": PlayerERMC.YELLOW,
-        "orange": PlayerERMC.ORANGE,
-        "blue": PlayerERMC.BLUE,
-        "pink": PlayerERMC.PINK,
-        "gray": PlayerERMC.GRAY,
-        "dark_green": PlayerERMC.DARK_GREEN,
-        "violet": PlayerERMC.VIOLET,
-        "dark_blue": PlayerERMC.DARK_BLUE,
+        "green": PlayerQuotaEvent.GREEN,
+        "yellow": PlayerQuotaEvent.YELLOW,
+        "orange": PlayerQuotaEvent.ORANGE,
+        "blue": PlayerQuotaEvent.BLUE,
+        "pink": PlayerQuotaEvent.PINK,
+        "gray": PlayerQuotaEvent.GRAY,
+        "dark_green": PlayerQuotaEvent.DARK_GREEN,
+        "violet": PlayerQuotaEvent.VIOLET,
+        "dark_blue": PlayerQuotaEvent.DARK_BLUE,
     }.get(color)
 
-    return PlayerERMC.color_map(index)
+    return PlayerQuotaEvent.color_map(index)

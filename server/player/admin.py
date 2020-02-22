@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from player.models import Player, PlayerERMC, PlayerTitle, PlayerWRC
+from player.models import Player, PlayerQuotaEvent, PlayerTitle
 from player.tenhou.models import TenhouNickname
 
 
@@ -44,14 +44,13 @@ class PlayerTitleAdmin(admin.ModelAdmin):
     raw_id_fields = ["player"]
 
 
-class PlayerERMCAdmin(admin.ModelAdmin):
+class PlayerQuotaEventAdmin(admin.ModelAdmin):
     search_fields = ["player__first_name_ru", "player__first_name_en", "player__last_name_ru", "player__last_name_en"]
-    list_display = ["player", "state", "federation_member"]
-    list_filter = ["state"]
+    list_display = ["player", "type", "state", "federation_member"]
+    list_filter = ["type", "state"]
     raw_id_fields = ["player"]
 
 
 admin.site.register(Player, PlayerAdmin)
-admin.site.register(PlayerERMC, PlayerERMCAdmin)
-admin.site.register(PlayerWRC, PlayerERMCAdmin)
+admin.site.register(PlayerQuotaEvent, PlayerQuotaEventAdmin)
 admin.site.register(PlayerTitle, PlayerTitleAdmin)
