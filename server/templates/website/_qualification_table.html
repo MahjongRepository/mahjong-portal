@@ -1,0 +1,48 @@
+{% load i18n humanize player_helper %}
+
+<div class="table-responsive-sm">
+    <table class="table table-hover mt-4">
+        <thead>
+        <tr>
+            <th scope="col" title="RR">#</th>
+            <th scope="col" title="{% trans 'is going to participate' %}">#</th>
+            <th scope="col">{% trans 'Name' %}</th>
+            <th scope="col">
+                {% trans 'MF' %}
+            </th>
+            <th scope="col">{% trans 'Points' %}</th>
+            <th scope="col">{% trans 'From' context 'location' %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rating_result in rating_results %}
+            <tr id="{{ rating_result.player.slug }}" style="background-color: {{ rating_result.get_color }}" title="{{ rating_result.get_state_display }}">
+                <th scope="row" title="RR">{{ rating_result.place }}</th>
+                <th scope="row" title="{% trans 'is going to participate' %}">{{ rating_result.confirmed|default_if_none:"" }}</th>
+                <td>
+                    {% with rating_result.player as player %}
+                        {% include 'common/_player_name.html' %}
+                    {% endwith %}
+                </td>
+                <td>
+                    {{ rating_result.federation_member|yesno:'да,нет,' }}
+                </td>
+                <td>{{ rating_result.score|floatformat:0 }}</td>
+                <td>
+                    {% if rating_result.player.city %}
+                        <a href="{% url 'city_page' rating_result.player.city.slug %}" class="d-print-none">
+                            {{ rating_result.player.city.name }}
+                        </a>
+                        {# special case for print #}
+                        <span class="d-none d-print-block">
+                           {{ rating_result.player.city.name }}
+                        </span>
+                    {% else %}
+                        {{ rating_result.player.country }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

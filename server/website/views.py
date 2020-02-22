@@ -1,5 +1,4 @@
 import csv
-import datetime
 import io
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -12,7 +11,7 @@ from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
-from player.models import Player, PlayerERMC, PlayerWRC
+from player.models import Player, PlayerQuotaEvent
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
@@ -212,69 +211,30 @@ def iormc_2018(request):
 
 
 def ermc_qualification_2019(request):
-    rating = Rating.objects.get(type=Rating.RR)
-
-    rating_date = datetime.date(2019, 1, 1)
-    rating_results = (
-        RatingResult.objects.filter(rating=rating)
-        .filter(date=rating_date)
-        .prefetch_related("player")
-        .prefetch_related("player__city")
-        .prefetch_related("player__ermc")
-        .order_by("place")
-    )
-
-    confirmed = 1
-    not_confirmed_colors = [PlayerERMC.GRAY, PlayerERMC.DARK_GREEN, PlayerERMC.DARK_BLUE]
-    for x in rating_results:
-        try:
-            ermc = x.player.ermc
-
-            if ermc.state in not_confirmed_colors:
-                x.confirmed = None
-            else:
-                x.confirmed = confirmed
-                confirmed += 1
-
-            x.federation_member = ermc.federation_member and "да" or "нет"
-        except PlayerERMC.DoesNotExist:
-            x.confirmed = None
-            x.federation_member = ""
-
-    return render(request, "website/erc_2019.html", {"rating_results": rating_results})
+    return qualification_view(request, PlayerQuotaEvent.ERMC_2019, "website/erc_2019.html")
 
 
 def wrc_qualification_2020(request):
-    rating = Rating.objects.get(type=Rating.RR)
-    rating_date = datetime.date(2020, 2, 1)
-    rating_results = (
-        RatingResult.objects.filter(rating=rating)
-        .filter(date=rating_date)
-        .prefetch_related("player")
-        .prefetch_related("player__city")
-        .prefetch_related("player__wrc")
-        .order_by("place")
-    )[:40]
+    return qualification_view(request, PlayerQuotaEvent.WRC_2020, "website/wrc_2020.html")
 
+
+def qualification_view(request, q_type, template):
+    results = PlayerQuotaEvent.objects.filter(type=q_type)
     confirmed = 1
-    not_confirmed_colors = [PlayerWRC.GRAY, PlayerWRC.DARK_GREEN, PlayerWRC.DARK_BLUE]
-    for x in rating_results:
-        x.wrc = None
-        try:
-            wrc = x.player.wrc
-
-            if wrc.state in not_confirmed_colors:
-                x.confirmed = None
-            else:
-                x.confirmed = confirmed
-                confirmed += 1
-
-            x.federation_member = wrc.federation_member and "да" or "нет"
-        except PlayerWRC.DoesNotExist:
+    not_confirmed_colors = [
+        PlayerQuotaEvent.GRAY,
+        PlayerQuotaEvent.DARK_GREEN,
+        PlayerQuotaEvent.DARK_BLUE,
+        PlayerQuotaEvent.NEW,
+    ]
+    for x in results:
+        if x.state in not_confirmed_colors:
             x.confirmed = None
-            x.federation_member = ""
+        else:
+            x.confirmed = confirmed
+            confirmed += 1
 
-    return render(request, "website/wrc_2020.html", {"rating_results": rating_results})
+    return render(request, template, {"rating_results": results})
 
 
 @user_passes_test(lambda u: u.is_superuser)

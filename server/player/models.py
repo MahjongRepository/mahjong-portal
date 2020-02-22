@@ -79,6 +79,69 @@ class PlayerTitle(BaseModel):
         return self.text
 
 
+class PlayerQuotaEvent(BaseModel):
+    GREEN = 0
+    YELLOW = 1
+    ORANGE = 2
+    BLUE = 3
+    PINK = 4
+    GRAY = 5
+    DARK_GREEN = 6
+    VIOLET = 7
+    DARK_BLUE = 8
+    NEW = 9
+
+    COLORS = [
+        [GREEN, "точно едет"],
+        [YELLOW, "скорее всего едет"],
+        [ORANGE, "пока сомневается, но скорее всего не едет"],
+        [BLUE, "игрок пока ничего не ответил"],
+        [PINK, "игрок пока что не проходит, но готов ехать, если появится квота"],
+        [GRAY, "точно не едет"],
+        [DARK_GREEN, "чемпион"],
+        [VIOLET, "игрок замены"],
+        [DARK_BLUE, "судья"],
+        [NEW, "новая запись"],
+    ]
+
+    ERMC_2019 = 0
+    WRC_2020 = 1
+    TYPES = [[ERMC_2019, "ERMC 2019"], [WRC_2020, "WRC 2020"]]
+
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    place = models.PositiveIntegerField(default=None, null=True, blank=True)
+    score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
+
+    state = models.PositiveSmallIntegerField(choices=COLORS, default=NEW)
+    federation_member = models.BooleanField(default=False, null=True)
+    type = models.PositiveSmallIntegerField(choices=TYPES)
+
+    class Meta:
+        ordering = ["place"]
+
+    def __unicode__(self):
+        return self.player.__unicode__()
+
+    def get_color(self):
+        return PlayerQuotaEvent.color_map(self.state)
+
+    @staticmethod
+    def color_map(index):
+        colors = {
+            PlayerQuotaEvent.GREEN: "#93C47D",
+            PlayerQuotaEvent.YELLOW: "#FFE599",
+            PlayerQuotaEvent.ORANGE: "#F6B26B",
+            PlayerQuotaEvent.BLUE: "#C9DAF8",
+            PlayerQuotaEvent.PINK: "#D5A6BD",
+            PlayerQuotaEvent.GRAY: "#999999",
+            PlayerQuotaEvent.DARK_GREEN: "#45818E",
+            PlayerQuotaEvent.VIOLET: "#8E7CC3",
+            PlayerQuotaEvent.DARK_BLUE: "#5757f8",
+            PlayerQuotaEvent.NEW: "#FFFFFF",
+        }
+        return colors.get(index, "")
+
+
 class PlayerERMC(BaseModel):
     GREEN = 0
     YELLOW = 1
