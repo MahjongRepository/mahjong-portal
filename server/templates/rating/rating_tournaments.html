@@ -15,13 +15,13 @@
         {% endif %}
 
         <h1>{{ rating.name }}</h1>
-        <p>{% trans 'List of tournaments that were included to the rating.' %}</p>
+        <p>{% trans 'List of tournaments that were included in the rating.' %}</p>
 
         {% include 'tournament/_tournaments_table.html' %}
     </div>
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="{{ rating.name }}. {% trans 'List of tournaments that were included to the rating.' %}">
-    <meta property="og:description" content="{{ rating.name }}. {% trans 'List of tournaments that were included to the rating.' %}">
+    <meta name="description" content="{{ rating.name }}. {% trans 'List of tournaments that were included in the rating.' %}">
+    <meta property="og:description" content="{{ rating.name }}. {% trans 'List of tournaments that were included in the rating.' %}">
 {% endblock %}

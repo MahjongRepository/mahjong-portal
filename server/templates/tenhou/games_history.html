@@ -2,13 +2,13 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans 'Tenhou games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}
+    {% trans 'Tenhou.net games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}
 {% endblock %}
 
 {% block content %}
     <div>
         <p><a href="{% url 'tenhou_games_history' previous_day.year previous_day.month previous_day.day %}">{% trans 'Previous day' %}</a></p>
-        <h1>{% trans 'Tenhou games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}</h1>
+        <h1>{% trans 'Tenhou.net games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}</h1>
 
         {% if rank_changes %}
             <h3>{% trans 'Rank changes' %}</h3>
@@ -103,6 +103,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="{% trans 'Tenhou games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}">
-    <meta property="og:description" content="{% trans 'Tenhou games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}">
+    <meta name="description" content="{% trans 'Tenhou.net games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}">
+    <meta property="og:description" content="{% trans 'Tenhou.net games history' %} {{ query_date|date:SHORT_DATE_FORMAT }}">
 {% endblock %}

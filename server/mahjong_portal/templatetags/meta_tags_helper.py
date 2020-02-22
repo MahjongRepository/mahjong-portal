@@ -10,9 +10,9 @@ register = template.Library()
 @register.simple_tag
 def tournaments_list_title(tournament_type, current_year):
     if tournament_type:
-        return _("EMA tournaments tournaments during %d") % current_year
+        return _("EMA tournaments during %d") % current_year
     else:
-        return _("Tournaments tournaments during %d") % current_year
+        return _("Tournaments during %d") % current_year
 
 
 @register.simple_tag
