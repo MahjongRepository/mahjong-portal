@@ -9,14 +9,7 @@ import telegram
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db.models import Q
-from telegram.error import (
-    Unauthorized,
-    BadRequest,
-    TimedOut,
-    NetworkError,
-    ChatMigrated,
-    TelegramError,
-)
+from telegram.error import Unauthorized, BadRequest, TimedOut, NetworkError, ChatMigrated, TelegramError
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters
 from telegram.ext import Updater
@@ -65,11 +58,7 @@ class Command(BaseCommand):
 
         # admin commands
         dispatcher.add_handler(
-            CommandHandler(
-                "restart",
-                restart,
-                filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME),
-            )
+            CommandHandler("restart", restart, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME))
         )
         dispatcher.add_handler(
             CommandHandler(
@@ -87,9 +76,7 @@ class Command(BaseCommand):
         )
         dispatcher.add_handler(
             CommandHandler(
-                "start_games",
-                start_games,
-                filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME),
+                "start_games", start_games, filters=Filters.user(username=TournamentHandler.TG_ADMIN_USERNAME)
             )
         )
         dispatcher.add_handler(
@@ -112,9 +99,7 @@ class Command(BaseCommand):
         dispatcher.add_handler(status_handler)
         dispatcher.add_handler(help_handler)
         dispatcher.add_error_handler(error_callback)
-        dispatcher.add_handler(
-            MessageHandler(Filters.status_update.new_chat_members, new_chat_member)
-        )
+        dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_chat_member))
 
         logger.info("Starting the bot...")
         updater.start_polling()
@@ -136,9 +121,7 @@ def set_up_logging():
     fh = logging.FileHandler(os.path.join(logs_directory, file_name))
     fh.setLevel(logging.DEBUG)
 
-    formatter = logging.Formatter(
-        "%(asctime)s %(levelname)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-    )
+    formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     ch.setFormatter(formatter)
     fh.setFormatter(formatter)
 
@@ -147,18 +130,14 @@ def set_up_logging():
 
 
 def set_game_log(bot, update, args):
-    logger.info(
-        "Set game log command. {}, {}".format(update.message.from_user.username, args)
-    )
+    logger.info("Set game log command. {}, {}".format(update.message.from_user.username, args))
 
     if not len(args):
-        update.message.reply_text(u"Укажите ссылку на ханчан после команды.")
+        update.message.reply_text("Укажите ссылку на ханчан после команды.")
         return
 
     # it can take some time to add log, so lets show typing notification
-    bot.send_chat_action(
-        chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING
-    )
+    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 
     message = tournament_handler.add_game_log(args[0])
     update.message.reply_text(message)
@@ -178,53 +157,39 @@ def get_tournament_status(bot, update):
 def help_bot(bot, update):
     logger.info("Help")
 
-    message = "1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n".format(
-        settings.TOURNAMENT_PUBLIC_LOBBY
-    )
-    message += "2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n".format(
-        settings.PANTHEON_EVENT_ID
-    )
-    message += "3. Текущие игры в лобби:\n https://tenhou.net/wg/?{} \n".format(
-        settings.TOURNAMENT_PUBLIC_LOBBY[:5]
-    )
+    message = "1. Ссылка на турнирное лобби:\n http://tenhou.net/0/?{} \n".format(settings.TOURNAMENT_PUBLIC_LOBBY)
+    message += "2. Ссылка на статистику:\n https://gui.mjtop.net/eid{}/stat \n".format(settings.PANTHEON_EVENT_ID)
+    message += "3. Текущие игры в лобби:\n https://tenhou.net/wg/?{} \n".format(settings.TOURNAMENT_PUBLIC_LOBBY[:5])
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
     message += "5. Регламент турнира:\n https://mahjong.click/ru/online/ \n"
     message += "6. Как получить ссылку на лог игры для flash/windows клиентов?\n https://imgur.com/gallery/7Hv52md \n"
     message += "7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx \n"
     message += "8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n"
     message += "9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e"
-    bot.send_message(
-        chat_id=update.message.chat_id, text=message, disable_web_page_preview=True
-    )
+    bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 
 def set_tenhou_nickname(bot, update, args):
-    logger.info(
-        "Nickname command. {}, {}".format(update.message.from_user.username, args)
-    )
+    logger.info("Nickname command. {}, {}".format(update.message.from_user.username, args))
 
     if not len(args):
-        update.message.reply_text(text=u"Укажите ваш tenhou.net ник после команды.")
+        update.message.reply_text(text="Укажите ваш tenhou.net ник после команды.")
         return
 
     username = update.message.from_user.username
     if not username:
         text = (
-            u"Перед привязкой tenhou.net ника нужно установить username в настройках "
-            u"телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/"
+            "Перед привязкой tenhou.net ника нужно установить username в настройках "
+            "телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/"
         )
         update.message.reply_text(text=text, disable_web_page_preview=True)
         return
 
     # it can take some time to validate nickname, so lets show typing notification
-    bot.send_chat_action(
-        chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING
-    )
+    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 
     tenhou_nickname = args[0]
-    message = tournament_handler.link_username_and_tenhou_nick(
-        username, tenhou_nickname
-    )
+    message = tournament_handler.link_username_and_tenhou_nick(username, tenhou_nickname)
     update.message.reply_text(message)
 
 
@@ -233,9 +198,7 @@ def new_chat_member(bot, update):
     logger.info("New member. {}".format(username))
 
     message = tournament_handler.new_chat_member(username)
-    bot.send_message(
-        chat_id=update.message.chat_id, text=message, disable_web_page_preview=True
-    )
+    bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
 
 def prepare_next_round(bot, update):
@@ -260,9 +223,7 @@ def start_games(bot, update):
 def start_failed_games(bot, update):
     logger.info("Start failed games")
 
-    games = TournamentGame.objects.filter(
-        Q(status=TournamentGame.FAILED_TO_START) | Q(status=TournamentGame.NEW)
-    )
+    games = TournamentGame.objects.filter(Q(status=TournamentGame.FAILED_TO_START) | Q(status=TournamentGame.NEW))
     bot.send_message(chat_id=update.message.chat_id, text="Запускаю игры...")
 
     for game in games:

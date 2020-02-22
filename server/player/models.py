@@ -16,9 +16,7 @@ class Player(BaseModel):
     last_name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
-    country = models.ForeignKey(
-        Country, on_delete=models.PROTECT, null=True, blank=True
-    )
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
     gender = models.PositiveSmallIntegerField(choices=GENDERS, default=NONE)
@@ -42,7 +40,7 @@ class Player(BaseModel):
         if self.is_hide:
             return _("Substitution player")
 
-        return u"{} {}".format(self.last_name, self.first_name)
+        return "{} {}".format(self.last_name, self.first_name)
 
     @property
     def tenhou_object(self):
@@ -63,9 +61,7 @@ class Player(BaseModel):
     @staticmethod
     def ema_queryset():
         return (
-            Player.objects.exclude(Q(ema_id__isnull=True) | Q(ema_id=""))
-            .filter(country__code="RU")
-            .order_by("-ema_id")
+            Player.objects.exclude(Q(ema_id__isnull=True) | Q(ema_id="")).filter(country__code="RU").order_by("-ema_id")
         )
 
 

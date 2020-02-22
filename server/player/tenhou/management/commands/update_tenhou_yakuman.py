@@ -34,9 +34,7 @@ class Command(BaseCommand):
         url = "http://tenhou.net/sc/ykm.js"
         print(url)
 
-        current_date = datetime.datetime.now().replace(
-            tzinfo=pytz.timezone("Asia/Tokyo")
-        )
+        current_date = datetime.datetime.now().replace(tzinfo=pytz.timezone("Asia/Tokyo"))
         current_year = current_date.year
         data = requests.get(url).content.decode("utf-8")
         self.parse_and_create_records(player_profiles, data, current_year)
@@ -45,9 +43,7 @@ class Command(BaseCommand):
         """
         Download historical data
         """
-        current_date = datetime.datetime.now().replace(
-            tzinfo=pytz.timezone("Asia/Tokyo")
-        )
+        current_date = datetime.datetime.now().replace(tzinfo=pytz.timezone("Asia/Tokyo"))
         current_year = current_date.year
 
         # 2006 - 2009 years have old format
@@ -96,15 +92,11 @@ class Command(BaseCommand):
         # new format
         if "\r\n" in yakuman_data:
             yakuman_data = yakuman_data.split("\r\n")[2]
-            yakuman_data = json.loads(
-                yakuman_data[4:-1].replace('"', '\\"').replace("'", '"')
-            )
+            yakuman_data = json.loads(yakuman_data[4:-1].replace('"', '\\"').replace("'", '"'))
         # old format
         else:
             yakuman_data = yakuman_data.split(";\n")[2].strip()
-            yakuman_data = (
-                yakuman_data[4:].replace('"', '\\"').replace("'", '"').replace("\n", "")
-            )
+            yakuman_data = yakuman_data[4:].replace('"', '\\"').replace("'", '"').replace("\n", "")
             yakuman_data = json.loads(yakuman_data)
 
         filtered_results = []
@@ -135,9 +127,7 @@ class Command(BaseCommand):
 
         for item in filtered_results:
             exists = (
-                CollectedYakuman.objects.filter(
-                    tenhou_object=item["tenhou_object"]
-                ).filter(date=item["date"])
+                CollectedYakuman.objects.filter(tenhou_object=item["tenhou_object"]).filter(date=item["date"])
             ).exists()
 
             if not exists:

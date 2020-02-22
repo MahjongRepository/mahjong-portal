@@ -23,9 +23,7 @@ class Command(BaseCommand):
 
         tournament_id = options.get("tournament_id")
 
-        url = "http://mahjong-europe.org/ranking/Tournament/TR_RCR_{}.html".format(
-            tournament_id
-        )
+        url = "http://mahjong-europe.org/ranking/Tournament/TR_RCR_{}.html".format(tournament_id)
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
 

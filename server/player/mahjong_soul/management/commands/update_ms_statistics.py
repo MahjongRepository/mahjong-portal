@@ -34,9 +34,7 @@ class Command(MSBaseCommand):
             response = await lobby.fetch_account_statistic_info(request)
             response = MessageToDict(response)
 
-            self.calculate_and_save_places_statistic(
-                response, four_people_stat, three_people_stat
-            )
+            self.calculate_and_save_places_statistic(response, four_people_stat, three_people_stat)
 
             four_people_stat.save()
             three_people_stat.save()
@@ -45,25 +43,15 @@ class Command(MSBaseCommand):
             self.calculate_and_save_points_diff(three_people_stat)
 
     def calculate_and_save_points_diff(self, stat_object):
-        latest_history = (
-            MSPointsHistory.objects.filter(stat_object=stat_object)
-            .order_by("-created_on")
-            .first()
-        )
+        latest_history = MSPointsHistory.objects.filter(stat_object=stat_object).order_by("-created_on").first()
         if not latest_history:
             MSPointsHistory.objects.create(
-                rank_index=0,
-                stat_object=stat_object,
-                rank=stat_object.rank,
-                points=stat_object.points,
+                rank_index=0, stat_object=stat_object, rank=stat_object.rank, points=stat_object.points
             )
             return
 
         # user stat wasn't changed from latest update
-        if (
-            latest_history.rank == stat_object.rank
-            and latest_history.points == stat_object.points
-        ):
+        if latest_history.rank == stat_object.rank and latest_history.points == stat_object.points:
             return
 
         # only points were changed
@@ -84,25 +72,17 @@ class Command(MSBaseCommand):
             points=stat_object.points,
         )
 
-    def calculate_and_save_places_statistic(
-        self, response, four_people_stat, three_people_stat
-    ):
+    def calculate_and_save_places_statistic(self, response, four_people_stat, three_people_stat):
         four_tonpusen_type = 1
         four_hanchan_type = 2
         three_tonpusen_type = 11
         three_hanchan_type = 12
-        games_statistics = response["detailData"]["rankStatistic"]["totalStatistic"][
-            "allLevelStatistic"
-        ]["gameMode"]
+        games_statistics = response["detailData"]["rankStatistic"]["totalStatistic"]["allLevelStatistic"]["gameMode"]
 
-        four_tonpusen_data = [
-            x for x in games_statistics if x["mode"] == four_tonpusen_type
-        ]
+        four_tonpusen_data = [x for x in games_statistics if x["mode"] == four_tonpusen_type]
         if four_tonpusen_data:
             result = self.calculate_places_from_raw_data(four_tonpusen_data)
-            first_place, second_place, third_place, fourth_place, games_count, average_place = (
-                result
-            )
+            first_place, second_place, third_place, fourth_place, games_count, average_place = result
 
             four_people_stat.tonpusen_games = games_count
             four_people_stat.tonpusen_average_place = average_place
@@ -111,14 +91,10 @@ class Command(MSBaseCommand):
             four_people_stat.tonpusen_third_place = third_place
             four_people_stat.tonpusen_fourth_place = fourth_place
 
-        four_hanchan_data = [
-            x for x in games_statistics if x["mode"] == four_hanchan_type
-        ]
+        four_hanchan_data = [x for x in games_statistics if x["mode"] == four_hanchan_type]
         if four_hanchan_data:
             result = self.calculate_places_from_raw_data(four_hanchan_data)
-            first_place, second_place, third_place, fourth_place, games_count, average_place = (
-                result
-            )
+            first_place, second_place, third_place, fourth_place, games_count, average_place = result
 
             four_people_stat.hanchan_games = games_count
             four_people_stat.hanchan_average_place = average_place
@@ -127,9 +103,7 @@ class Command(MSBaseCommand):
             four_people_stat.hanchan_third_place = third_place
             four_people_stat.hanchan_fourth_place = fourth_place
 
-        three_tonpusen_data = [
-            x for x in games_statistics if x["mode"] == three_tonpusen_type
-        ]
+        three_tonpusen_data = [x for x in games_statistics if x["mode"] == three_tonpusen_type]
         if three_tonpusen_data:
             first_place, second_place, third_place, _, games_count, average_place = self.calculate_places_from_raw_data(
                 three_tonpusen_data
@@ -141,9 +115,7 @@ class Command(MSBaseCommand):
             three_people_stat.tonpusen_second_place = second_place
             three_people_stat.tonpusen_third_place = third_place
 
-        three_hanchan_data = [
-            x for x in games_statistics if x["mode"] == three_hanchan_type
-        ]
+        three_hanchan_data = [x for x in games_statistics if x["mode"] == three_hanchan_type]
         if three_hanchan_data:
             first_place, second_place, third_place, _, games_count, average_place = self.calculate_places_from_raw_data(
                 three_hanchan_data
@@ -162,15 +134,6 @@ class Command(MSBaseCommand):
         fourth_place = data[0]["gameFinalPosition"][3]
 
         games_count = first_place + second_place + third_place + fourth_place
-        average_place = (
-            first_place + second_place * 2 + third_place * 3 + fourth_place * 4
-        ) / games_count
+        average_place = (first_place + second_place * 2 + third_place * 3 + fourth_place * 4) / games_count
 
-        return (
-            first_place,
-            second_place,
-            third_place,
-            fourth_place,
-            games_count,
-            average_place,
-        )
+        return (first_place, second_place, third_place, fourth_place, games_count, average_place)

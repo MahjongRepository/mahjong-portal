@@ -33,12 +33,8 @@ class Rating(BaseModel):
 
 class RatingDelta(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
-    player = models.ForeignKey(
-        Player, on_delete=models.PROTECT, related_name="rating_delta"
-    )
-    tournament = models.ForeignKey(
-        Tournament, on_delete=models.PROTECT, related_name="rating_delta"
-    )
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name="rating_delta")
+    tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name="rating_delta")
     is_active = models.BooleanField(default=False)
 
     base_rank = models.DecimalField(decimal_places=2, max_digits=10)
@@ -52,30 +48,21 @@ class RatingDelta(BaseModel):
 
     @property
     def coefficient_obj(self):
-        return TournamentCoefficients.objects.get(
-            rating=self.rating, tournament=self.tournament, date=self.date
-        )
+        return TournamentCoefficients.objects.get(rating=self.rating, tournament=self.tournament, date=self.date)
 
     @property
     def coefficient_value(self):
         coefficient_obj = self.coefficient_obj
         return get_tournament_coefficient(
-            self.rating.type == Rating.EMA,
-            self.tournament_id,
-            self.player,
-            coefficient_obj.coefficient,
+            self.rating.type == Rating.EMA, self.tournament_id, self.player, coefficient_obj.coefficient
         )
 
 
 class RatingResult(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
-    player = models.ForeignKey(
-        Player, on_delete=models.PROTECT, related_name="rating_results"
-    )
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name="rating_results")
 
-    score = models.DecimalField(
-        default=None, decimal_places=2, max_digits=10, null=True, blank=True
-    )
+    score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
     tournament_numbers = models.PositiveIntegerField(null=True, blank=True)
@@ -97,18 +84,12 @@ class RatingResult(BaseModel):
 
 class TournamentCoefficients(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
-    tournament = models.ForeignKey(
-        Tournament, on_delete=models.CASCADE, related_name="rating_results"
-    )
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="rating_results")
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
 
-    coefficient = models.DecimalField(
-        decimal_places=2, max_digits=10, null=True, blank=True
-    )
+    coefficient = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-    previous_age = models.DecimalField(
-        decimal_places=2, max_digits=10, null=True, blank=True
-    )
+    previous_age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
 
     def __unicode__(self):
         return self.rating.name

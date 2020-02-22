@@ -18,12 +18,6 @@ def ms_accounts(request, stat_type="four"):
         statistics = statistics.filter(game_type=MSAccountStatistic.THREE_PLAYERS)
 
     statistics = statistics.filter(Q(tonpusen_games__gt=0) | Q(hanchan_games__gt=0))
-    statistics = statistics.select_related("account", "account__player").order_by(
-        "-rank", "-points"
-    )
+    statistics = statistics.select_related("account", "account__player").order_by("-rank", "-points")
 
-    return render(
-        request,
-        "ms/ms_accounts.html",
-        {"statistics": statistics, "four_players": four_players},
-    )
+    return render(request, "ms/ms_accounts.html", {"statistics": statistics, "four_players": four_players})

@@ -13,11 +13,7 @@ def club_list(request):
     if get_language() == "ru":
         map_language = "ru_RU"
 
-    return render(
-        request,
-        "club/list.html",
-        {"clubs": clubs, "map_language": map_language, "page": "club"},
-    )
+    return render(request, "club/list.html", {"clubs": clubs, "map_language": map_language, "page": "club"})
 
 
 def club_details(request, slug):
@@ -30,10 +26,7 @@ def club_details(request, slug):
     )[:5]
 
     club_sessions = (
-        club.club_sessions.all()
-        .order_by("-date")
-        .prefetch_related("results")
-        .prefetch_related("results__player")
+        club.club_sessions.all().order_by("-date").prefetch_related("results").prefetch_related("results__player")
     )[:10]
     total_sessions = club.club_sessions.all().count()
 
@@ -53,11 +46,7 @@ def club_details(request, slug):
     if sort == "rank":
         real_sort = [F("rank").desc(nulls_last=True), "average_place"]
 
-    club_rating = (
-        club.rating.filter(games_count__gte=10)
-        .order_by(*real_sort)
-        .prefetch_related("player")
-    )
+    club_rating = club.rating.filter(games_count__gte=10).order_by(*real_sort).prefetch_related("player")
 
     return render(
         request,
@@ -84,8 +73,4 @@ def club_tournaments(request, slug):
         .order_by("-end_date")
         .prefetch_related("city")
     )
-    return render(
-        request,
-        "club/tournaments.html",
-        {"club": club, "tournaments": tournaments, "page": "club"},
-    )
+    return render(request, "club/tournaments.html", {"club": club, "tournaments": tournaments, "page": "club"})

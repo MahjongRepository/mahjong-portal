@@ -31,9 +31,7 @@ class Command(BaseCommand):
         tenhou_nickname = options.get("tenhou_nickname")
         account_start_date = get_started_date_for_account(tenhou_nickname)
 
-        is_main = (
-            TenhouNickname.objects.filter(player=player, is_active=True).count() == 0
-        )
+        is_main = TenhouNickname.objects.filter(player=player, is_active=True).count() == 0
         tenhou_object = TenhouNickname.objects.create(
             is_main=is_main,
             player=player,

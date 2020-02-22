@@ -35,24 +35,18 @@ def player_details(request, slug, year=None, month=None, day=None):
         else:
             rating_date = entered_date
 
-        result = RatingResult.objects.filter(
-            date=rating_date, rating=rating, player=player
-        ).first()
+        result = RatingResult.objects.filter(date=rating_date, rating=rating, player=player).first()
         if result:
             rating_results.append(result)
 
     tournament_results = (
-        TournamentResult.objects.filter(player=player)
-        .prefetch_related("tournament")
-        .order_by("-tournament__end_date")
+        TournamentResult.objects.filter(player=player).prefetch_related("tournament").order_by("-tournament__end_date")
     )[:10]
 
     tenhou_data = TenhouNickname.objects.filter(player=player, is_main=True)
     ms_data = MSAccount.objects.filter(player=player).first()
     club_ratings = (
-        ClubRating.objects.filter(player=player)
-        .prefetch_related("club", "club__city")
-        .order_by("-games_count")
+        ClubRating.objects.filter(player=player).prefetch_related("club", "club__city").order_by("-games_count")
     )
 
     return render(
@@ -74,16 +68,10 @@ def player_tournaments(request, slug):
     player = get_object_or_404(Player, slug=slug)
 
     tournament_results = (
-        TournamentResult.objects.filter(player=player)
-        .prefetch_related("tournament")
-        .order_by("-tournament__end_date")
+        TournamentResult.objects.filter(player=player).prefetch_related("tournament").order_by("-tournament__end_date")
     )
 
-    return render(
-        request,
-        "player/tournaments.html",
-        {"player": player, "tournament_results": tournament_results},
-    )
+    return render(request, "player/tournaments.html", {"player": player, "tournament_results": tournament_results})
 
 
 def player_rating_details(request, slug, rating_slug, year=None, month=None, day=None):
@@ -94,9 +82,7 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
     if not rating_date:
         today, rating_date = get_latest_rating_date(rating)
 
-    rating_result = get_object_or_404(
-        RatingResult, rating=rating, player=player, date=rating_date
-    )
+    rating_result = get_object_or_404(RatingResult, rating=rating, player=player, date=rating_date)
 
     rating_deltas = (
         RatingDelta.objects.filter(player=player, rating=rating, date=rating_date)
@@ -111,18 +97,11 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
         for d in sorted(
             rating_deltas,
             reverse=True,
-            key=lambda d: float(d.base_rank)
-            * float(d.coefficient_obj.age)
-            * float(d.coefficient_value),
+            key=lambda d: float(d.base_rank) * float(d.coefficient_obj.age) * float(d.coefficient_value),
         )
     )[:top_tournaments_number]
 
-    last_rating_place = (
-        RatingResult.objects.filter(rating=rating, date=rating_date)
-        .order_by("place")
-        .last()
-        .place
-    )
+    last_rating_place = RatingResult.objects.filter(rating=rating, date=rating_date).order_by("place").last().place
     filtered_results = _get_rating_changes(rating, player, today)
 
     return render(
@@ -151,9 +130,7 @@ def player_rating_changes(request, slug, rating_slug, year=None, month=None, day
     if not rating_date:
         today, rating_date = get_latest_rating_date(rating)
 
-    rating_result = get_object_or_404(
-        RatingResult, rating=rating, player=player, date=rating_date
-    )
+    rating_result = get_object_or_404(RatingResult, rating=rating, player=player, date=rating_date)
     filtered_results = reversed(_get_rating_changes(rating, player, today))
 
     return render(
@@ -172,9 +149,7 @@ def player_rating_changes(request, slug, rating_slug, year=None, month=None, day
 
 def _get_rating_changes(rating, player, today):
     tournament_coefficients = (
-        TournamentCoefficients.objects.filter(
-            tournament__results__player=player, rating=rating
-        )
+        TournamentCoefficients.objects.filter(tournament__results__player=player, rating=rating)
         .exclude(previous_age=None)
         .exclude(age=F("previous_age"))
         .order_by("date")
@@ -183,17 +158,11 @@ def _get_rating_changes(rating, player, today):
     tournament_coefficients_by_date = defaultdict(list)
     for tc in tournament_coefficients:
         tournament_coefficients_by_date[tc.date].append(
-            {
-                "tournament_name": tc.tournament.name,
-                "age": float(tc.age),
-                "previous_age": float(tc.previous_age),
-            }
+            {"tournament_name": tc.tournament.name, "age": float(tc.age), "previous_age": float(tc.previous_age)}
         )
 
     all_rating_results = (
-        RatingResult.objects.filter(rating=rating, player=player)
-        .filter(date__lte=today)
-        .order_by("date")
+        RatingResult.objects.filter(rating=rating, player=player).filter(date__lte=today).order_by("date")
     )
 
     filtered_results = []
@@ -218,13 +187,9 @@ def _get_rating_changes(rating, player, today):
 def player_tenhou_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
     tenhou_data = (
-        TenhouNickname.objects.filter(player=player)
-        .order_by("-is_main")
-        .prefetch_related("aggregated_statistics")
+        TenhouNickname.objects.filter(player=player).order_by("-is_main").prefetch_related("aggregated_statistics")
     )
-    return render(
-        request, "player/tenhou.html", {"player": player, "tenhou_data": tenhou_data}
-    )
+    return render(request, "player/tenhou.html", {"player": player, "tenhou_data": tenhou_data})
 
 
 def player_ms_details(request, slug):

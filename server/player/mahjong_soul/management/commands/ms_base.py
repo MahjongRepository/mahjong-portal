@@ -28,9 +28,7 @@ class MSBaseCommand(BaseCommand):
     TOKEN_PATH = os.path.join(settings.BASE_DIR, ".ms")
 
     def handle(self, *args, **options):
-        asyncio.run(
-            self.run(settings.MS_USERNAME, settings.MS_PASSWORD, *args, **options)
-        )
+        asyncio.run(self.run(settings.MS_USERNAME, settings.MS_PASSWORD, *args, **options))
 
     async def run(self, username, password, *args, **options):
         lobby, channel = await self.connect()
@@ -53,15 +51,11 @@ class MSBaseCommand(BaseCommand):
                 version = await res.json()
                 version = version["version"]
 
-            async with session.get(
-                "{}/1/v{}/config.json".format(MS_HOST, version)
-            ) as res:
+            async with session.get("{}/1/v{}/config.json".format(MS_HOST, version)) as res:
                 config = await res.json()
                 url = config["ip"][0]["region_urls"]["mainland"]
 
-            async with session.get(
-                url + "?service=ws-gateway&protocol=ws&ssl=true"
-            ) as res:
+            async with session.get(url + "?service=ws-gateway&protocol=ws&ssl=true") as res:
                 servers = await res.json()
                 # maintenance mode
                 if not servers.get("servers"):
@@ -89,9 +83,7 @@ class MSBaseCommand(BaseCommand):
 
         req = pb.ReqLogin()
         req.account = username
-        req.password = hmac.new(
-            b"lailai", password.encode(), hashlib.sha256
-        ).hexdigest()
+        req.password = hmac.new(b"lailai", password.encode(), hashlib.sha256).hexdigest()
         req.device.device_type = "pc"
         req.device.browser = "safari"
         req.random_key = uuid_key

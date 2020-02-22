@@ -17,11 +17,7 @@ from system.ema_players_admin.forms import AddPlayerForm
 def list_of_ema_players(request):
     query = request.GET.get("q")
     players = _get_players_query(query)
-    return render(
-        request,
-        "ema_players_admin/players_list.html",
-        {"players": players, "query": query},
-    )
+    return render(request, "ema_players_admin/players_list.html", {"players": players, "query": query})
 
 
 @login_required
@@ -34,14 +30,7 @@ def download_players_list_csv(request):
     writer = csv.writer(content)
     writer.writerow(["EMA_NUMBER", "LAST_NAME", "FIRST_NAME", "COUNTRY"])
     for player in players:
-        writer.writerow(
-            [
-                player.ema_id,
-                player.last_name_en.upper(),
-                player.first_name_en.upper(),
-                "RUS : Russia",
-            ]
-        )
+        writer.writerow([player.ema_id, player.last_name_en.upper(), player.first_name_en.upper(), "RUS : Russia"])
 
     response = HttpResponse(content.getvalue(), content_type="text/x-csv")
     response["Content-Disposition"] = "attachment; filename=ema_players.csv"
@@ -72,9 +61,7 @@ def add_new_player(request):
             player = form.save(commit=False)
             player.country = Country.objects.get(code="RU")
             player.ema_id = player.latest_ema_id + 1
-            player.slug = slugify(
-                "{} {}".format(player.last_name_en, player.first_name_en)
-            )
+            player.slug = slugify("{} {}".format(player.last_name_en, player.first_name_en))
             player.save()
 
             return redirect("list_of_ema_players")

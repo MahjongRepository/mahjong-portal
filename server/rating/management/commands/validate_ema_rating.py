@@ -56,9 +56,7 @@ class Command(BaseCommand):
             if last_name == "Wo&Zacute;Niak":
                 last_name = "Woźniak"
 
-            country_code = (
-                os.path.basename(data[6].find("img")["src"]).replace(".png", "").upper()
-            )
+            country_code = os.path.basename(data[6].find("img")["src"]).replace(".png", "").upper()
 
             ema_players[ema_id] = {
                 "place": place,
@@ -94,6 +92,23 @@ class Command(BaseCommand):
                 "tournament_numbers": result.tournament_numbers,
             }
 
+        missed = self.get_missed_players(player, ema_players)
+
+        print("")
+        for player in missed:
+            print("Missed player in our rating: {}".format(format_player(player)))
+
+        print("")
+        for ema_id in players.keys():
+            if ema_id not in ema_players:
+                player = players[ema_id]
+                print("User had to be removed from rating: {}".format(format_player(player)))
+
+        print("")
+        print("EMA rating date: {}".format(rating_date))
+        print("Our rating date: {}".format(our_rating_date))
+
+    def get_missed_players(self, players, ema_players):
         missed = []
         for ema_id in reversed(list(ema_players.keys())):
             ema_player = ema_players[ema_id]
@@ -104,36 +119,28 @@ class Command(BaseCommand):
                 if player["scores"] != ema_player["scores"]:
                     print(
                         "Not correct scores: {} {}. For {}".format(
-                            ema_player["scores"],
-                            player["scores"],
-                            format_player(ema_player),
+                            ema_player["scores"], player["scores"], format_player(ema_player)
                         )
                     )
 
                 if player["place"] != ema_player["place"]:
                     print(
                         "Not correct place: {} {}. For {}".format(
-                            ema_player["place"],
-                            player["place"],
-                            format_player(ema_player),
+                            ema_player["place"], player["place"], format_player(ema_player)
                         )
                     )
 
                 if player["tournament_numbers"] != ema_player["tournament_numbers"]:
                     print(
                         "Not correct tournament numbers: {} {}. For {}".format(
-                            ema_player["tournament_numbers"],
-                            player["tournament_numbers"],
-                            format_player(ema_player),
+                            ema_player["tournament_numbers"], player["tournament_numbers"], format_player(ema_player)
                         )
                     )
 
                 if player["country_code"] != ema_player["country_code"]:
                     print(
                         "Not correct country: {} {}. For {}".format(
-                            ema_player["country_code"],
-                            player["country_code"],
-                            format_player(ema_player),
+                            ema_player["country_code"], player["country_code"], format_player(ema_player)
                         )
                     )
 
@@ -143,35 +150,14 @@ class Command(BaseCommand):
                 ):
                     print(
                         "Names mismatch: id= {} {}".format(
-                            "{}".format(ema_id),
-                            "f= {} l= {}".format(
-                                ema_player["first_name"], ema_player["last_name"]
-                            ),
+                            "{}".format(ema_id), "f= {} l= {}".format(ema_player["first_name"], ema_player["last_name"])
                         )
                     )
             else:
                 missed.append(ema_player)
 
-        print("")
-        for player in missed:
-            print("Missed player in our rating: {}".format(format_player(player)))
-
-        print("")
-        for ema_id in players.keys():
-            if ema_id not in ema_players:
-                player = players[ema_id]
-                print(
-                    "User had to be removed from rating: {}".format(
-                        format_player(player)
-                    )
-                )
-
-        print("")
-        print("EMA rating date: {}".format(rating_date))
-        print("Our rating date: {}".format(our_rating_date))
+        return missed
 
 
 def format_player(player):
-    return "{} {} {}".format(
-        player["ema_id"], player["last_name"], player["first_name"]
-    )
+    return "{} {} {}".format(player["ema_id"], player["last_name"], player["first_name"])

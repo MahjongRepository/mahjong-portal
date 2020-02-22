@@ -26,9 +26,7 @@ def tournaments_list_description(tournament_type, current_year):
 @register.simple_tag
 def tournament_page_description(tournament):
     if tournament.city:
-        place = "{}, {}".format(
-            prepositional(tournament.city.name).title(), tournament.country
-        )
+        place = "{}, {}".format(prepositional(tournament.city.name).title(), tournament.country)
     else:
         place = "{}".format(prepositional(tournament.country.name).title())
 
@@ -46,10 +44,7 @@ def club_page_description(club):
     else:
         place = "{}".format(prepositional(club.country.name).title())
 
-    return _('Riichi mahjong club "%(name)s" in %(place)s') % {
-        "name": club.name,
-        "place": place,
-    }
+    return _('Riichi mahjong club "%(name)s" in %(place)s') % {"name": club.name, "place": place}
 
 
 @register.simple_tag
@@ -59,7 +54,4 @@ def player_page_description(player):
     else:
         place = "{}".format(genitive(player.country.name).title())
 
-    return _("Riichi mahjong player %(name)s from %(place)s") % {
-        "name": player.full_name,
-        "place": place,
-    }
+    return _("Riichi mahjong player %(name)s from %(place)s") % {"name": player.full_name, "place": place}

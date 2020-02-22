@@ -68,10 +68,7 @@ ROOT_URLCONF = "mahjong_portal.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            os.path.join(BASE_DIR, "templates"),
-            os.path.join(BASE_DIR, "system", "templates"),
-        ],
+        "DIRS": [os.path.join(BASE_DIR, "templates"), os.path.join(BASE_DIR, "system", "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -100,9 +97,7 @@ if os.environ.get("PANTHEON_DB_URL"):
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -141,28 +136,14 @@ LOGGING = {
     "disable_existing_loggers": False,
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "filters": {
-        "skip_site_packages_logs": {
-            "()": "django.utils.log.CallbackFilter",
-            "callback": skip_site_packages_logs,
-        }
+        "skip_site_packages_logs": {"()": "django.utils.log.CallbackFilter", "callback": skip_site_packages_logs}
     },
     "formatters": {
-        "simple": {
-            "format": "%(asctime)s django %(levelname)s: %(message)s",
-            "datefmt": "%Y-%m-%dT%H:%M:%S",
-        }
+        "simple": {"format": "%(asctime)s django %(levelname)s: %(message)s", "datefmt": "%Y-%m-%dT%H:%M:%S"}
     },
     "loggers": {
-        "django": {
-            "handlers": ["console"],
-            "level": DJANGO_LOG_LEVEL,
-            "propagate": True,
-        },
-        "django.db.backends": {
-            "level": "ERROR",
-            "handlers": ["console"],
-            "propagate": False,
-        },
+        "django": {"handlers": ["console"], "level": DJANGO_LOG_LEVEL, "propagate": True},
+        "django.db.backends": {"level": "ERROR", "handlers": ["console"], "propagate": False},
         "django.template": {
             "handlers": ["console"],
             "filters": ["skip_site_packages_logs"],
@@ -220,5 +201,5 @@ CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
 # support for non docker installations
 try:
     from .settings_local import *
-except:
+except ImportError:
     pass

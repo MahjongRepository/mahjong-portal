@@ -39,10 +39,7 @@ def home(request):
     )
 
     events = (
-        Tournament.public.filter(is_upcoming=True)
-        .filter(is_event=True)
-        .prefetch_related("city")
-        .order_by("start_date")
+        Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
     )
 
     return render(
@@ -74,9 +71,7 @@ def championships(request):
         Q(tournament_type=Tournament.CHAMPIONSHIP) | Q(russian_cup=True)
     ).order_by("-end_date")
 
-    return render(
-        request, "website/championships.html", {"championships": championships}
-    )
+    return render(request, "website/championships.html", {"championships": championships})
 
 
 def contacts(request):
@@ -96,20 +91,14 @@ def search(request):
     query_list = [x.object for x in results]
     players = [x for x in query_list if x.__class__ == Player]
 
-    return render(
-        request, "website/search.html", {"players": players, "search_query": query}
-    )
+    return render(request, "website/search.html", {"players": players, "search_query": query})
 
 
 def city_page(request, slug):
     city = get_object_or_404(City, slug=slug)
 
     clubs = Club.objects.filter(city=city).prefetch_related("city")
-    tournaments = (
-        Tournament.public.filter(city=city, is_event=False)
-        .order_by("-end_date")
-        .prefetch_related("city")
-    )
+    tournaments = Tournament.public.filter(city=city, is_event=False).order_by("-end_date").prefetch_related("city")
 
     players = Player.objects.filter(city=city).prefetch_related("city")
     for player in players:
@@ -123,9 +112,7 @@ def city_page(request, slug):
     players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
     return render(
-        request,
-        "website/city.html",
-        {"city": city, "clubs": clubs, "players": players, "tournaments": tournaments},
+        request, "website/city.html", {"city": city, "clubs": clubs, "players": players, "tournaments": tournaments}
     )
 
 
@@ -133,10 +120,7 @@ def players_api(request):
     translation.activate("ru")
 
     players = (
-        Player.objects.filter(country__code="RU")
-        .prefetch_related("city")
-        .prefetch_related("tenhou")
-        .order_by("id")
+        Player.objects.filter(country__code="RU").prefetch_related("city").prefetch_related("tenhou").order_by("id")
     )
 
     data = []
@@ -184,9 +168,7 @@ def iormc_2018(request):
     winter_id = 323
 
     tournament_ids = [spring_id, summer_id, winter_id]
-    results = TournamentResult.objects.filter(
-        tournament_id__in=tournament_ids
-    ).prefetch_related("player")
+    results = TournamentResult.objects.filter(tournament_id__in=tournament_ids).prefetch_related("player")
     data = {}
     for result in results:
         if result.player.is_hide or result.player.is_replacement:
@@ -224,11 +206,7 @@ def iormc_2018(request):
 
             data[key]["total"] = max([first, second, third])
 
-    data = sorted(
-        data.values(),
-        key=lambda x: (x["number_of_played"] >= 2, x["total"]),
-        reverse=True,
-    )
+    data = sorted(data.values(), key=lambda x: (x["number_of_played"] >= 2, x["total"]), reverse=True)
 
     return render(request, "website/iormc.html", {"data": data})
 
@@ -247,11 +225,7 @@ def ermc_qualification_2019(request):
     )
 
     confirmed = 1
-    not_confirmed_colors = [
-        PlayerERMC.GRAY,
-        PlayerERMC.DARK_GREEN,
-        PlayerERMC.DARK_BLUE,
-    ]
+    not_confirmed_colors = [PlayerERMC.GRAY, PlayerERMC.DARK_GREEN, PlayerERMC.DARK_BLUE]
     for x in rating_results:
         try:
             ermc = x.player.ermc
@@ -365,9 +339,7 @@ def export_tournament_results(request, tournament_id):
     for x in rows:
         writer.writerow(x)
 
-    file_name = slugify(
-        "{} {} results".format(tournament.name_en, tournament.end_date.year)
-    )
+    file_name = slugify("{} {} results".format(tournament.name_en, tournament.end_date.year))
 
     response = HttpResponse(content.getvalue(), content_type="text/plain")
     response["Content-Disposition"] = "attachment; filename={}.csv".format(file_name)

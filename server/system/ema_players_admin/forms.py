@@ -29,14 +29,10 @@ class AddPlayerForm(forms.ModelForm):
             last_name_ru = last_name_ru.title()
 
             try:
-                player = Player.objects.get(
-                    first_name_ru=first_name_ru, last_name_ru=last_name_ru
-                )
+                player = Player.objects.get(first_name_ru=first_name_ru, last_name_ru=last_name_ru)
                 if player.ema_id:
                     raise forms.ValidationError(
-                        "Игрок с таким именем уже существует и у него есть ema id {}.".format(
-                            player.ema_id
-                        )
+                        "Игрок с таким именем уже существует и у него есть ema id {}.".format(player.ema_id)
                     )
                 else:
                     message = "Игрок с таким именем уже существует."
@@ -45,17 +41,13 @@ class AddPlayerForm(forms.ModelForm):
 
                     message += " {}.".format(player.country.name)
 
-                    link = "<a href={}>Да, давай!</a>".format(
-                        reverse("assign_ema_id", kwargs={"player_id": player.id})
-                    )
+                    link = "<a href={}>Да, давай!</a>".format(reverse("assign_ema_id", kwargs={"player_id": player.id}))
                     message += " Добавить ему EMA id? {}".format(link)
 
                     raise forms.ValidationError(mark_safe(message))
 
             except Player.MultipleObjectsReturned:
-                raise forms.ValidationError(
-                    "Игроков с таким именем уже несколько. Обратитесь к администратору."
-                )
+                raise forms.ValidationError("Игроков с таким именем уже несколько. Обратитесь к администратору.")
             except Player.DoesNotExist:
                 pass
 

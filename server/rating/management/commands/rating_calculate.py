@@ -37,22 +37,13 @@ class Command(BaseCommand):
                 "rating_date": today - datetime.timedelta(days=365 * 2),
                 "calculator": RatingRRCalculation,
                 "rating_type": Rating.RR,
-                "tournament_types": [
-                    Tournament.RR,
-                    Tournament.EMA,
-                    Tournament.FOREIGN_EMA,
-                ],
+                "tournament_types": [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA],
             },
             "crr": {
                 "rating_date": today - datetime.timedelta(days=365 * 2),
                 "calculator": RatingCRRCalculation,
                 "rating_type": Rating.CRR,
-                "tournament_types": [
-                    Tournament.CRR,
-                    Tournament.RR,
-                    Tournament.EMA,
-                    Tournament.FOREIGN_EMA,
-                ],
+                "tournament_types": [Tournament.CRR, Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA],
             },
             "online": {
                 "rating_date": today - datetime.timedelta(days=913),
@@ -64,11 +55,7 @@ class Command(BaseCommand):
                 "rating_date": today - datetime.timedelta(days=365 * 2),
                 "calculator": RatingEMACalculation,
                 "rating_type": Rating.EMA,
-                "tournament_types": [
-                    Tournament.EMA,
-                    Tournament.FOREIGN_EMA,
-                    Tournament.CHAMPIONSHIP,
-                ],
+                "tournament_types": [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP],
             },
         }
 
@@ -83,9 +70,7 @@ class Command(BaseCommand):
         rating_date = rating_data["rating_date"]
         rating = Rating.objects.get(type=rating_data["rating_type"])
         tournaments = (
-            Tournament.public.filter(
-                tournament_type__in=rating_data["tournament_types"]
-            )
+            Tournament.public.filter(tournament_type__in=rating_data["tournament_types"])
             .filter(is_upcoming=False)
             .order_by("end_date")
         )
@@ -94,9 +79,7 @@ class Command(BaseCommand):
         print("Rating date =", rating_date)
 
         if specified_date:
-            specified_date = datetime.datetime.strptime(
-                specified_date, "%Y-%m-%d"
-            ).date()
+            specified_date = datetime.datetime.strptime(specified_date, "%Y-%m-%d").date()
             RatingDate.objects.filter(rating=rating, date=specified_date).delete()
 
             dates_to_recalculate = [specified_date]
@@ -133,12 +116,8 @@ class Command(BaseCommand):
 
             print("Found dates: {}".format(len(dates_to_process)))
 
-            already_added_dates = RatingDate.objects.filter(rating=rating).values_list(
-                "date", flat=True
-            )
-            dates_to_recalculate = sorted(
-                list(set(dates_to_process) - set(already_added_dates))
-            )
+            already_added_dates = RatingDate.objects.filter(rating=rating).values_list("date", flat=True)
+            dates_to_recalculate = sorted(list(set(dates_to_process) - set(already_added_dates)))
 
             print("Dates to recalculate: {}".format(len(dates_to_recalculate)))
 
@@ -184,13 +163,9 @@ class Command(BaseCommand):
 
         print("{0}: End".format(get_date_string()))
 
-    def calculate_rating(
-        self, dates_to_process, tournaments, calculator, rating, is_future=False
-    ):
-        for i, rating_date in enumerate(dates_to_process):
-            RatingDate.objects.create(
-                rating=rating, date=rating_date, is_future=is_future
-            )
+    def calculate_rating(self, dates_to_process, tournaments, calculator, rating, is_future=False):
+        for rating_date in dates_to_process:
+            RatingDate.objects.create(rating=rating, date=rating_date, is_future=is_future)
 
             RatingResult.objects.filter(rating=rating, date=rating_date).delete()
             RatingDelta.objects.filter(rating=rating, date=rating_date).delete()
@@ -203,9 +178,7 @@ class Command(BaseCommand):
 
             calculator.calculate_players_rating_rank(rating, rating_date)
 
-    def find_tournament_dates_changes(
-        self, start_date, stop_date, tournaments, calculator, tournaments_diff
-    ):
+    def find_tournament_dates_changes(self, start_date, stop_date, tournaments, calculator, tournaments_diff):
         continue_work = True
         dates_to_process = []
         while continue_work:

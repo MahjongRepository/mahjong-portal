@@ -39,26 +39,20 @@ class MSAccountStatistic(models.Model):
     THREE_PLAYERS = 1
     TYPES = [[FOUR_PLAYERS, "Four player"], [THREE_PLAYERS, "Three player"]]
 
-    account = models.ForeignKey(
-        MSAccount, related_name="statistics", on_delete=models.CASCADE
-    )
+    account = models.ForeignKey(MSAccount, related_name="statistics", on_delete=models.CASCADE)
     game_type = models.PositiveSmallIntegerField(choices=TYPES)
     rank = models.PositiveSmallIntegerField(null=True, blank=True)
     points = models.PositiveSmallIntegerField(null=True, blank=True)
 
     tonpusen_games = models.PositiveIntegerField(default=0)
-    tonpusen_average_place = models.DecimalField(
-        decimal_places=2, max_digits=10, default=0
-    )
+    tonpusen_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     tonpusen_first_place = models.PositiveIntegerField(default=0)
     tonpusen_second_place = models.PositiveIntegerField(default=0)
     tonpusen_third_place = models.PositiveIntegerField(default=0)
     tonpusen_fourth_place = models.PositiveIntegerField(default=0)
 
     hanchan_games = models.PositiveIntegerField(default=0)
-    hanchan_average_place = models.DecimalField(
-        decimal_places=2, max_digits=10, default=0
-    )
+    hanchan_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     hanchan_first_place = models.PositiveIntegerField(default=0)
     hanchan_second_place = models.PositiveIntegerField(default=0)
     hanchan_third_place = models.PositiveIntegerField(default=0)
@@ -88,9 +82,7 @@ class MSAccountStatistic(models.Model):
         rank = data and data.first().rank or None
         if not rank:
             return []
-        return MSPointsHistory.objects.filter(stat_object=self, rank=rank).order_by(
-            "created_on"
-        )
+        return MSPointsHistory.objects.filter(stat_object=self, rank=rank).order_by("created_on")
 
     def last_played_date(self):
         data = MSPointsHistory.objects.filter(stat_object=self).order_by("-created_on")

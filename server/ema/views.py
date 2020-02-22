@@ -9,9 +9,9 @@ from rating.utils import get_latest_rating_date
 def best_countries(request):
     rating = Rating.objects.get(type=Rating.EMA)
     today, rating_date = get_latest_rating_date(rating)
-    ema_ratings = RatingResult.objects.filter(
-        rating=rating, date=rating_date
-    ).prefetch_related("player", "rating", "player__country")
+    ema_ratings = RatingResult.objects.filter(rating=rating, date=rating_date).prefetch_related(
+        "player", "rating", "player__country"
+    )
     countries = _get_countries_data(ema_ratings)
     return render(request, "ema/best_countries.html", {"countries": countries})
 
@@ -27,12 +27,12 @@ def ema_quotas(request):
     # European and World champions
     available_seats = total_seats - 2
 
-    ema_ratings = RatingResult.objects.filter(
-        rating__type=Rating.EMA, date=datetime.date(2020, 1, 1)
-    ).prefetch_related("player", "rating", "player__country")
+    ema_ratings = RatingResult.objects.filter(rating__type=Rating.EMA, date=datetime.date(2020, 1, 1)).prefetch_related(
+        "player", "rating", "player__country"
+    )
     countries_data = _get_countries_data(ema_ratings)
 
-    for rank, data in enumerate(countries_data):
+    for data in countries_data:
         data["b_quota"] = 0
         data["country_players"] = len(data["players_rating"])
         data["country_required_rating_players"] = len(
@@ -42,9 +42,7 @@ def ema_quotas(request):
     quotas = {}
 
     # First, seats will be given to all countries in descending order of ranking
-    countries_data = sorted(
-        countries_data, key=lambda x: x["country_rating"], reverse=True
-    )
+    countries_data = sorted(countries_data, key=lambda x: x["country_rating"], reverse=True)
     for rank, data in enumerate(countries_data):
         country = data["country"]
 
@@ -78,9 +76,7 @@ def ema_quotas(request):
 
     # Finally, any leftover seats will be distributed using part B of the quota formula.
     total_players = sum([data["country_players"] for data in countries_data])
-    total_required_rating_players = sum(
-        [data["country_required_rating_players"] for data in countries_data]
-    )
+    total_required_rating_players = sum([data["country_required_rating_players"] for data in countries_data])
 
     n = 0
     while n < available_seats:
@@ -97,11 +93,7 @@ def ema_quotas(request):
 
         # Increase the B-quota of the country with the largest B3*N that is also smaller than its
         # current B-quota by 1
-        countries_data = sorted(
-            countries_data,
-            key=lambda x: x["b_coefficient"] - x["b_quota"],
-            reverse=True,
-        )
+        countries_data = sorted(countries_data, key=lambda x: x["b_coefficient"] - x["b_quota"], reverse=True)
         for data in countries_data:
             if data["b_quota"] <= data["b_coefficient"]:
                 data["b_quota"] += 1
@@ -126,9 +118,7 @@ def ema_quotas(request):
 
     quotas = sorted(quotas.values(), key=lambda x: x["rank"])
 
-    return render(
-        request, "ema/quotas.html", {"quotas": quotas, "total_quotas": total_quotas}
-    )
+    return render(request, "ema/quotas.html", {"quotas": quotas, "total_quotas": total_quotas})
 
 
 def _get_countries_data(ema_ratings):
@@ -136,20 +126,13 @@ def _get_countries_data(ema_ratings):
     for rating in ema_ratings:
         country_code = rating.player.country.code
         if country_code not in countries_temp:
-            countries_temp[country_code] = {
-                "country": rating.player.country,
-                "players_rating": [],
-            }
+            countries_temp[country_code] = {"country": rating.player.country, "players_rating": []}
 
-        countries_temp[country_code]["players_rating"].append(
-            {"player": rating.player, "score": rating.score}
-        )
+        countries_temp[country_code]["players_rating"].append({"player": rating.player, "score": rating.score})
 
     countries = []
     for data in countries_temp.values():
-        best_3 = sorted(data["players_rating"], key=lambda x: x["score"], reverse=True)[
-            :3
-        ]
+        best_3 = sorted(data["players_rating"], key=lambda x: x["score"], reverse=True)[:3]
         countries.append(
             {
                 "country": data["country"],

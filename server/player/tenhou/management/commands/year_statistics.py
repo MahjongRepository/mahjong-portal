@@ -16,9 +16,7 @@ class Command(BaseCommand):
         end_date = datetime(2020, 1, 1, tzinfo=pytz.UTC)
 
         results = (
-            TournamentResult.objects.filter(
-                tournament__end_date__gte=start_date, tournament__end_date__lt=end_date
-            )
+            TournamentResult.objects.filter(tournament__end_date__gte=start_date, tournament__end_date__lt=end_date)
             .exclude(tournament__tournament_type=Tournament.FOREIGN_EMA)
             .exclude(tournament__tournament_type=Tournament.CHAMPIONSHIP)
         )
@@ -31,9 +29,7 @@ class Command(BaseCommand):
         cities = City.objects.filter(id__in=city_ids)
         print("Cities: {}".format(cities.count()))
 
-        games = TenhouGameLog.objects.filter(
-            game_date__gte=start_date, game_date__lt=end_date
-        )
+        games = TenhouGameLog.objects.filter(game_date__gte=start_date, game_date__lt=end_date)
         print("Games: {}".format(games.count()))
 
         sum_minutes = games.aggregate(Sum("game_length"))["game_length__sum"]

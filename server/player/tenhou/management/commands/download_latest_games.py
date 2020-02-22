@@ -10,10 +10,7 @@ from django.utils import timezone
 
 from player.tenhou.models import TenhouNickname, TenhouGameLog
 from utils.tenhou.current_tenhou_games import lobbies_dict
-from utils.tenhou.helper import (
-    parse_log_line,
-    recalculate_tenhou_statistics_for_four_players,
-)
+from utils.tenhou.helper import parse_log_line, recalculate_tenhou_statistics_for_four_players
 
 
 def get_date_string():
@@ -37,9 +34,7 @@ class Command(BaseCommand):
         if not os.path.exists(temp_folder):
             os.mkdir(temp_folder)
 
-        archive_names = self.download_archives_with_games(
-            temp_folder, settings.TENHOU_LATEST_GAMES_URL
-        )
+        archive_names = self.download_archives_with_games(temp_folder, settings.TENHOU_LATEST_GAMES_URL)
         lines = self.load_game_records(temp_folder, archive_names)
 
         for line in lines:
@@ -50,12 +45,10 @@ class Command(BaseCommand):
                 # was found in latest games
                 if player["name"] in watching_nicknames:
                     # skip sanma games for now
-                    if result["game_rules"][0] == u"三":
+                    if result["game_rules"][0] == "三":
                         continue
 
-                    game_date = "{} {} +0900".format(
-                        date.strftime("%Y-%d-%m"), result["game_time"]
-                    )
+                    game_date = "{} {} +0900".format(date.strftime("%Y-%d-%m"), result["game_time"])
                     game_date = datetime.strptime(game_date, "%Y-%d-%m %H:%M %z")
 
                     results.append(

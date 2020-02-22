@@ -24,13 +24,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
     list_display = ["last_name", "first_name", "city", "pantheon_id"]
     list_filter = ["is_hide", "country"]
-    search_fields = [
-        "first_name_ru",
-        "first_name_en",
-        "last_name_ru",
-        "last_name_en",
-        "ema_id",
-    ]
+    search_fields = ["first_name_ru", "first_name_en", "last_name_ru", "last_name_en", "ema_id"]
 
     def get_queryset(self, request):
         return Player.objects.all()
@@ -51,12 +45,7 @@ class PlayerTitleAdmin(admin.ModelAdmin):
 
 
 class PlayerERMCAdmin(admin.ModelAdmin):
-    search_fields = [
-        "player__first_name_ru",
-        "player__first_name_en",
-        "player__last_name_ru",
-        "player__last_name_en",
-    ]
+    search_fields = ["player__first_name_ru", "player__first_name_en", "player__last_name_ru", "player__last_name_en"]
     list_display = ["player", "state", "federation_member"]
     list_filter = ["state"]
     raw_id_fields = ["player"]

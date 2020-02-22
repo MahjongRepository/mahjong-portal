@@ -25,9 +25,7 @@ class Command(BaseCommand):
                 # we disabled main account for the player
                 # maybe there is another account to be main one
                 if tenhou_object.is_main:
-                    other_objects = TenhouNickname.objects.filter(
-                        player=tenhou_object.player, is_active=True
-                    ).first()
+                    other_objects = TenhouNickname.objects.filter(player=tenhou_object.player, is_active=True).first()
 
                     if other_objects:
                         other_objects.is_main = True

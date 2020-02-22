@@ -10,17 +10,10 @@ from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
-from online.models import (
-    TournamentPlayers,
-    TournamentStatus,
-    TournamentGame,
-    TournamentGamePlayer,
-)
+from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
 from online.team_seating import TeamSeating
-from player.tenhou.management.commands.add_tenhou_account import (
-    get_started_date_for_account,
-)
+from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
 
@@ -42,25 +35,16 @@ class TournamentHandler:
         self.tournament = tournament
         self.lobby = lobby
         self.game_type = game_type
-        self.status, _ = TournamentStatus.objects.get_or_create(
-            tournament=self.tournament
-        )
+        self.status, _ = TournamentStatus.objects.get_or_create(tournament=self.tournament)
 
     def get_tournament_status(self):
         if not self.status.current_round:
-            confirmed_players = TournamentPlayers.objects.filter(
-                tournament=self.tournament
-            ).count()
+            confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
             if self.status.registration_closed:
-                return "Игры скоро начнутся. Подтвержденных игроков: {}.".format(
-                    confirmed_players
-                )
+                return "Игры скоро начнутся. Подтвержденных игроков: {}.".format(confirmed_players)
             else:
-                return (
-                    "Идёт этап подтверждения участия. "
-                    "На данный момент {} подтвержденных игроков.".format(
-                        confirmed_players
-                    )
+                return "Идёт этап подтверждения участия. " "На данный момент {} подтвержденных игроков.".format(
+                    confirmed_players
                 )
 
         if self.status.end_break_time:
@@ -108,15 +92,10 @@ class TournamentHandler:
                 minutes = round(delta.seconds // 60 % 60, 2)
                 seconds = delta.seconds - minutes * 60
                 date = "{} {} и {} {}".format(
-                    minutes,
-                    minutes_dict.get(minutes, "минут"),
-                    seconds,
-                    seconds_dict.get(seconds, "секунд"),
+                    minutes, minutes_dict.get(minutes, "минут"), seconds, seconds_dict.get(seconds, "секунд")
                 )
             else:
-                date = "{} {}".format(
-                    delta.seconds, seconds_dict.get(delta.seconds, "секунд")
-                )
+                date = "{} {}".format(delta.seconds, seconds_dict.get(delta.seconds, "секунд"))
 
             return "Перерыв. Следующий тур начнётся через {}.".format(date)
 
@@ -139,9 +118,7 @@ class TournamentHandler:
             message = "Тур {}. ".format(self.status.current_round)
 
             if active_games_count:
-                message += "Активных игр на данный момент: {}. Ждём пока они закончатся.".format(
-                    active_games_count
-                )
+                message += "Активных игр на данный момент: {}. Ждём пока они закончатся.".format(active_games_count)
 
             if failed_games_count:
                 message += "Несколько игр не смогли запуститься. Администратор скоро это исправит."
@@ -168,10 +145,7 @@ class TournamentHandler:
         data = {
             "jsonrpc": "2.0",
             "method": "updatePlayersTeams",
-            "params": {
-                "eventId": settings.PANTHEON_EVENT_ID,
-                "teamNameMap": team_names,
-            },
+            "params": {"eventId": settings.PANTHEON_EVENT_ID, "teamNameMap": team_names},
             "id": make_random_letters_and_digit_string(),
         }
 
@@ -268,9 +242,7 @@ class TournamentHandler:
                 TournamentHandler.TG_ADMIN_USERNAME
             )
 
-        if TournamentPlayers.objects.filter(
-            tenhou_username=tenhou_nickname, tournament=self.tournament
-        ).exists():
+        if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
             return 'Ник "{}" уже был зарегистрирован на турнир.'.format(tenhou_nickname)
 
         account_started_date = get_started_date_for_account(tenhou_nickname)
@@ -286,9 +258,7 @@ class TournamentHandler:
         team_name = registration.notes
 
         try:
-            old_record = TournamentPlayers.objects.get(
-                telegram_username=telegram_username, tournament=self.tournament
-            )
+            old_record = TournamentPlayers.objects.get(telegram_username=telegram_username, tournament=self.tournament)
             old_record.delete()
         except TournamentPlayers.DoesNotExist:
             pass
@@ -301,9 +271,7 @@ class TournamentHandler:
             team_name=team_name,
         )
 
-        message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(
-            tenhou_nickname
-        )
+        message = 'Тенхо ник "{}" был ассоциирован с вами. Участие в турнире было подтверждено!'.format(tenhou_nickname)
         return message
 
     def prepare_next_round(self):
@@ -313,24 +281,18 @@ class TournamentHandler:
         if self.status.current_round >= self.tournament.number_of_sessions:
             return [], "Невозможно запустить новые игры. У турнира закончились туры."
 
-        current_games = TournamentGame.objects.filter(
-            tournament=self.tournament
-        ).exclude(status=TournamentGame.FINISHED)
+        current_games = TournamentGame.objects.filter(tournament=self.tournament).exclude(
+            status=TournamentGame.FINISHED
+        )
 
         if current_games.exists():
-            return (
-                [],
-                "Невозможно запустить новые игры. Старые игры ещё не завершились.",
-            )
+            return ([], "Невозможно запустить новые игры. Старые игры ещё не завершились.")
 
         confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
 
         missed_id = confirmed_players.filter(pantheon_id=None)
         if missed_id.exists():
-            return (
-                [],
-                "Невозможно запустить новые игры. Не у всех игроков стоит pantheon id.",
-            )
+            return ([], "Невозможно запустить новые игры. Не у всех игроков стоит pantheon id.")
 
         with transaction.atomic():
             self.status.current_round += 1
@@ -357,15 +319,10 @@ class TournamentHandler:
                     for wind in range(0, len(item)):
                         player_id = pantheon_ids[item[wind]].id
 
-                        TournamentGamePlayer.objects.create(
-                            game=game, player_id=player_id, wind=wind
-                        )
+                        TournamentGamePlayer.objects.create(game=game, player_id=player_id, wind=wind)
                     games.append(game)
                 except Exception:
-                    logger.error(
-                        "Failed to prepare a game. Pantheon ids={}".format(item),
-                        exc_info=1,
-                    )
+                    logger.error("Failed to prepare a game. Pantheon ids={}".format(item), exc_info=1)
 
             # we was able to generate games
             if games:
@@ -410,25 +367,19 @@ class TournamentHandler:
         }
 
         try:
-            response = requests.post(
-                url, data=data, headers=headers, allow_redirects=False
-            )
+            response = requests.post(url, data=data, headers=headers, allow_redirects=False)
             location = unquote(response.headers["location"])
             result = location.split("{}&".format(self.lobby))[1]
 
             if result.startswith("FAILED"):
                 game.status = TournamentGame.FAILED_TO_START
 
-                message = "Стол: {} не получилось запустить.".format(
-                    u", ".join(player_names)
-                )
+                message = "Стол: {} не получилось запустить.".format(", ".join(player_names))
                 message += " Стол был отодвинут в конец очереди."
             elif result.startswith("MEMBER NOT FOUND"):
                 game.status = TournamentGame.FAILED_TO_START
 
-                message = "Стол: {} не получилось запустить.".format(
-                    u", ".join(player_names)
-                )
+                message = "Стол: {} не получилось запустить.".format(", ".join(player_names))
                 missed_players = [x for x in result.split("\r\n")[1:] if x]
 
                 tg_usernames = (
@@ -443,10 +394,10 @@ class TournamentHandler:
             else:
                 game.status = TournamentGame.STARTED
 
-                message = "Стол: {} запущен.".format(u", ".join(player_names))
+                message = "Стол: {} запущен.".format(", ".join(player_names))
         except Exception:
             message = "Стол: {} не получилось запустить. Требуется вмешательство администратора.".format(
-                u", ".join(player_names)
+                ", ".join(player_names)
             )
             game.status = TournamentGame.FAILED_TO_START
         game.save()
@@ -468,15 +419,11 @@ class TournamentHandler:
             else:
                 index = self.status.current_round - 1
                 break_minutes = TOURNAMENT_BREAKS_TIME[index]
-                self.status.end_break_time = timezone.now() + timedelta(
-                    minutes=break_minutes
-                )
+                self.status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
                 self.status.save()
                 return (
                     "Все игры успешно завершились. Следующий тур начнётся через {} минут.\n\n"
-                    "Игровое лобби: http://tenhou.net/0/?{}".format(
-                        break_minutes, settings.TOURNAMENT_PUBLIC_LOBBY
-                    )
+                    "Игровое лобби: http://tenhou.net/0/?{}".format(break_minutes, settings.TOURNAMENT_PUBLIC_LOBBY)
                 )
         else:
             return None
@@ -486,12 +433,12 @@ class TournamentHandler:
             message = "Добро пожаловать в чат онлайн турнира! \n"
             if not username:
                 message += (
-                    u"Для начала установите username в настройках телеграма (Settings -> Username). "
-                    u"Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n"
+                    "Для начала установите username в настройках телеграма (Settings -> Username). "
+                    "Инструкция: http://telegramzy.ru/nik-v-telegramm/ \n"
                 )
-                message += u'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
+                message += 'После этого отправьте команду "/me ваш ник на тенхе" для подтверждения участия.'
             else:
-                message += u'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
+                message += 'Для подтверждения участия отправьте команду "/me ваш ник на тенхе"'
             return message
         else:
             message = "Добро пожаловать в чат онлайн турнира! \n\n"
@@ -517,9 +464,7 @@ class TournamentHandler:
 
         content = response.json()
         if content.get("error"):
-            logger.error(
-                "Make sortition. Pantheon error. {}".format(content.get("error"))
-            )
+            logger.error("Make sortition. Pantheon error. {}".format(content.get("error")))
             return []
 
         return content["result"]

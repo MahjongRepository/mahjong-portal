@@ -22,7 +22,7 @@ NEXT_LEVEL_POINTS = {
     10502: 6000,
     10503: 9000,
     # Celestial,
-    10601: u"∞",
+    10601: "∞",
     # Sanma Novice
     20101: 20,
     20102: 80,
@@ -44,7 +44,7 @@ NEXT_LEVEL_POINTS = {
     20502: 6000,
     20503: 9000,
     # Sanma Celestial,
-    20601: u"∞",
+    20601: "∞",
 }
 
 RANK_LABELS = {
@@ -69,7 +69,7 @@ RANK_LABELS = {
     10502: "Saint II",
     10503: "Saint III",
     # Celestial,
-    10601: u"Celestial 😎",
+    10601: "Celestial 😎",
     # Sanma Novice
     20101: "Novice I",
     20102: "Novice II",
@@ -91,5 +91,5 @@ RANK_LABELS = {
     20502: "Saint II",
     20503: "Saint III",
     # Sanma Celestial,
-    20601: u"Celestial 😎",
+    20601: "Celestial 😎",
 }

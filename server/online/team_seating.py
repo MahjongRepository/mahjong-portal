@@ -81,10 +81,7 @@ class TeamSeating:
                 tables.append(players_ids)
 
                 teams_on_the_table = (
-                    TournamentPlayers.objects.filter(
-                        tournament_id=settings.TOURNAMENT_ID,
-                        team_number__in=players_ids,
-                    )
+                    TournamentPlayers.objects.filter(tournament_id=settings.TOURNAMENT_ID, team_number__in=players_ids)
                     .values_list("team_name", flat=True)
                     .distinct()
                     .count()

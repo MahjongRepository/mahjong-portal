@@ -1,11 +1,6 @@
 from django.conf.urls import url
 
-from system.ema_players_admin.views import (
-    list_of_ema_players,
-    download_players_list_csv,
-    add_new_player,
-    assign_ema_id,
-)
+from system.ema_players_admin.views import list_of_ema_players, download_players_list_csv, add_new_player, assign_ema_id
 
 urlpatterns = [
     url(r"^list/$", list_of_ema_players, name="list_of_ema_players"),

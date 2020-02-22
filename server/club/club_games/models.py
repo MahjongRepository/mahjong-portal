@@ -7,16 +7,12 @@ from player.tenhou.models import TenhouNickname
 
 
 class ClubSessionSyncData(BaseModel):
-    club = models.OneToOneField(
-        Club, on_delete=models.CASCADE, related_name="sync_info"
-    )
+    club = models.OneToOneField(Club, on_delete=models.CASCADE, related_name="sync_info")
     last_session_id = models.PositiveIntegerField(null=True, blank=True)
 
 
 class ClubSession(BaseModel):
-    club = models.ForeignKey(
-        Club, on_delete=models.CASCADE, related_name="club_sessions"
-    )
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_sessions")
     date = models.DateTimeField()
 
     pantheon_id = models.CharField(max_length=255, null=True, blank=True)
@@ -27,9 +23,7 @@ class ClubSession(BaseModel):
 
 
 class ClubSessionResult(BaseModel):
-    club_session = models.ForeignKey(
-        ClubSession, on_delete=models.CASCADE, related_name="results"
-    )
+    club_session = models.ForeignKey(ClubSession, on_delete=models.CASCADE, related_name="results")
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     player_string = models.CharField(max_length=255, null=True, blank=True)
 
@@ -42,7 +36,7 @@ class ClubSessionResult(BaseModel):
 
     @property
     def wind(self):
-        winds = [u"東", u"南", u"西", u"北"]
+        winds = ["東", "南", "西", "北"]
         return winds[self.order - 1]
 
 
@@ -58,6 +52,4 @@ class ClubRating(BaseModel):
     third_place = models.DecimalField(decimal_places=2, max_digits=10)
     fourth_place = models.DecimalField(decimal_places=2, max_digits=10)
 
-    rank = models.PositiveSmallIntegerField(
-        choices=TenhouNickname.RANKS, null=True, blank=True, default=None
-    )
+    rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)

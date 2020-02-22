@@ -17,9 +17,5 @@ class Command(BaseCommand):
         tournament = Tournament.objects.get(id=tournament_id)
 
         RatingDate.objects.filter(date__gte=tournament.end_date, rating=rating).delete()
-        RatingResult.objects.filter(
-            date__gte=tournament.end_date, rating=rating
-        ).delete()
-        RatingDelta.objects.filter(
-            date__gte=tournament.end_date, rating=rating
-        ).delete()
+        RatingResult.objects.filter(date__gte=tournament.end_date, rating=rating).delete()
+        RatingDelta.objects.filter(date__gte=tournament.end_date, rating=rating).delete()

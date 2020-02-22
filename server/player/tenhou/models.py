@@ -18,27 +18,27 @@ class TenhouActiveNicknameManager(models.Manager):
 
 class TenhouNickname(BaseModel):
     RANKS = [
-        [0, u"新人"],
-        [1, u"９級"],
-        [2, u"８級"],
-        [3, u"７級"],
-        [4, u"６級"],
-        [5, u"５級"],
-        [6, u"４級"],
-        [7, u"３級"],
-        [8, u"２級"],
-        [9, u"１級"],
-        [10, u"初段"],
-        [11, u"二段"],
-        [12, u"三段"],
-        [13, u"四段"],
-        [14, u"五段"],
-        [15, u"六段"],
-        [16, u"七段"],
-        [17, u"八段"],
-        [18, u"九段"],
-        [19, u"十段"],
-        [20, u"天鳳位"],
+        [0, "新人"],
+        [1, "９級"],
+        [2, "８級"],
+        [3, "７級"],
+        [4, "６級"],
+        [5, "５級"],
+        [6, "４級"],
+        [7, "３級"],
+        [8, "２級"],
+        [9, "１級"],
+        [10, "初段"],
+        [11, "二段"],
+        [12, "三段"],
+        [13, "四段"],
+        [14, "五段"],
+        [15, "六段"],
+        [16, "七段"],
+        [17, "八段"],
+        [18, "九段"],
+        [19, "十段"],
+        [20, "天鳳位"],
     ]
 
     objects = TenhouActiveNicknameManager()
@@ -62,9 +62,7 @@ class TenhouNickname(BaseModel):
 
     average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     played_games = models.PositiveIntegerField(default=0)
-    month_average_place = models.DecimalField(
-        decimal_places=2, max_digits=10, default=0
-    )
+    month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     month_played_games = models.PositiveIntegerField(default=0)
     four_games_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
@@ -76,9 +74,7 @@ class TenhouNickname(BaseModel):
         db_table = "player_tenhounickname"
 
     def four_players_aggregated_statistics(self):
-        return self.aggregated_statistics.filter(
-            game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
-        ).first()
+        return self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
 
     def all_time_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.ALL_TIME)
@@ -90,11 +86,7 @@ class TenhouNickname(BaseModel):
         return self.yakumans.order_by("-date")
 
     def prepare_latest_places(self):
-        return reversed(
-            self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by(
-                "-game_date"
-            )[:20]
-        )
+        return reversed(self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by("-game_date")[:20])
 
     def rank_changes(self):
         return (
@@ -105,44 +97,40 @@ class TenhouNickname(BaseModel):
 
     def pt_changes(self):
         last_rank_change_date = self.rank_changes().last()
-        last_rank_change_date = (
-            last_rank_change_date.game_end_date if last_rank_change_date else None
-        )
+        last_rank_change_date = last_rank_change_date.game_end_date if last_rank_change_date else None
         return self.game_logs.filter(game_date__gte=last_rank_change_date)
 
     def dan_settings(self):
         return FourPlayersPointsCalculator.DAN_SETTINGS[self.get_rank()]
 
     def get_rank(self):
-        stat = self.aggregated_statistics.filter(
-            game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
-        ).first()
+        stat = self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
         return stat.get_rank_display()
 
 
 class TenhouAggregatedStatistics(models.Model):
     RANKS = [
-        [0, u"新人"],
-        [1, u"９級"],
-        [2, u"８級"],
-        [3, u"７級"],
-        [4, u"６級"],
-        [5, u"５級"],
-        [6, u"４級"],
-        [7, u"３級"],
-        [8, u"２級"],
-        [9, u"１級"],
-        [10, u"初段"],
-        [11, u"二段"],
-        [12, u"三段"],
-        [13, u"四段"],
-        [14, u"五段"],
-        [15, u"六段"],
-        [16, u"七段"],
-        [17, u"八段"],
-        [18, u"九段"],
-        [19, u"十段"],
-        [20, u"天鳳位"],
+        [0, "新人"],
+        [1, "９級"],
+        [2, "８級"],
+        [3, "７級"],
+        [4, "６級"],
+        [5, "５級"],
+        [6, "４級"],
+        [7, "３級"],
+        [8, "２級"],
+        [9, "１級"],
+        [10, "初段"],
+        [11, "二段"],
+        [12, "三段"],
+        [13, "四段"],
+        [14, "五段"],
+        [15, "六段"],
+        [16, "七段"],
+        [17, "八段"],
+        [18, "九段"],
+        [19, "十段"],
+        [20, "天鳳位"],
     ]
 
     FOUR_PLAYERS = 0
@@ -150,22 +138,16 @@ class TenhouAggregatedStatistics(models.Model):
 
     TYPES = [[FOUR_PLAYERS, "Four players"], [THREE_PLAYERS, "Three players"]]
 
-    tenhou_object = models.ForeignKey(
-        TenhouNickname, on_delete=models.CASCADE, related_name="aggregated_statistics"
-    )
+    tenhou_object = models.ForeignKey(TenhouNickname, on_delete=models.CASCADE, related_name="aggregated_statistics")
     rank = models.PositiveSmallIntegerField(choices=RANKS, null=True, blank=True)
     rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-    game_players = models.PositiveSmallIntegerField(
-        choices=TYPES, null=True, blank=True
-    )
+    game_players = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
 
     played_games = models.PositiveIntegerField(default=0)
     month_played_games = models.PositiveIntegerField(default=0)
 
     average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-    month_average_place = models.DecimalField(
-        decimal_places=2, max_digits=10, default=0
-    )
+    month_average_place = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
     pt = models.PositiveSmallIntegerField(default=0)
     end_pt = models.PositiveSmallIntegerField(default=0)
@@ -194,9 +176,7 @@ class TenhouStatistics(models.Model):
     CURRENT_MONTH = 1
     TYPES = [[ALL_TIME, "All time"], [CURRENT_MONTH, "Current month"]]
 
-    tenhou_object = models.ForeignKey(
-        TenhouNickname, on_delete=models.CASCADE, related_name="statistics"
-    )
+    tenhou_object = models.ForeignKey(TenhouNickname, on_delete=models.CASCADE, related_name="statistics")
     lobby = models.PositiveSmallIntegerField(choices=LOBBIES)
     stat_type = models.PositiveSmallIntegerField(choices=TYPES, default=ALL_TIME)
 
@@ -214,9 +194,7 @@ class TenhouStatistics(models.Model):
 
 
 class CollectedYakuman(models.Model):
-    tenhou_object = models.ForeignKey(
-        TenhouNickname, on_delete=models.CASCADE, related_name="yakumans"
-    )
+    tenhou_object = models.ForeignKey(TenhouNickname, on_delete=models.CASCADE, related_name="yakumans")
     date = models.DateTimeField()
     log_id = models.CharField(max_length=44)
     yakuman_list = models.CharField(max_length=60)
@@ -241,25 +219,17 @@ class TenhouGameLog(models.Model):
 
     TYPES = [[FOUR_PLAYERS, "Four players"], [THREE_PLAYERS, "Three players"]]
 
-    tenhou_object = models.ForeignKey(
-        TenhouNickname, on_delete=models.CASCADE, related_name="game_logs"
-    )
+    tenhou_object = models.ForeignKey(TenhouNickname, on_delete=models.CASCADE, related_name="game_logs")
 
     lobby = models.PositiveSmallIntegerField(choices=TenhouStatistics.LOBBIES)
     place = models.PositiveSmallIntegerField()
     game_length = models.PositiveSmallIntegerField()
     delta = models.SmallIntegerField(default=0)
-    rank = models.PositiveSmallIntegerField(
-        choices=TenhouNickname.RANKS, null=True, blank=True, default=None
-    )
-    next_rank = models.PositiveSmallIntegerField(
-        choices=TenhouNickname.RANKS, null=True, blank=True, default=None
-    )
+    rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
+    next_rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
     game_date = models.DateTimeField()
     game_rules = models.CharField(max_length=20)
-    game_players = models.PositiveSmallIntegerField(
-        choices=TYPES, null=True, blank=True
-    )
+    game_players = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
 
     class Meta:
         unique_together = ["tenhou_object", "game_date"]

@@ -6,12 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.db import transaction
 
-from player.tenhou.models import (
-    TenhouStatistics,
-    TenhouNickname,
-    TenhouGameLog,
-    TenhouAggregatedStatistics,
-)
+from player.tenhou.models import TenhouStatistics, TenhouNickname, TenhouGameLog, TenhouAggregatedStatistics
 from utils.general import get_month_first_day, get_month_last_day
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.points_calculator import FourPlayersPointsCalculator
@@ -47,12 +42,7 @@ def parse_log_line(line):
 
         place += 1
 
-    return {
-        "players": players,
-        "game_rules": game_rules,
-        "game_time": game_time,
-        "game_length": game_length,
-    }
+    return {"players": players, "game_rules": game_rules, "game_time": game_time, "game_length": game_length}
 
 
 def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None):
@@ -106,17 +96,12 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         TenhouStatistics.objects.filter(tenhou_object=tenhou_object).delete()
 
         for lobby_key, lobby_data in lobbies_data.items():
-            stat_types = {
-                "all": TenhouStatistics.ALL_TIME,
-                "current_month": TenhouStatistics.CURRENT_MONTH,
-            }
+            stat_types = {"all": TenhouStatistics.ALL_TIME, "current_month": TenhouStatistics.CURRENT_MONTH}
 
             for key, stat_type in stat_types.items():
                 if lobby_data[key]["played_games"]:
                     stat_object, _ = TenhouStatistics.objects.get_or_create(
-                        lobby=lobby_key,
-                        tenhou_object=tenhou_object,
-                        stat_type=stat_type,
+                        lobby=lobby_key, tenhou_object=tenhou_object, stat_type=stat_type
                     )
 
                     games_count = lobby_data[key]["played_games"]
@@ -138,12 +123,7 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
                         month_third_place += third_place
                         month_fourth_place += fourth_place
 
-                    average_place = (
-                        first_place
-                        + second_place * 2
-                        + third_place * 3
-                        + fourth_place * 4
-                    ) / games_count
+                    average_place = (first_place + second_place * 2 + third_place * 3 + fourth_place * 4) / games_count
 
                     first_place = (first_place / games_count) * 100
                     second_place = (second_place / games_count) * 100
@@ -160,20 +140,14 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
 
         if total_played_games:
             total_average_place = (
-                total_first_place
-                + total_second_place * 2
-                + total_third_place * 3
-                + total_fourth_place * 4
+                total_first_place + total_second_place * 2 + total_third_place * 3 + total_fourth_place * 4
             ) / total_played_games
         else:
             total_average_place = 0
 
         if month_played_games:
             month_average_place = (
-                month_first_place
-                + month_second_place * 2
-                + month_third_place * 3
-                + month_fourth_place * 4
+                month_first_place + month_second_place * 2 + month_third_place * 3 + month_fourth_place * 4
             ) / month_played_games
         else:
             month_average_place = 0
@@ -192,13 +166,10 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         tenhou_object.save()
 
         stat, _ = TenhouAggregatedStatistics.objects.get_or_create(
-            game_players=TenhouAggregatedStatistics.FOUR_PLAYERS,
-            tenhou_object=tenhou_object,
+            game_players=TenhouAggregatedStatistics.FOUR_PLAYERS, tenhou_object=tenhou_object
         )
 
-        rank = [x[0] for x in TenhouNickname.RANKS if x[1] == calculated_rank["rank"]][
-            0
-        ]
+        rank = [x[0] for x in TenhouNickname.RANKS if x[1] == calculated_rank["rank"]][0]
         # 3 or less dan
         if rank <= 12:
             # we need to erase user rate when user lost 4 dan
@@ -264,7 +235,7 @@ def save_played_games(tenhou_object, player_games):
     filtered_games = []
     for game in player_games:
         # let's collect stat only from usual games for 4 players
-        if game["lobby_number"] == "L0000" and game["game_rules"][0] == u"四":
+        if game["lobby_number"] == "L0000" and game["game_rules"][0] == "四":
             filtered_games.append(game)
 
     with transaction.atomic():
@@ -281,9 +252,7 @@ def save_played_games(tenhou_object, player_games):
 
 
 def get_started_date_for_account(tenhou_nickname):
-    url = "http://arcturus.su/tenhou/ranking/ranking.pl?name={}".format(
-        quote(tenhou_nickname, safe="")
-    )
+    url = "http://arcturus.su/tenhou/ranking/ranking.pl?name={}".format(quote(tenhou_nickname, safe=""))
 
     page = requests.get(url)
     soup = BeautifulSoup(page.content, "html.parser", from_encoding="utf-8")

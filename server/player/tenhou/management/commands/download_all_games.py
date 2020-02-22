@@ -29,8 +29,6 @@ class Command(BaseCommand):
                 )
 
                 save_played_games(tenhou_object, player_games)
-                recalculate_tenhou_statistics_for_four_players(
-                    tenhou_object, player_games
-                )
+                recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games)
 
         print("{0}: End".format(get_date_string()))

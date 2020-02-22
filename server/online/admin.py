@@ -3,12 +3,7 @@ from django import forms
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from online.models import (
-    TournamentStatus,
-    TournamentPlayers,
-    TournamentGame,
-    TournamentGamePlayer,
-)
+from online.models import TournamentStatus, TournamentPlayers, TournamentGame, TournamentGamePlayer
 from player.models import Player
 from tournament.models import Tournament, OnlineTournamentRegistration
 
@@ -21,9 +16,7 @@ class TournamentGameForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["tournament"].queryset = Tournament.objects.filter(
-            tournament_type=Tournament.ONLINE
-        )
+        self.fields["tournament"].queryset = Tournament.objects.filter(tournament_type=Tournament.ONLINE)
 
 
 class TournamentPlayersForm(forms.ModelForm):
@@ -34,9 +27,9 @@ class TournamentPlayersForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["tournament"].queryset = Tournament.objects.filter(
-            tournament_type=Tournament.ONLINE
-        ).order_by("-start_date")
+        self.fields["tournament"].queryset = Tournament.objects.filter(tournament_type=Tournament.ONLINE).order_by(
+            "-start_date"
+        )
 
 
 class TournamentStatusAdmin(admin.ModelAdmin):
@@ -57,11 +50,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
         "disable_in_pantheon_sortition",
     ]
 
-    list_filter = [
-        ["tournament", admin.RelatedOnlyFieldListFilter],
-        "added_to_pantheon",
-        "enabled_in_pantheon",
-    ]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "added_to_pantheon", "enabled_in_pantheon"]
 
     def player(self, obj):
         if obj.pantheon_id:
@@ -71,33 +60,25 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
                 pass
 
         try:
-            registration = OnlineTournamentRegistration.objects.filter(
-                tenhou_nickname=obj.tenhou_username
-            ).last()
+            registration = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
             if registration and registration.player:
                 return registration.player
         except (OnlineTournamentRegistration.DoesNotExist, Player.DoesNotExist):
             pass
 
-        result = OnlineTournamentRegistration.objects.filter(
-            tenhou_nickname=obj.tenhou_username
-        ).last()
+        result = OnlineTournamentRegistration.objects.filter(tenhou_nickname=obj.tenhou_username).last()
         if result:
-            return u"[{} {}]".format(result.last_name, result.first_name)
+            return "[{} {}]".format(result.last_name, result.first_name)
 
         return None
 
     def add_to_pantheon_action(self, obj):
         if not obj.pantheon_id:
-            return mark_safe(
-                '<span style="background-color: red; padding: 5px;">MISSED PANTHEON ID</span>'
-            )
+            return mark_safe('<span style="background-color: red; padding: 5px;">MISSED PANTHEON ID</span>')
 
         if not obj.added_to_pantheon:
             url = reverse("add_user_to_the_pantheon", kwargs={"record_id": obj.id})
-            return mark_safe(
-                '<a href="{}" class="button">Add to pantheon</a>'.format(url)
-            )
+            return mark_safe('<a href="{}" class="button">Add to pantheon</a>'.format(url))
 
         return "Added"
 
@@ -106,9 +87,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
             url = reverse("disable_user_in_pantheon", kwargs={"record_id": obj.id})
             return mark_safe('<a href="{}" class="button">Disable</a>'.format(url))
 
-        return mark_safe(
-            '<span style="background-color: red; padding: 5px;">Disabled</span>'
-        )
+        return mark_safe('<span style="background-color: red; padding: 5px;">Disabled</span>')
 
 
 class TournamentGamePlayerForm(forms.ModelForm):
@@ -137,19 +116,8 @@ class TournamentGamePlayerInline(admin.TabularInline):
 class TournamentGameAdmin(admin.ModelAdmin):
     form = TournamentGameForm
     inlines = [TournamentGamePlayerInline]
-    list_display = [
-        "tournament",
-        "tournament_round",
-        "status",
-        "log_id",
-        "created_on",
-        "updated_on",
-    ]
-    list_filter = [
-        ["tournament", admin.RelatedOnlyFieldListFilter],
-        "status",
-        "tournament_round",
-    ]
+    list_display = ["tournament", "tournament_round", "status", "log_id", "created_on", "updated_on"]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "status", "tournament_round"]
 
 
 admin.site.register(TournamentStatus, TournamentStatusAdmin)

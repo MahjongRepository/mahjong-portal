@@ -5,18 +5,9 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from club.club_games.models import (
-    ClubSession,
-    ClubSessionResult,
-    ClubRating,
-    ClubSessionSyncData,
-)
+from club.club_games.models import ClubSession, ClubSessionResult, ClubRating, ClubSessionSyncData
 from club.models import Club
-from club.pantheon_games.models import (
-    PantheonSession,
-    PantheonSessionResult,
-    PantheonRound,
-)
+from club.pantheon_games.models import PantheonSession, PantheonSessionResult, PantheonRound
 from player.models import Player
 from player.tenhou.models import TenhouAggregatedStatistics
 
@@ -107,25 +98,18 @@ class Command(BaseCommand):
             prepared_results = [x[1] for x in prepared_results.items()]
             date = session.end_date.replace(tzinfo=pytz.timezone("CET"))
             club_session = ClubSession.objects.create(
-                club=club,
-                date=date,
-                pantheon_id=session.representational_hash,
-                pantheon_event_id=session.event_id,
+                club=club, date=date, pantheon_id=session.representational_hash, pantheon_event_id=session.event_id
             )
 
             for prepared_result in prepared_results:
                 player_string = ""
                 player = (
-                    prepared_result["player_id"] in players_dict
-                    and players_dict[prepared_result["player_id"]]
-                    or None
+                    prepared_result["player_id"] in players_dict and players_dict[prepared_result["player_id"]] or None
                 )
                 if not player:
                     player_string = prepared_result["display_name"]
                     # we need to display to the admin
-                    missed_players[prepared_result["player_id"]] = prepared_result[
-                        "display_name"
-                    ]
+                    missed_players[prepared_result["player_id"]] = prepared_result["display_name"]
 
                 ClubSessionResult.objects.create(
                     club_session=club_session,
@@ -137,9 +121,7 @@ class Command(BaseCommand):
                 )
 
         session = (
-            PantheonSession.objects.filter(
-                event__id__in=event_ids, status=PantheonSession.FINISHED
-            ).order_by("id")
+            PantheonSession.objects.filter(event__id__in=event_ids, status=PantheonSession.FINISHED).order_by("id")
         ).last()
 
         sync_data.last_session_id = session.id
@@ -157,9 +139,9 @@ class Command(BaseCommand):
 
         # let's query all data once
         # ro reduce queries count
-        all_session_results = PantheonSessionResult.objects.filter(
-            session__event_id__in=event_ids
-        ).filter(session__status=PantheonSession.FINISHED)
+        all_session_results = PantheonSessionResult.objects.filter(session__event_id__in=event_ids).filter(
+            session__status=PantheonSession.FINISHED
+        )
         all_rounds = PantheonRound.objects.filter(event__id__in=event_ids).filter(
             session__status=PantheonSession.FINISHED
         )
@@ -180,9 +162,9 @@ class Command(BaseCommand):
 
         days_ago = timezone.now() - timedelta(days=self.NUMBER_OF_CLUB_STATISTICS_DAYS)
         for player in players:
-            base_query = ClubSessionResult.objects.filter(
-                club_session__club=club, player=player
-            ).filter(club_session__date__gte=days_ago)
+            base_query = ClubSessionResult.objects.filter(club_session__club=club, player=player).filter(
+                club_session__date__gte=days_ago
+            )
 
             games_count = base_query.count()
 
@@ -195,9 +177,7 @@ class Command(BaseCommand):
             third_place = base_query.filter(place=3).count()
             fourth_place = base_query.filter(place=4).count()
 
-            average_place = (
-                first_place + second_place * 2 + third_place * 3 + fourth_place * 4
-            ) / games_count
+            average_place = (first_place + second_place * 2 + third_place * 3 + fourth_place * 4) / games_count
 
             first_place = (first_place / games_count) * 100
             second_place = (second_place / games_count) * 100

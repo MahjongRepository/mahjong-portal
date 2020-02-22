@@ -74,14 +74,7 @@ def get_month_first_day(date=None):
 
 def get_month_last_day(date=None):
     date = date or timezone.now()
-    return datetime(
-        date.year,
-        date.month,
-        calendar.monthrange(date.year, date.month)[1],
-        23,
-        59,
-        tzinfo=pytz.utc,
-    )
+    return datetime(date.year, date.month, calendar.monthrange(date.year, date.month)[1], 23, 59, tzinfo=pytz.utc)
 
 
 # TODO: Remove these hardcoded values when tournaments with stages will be implemented

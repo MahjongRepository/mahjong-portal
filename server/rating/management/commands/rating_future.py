@@ -45,17 +45,13 @@ class Command(BaseCommand):
             TournamentResult.objects.filter(tournament=tournament).delete()
 
             player = Player.objects.get(id=player_id)
-            TournamentResult.objects.create(
-                place=place, player=player, tournament=tournament
-            )
+            TournamentResult.objects.create(place=place, player=player, tournament=tournament)
 
             calculator = RatingRRCalculation()
             rating = Rating.objects.get(type=Rating.RR)
             types = [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
             tournaments = (
-                Tournament.public.filter(tournament_type__in=types)
-                .filter(is_upcoming=False)
-                .order_by("end_date")
+                Tournament.public.filter(tournament_type__in=types).filter(is_upcoming=False).order_by("end_date")
             )
 
             RatingResult.objects.filter(rating=rating).delete()
@@ -65,15 +61,11 @@ class Command(BaseCommand):
 
             self.calculate_rating(dates_to_process, tournaments, calculator, rating)
 
-            results = RatingResult.objects.filter(
-                rating=rating, date=rating_date
-            ).order_by("place")[:15]
+            results = RatingResult.objects.filter(rating=rating, date=rating_date).order_by("place")[:15]
             for result in results:
                 data.append([result.player.last_name_ru, result.place, result.score])
 
-            c = TournamentCoefficients.objects.get(
-                rating=rating, date=rating_date, tournament=tournament
-            )
+            c = TournamentCoefficients.objects.get(rating=rating, date=rating_date, tournament=tournament)
 
             if add_coefficient:
                 data[0].append(c.coefficient)
@@ -85,7 +77,7 @@ class Command(BaseCommand):
                     writer.writerow(x)
 
     def calculate_rating(self, dates_to_process, tournaments, calculator, rating):
-        for i, rating_date in enumerate(dates_to_process):
+        for rating_date in dates_to_process:
             limited_tournaments = tournaments.filter(end_date__lte=rating_date)
 
             for tournament in limited_tournaments:

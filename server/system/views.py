@@ -21,7 +21,5 @@ def transliterate_text(request):
         transliterated_text = transliterate_name(original_text)
 
     return render(
-        request,
-        "transliterate.html",
-        {"original_text": original_text, "transliterated_text": transliterated_text},
+        request, "transliterate.html", {"original_text": original_text, "transliterated_text": transliterated_text}
     )

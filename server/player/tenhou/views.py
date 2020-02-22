@@ -6,12 +6,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 
-from player.tenhou.models import (
-    TenhouNickname,
-    CollectedYakuman,
-    TenhouGameLog,
-    TenhouAggregatedStatistics,
-)
+from player.tenhou.models import TenhouNickname, CollectedYakuman, TenhouGameLog, TenhouAggregatedStatistics
 from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 
@@ -43,7 +38,7 @@ def get_current_tenhou_games_async(request):
                 found_players.append(player)
                 our_players_games[game["game_id"]] = game
 
-            if player["name"].startswith(u"ⓝ"):
+            if player["name"].startswith("ⓝ"):
                 player["is_bot"] = True
                 bot_games[game["game_id"]] = game
 
@@ -68,18 +63,14 @@ def get_current_tenhou_games_async(request):
 
 def latest_yakumans(request):
     yakumans = (
-        CollectedYakuman.objects.all()
-        .order_by("-date")
-        .prefetch_related("tenhou_object", "tenhou_object__player")
+        CollectedYakuman.objects.all().order_by("-date").prefetch_related("tenhou_object", "tenhou_object__player")
     )
     return render(request, "tenhou/latest_yakumans.html", {"yakumans": yakumans})
 
 
 def tenhou_accounts(request):
     accounts = (
-        TenhouAggregatedStatistics.objects.filter(
-            game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
-        )
+        TenhouAggregatedStatistics.objects.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
         .filter(tenhou_object__is_active=True)
         .order_by("-rank", "-rate", "-pt")
         .prefetch_related("tenhou_object")
@@ -93,9 +84,7 @@ def games_history(request, year=None, month=None, day=None):
     query_date = timezone.now().date()
     if year and month and day:
         try:
-            query_date = datetime(
-                year=int(year), month=int(month), day=int(day), tzinfo=pytz.utc
-            )
+            query_date = datetime(year=int(year), month=int(month), day=int(day), tzinfo=pytz.utc)
         except ValueError:
             raise Http404
 
@@ -121,8 +110,7 @@ def games_history(request, year=None, month=None, day=None):
             "previous_day": previous_day,
             "games": games,
             "total": games.count(),
-            "time_spent": (games.aggregate(Sum("game_length"))["game_length__sum"] or 0)
-            / 60.0,
+            "time_spent": (games.aggregate(Sum("game_length"))["game_length__sum"] or 0) / 60.0,
             "rank_changes": rank_changes,
         },
     )

@@ -2,12 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from club.models import Club
-from club.pantheon_games.models import (
-    PantheonEvent,
-    PantheonSession,
-    PantheonSessionResult,
-    PantheonPlayer,
-)
+from club.pantheon_games.models import PantheonEvent, PantheonSession, PantheonSessionResult, PantheonPlayer
 from player.models import Player
 
 
@@ -51,9 +46,7 @@ class Command(BaseCommand):
         player_ids = []
         events = PantheonEvent.objects.filter(id__in=event_ids)
         for event in events:
-            sessions = PantheonSession.objects.filter(
-                event=event, status=PantheonSession.FINISHED
-            )
+            sessions = PantheonSession.objects.filter(event=event, status=PantheonSession.FINISHED)
 
             for session in sessions:
                 player_ids.extend([x.player_id for x in session.players.all()])
@@ -80,9 +73,7 @@ class Command(BaseCommand):
             # let's try to match player by first and last name
             if not player:
                 try:
-                    player = Player.objects.get(
-                        first_name_ru=first_name, last_name_ru=last_name
-                    )
+                    player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
                     player.pantheon_id = pantheon_player.id
                     player.save()
                 except Player.DoesNotExist:
@@ -92,11 +83,7 @@ class Command(BaseCommand):
                     # let's try to add city to query
                     try:
                         print(last_name)
-                        player = Player.objects.get(
-                            first_name_ru=first_name,
-                            last_name_ru=last_name,
-                            city=club.city,
-                        )
+                        player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name, city=club.city)
                     except (Player.DoesNotExist, Player.MultipleObjectsReturned):
                         # two players with same name from the same city
                         # we can't handle it automatically
@@ -105,9 +92,7 @@ class Command(BaseCommand):
             if player:
                 club.players.add(player)
             else:
-                games = PantheonSessionResult.objects.filter(
-                    player_id=pantheon_player.id
-                ).count()
+                games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
                 if games >= 10:
                     print(
                         "Missed player: id={}, {}, Games: {} ".format(

@@ -35,18 +35,13 @@ def add_user_to_the_pantheon(request, record_id):
 
     content = response.json()
     if content.get("error"):
-        return HttpResponse(
-            "Update player. Pantheon error: {}".format(content.get("error"))
-        )
+        return HttpResponse("Update player. Pantheon error: {}".format(content.get("error")))
 
     # The second step is enroll player
     data = {
         "jsonrpc": "2.0",
         "method": "enrollPlayerCP",
-        "params": {
-            "eventId": settings.PANTHEON_EVENT_ID,
-            "playerId": record.pantheon_id,
-        },
+        "params": {"eventId": settings.PANTHEON_EVENT_ID, "playerId": record.pantheon_id},
         "id": make_random_letters_and_digit_string(),
     }
 
@@ -56,18 +51,13 @@ def add_user_to_the_pantheon(request, record_id):
 
     content = response.json()
     if content.get("error"):
-        return HttpResponse(
-            "Enroll player. Pantheon error: {}".format(content.get("error"))
-        )
+        return HttpResponse("Enroll player. Pantheon error: {}".format(content.get("error")))
 
     # The third step is register player
     data = {
         "jsonrpc": "2.0",
         "method": "registerPlayerCP",
-        "params": {
-            "eventId": settings.PANTHEON_EVENT_ID,
-            "playerId": record.pantheon_id,
-        },
+        "params": {"eventId": settings.PANTHEON_EVENT_ID, "playerId": record.pantheon_id},
         "id": make_random_letters_and_digit_string(),
     }
 
@@ -77,9 +67,7 @@ def add_user_to_the_pantheon(request, record_id):
 
     content = response.json()
     if content.get("error"):
-        return HttpResponse(
-            "Register player. Pantheon error: {}".format(content.get("error"))
-        )
+        return HttpResponse("Register player. Pantheon error: {}".format(content.get("error")))
 
     record.added_to_pantheon = True
     record.save()
@@ -98,11 +86,7 @@ def disable_user_in_pantheon(request, record_id):
     data = {
         "jsonrpc": "2.0",
         "method": "updatePlayerSeatingFlagCP",
-        "params": {
-            "playerId": record.pantheon_id,
-            "eventId": settings.PANTHEON_EVENT_ID,
-            "ignoreSeating": 1,
-        },
+        "params": {"playerId": record.pantheon_id, "eventId": settings.PANTHEON_EVENT_ID, "ignoreSeating": 1},
         "id": make_random_letters_and_digit_string(),
     }
 
@@ -112,9 +96,7 @@ def disable_user_in_pantheon(request, record_id):
 
     content = response.json()
     if content.get("error"):
-        return HttpResponse(
-            "Disable player. Pantheon error: {}".format(content.get("error"))
-        )
+        return HttpResponse("Disable player. Pantheon error: {}".format(content.get("error")))
 
     record.enabled_in_pantheon = False
     record.save()

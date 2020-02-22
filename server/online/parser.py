@@ -29,12 +29,8 @@ class TenhouParser(object):
         return players
 
     def _download_log(self, log_id):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-        }
-        response = requests.get(
-            "http://e.mjv.jp/0/log/?{}".format(log_id), headers=headers
-        )
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"}
+        response = requests.get("http://e.mjv.jp/0/log/?{}".format(log_id), headers=headers)
         data = response.text
         return data
 
@@ -87,9 +83,7 @@ class TenhouParser(object):
                 index = x % (33 - y)
             first = (a ^ b ^ table[index]) & 0xFFFF
             second = (b ^ c ^ table[index] ^ table[index + 1]) & 0xFFFF
-            result = codecs.getencoder("hex_codec")(struct.pack(">HH", first, second))[
-                0
-            ].decode("ASCII")
+            result = codecs.getencoder("hex_codec")(struct.pack(">HH", first, second))[0].decode("ASCII")
             return log_id[:code_pos] + result
         else:
             return log_id
@@ -105,9 +99,7 @@ class TenhouParser(object):
                 tag_start = x + 1
 
             # not useful tags
-            if tag and (
-                "mjloggm" in tag or "TAIKYOKU" in tag or "SHUFFLE seed=" in tag
-            ):
+            if tag and ("mjloggm" in tag or "TAIKYOKU" in tag or "SHUFFLE seed=" in tag):
                 tag = None
 
             # new round was started

@@ -37,9 +37,7 @@ class EMATournamentListSitemap(TournamentListSitemap):
     changefreq = "monthly"
 
     def location(self, item):
-        return reverse(
-            "tournament_ema_list", kwargs={"year": item, "tournament_type": "EMA"}
-        )
+        return reverse("tournament_ema_list", kwargs={"year": item, "tournament_type": "EMA"})
 
 
 class TournamentSitemap(BaseSitemap):

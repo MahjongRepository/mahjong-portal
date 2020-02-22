@@ -59,9 +59,7 @@ class Tournament(BaseModel):
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
-    tournament_type = models.CharField(
-        max_length=10, choices=TOURNAMENT_TYPES, default=RR, db_index=True
-    )
+    tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR, db_index=True)
 
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
@@ -143,9 +141,7 @@ class Tournament(BaseModel):
         return reverse("rating", kwargs={"slug": tournament_type})
 
     def is_ema(self):
-        return (
-            self.tournament_type == self.EMA or self.tournament_type == self.FOREIGN_EMA
-        )
+        return self.tournament_type == self.EMA or self.tournament_type == self.FOREIGN_EMA
 
     def is_rr(self):
         return self.tournament_type == self.RR
@@ -181,28 +177,18 @@ class Tournament(BaseModel):
 
 
 class TournamentResult(BaseModel):
-    tournament = models.ForeignKey(
-        Tournament, related_name="results", on_delete=models.PROTECT
-    )
+    tournament = models.ForeignKey(Tournament, related_name="results", on_delete=models.PROTECT)
     player = models.ForeignKey(
-        Player,
-        on_delete=models.PROTECT,
-        related_name="tournament_results",
-        null=True,
-        blank=True,
+        Player, on_delete=models.PROTECT, related_name="tournament_results", null=True, blank=True
     )
     player_string = models.CharField(max_length=512, null=True, blank=True)
     place = models.PositiveSmallIntegerField()
-    scores = models.DecimalField(
-        default=None, decimal_places=2, max_digits=10, null=True, blank=True
-    )
+    scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     exclude_from_rating = models.BooleanField(default=False)
     games = models.PositiveSmallIntegerField(default=0)
 
     # for players without profile
-    country = models.ForeignKey(
-        Country, on_delete=models.CASCADE, null=True, blank=True
-    )
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
 
     def __unicode__(self):
         return self.tournament.name
@@ -223,18 +209,14 @@ class TournamentResult(BaseModel):
 
 
 class TournamentRegistration(BaseModel):
-    tournament = models.ForeignKey(
-        Tournament, related_name="tournament_registrations", on_delete=models.PROTECT
-    )
+    tournament = models.ForeignKey(Tournament, related_name="tournament_registrations", on_delete=models.PROTECT)
     is_approved = models.BooleanField(default=True)
 
     first_name = models.CharField(max_length=255, verbose_name=_("First name"))
     last_name = models.CharField(max_length=255, verbose_name=_("Last name"))
     city = models.CharField(max_length=255, verbose_name=_("City"))
     phone = models.CharField(
-        max_length=255,
-        verbose_name=_("Phone"),
-        help_text=_("It will be visible only to the administrator"),
+        max_length=255, verbose_name=_("Phone"), help_text=_("It will be visible only to the administrator")
     )
     additional_contact = models.CharField(
         max_length=255,
@@ -246,47 +228,31 @@ class TournamentRegistration(BaseModel):
     )
 
     is_highlighted = models.BooleanField(default=False)
-    notes = models.TextField(
-        null=True, blank=True, default="", verbose_name=_("Team name")
-    )
+    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Team name"))
 
     player = models.ForeignKey(
-        Player,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="tournament_registrations",
+        Player, on_delete=models.CASCADE, null=True, blank=True, related_name="tournament_registrations"
     )
-    city_object = models.ForeignKey(
-        City, on_delete=models.CASCADE, null=True, blank=True
-    )
+    city_object = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
 
-    allow_to_save_data = models.BooleanField(
-        default=False, verbose_name=_("I allow to store my personal data")
-    )
+    allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
 
     def __unicode__(self):
         return self.full_name
 
     @property
     def full_name(self):
-        return u"{} {}".format(self.last_name, self.first_name)
+        return "{} {}".format(self.last_name, self.first_name)
 
 
 class OnlineTournamentRegistration(BaseModel):
-    tournament = models.ForeignKey(
-        Tournament,
-        related_name="online_tournament_registrations",
-        on_delete=models.PROTECT,
-    )
+    tournament = models.ForeignKey(Tournament, related_name="online_tournament_registrations", on_delete=models.PROTECT)
     is_approved = models.BooleanField(default=True)
 
     first_name = models.CharField(max_length=255, verbose_name=_("First name"))
     last_name = models.CharField(max_length=255, verbose_name=_("Last name"))
     city = models.CharField(max_length=255, verbose_name=_("City"))
-    tenhou_nickname = models.CharField(
-        max_length=255, verbose_name=_("Tenhou.net nickname")
-    )
+    tenhou_nickname = models.CharField(max_length=255, verbose_name=_("Tenhou.net nickname"))
     contact = models.CharField(
         max_length=255,
         verbose_name=_("Your contact (email, phone, etc.)"),
@@ -294,23 +260,13 @@ class OnlineTournamentRegistration(BaseModel):
     )
 
     player = models.ForeignKey(
-        Player,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="online_tournament_registrations",
+        Player, on_delete=models.CASCADE, null=True, blank=True, related_name="online_tournament_registrations"
     )
-    city_object = models.ForeignKey(
-        City, on_delete=models.CASCADE, null=True, blank=True
-    )
+    city_object = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
 
-    allow_to_save_data = models.BooleanField(
-        default=False, verbose_name=_("I allow to store my personal data")
-    )
+    allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
 
-    notes = models.TextField(
-        null=True, blank=True, default="", verbose_name=_("Team name")
-    )
+    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Team name"))
 
     class Meta:
         unique_together = ["tenhou_nickname", "tournament"]
@@ -320,18 +276,14 @@ class OnlineTournamentRegistration(BaseModel):
 
     @property
     def full_name(self):
-        return u"{} {}".format(self.last_name, self.first_name)
+        return "{} {}".format(self.last_name, self.first_name)
 
 
 class TournamentApplication(BaseModel):
-    tournament_name = models.CharField(
-        max_length=255, verbose_name=_("Tournament name")
-    )
+    tournament_name = models.CharField(max_length=255, verbose_name=_("Tournament name"))
     city = models.CharField(max_length=255, verbose_name=_("City"))
     tournament_type = models.PositiveSmallIntegerField(
-        verbose_name=_("Tournament type"),
-        choices=[[0, "CRR"], [1, "RR"], [2, "EMA"]],
-        default=0,
+        verbose_name=_("Tournament type"), choices=[[0, "CRR"], [1, "RR"], [2, "EMA"]], default=0
     )
     start_date = models.CharField(max_length=255, verbose_name=_("Start date"))
     end_date = models.CharField(
@@ -341,19 +293,13 @@ class TournamentApplication(BaseModel):
         blank=True,
         help_text=_("Leave empty if tournament has one day"),
     )
-    address = models.TextField(
-        verbose_name=_("Address"), help_text=_("How to reach your tournament venue")
-    )
+    address = models.TextField(verbose_name=_("Address"), help_text=_("How to reach your tournament venue"))
     additional_info_link = models.URLField(
-        null=True,
-        blank=True,
-        verbose_name=_("Link to additional tournament information"),
+        null=True, blank=True, verbose_name=_("Link to additional tournament information")
     )
 
     organizer_name = models.CharField(max_length=255, verbose_name=_("Organizer name"))
-    organizer_phone = models.CharField(
-        max_length=255, verbose_name=_("Organizer phone")
-    )
+    organizer_phone = models.CharField(max_length=255, verbose_name=_("Organizer phone"))
     organizer_additional_contact = models.CharField(
         max_length=255,
         verbose_name=_("Organizer additional contact"),
@@ -372,51 +318,31 @@ class TournamentApplication(BaseModel):
         help_text=_("Email, link to vk or something else"),
     )
     referee_english = models.PositiveSmallIntegerField(
-        choices=[[0, _("No")], [1, _("Yes")]],
-        default=1,
-        verbose_name=_("Referee english"),
+        choices=[[0, _("No")], [1, _("Yes")]], default=1, verbose_name=_("Referee english")
     )
 
     max_number_of_participants = models.PositiveSmallIntegerField(
         null=True, blank=True, verbose_name=_("Max number of participants")
     )
-    number_of_games = models.PositiveSmallIntegerField(
-        verbose_name=_("Number of hanchans")
-    )
+    number_of_games = models.PositiveSmallIntegerField(verbose_name=_("Number of hanchans"))
     entry_fee = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
-        verbose_name=_("Entry fee"),
-        help_text=_("Leave empty if it is free tournament"),
+        null=True, blank=True, verbose_name=_("Entry fee"), help_text=_("Leave empty if it is free tournament")
     )
     pantheon_needed = models.PositiveSmallIntegerField(
-        choices=[[0, _("No")], [1, _("Yes")]],
-        default=1,
-        verbose_name=_("Pantheon needed"),
+        choices=[[0, _("No")], [1, _("Yes")]], default=1, verbose_name=_("Pantheon needed")
     )
     rules = models.PositiveSmallIntegerField(
         verbose_name=_("Tournament rules"),
-        choices=[
-            [0, _("EMA")],
-            [1, _("WRC")],
-            [2, _("JPML-A")],
-            [3, _("JPML-B")],
-            [4, _("Other")],
-        ],
+        choices=[[0, _("EMA")], [1, _("WRC")], [2, _("JPML-A")], [3, _("JPML-B")], [4, _("Other")]],
         default=0,
     )
     registration_type = models.PositiveSmallIntegerField(
-        choices=[[0, _("Open")], [1, _("Closed")], [2, _("Limited")]],
-        verbose_name=_("Registration type"),
-        default=0,
+        choices=[[0, _("Open")], [1, _("Closed")], [2, _("Limited")]], verbose_name=_("Registration type"), default=0
     )
     additional_info = models.TextField(
-        verbose_name=_("Additional info"),
-        help_text=_("More information about tournament"),
+        verbose_name=_("Additional info"), help_text=_("More information about tournament")
     )
-    allow_to_save_data = models.BooleanField(
-        help_text=_("I allow to store my personal data")
-    )
+    allow_to_save_data = models.BooleanField(help_text=_("I allow to store my personal data"))
 
     def __unicode__(self):
         return ""

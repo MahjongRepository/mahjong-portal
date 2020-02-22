@@ -1,9 +1,10 @@
 [flake8]
-ignore=Q003,W504
-max-line-length=120
-inline-quotes=single
+ignore = E203, E266, E501, W503
+max-line-length = 120
+max-complexity = 18
+select = B,C,E,F,W,T4,B9
 exclude=
         */migrations/*,
-        mahjong_portal/settings.py,
+        server/mahjong_portal/settings.py,
         online/parser.py,
         manage.py,

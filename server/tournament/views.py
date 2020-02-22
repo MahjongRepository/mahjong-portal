@@ -7,17 +7,8 @@ from django.utils.translation import gettext as _
 
 from player.models import Player
 from settings.models import City
-from tournament.forms import (
-    TournamentRegistrationForm,
-    OnlineTournamentRegistrationForm,
-    TournamentApplicationForm,
-)
-from tournament.models import (
-    Tournament,
-    TournamentResult,
-    TournamentRegistration,
-    OnlineTournamentRegistration,
-)
+from tournament.forms import TournamentRegistrationForm, OnlineTournamentRegistrationForm, TournamentApplicationForm
+from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
 
 
 def tournament_list(request, tournament_type=None, year=None):
@@ -34,27 +25,13 @@ def tournament_list(request, tournament_type=None, year=None):
     tournaments = Tournament.objects.filter(end_date__year=selected_year)
 
     if tournament_type == "ema":
-        tournament_types = [
-            Tournament.EMA,
-            Tournament.FOREIGN_EMA,
-            Tournament.CHAMPIONSHIP,
-        ]
+        tournament_types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
         tournaments = tournaments.filter(tournament_type__in=tournament_types)
     else:
-        tournament_types = [
-            Tournament.EMA,
-            Tournament.RR,
-            Tournament.CRR,
-            Tournament.OTHER,
-            Tournament.ONLINE,
-        ]
+        tournament_types = [Tournament.EMA, Tournament.RR, Tournament.CRR, Tournament.OTHER, Tournament.ONLINE]
         tournaments = tournaments.filter(tournament_type__in=tournament_types)
 
-    tournaments = (
-        tournaments.order_by("-end_date")
-        .prefetch_related("city")
-        .prefetch_related("country")
-    )
+    tournaments = tournaments.order_by("-end_date").prefetch_related("city").prefetch_related("country")
 
     upcoming_tournaments = (
         Tournament.public.filter(is_upcoming=True)
@@ -93,9 +70,7 @@ def tournament_details(request, slug):
     )
 
     return render(
-        request,
-        "tournament/details.html",
-        {"tournament": tournament, "results": results, "page": "tournament"},
+        request, "tournament/details.html", {"tournament": tournament, "results": results, "page": "tournament"}
     )
 
 
@@ -133,12 +108,7 @@ def tournament_announcement(request, slug):
     return render(
         request,
         "tournament/announcement.html",
-        {
-            "tournament": tournament,
-            "page": "tournament",
-            "form": form,
-            "registration_results": registration_results,
-        },
+        {"tournament": tournament, "page": "tournament", "form": form, "registration_results": registration_results},
     )
 
 
@@ -152,13 +122,9 @@ def tournament_registration(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
 
     if tournament.is_online():
-        form = OnlineTournamentRegistrationForm(
-            request.POST, initial={"tournament": tournament}
-        )
+        form = OnlineTournamentRegistrationForm(request.POST, initial={"tournament": tournament})
     else:
-        form = TournamentRegistrationForm(
-            request.POST, initial={"tournament": tournament}
-        )
+        form = TournamentRegistrationForm(request.POST, initial={"tournament": tournament})
 
     if form.is_valid():
         if tournament.is_online():
@@ -167,9 +133,7 @@ def tournament_registration(request, tournament_id):
                 tournament=tournament, tenhou_nickname=tenhou_nickname
             ).exists()
             if exists:
-                messages.success(
-                    request, _("You already registered to the tournament!")
-                )
+                messages.success(request, _("You already registered to the tournament!"))
                 return redirect(tournament.get_url())
 
         instance = form.save(commit=False)
@@ -179,8 +143,7 @@ def tournament_registration(request, tournament_id):
 
         try:
             instance.player = Player.objects.get(
-                first_name_ru=instance.first_name.title(),
-                last_name_ru=instance.last_name.title(),
+                first_name_ru=instance.first_name.title(), last_name_ru=instance.last_name.title()
             )
         except (Player.DoesNotExist, Player.MultipleObjectsReturned):
             # TODO if multiple players are here, let's try to filter by city
@@ -219,6 +182,4 @@ def tournament_application(request):
             form.save()
             success = True
 
-    return render(
-        request, "tournament/application.html", {"form": form, "success": success}
-    )
+    return render(request, "tournament/application.html", {"form": form, "success": success})
