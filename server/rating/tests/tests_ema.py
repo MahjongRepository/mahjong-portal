@@ -8,7 +8,6 @@ from tournament.models import Tournament
 
 
 class EMARatingTestCase(TestCase, RatingTestMixin):
-
     def setUp(self):
         self.set_up_initial_objects()
 
@@ -59,20 +58,40 @@ class EMARatingTestCase(TestCase, RatingTestMixin):
 
         tournament = self.create_tournament()
 
-        self.create_tournament_result(tournament, 1, self.create_player(country_code='1'))
-        self.create_tournament_result(tournament, 2, self.create_player(country_code='2'))
-        self.create_tournament_result(tournament, 3, self.create_player(country_code='3'))
-        self.create_tournament_result(tournament, 4, self.create_player(country_code='4'))
-        self.create_tournament_result(tournament, 5, self.create_player(country_code='5'))
+        self.create_tournament_result(
+            tournament, 1, self.create_player(country_code="1")
+        )
+        self.create_tournament_result(
+            tournament, 2, self.create_player(country_code="2")
+        )
+        self.create_tournament_result(
+            tournament, 3, self.create_player(country_code="3")
+        )
+        self.create_tournament_result(
+            tournament, 4, self.create_player(country_code="4")
+        )
+        self.create_tournament_result(
+            tournament, 5, self.create_player(country_code="5")
+        )
         self.assertEqual(calculator.countries_coefficient(tournament), 0)
 
-        self.create_tournament_result(tournament, 6, self.create_player(country_code='6'))
-        self.create_tournament_result(tournament, 7, self.create_player(country_code='7'))
-        self.create_tournament_result(tournament, 8, self.create_player(country_code='8'))
-        self.create_tournament_result(tournament, 9, self.create_player(country_code='9'))
+        self.create_tournament_result(
+            tournament, 6, self.create_player(country_code="6")
+        )
+        self.create_tournament_result(
+            tournament, 7, self.create_player(country_code="7")
+        )
+        self.create_tournament_result(
+            tournament, 8, self.create_player(country_code="8")
+        )
+        self.create_tournament_result(
+            tournament, 9, self.create_player(country_code="9")
+        )
         self.assertEqual(calculator.countries_coefficient(tournament), 0.5)
 
-        self.create_tournament_result(tournament, 10, self.create_player(country_code='10'))
+        self.create_tournament_result(
+            tournament, 10, self.create_player(country_code="10")
+        )
         self.assertEqual(calculator.countries_coefficient(tournament), 1)
 
     def test_tournament_coefficient_and_qualification(self):

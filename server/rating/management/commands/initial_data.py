@@ -10,32 +10,25 @@ from tournament.models import Tournament, TournamentResult
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
         year = timezone.now().year
 
-        country = Country.objects.create(name='Russia', code='RU')
-        Rating.objects.create(name='RR', slug='rr', type=Rating.RR)
+        country = Country.objects.create(name="Russia", code="RU")
+        Rating.objects.create(name="RR", slug="rr", type=Rating.RR)
 
         first_player = Player.objects.create(
-            first_name='Takaharu',
-            last_name='Ooi',
-            slug='first',
-            country=country
+            first_name="Takaharu", last_name="Ooi", slug="first", country=country
         )
 
         second_player = Player.objects.create(
-            first_name='Koshin',
-            last_name='Asakura',
-            slug='second',
-            country=country,
+            first_name="Koshin", last_name="Asakura", slug="second", country=country
         )
 
         first_tournament = Tournament.objects.create(
-            name='First',
+            name="First",
             end_date=datetime(year, 1, 1),
             country=country,
-            slug='first',
+            slug="first",
             number_of_players=2,
             number_of_sessions=20,
             tournament_type=Tournament.RR,
@@ -49,13 +42,13 @@ class Command(BaseCommand):
         )
 
         second_tournament = Tournament.objects.create(
-            name='Second',
+            name="Second",
             end_date=datetime(year - 1, 9, 10),
             country=country,
-            slug='second',
+            slug="second",
             number_of_players=2,
             number_of_sessions=14,
-            tournament_type=Tournament.RR
+            tournament_type=Tournament.RR,
         )
 
         TournamentResult.objects.create(
@@ -65,4 +58,4 @@ class Command(BaseCommand):
             player=second_player, place=2, scores=10000, tournament=second_tournament
         )
 
-        call_command('rating_calculate', 'rr')
+        call_command("rating_calculate", "rr")

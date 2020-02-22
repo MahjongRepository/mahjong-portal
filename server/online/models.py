@@ -39,10 +39,10 @@ class TournamentGame(BaseModel):
     FINISHED = 3
 
     STATUSES = [
-        [NEW, 'New'],
-        [STARTED, 'Started'],
-        [FAILED_TO_START, 'Failed to start'],
-        [FINISHED, 'Finished'],
+        [NEW, "New"],
+        [STARTED, "Started"],
+        [FAILED_TO_START, "Failed to start"],
+        [FINISHED, "Finished"],
     ]
 
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
@@ -52,25 +52,25 @@ class TournamentGame(BaseModel):
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
 
     class Meta:
-        ordering = ['-tournament', '-tournament_round', 'status', ]
+        ordering = ["-tournament", "-tournament_round", "status"]
 
     def __unicode__(self):
-        return '{}, {}, {}'.format(self.id, self.get_status_display(), self.tournament_round)
+        return "{}, {}, {}".format(
+            self.id, self.get_status_display(), self.tournament_round
+        )
 
 
 class TournamentGamePlayer(BaseModel):
     player = models.ForeignKey(TournamentPlayers, on_delete=models.CASCADE)
     game = models.ForeignKey(
-        TournamentGame,
-        on_delete=models.CASCADE,
-        related_name='game_players',
+        TournamentGame, on_delete=models.CASCADE, related_name="game_players"
     )
     wind = models.PositiveSmallIntegerField(null=True, blank=True, default=None)
 
     def __unicode__(self):
-        return u'{}, {}, {}, {}'.format(
+        return u"{}, {}, {}, {}".format(
             self.player.__unicode__(),
             self.wind,
             self.player.pantheon_id,
-            self.player.team_name
+            self.player.team_name,
         )

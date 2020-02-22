@@ -6,33 +6,34 @@ from player.models import Player
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
-        with open('export_players.csv', 'w') as f:
+        with open("export_players.csv", "w") as f:
             writer = csv.writer(f)
 
-            players = Player.objects.filter(country__code='RU')
+            players = Player.objects.filter(country__code="RU")
 
             rows = [
                 [
-                    'id',
-                    'last_name_ru',
-                    'first_name_ru',
-                    'last_name_en',
-                    'first_name_en',
-                    'ema_id',
+                    "id",
+                    "last_name_ru",
+                    "first_name_ru",
+                    "last_name_en",
+                    "first_name_en",
+                    "ema_id",
                 ]
             ]
 
             for player in players:
-                rows.append([
-                    player.id,
-                    player.last_name_ru,
-                    player.first_name_ru,
-                    player.last_name_en,
-                    player.first_name_en,
-                    player.ema_id,
-                ])
+                rows.append(
+                    [
+                        player.id,
+                        player.last_name_ru,
+                        player.first_name_ru,
+                        player.last_name_en,
+                        player.first_name_en,
+                        player.ema_id,
+                    ]
+                )
 
             for x in rows:
                 writer.writerow(x)

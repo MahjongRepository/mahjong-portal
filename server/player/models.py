@@ -10,28 +10,26 @@ class Player(BaseModel):
     FEMALE = 0
     MALE = 1
     NONE = 2
-    GENDERS = [
-        [FEMALE, 'f'],
-        [MALE, 'm'],
-        [NONE, ''],
-    ]
+    GENDERS = [[FEMALE, "f"], [MALE, "m"], [NONE, ""]]
 
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True)
+    country = models.ForeignKey(
+        Country, on_delete=models.PROTECT, null=True, blank=True
+    )
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
     gender = models.PositiveSmallIntegerField(choices=GENDERS, default=NONE)
     is_replacement = models.BooleanField(default=False)
     is_hide = models.BooleanField(default=False)
 
-    ema_id = models.CharField(max_length=30, null=True, blank=True, default='')
+    ema_id = models.CharField(max_length=30, null=True, blank=True, default="")
     pantheon_id = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
-        ordering = ['last_name']
+        ordering = ["last_name"]
 
     def __unicode__(self):
         return self.full_name
@@ -42,21 +40,21 @@ class Player(BaseModel):
     @property
     def full_name(self):
         if self.is_hide:
-            return _('Substitution player')
+            return _("Substitution player")
 
-        return u'{} {}'.format(self.last_name, self.first_name)
+        return u"{} {}".format(self.last_name, self.first_name)
 
     @property
     def tenhou_object(self):
-        tenhou = self.tenhou.all().order_by('-is_main').first()
+        tenhou = self.tenhou.all().order_by("-is_main").first()
         return tenhou
 
     @property
     def ms_object(self):
-        ms_obj = self.ms.all().order_by('statistics__rank').first()
+        ms_obj = self.ms.all().order_by("statistics__rank").first()
         if not ms_obj:
             return None
-        return ms_obj.statistics.all().order_by('rank').first()
+        return ms_obj.statistics.all().order_by("rank").first()
 
     @property
     def latest_ema_id(self):
@@ -64,21 +62,22 @@ class Player(BaseModel):
 
     @staticmethod
     def ema_queryset():
-        return (Player.objects
-                .exclude(Q(ema_id__isnull=True) | Q(ema_id=''))
-                .filter(country__code='RU')
-                .order_by('-ema_id'))
+        return (
+            Player.objects.exclude(Q(ema_id__isnull=True) | Q(ema_id=""))
+            .filter(country__code="RU")
+            .order_by("-ema_id")
+        )
 
 
 class PlayerTitle(BaseModel):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='titles')
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="titles")
     text = models.CharField(max_length=255)
     background_color = models.CharField(max_length=7)
     text_color = models.CharField(max_length=7)
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
 
     def __unicode__(self):
         return self.text
@@ -96,18 +95,18 @@ class PlayerERMC(BaseModel):
     DARK_BLUE = 8
 
     COLORS = [
-        [GREEN, 'точно едет'],
-        [YELLOW, 'скорее всего едет'],
-        [ORANGE, 'пока сомневается, но скорее всего не едет'],
-        [BLUE, 'игрок пока ничего не ответил'],
-        [PINK, 'игрок пока что не проходит, но готов ехать, если появится квота'],
-        [GRAY, 'точно не едет'],
-        [DARK_GREEN, 'деда'],
-        [VIOLET, 'игрок замены'],
-        [DARK_BLUE, 'не деда (судья)'],
+        [GREEN, "точно едет"],
+        [YELLOW, "скорее всего едет"],
+        [ORANGE, "пока сомневается, но скорее всего не едет"],
+        [BLUE, "игрок пока ничего не ответил"],
+        [PINK, "игрок пока что не проходит, но готов ехать, если появится квота"],
+        [GRAY, "точно не едет"],
+        [DARK_GREEN, "деда"],
+        [VIOLET, "игрок замены"],
+        [DARK_BLUE, "не деда (судья)"],
     ]
 
-    player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='ermc')
+    player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name="ermc")
 
     state = models.PositiveSmallIntegerField(choices=COLORS)
     federation_member = models.BooleanField(default=False)
@@ -121,17 +120,17 @@ class PlayerERMC(BaseModel):
     @staticmethod
     def color_map(index):
         colors = {
-            PlayerERMC.GREEN: '#93C47D',
-            PlayerERMC.YELLOW: '#FFE599',
-            PlayerERMC.ORANGE: '#F6B26B',
-            PlayerERMC.BLUE: '#C9DAF8',
-            PlayerERMC.PINK: '#D5A6BD',
-            PlayerERMC.GRAY: '#999999',
-            PlayerERMC.DARK_GREEN: '#45818E',
-            PlayerERMC.VIOLET: '#8E7CC3',
-            PlayerERMC.DARK_BLUE: '#5757f8',
+            PlayerERMC.GREEN: "#93C47D",
+            PlayerERMC.YELLOW: "#FFE599",
+            PlayerERMC.ORANGE: "#F6B26B",
+            PlayerERMC.BLUE: "#C9DAF8",
+            PlayerERMC.PINK: "#D5A6BD",
+            PlayerERMC.GRAY: "#999999",
+            PlayerERMC.DARK_GREEN: "#45818E",
+            PlayerERMC.VIOLET: "#8E7CC3",
+            PlayerERMC.DARK_BLUE: "#5757f8",
         }
-        return colors.get(index, '')
+        return colors.get(index, "")
 
 
 class PlayerWRC(BaseModel):
@@ -146,18 +145,18 @@ class PlayerWRC(BaseModel):
     DARK_BLUE = 8
 
     COLORS = [
-        [GREEN, 'точно едет'],
-        [YELLOW, 'скорее всего едет'],
-        [ORANGE, 'пока сомневается, но скорее всего не едет'],
-        [BLUE, 'игрок пока ничего не ответил'],
-        [PINK, 'игрок пока что не проходит, но готов ехать, если появится квота'],
-        [GRAY, 'точно не едет'],
-        [DARK_GREEN, 'чемпион европы'],
-        [VIOLET, 'игрок замены'],
-        [DARK_BLUE, 'не деда (судья)'],
+        [GREEN, "точно едет"],
+        [YELLOW, "скорее всего едет"],
+        [ORANGE, "пока сомневается, но скорее всего не едет"],
+        [BLUE, "игрок пока ничего не ответил"],
+        [PINK, "игрок пока что не проходит, но готов ехать, если появится квота"],
+        [GRAY, "точно не едет"],
+        [DARK_GREEN, "чемпион европы"],
+        [VIOLET, "игрок замены"],
+        [DARK_BLUE, "не деда (судья)"],
     ]
 
-    player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name='wrc')
+    player = models.OneToOneField(Player, on_delete=models.CASCADE, related_name="wrc")
 
     state = models.PositiveSmallIntegerField(choices=COLORS)
     federation_member = models.BooleanField(default=False)
@@ -171,14 +170,14 @@ class PlayerWRC(BaseModel):
     @staticmethod
     def color_map(index):
         colors = {
-            PlayerWRC.GREEN: '#93C47D',
-            PlayerWRC.YELLOW: '#FFE599',
-            PlayerWRC.ORANGE: '#F6B26B',
-            PlayerWRC.BLUE: '#C9DAF8',
-            PlayerWRC.PINK: '#D5A6BD',
-            PlayerWRC.GRAY: '#999999',
-            PlayerWRC.DARK_GREEN: '#45818E',
-            PlayerWRC.VIOLET: '#8E7CC3',
-            PlayerWRC.DARK_BLUE: '#5757f8',
+            PlayerWRC.GREEN: "#93C47D",
+            PlayerWRC.YELLOW: "#FFE599",
+            PlayerWRC.ORANGE: "#F6B26B",
+            PlayerWRC.BLUE: "#C9DAF8",
+            PlayerWRC.PINK: "#D5A6BD",
+            PlayerWRC.GRAY: "#999999",
+            PlayerWRC.DARK_GREEN: "#45818E",
+            PlayerWRC.VIOLET: "#8E7CC3",
+            PlayerWRC.DARK_BLUE: "#5757f8",
         }
-        return colors.get(index, '')
+        return colors.get(index, "")

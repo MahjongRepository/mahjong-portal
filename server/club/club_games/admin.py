@@ -4,9 +4,9 @@ from club.club_games.models import ClubSessionResult
 
 
 class ClubSessionResultAdmin(admin.ModelAdmin):
-    list_display = ['player', 'player_string', 'club']
-    search_fields = ['player_string']
-    ordering = ['-club_session__club__name', 'player_string']
+    list_display = ["player", "player_string", "club"]
+    search_fields = ["player_string"]
+    ordering = ["-club_session__club__name", "player_string"]
 
     def club(self, obj):
         return obj.club_session.club.name

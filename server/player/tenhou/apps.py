@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class TenhouConfig(AppConfig):
-    name = 'player.tenhou'
+    name = "player.tenhou"

@@ -8,10 +8,11 @@ from rating.models import RatingResult
 
 def get_latest_rating_date(rating):
     today = timezone.now().date()
-    rating_results = (RatingResult.objects
-                      .filter(rating=rating)
-                      .filter(date__lte=today)
-                      .order_by('date'))
+    rating_results = (
+        RatingResult.objects.filter(rating=rating)
+        .filter(date__lte=today)
+        .order_by("date")
+    )
     return today, rating_results.last().date
 
 

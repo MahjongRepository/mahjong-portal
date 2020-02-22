@@ -8,18 +8,14 @@ from player.tenhou.models import TenhouNickname
 
 class ClubSessionSyncData(BaseModel):
     club = models.OneToOneField(
-        Club,
-        on_delete=models.CASCADE,
-        related_name='sync_info',
+        Club, on_delete=models.CASCADE, related_name="sync_info"
     )
     last_session_id = models.PositiveIntegerField(null=True, blank=True)
 
 
 class ClubSession(BaseModel):
     club = models.ForeignKey(
-        Club,
-        on_delete=models.CASCADE,
-        related_name='club_sessions',
+        Club, on_delete=models.CASCADE, related_name="club_sessions"
     )
     date = models.DateTimeField()
 
@@ -32,15 +28,9 @@ class ClubSession(BaseModel):
 
 class ClubSessionResult(BaseModel):
     club_session = models.ForeignKey(
-        ClubSession,
-        on_delete=models.CASCADE,
-        related_name='results',
+        ClubSession, on_delete=models.CASCADE, related_name="results"
     )
-    player = models.ForeignKey(
-        Player,
-        on_delete=models.CASCADE,
-        null=True, blank=True,
-    )
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     player_string = models.CharField(max_length=255, null=True, blank=True)
 
     order = models.PositiveSmallIntegerField()
@@ -48,25 +38,17 @@ class ClubSessionResult(BaseModel):
     score = models.IntegerField()
 
     class Meta:
-        ordering = ['order']
+        ordering = ["order"]
 
     @property
     def wind(self):
-        winds = [u'東', u'南', u'西', u'北']
+        winds = [u"東", u"南", u"西", u"北"]
         return winds[self.order - 1]
 
 
 class ClubRating(BaseModel):
-    club = models.ForeignKey(
-        Club,
-        on_delete=models.CASCADE,
-        related_name='rating',
-    )
-    player = models.ForeignKey(
-        Player,
-        on_delete=models.CASCADE,
-        null=True, blank=True,
-    )
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="rating")
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     player_string = models.CharField(max_length=255, null=True, blank=True)
 
     games_count = models.PositiveIntegerField()
@@ -76,4 +58,6 @@ class ClubRating(BaseModel):
     third_place = models.DecimalField(decimal_places=2, max_digits=10)
     fourth_place = models.DecimalField(decimal_places=2, max_digits=10)
 
-    rank = models.PositiveSmallIntegerField(choices=TenhouNickname.RANKS, null=True, blank=True, default=None)
+    rank = models.PositiveSmallIntegerField(
+        choices=TenhouNickname.RANKS, null=True, blank=True, default=None
+    )

@@ -12,22 +12,17 @@ class Rating(BaseModel):
     CRR = 2
     ONLINE = 3
 
-    TYPES = [
-        [RR, 'RR'],
-        [CRR, 'CRR'],
-        [EMA, 'EMA'],
-        [ONLINE, 'ONLINE']
-    ]
+    TYPES = [[RR, "RR"], [CRR, "CRR"], [EMA, "EMA"], [ONLINE, "ONLINE"]]
 
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
-    description = models.TextField(null=True, blank=True, default='')
+    description = models.TextField(null=True, blank=True, default="")
     order = models.PositiveIntegerField(default=0)
 
     type = models.PositiveSmallIntegerField(choices=TYPES)
 
     class Meta:
-        ordering = ['id']
+        ordering = ["id"]
 
     def __unicode__(self):
         return self.name
@@ -38,8 +33,12 @@ class Rating(BaseModel):
 
 class RatingDelta(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
-    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='rating_delta')
-    tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name='rating_delta')
+    player = models.ForeignKey(
+        Player, on_delete=models.PROTECT, related_name="rating_delta"
+    )
+    tournament = models.ForeignKey(
+        Tournament, on_delete=models.PROTECT, related_name="rating_delta"
+    )
     is_active = models.BooleanField(default=False)
 
     base_rank = models.DecimalField(decimal_places=2, max_digits=10)
@@ -53,7 +52,9 @@ class RatingDelta(BaseModel):
 
     @property
     def coefficient_obj(self):
-        return TournamentCoefficients.objects.get(rating=self.rating, tournament=self.tournament, date=self.date)
+        return TournamentCoefficients.objects.get(
+            rating=self.rating, tournament=self.tournament, date=self.date
+        )
 
     @property
     def coefficient_value(self):
@@ -62,15 +63,19 @@ class RatingDelta(BaseModel):
             self.rating.type == Rating.EMA,
             self.tournament_id,
             self.player,
-            coefficient_obj.coefficient
+            coefficient_obj.coefficient,
         )
 
 
 class RatingResult(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
-    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name='rating_results')
+    player = models.ForeignKey(
+        Player, on_delete=models.PROTECT, related_name="rating_results"
+    )
 
-    score = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
+    score = models.DecimalField(
+        default=None, decimal_places=2, max_digits=10, null=True, blank=True
+    )
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
     tournament_numbers = models.PositiveIntegerField(null=True, blank=True)
@@ -81,22 +86,29 @@ class RatingResult(BaseModel):
         return self.rating.name
 
     def get_deltas(self):
-        return (RatingDelta.objects
-                           .filter(player=self.player, rating=self.rating)
-                           .filter(is_active=True)
-                           .prefetch_related('player')
-                           .prefetch_related('tournament')
-                           .order_by('-tournament__end_date'))
+        return (
+            RatingDelta.objects.filter(player=self.player, rating=self.rating)
+            .filter(is_active=True)
+            .prefetch_related("player")
+            .prefetch_related("tournament")
+            .order_by("-tournament__end_date")
+        )
 
 
 class TournamentCoefficients(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.CASCADE)
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='rating_results')
+    tournament = models.ForeignKey(
+        Tournament, on_delete=models.CASCADE, related_name="rating_results"
+    )
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
 
-    coefficient = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    coefficient = models.DecimalField(
+        decimal_places=2, max_digits=10, null=True, blank=True
+    )
     age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-    previous_age = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    previous_age = models.DecimalField(
+        decimal_places=2, max_digits=10, null=True, blank=True
+    )
 
     def __unicode__(self):
         return self.rating.name
@@ -108,7 +120,7 @@ class RatingDate(BaseModel):
     is_future = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-date']
+        ordering = ["-date"]
 
     def __unicode__(self):
         return self.rating.__unicode__()

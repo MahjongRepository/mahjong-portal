@@ -8,7 +8,7 @@ class PantheonPlayer(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'player'
+        db_table = "player"
 
 
 class PantheonEvent(models.Model):
@@ -18,11 +18,11 @@ class PantheonEvent(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'event'
+        db_table = "event"
 
 
 class PantheonSession(models.Model):
-    FINISHED = 'finished'
+    FINISHED = "finished"
 
     event = models.ForeignKey(PantheonEvent, on_delete=models.CASCADE)
     end_date = models.DateTimeField()
@@ -31,15 +31,13 @@ class PantheonSession(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'session'
+        db_table = "session"
 
 
 class PantheonSessionResult(models.Model):
     event = models.ForeignKey(PantheonEvent, on_delete=models.CASCADE)
     session = models.ForeignKey(
-        PantheonSession,
-        on_delete=models.CASCADE,
-        related_name='results',
+        PantheonSession, on_delete=models.CASCADE, related_name="results"
     )
     player = models.ForeignKey(PantheonPlayer, on_delete=models.CASCADE)
     score = models.PositiveIntegerField()
@@ -47,14 +45,12 @@ class PantheonSessionResult(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'session_results'
+        db_table = "session_results"
 
 
 class PantheonSessionPlayer(models.Model):
     session = models.ForeignKey(
-        PantheonSession,
-        on_delete=models.CASCADE,
-        related_name='players',
+        PantheonSession, on_delete=models.CASCADE, related_name="players"
     )
     player = models.ForeignKey(PantheonPlayer, on_delete=models.CASCADE)
     # django wanted on primary key
@@ -63,27 +59,21 @@ class PantheonSessionPlayer(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'session_player'
+        db_table = "session_player"
 
 
 class PantheonRound(models.Model):
-    RON = 'ron'
-    MULTI_RON = 'multiron'
+    RON = "ron"
+    MULTI_RON = "multiron"
 
     session = models.ForeignKey(
-        PantheonSession,
-        on_delete=models.CASCADE,
-        related_name='rounds',
+        PantheonSession, on_delete=models.CASCADE, related_name="rounds"
     )
     winner = models.ForeignKey(
-        PantheonPlayer,
-        on_delete=models.CASCADE,
-        related_name='win_rounds',
+        PantheonPlayer, on_delete=models.CASCADE, related_name="win_rounds"
     )
     loser = models.ForeignKey(
-        PantheonPlayer,
-        on_delete=models.CASCADE,
-        related_name='lose_rounds',
+        PantheonPlayer, on_delete=models.CASCADE, related_name="lose_rounds"
     )
     event = models.ForeignKey(PantheonEvent, on_delete=models.CASCADE)
     dora = models.PositiveIntegerField()
@@ -96,4 +86,4 @@ class PantheonRound(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'round'
+        db_table = "round"

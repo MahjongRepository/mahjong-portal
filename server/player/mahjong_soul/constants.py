@@ -22,8 +22,7 @@ NEXT_LEVEL_POINTS = {
     10502: 6000,
     10503: 9000,
     # Celestial,
-    10601: u'∞',
-
+    10601: u"∞",
     # Sanma Novice
     20101: 20,
     20102: 80,
@@ -45,53 +44,52 @@ NEXT_LEVEL_POINTS = {
     20502: 6000,
     20503: 9000,
     # Sanma Celestial,
-    20601: u'∞'
+    20601: u"∞",
 }
 
 RANK_LABELS = {
     # Novice
-    10101: 'Novice I',
-    10102: 'Novice II',
-    10103: 'Novice III',
+    10101: "Novice I",
+    10102: "Novice II",
+    10103: "Novice III",
     # Adept
-    10201: 'Adept I',
-    10202: 'Adept II',
-    10203: 'Adept III',
+    10201: "Adept I",
+    10202: "Adept II",
+    10203: "Adept III",
     # Expert
-    10301: 'Expert I',
-    10302: 'Expert II',
-    10303: 'Expert III',
+    10301: "Expert I",
+    10302: "Expert II",
+    10303: "Expert III",
     # Master
-    10401: 'Master I',
-    10402: 'Master II',
-    10403: 'Master III',
+    10401: "Master I",
+    10402: "Master II",
+    10403: "Master III",
     # Saint
-    10501: 'Saint I',
-    10502: 'Saint II',
-    10503: 'Saint III',
+    10501: "Saint I",
+    10502: "Saint II",
+    10503: "Saint III",
     # Celestial,
-    10601: u'Celestial 😎',
-
+    10601: u"Celestial 😎",
     # Sanma Novice
-    20101: 'Novice I',
-    20102: 'Novice II',
-    20103: 'Novice III',
+    20101: "Novice I",
+    20102: "Novice II",
+    20103: "Novice III",
     # Sanma Adept
-    20201: 'Adept I',
-    20202: 'Adept II',
-    20203: 'Adept III',
+    20201: "Adept I",
+    20202: "Adept II",
+    20203: "Adept III",
     # Sanma Expert
-    20301: 'Expert I',
-    20302: 'Expert II',
-    20303: 'Expert III',
+    20301: "Expert I",
+    20302: "Expert II",
+    20303: "Expert III",
     # Sanma Master
-    20401: 'Master I',
-    20402: 'Master II',
-    20403: 'Master III',
+    20401: "Master I",
+    20402: "Master II",
+    20403: "Master III",
     # Sanma Saint
-    20501: 'Saint I',
-    20502: 'Saint II',
-    20503: 'Saint III',
+    20501: "Saint I",
+    20502: "Saint II",
+    20503: "Saint III",
     # Sanma Celestial,
-    20601: u'Celestial 😎',
+    20601: u"Celestial 😎",
 }

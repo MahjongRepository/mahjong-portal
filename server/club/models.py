@@ -14,7 +14,7 @@ class Club(BaseModel):
     description = models.TextField(null=True, blank=True)
     rating_description = models.TextField(null=True, blank=True)
 
-    players = models.ManyToManyField(Player, related_name='clubs', blank=True)
+    players = models.ManyToManyField(Player, related_name="clubs", blank=True)
 
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
@@ -25,7 +25,7 @@ class Club(BaseModel):
     pantheon_ids = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __unicode__(self):
         return self.name

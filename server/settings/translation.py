@@ -4,11 +4,11 @@ from settings.models import Country, City
 
 
 class CountryTranslationOptions(TranslationOptions):
-    fields = ['name']
+    fields = ["name"]
 
 
 class CityTranslationOptions(TranslationOptions):
-    fields = ['name']
+    fields = ["name"]
 
 
 translator.register(Country, CountryTranslationOptions)

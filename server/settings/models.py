@@ -8,7 +8,7 @@ class Country(BaseModel):
     name = models.CharField(max_length=255)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __unicode__(self):
         return self.name
@@ -19,7 +19,7 @@ class City(BaseModel):
     slug = models.SlugField(unique=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __unicode__(self):
         return self.name

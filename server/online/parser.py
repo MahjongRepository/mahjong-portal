@@ -9,7 +9,6 @@ import requests
 
 
 class TenhouParser(object):
-
     def get_player_names(self, log_id):
         log_id = self._get_log_name_for_download(log_id)
         log_content = self._download_log(log_id)
@@ -18,39 +17,68 @@ class TenhouParser(object):
         players = []
         first_round = rounds[0]
         for tag in first_round:
-            if tag.startswith('<UN'):
+            if tag.startswith("<UN"):
                 players = [
-                    unquote(self._get_attribute_content(tag, 'n0')),
-                    unquote(self._get_attribute_content(tag, 'n1')),
-                    unquote(self._get_attribute_content(tag, 'n2')),
-                    unquote(self._get_attribute_content(tag, 'n3')),
+                    unquote(self._get_attribute_content(tag, "n0")),
+                    unquote(self._get_attribute_content(tag, "n1")),
+                    unquote(self._get_attribute_content(tag, "n2")),
+                    unquote(self._get_attribute_content(tag, "n3")),
                 ]
                 break
 
         return players
 
     def _download_log(self, log_id):
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
-        response = requests.get('http://e.mjv.jp/0/log/?{}'.format(log_id), headers=headers)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+        }
+        response = requests.get(
+            "http://e.mjv.jp/0/log/?{}".format(log_id), headers=headers
+        )
         data = response.text
         return data
 
     def _get_log_name_for_download(self, log_id):
         table = [
-            22136, 52719, 55146, 42104,
-            59591, 46934, 9248,  28891,
-            49597, 52974, 62844, 4015,
-            18311, 50730, 43056, 17939,
-            64838, 38145, 27008, 39128,
-            35652, 63407, 65535, 23473,
-            35164, 55230, 27536, 4386,
-            64920, 29075, 42617, 17294,
-            18868, 2081
+            22136,
+            52719,
+            55146,
+            42104,
+            59591,
+            46934,
+            9248,
+            28891,
+            49597,
+            52974,
+            62844,
+            4015,
+            18311,
+            50730,
+            43056,
+            17939,
+            64838,
+            38145,
+            27008,
+            39128,
+            35652,
+            63407,
+            65535,
+            23473,
+            35164,
+            55230,
+            27536,
+            4386,
+            64920,
+            29075,
+            42617,
+            17294,
+            18868,
+            2081,
         ]
 
         code_pos = log_id.rindex("-") + 1
         code = log_id[code_pos:]
-        if code[0] == 'x':
+        if code[0] == "x":
             a, b, c = struct.unpack(">HHH", bytes.fromhex(code[1:]))
             index = 0
             if log_id[:12] > "2010041111gm":
@@ -59,7 +87,9 @@ class TenhouParser(object):
                 index = x % (33 - y)
             first = (a ^ b ^ table[index]) & 0xFFFF
             second = (b ^ c ^ table[index] ^ table[index + 1]) & 0xFFFF
-            result = codecs.getencoder('hex_codec')(struct.pack(">HH", first, second))[0].decode('ASCII')
+            result = codecs.getencoder("hex_codec")(struct.pack(">HH", first, second))[
+                0
+            ].decode("ASCII")
             return log_id[:code_pos] + result
         else:
             return log_id
@@ -70,29 +100,31 @@ class TenhouParser(object):
         tag = None
         game_round = []
         for x in range(0, len(log_content)):
-            if log_content[x] == '>':
-                tag = log_content[tag_start:x + 1]
+            if log_content[x] == ">":
+                tag = log_content[tag_start : x + 1]
                 tag_start = x + 1
 
             # not useful tags
-            if tag and ('mjloggm' in tag or 'TAIKYOKU' in tag or 'SHUFFLE seed=' in tag):
+            if tag and (
+                "mjloggm" in tag or "TAIKYOKU" in tag or "SHUFFLE seed=" in tag
+            ):
                 tag = None
 
             # new round was started
-            if tag and 'INIT' in tag:
+            if tag and "INIT" in tag:
                 rounds.append(game_round)
                 game_round = []
 
             # the end of the game
-            if tag and 'owari' in tag:
+            if tag and "owari" in tag:
                 rounds.append(game_round)
 
             if tag:
                 # to save some memory we can remove not needed information from logs
-                if 'INIT' in tag:
+                if "INIT" in tag:
                     # we dont need seed information
                     find = re.compile(r'shuffle="[^"]*"')
-                    tag = find.sub('', tag)
+                    tag = find.sub("", tag)
 
                 # add processed tag to the round
                 game_round.append(tag)

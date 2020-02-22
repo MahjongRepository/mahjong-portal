@@ -4,6 +4,5 @@ from online.team_seating import TeamSeating
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
         TeamSeating.prepare_team_sortition()

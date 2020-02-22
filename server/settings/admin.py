@@ -5,22 +5,21 @@ from settings.models import Country, City
 
 
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ["name"]
 
 
 class CityForm(forms.ModelForm):
-
     class Meta:
         model = City
-        exclude = ['name']
+        exclude = ["name"]
 
 
 class CityAdmin(admin.ModelAdmin):
     form = CityForm
-    list_display = ['name']
-    search_fields = ['name_ru', 'name_en']
+    list_display = ["name"]
+    search_fields = ["name_ru", "name_en"]
 
-    prepopulated_fields = {'slug': ['name_en']}
+    prepopulated_fields = {"slug": ["name_en"]}
 
 
 admin.site.register(Country, CountryAdmin)

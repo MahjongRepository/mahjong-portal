@@ -12,14 +12,21 @@ class RatingTestMixin(object):
     player = None
 
     def set_up_initial_objects(self):
-        self.country = Country.objects.create(code='RU', name='Russia')
+        self.country = Country.objects.create(code="RU", name="Russia")
         self.player = self.create_player()
 
-    def create_tournament(self, players=1, sessions=1, start_date=None, end_date=None, tournament_type=Tournament.EMA):
+    def create_tournament(
+        self,
+        players=1,
+        sessions=1,
+        start_date=None,
+        end_date=None,
+        tournament_type=Tournament.EMA,
+    ):
         start_date = start_date or timezone.now().date()
         end_date = end_date or timezone.now().date()
         return Tournament.objects.create(
-            name='test',
+            name="test",
             slug=make_random_letters_and_digit_string(),
             start_date=start_date,
             end_date=end_date,
@@ -31,23 +38,23 @@ class RatingTestMixin(object):
 
     def create_player(self, country_code=None):
         if country_code:
-            country, _ = Country.objects.get_or_create(code=country_code, name=country_code)
+            country, _ = Country.objects.get_or_create(
+                code=country_code, name=country_code
+            )
         else:
             country = self.country
 
         return Player.objects.create(
-            first_name='test',
-            last_name='test',
+            first_name="test",
+            last_name="test",
             slug=make_random_letters_and_digit_string(),
-            country=country
+            country=country,
         )
 
     def create_tournament_result(self, tournament, place, player=None):
         player = player or self.player
         return TournamentResult.objects.create(
-            place=place,
-            tournament=tournament,
-            player=player
+            place=place, tournament=tournament, player=player
         )
 
     def create_rating_delta(self, rating, tournament, player, delta, rating_date):
