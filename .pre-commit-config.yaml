@@ -16,3 +16,11 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies: [flake8-bugbear]
+  - repo: local
+    hooks:
+      - id: run-tests
+        name: run unit tests
+        entry: make test
+        language: python
+        pass_filenames: false
+        verbose: true
