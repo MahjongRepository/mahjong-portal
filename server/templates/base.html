@@ -54,7 +54,7 @@
                 </div>
             </li>
             <li class="nav-item {% if page == 'tournament' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'tournament_list' CURRENT_YEAR %}">{% trans 'Tournaments' %}</a>
+                <a class="nav-link" href="{% url 'tournament_list' CURRENT_YEAR|default_if_none:2020 %}">{% trans 'Tournaments' %}</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

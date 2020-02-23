@@ -1,7 +1,7 @@
 {% with tenhou_object=player.tenhou_object ms_object=player.ms_object %}
     {% if tenhou_object %}
         <a href="{% url 'player_tenhou_details' registration_item.player.slug %}">
-            <nobr>{{ tenhou_object.get_rank }}</nobr>
+            <nobr>{{ tenhou_object.get_rank_display }}</nobr>
         </a>
     {% endif %}
     {% if ms_object %}

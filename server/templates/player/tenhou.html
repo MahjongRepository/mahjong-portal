@@ -35,40 +35,42 @@
             {% endif %}
         {% endfor %}
 
-        var rankChart = new Chart('rank_chart', {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Rank' %}',
-                        data: rank_changes,
-                        fill: false,
-                        borderColor: 'rgb(153, 102, 255)',
-                        backgroundColor: 'rgb(153, 102, 255)',
-                        steppedLine: true
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time'
-                    }],
-                    yAxes: [{
-                        type: 'category',
-                        labels: ranks
-                    }]
+        if (rank_changes.length) {
+            var rankChart = new Chart('rank_chart', {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: '{% trans 'Rank' %}',
+                            data: rank_changes,
+                            fill: false,
+                            borderColor: 'rgb(153, 102, 255)',
+                            backgroundColor: 'rgb(153, 102, 255)',
+                            steppedLine: true
+                        }
+                    ]
                 },
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]['y'] || '';
-                            {# Понятия не имею почему без этого тултип кривой #}
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time'
+                        }],
+                        yAxes: [{
+                            type: 'category',
+                            labels: ranks
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]['y'] || '';
+                                {# Понятия не имею почему без этого тултип кривой #}
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
         var pt_changes = [];
         var labels = [];
@@ -82,37 +84,38 @@
             labels.push("{{ c.game_date|date:'Y-m-d' }}");
         {% endfor %}
 
-        var ptChart = new Chart('pt_chart', {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Points' %}',
-                        data: pt_changes,
-                        fill: false,
-                        borderColor: 'green',
-                        backgroundColor: 'green',
-                        cubicInterpolationMode: 'monotone'
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'category',
-                        labels: labels
-                    }],
-                    yAxes: [{
-                        type: 'linear',
-                        ticks: {
-                            min: 0,
-                            max: {{ tenhou_data.0.dan_settings.end_pt }}
+        if (pt_changes.length) {
+            var ptChart = new Chart('pt_chart', {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: '{% trans 'Points' %}',
+                            data: pt_changes,
+                            fill: false,
+                            borderColor: 'green',
+                            backgroundColor: 'green',
+                            cubicInterpolationMode: 'monotone'
                         }
-                    }]
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'category',
+                            labels: labels
+                        }],
+                        yAxes: [{
+                            type: 'linear',
+                            ticks: {
+                                min: 0,
+                                max: {{ tenhou_data.0.dan_settings.end_pt }}
+                            }
+                        }]
+                    }
                 }
-            }
-        });
-
+            });
+        }
     </script>
 {% endblock %}
 
@@ -153,10 +156,15 @@
 
                     {% if forloop.first %}
                         <div class="d-none d-md-block d-print-none">
-                            <h5>{% trans "Rank chart" %}</h5>
-                            <canvas id="rank_chart"></canvas>
-                            <h5>{% trans "Pt chart" %}</h5>
-                            <canvas id="pt_chart" class="d-none d-md-block d-print-none"></canvas>
+                            {% if aggregated_stat.rank_changes %}
+                                <h5>{% trans "Rank chart" %}</h5>
+                                <canvas id="rank_chart"></canvas>
+                            {% endif %}
+
+                            {% if aggregated_stat.pt_changes %}
+                                <h5>{% trans "Pt chart" %}</h5>
+                                <canvas id="pt_chart" class="d-none d-md-block d-print-none"></canvas>
+                            {% endif %}
                         </div>
                     {% endif %}
 

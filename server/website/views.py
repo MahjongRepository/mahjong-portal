@@ -12,6 +12,7 @@ from haystack.forms import ModelSearchForm
 
 from club.models import Club
 from player.models import Player, PlayerQuotaEvent
+from player.tenhou.models import TenhouAggregatedStatistics
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
@@ -105,8 +106,12 @@ def city_page(request, slug):
 
         tenhou_object = player.tenhou_object
         if tenhou_object:
-            player.rank = tenhou_object.rank
-            player.rank_display = tenhou_object.get_rank()
+            stat = tenhou_object.aggregated_statistics.filter(
+                game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
+            ).first()
+
+            player.rank = stat.rank
+            player.rank_display = stat.get_rank_display()
 
     players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 

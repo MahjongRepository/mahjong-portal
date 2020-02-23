@@ -50,7 +50,9 @@ class TenhouNickname(BaseModel):
         return self.yakumans.order_by("-date")
 
     def prepare_latest_places(self):
-        return reversed(self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by("-game_date")[:20])
+        return list(
+            reversed(self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by("-game_date")[:20])
+        )
 
     def rank_changes(self):
         return (
@@ -62,12 +64,14 @@ class TenhouNickname(BaseModel):
     def pt_changes(self):
         last_rank_change_date = self.rank_changes().last()
         last_rank_change_date = last_rank_change_date.game_end_date if last_rank_change_date else None
+        if not last_rank_change_date:
+            return None
         return self.game_logs.filter(game_date__gte=last_rank_change_date)
 
     def dan_settings(self):
-        return FourPlayersPointsCalculator.DAN_SETTINGS[self.get_rank()]
+        return FourPlayersPointsCalculator.DAN_SETTINGS[self.get_rank_display()]
 
-    def get_rank(self):
+    def get_rank_display(self):
         stat = self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
         return stat.get_rank_display()
 
