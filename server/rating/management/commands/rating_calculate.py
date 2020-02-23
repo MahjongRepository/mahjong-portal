@@ -33,30 +33,10 @@ class Command(BaseCommand):
         today = datetime.datetime.now().date()
 
         rating_options = {
-            "rr": {
-                "rating_date": today - datetime.timedelta(days=365 * 2),
-                "calculator": RatingRRCalculation,
-                "rating_type": Rating.RR,
-                "tournament_types": [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA],
-            },
-            "crr": {
-                "rating_date": today - datetime.timedelta(days=365 * 2),
-                "calculator": RatingCRRCalculation,
-                "rating_type": Rating.CRR,
-                "tournament_types": [Tournament.CRR, Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA],
-            },
-            "online": {
-                "rating_date": today - datetime.timedelta(days=913),
-                "calculator": RatingOnlineCalculation,
-                "rating_type": Rating.ONLINE,
-                "tournament_types": [Tournament.ONLINE],
-            },
-            "ema": {
-                "rating_date": today - datetime.timedelta(days=365 * 2),
-                "calculator": RatingEMACalculation,
-                "rating_type": Rating.EMA,
-                "tournament_types": [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP],
-            },
+            "rr": {"calculator": RatingRRCalculation, "rating_type": Rating.RR},
+            "crr": {"calculator": RatingCRRCalculation, "rating_type": Rating.CRR},
+            "online": {"calculator": RatingOnlineCalculation, "rating_type": Rating.ONLINE},
+            "ema": {"calculator": RatingEMACalculation, "rating_type": Rating.EMA},
         }
 
         rating_data = rating_options.get(rating_type)
@@ -67,10 +47,11 @@ class Command(BaseCommand):
         print('Calculating "{}" rating...'.format(rating_type.upper()))
 
         calculator = rating_data["calculator"]()
-        rating_date = rating_data["rating_date"]
+        rating_date = calculator.get_date(today)
         rating = Rating.objects.get(type=rating_data["rating_type"])
+        tournament_types = calculator.TOURNAMENT_TYPES
         tournaments = (
-            Tournament.public.filter(tournament_type__in=rating_data["tournament_types"])
+            Tournament.public.filter(tournament_type__in=tournament_types)
             .filter(is_upcoming=False)
             .order_by("end_date")
         )

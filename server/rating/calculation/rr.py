@@ -14,8 +14,8 @@ from tournament.models import TournamentResult, Tournament
 from utils.general import get_tournament_coefficient
 
 
-class RatingRRCalculation(object):
-    players = None
+class RatingRRCalculation:
+    TOURNAMENT_TYPES = [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
 
     FIRST_PART_MIN_TOURNAMENTS = 5
     SECOND_PART_MIN_TOURNAMENTS = 4
@@ -37,10 +37,9 @@ class RatingRRCalculation(object):
         return list(Player.objects.filter(country__code="RU").exclude(is_replacement=True).exclude(is_hide=True))
 
     def get_base_query(self, rating, start_date, rating_date):
-        types = [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA]
         base_query = (
             RatingDelta.objects.filter(rating=rating)
-            .filter(tournament__tournament_type__in=types)
+            .filter(tournament__tournament_type__in=self.TOURNAMENT_TYPES)
             .filter(Q(tournament__end_date__gt=start_date) & Q(tournament__end_date__lte=rating_date))
             .filter(date=rating_date)
         )
@@ -261,15 +260,18 @@ class RatingRRCalculation(object):
 
         first_value = 10
         second_value = 5
+        third_value = 1
 
-        if tournament.number_of_players <= 80:
+        if tournament.number_of_players <= 60:
             calculated += players_multiplicator * first_value
-        elif 81 <= tournament.number_of_players <= 160:
-            second_part = players_multiplicator - 20
-
-            calculated += 20 * first_value + second_part * second_value
+        elif 61 <= tournament.number_of_players <= 120:
+            second_part = players_multiplicator - 15
+            calculated += 15 * first_value + second_part * second_value
+        elif 121 <= tournament.number_of_players <= 180:
+            third_part = players_multiplicator - 30
+            calculated += 15 * first_value + 15 * second_value + third_part * third_value
         else:
-            calculated += 300
+            calculated += 240
 
         return float(calculated / 100)
 
@@ -311,13 +313,13 @@ class RatingRRCalculation(object):
         """
 
         diff = relativedelta(rating_date, end_date)
+        part = (1 / 7) * 100
 
         if diff.years < 1:
             return 100
-        elif diff.years < 2 and diff.months < 6:
-            return 66
-        elif diff.years < 2:
-            return 33
+        elif 1 <= diff.years < 2:
+            value = int(diff.months / 2 + 1)
+            return round(100 - (value * part), 2)
         else:
             return 0
 

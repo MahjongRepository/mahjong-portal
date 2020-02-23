@@ -1,5 +1,4 @@
 from dateutil.relativedelta import relativedelta
-from django.db.models import Q
 from django.template.defaultfilters import floatformat
 from django.utils import timezone
 
@@ -11,6 +10,7 @@ from utils.general import get_tournament_coefficient
 
 
 class RatingEMACalculation(RatingRRCalculation):
+    TOURNAMENT_TYPES = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
     IS_EMA = True
 
     def get_players(self):
@@ -21,16 +21,6 @@ class RatingEMACalculation(RatingRRCalculation):
             .exclude(is_hide=True)
             .order_by("-last_name")
         )
-
-    def get_base_query(self, rating, start_date, rating_date):
-        types = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
-        base_query = (
-            RatingDelta.objects.filter(rating=rating)
-            .filter(tournament__tournament_type__in=types)
-            .filter(Q(tournament__end_date__gt=start_date) & Q(tournament__end_date__lte=rating_date))
-            .filter(date=rating_date)
-        )
-        return base_query
 
     def calculate_players_rating_rank(self, rating, rating_date):
         results = []
