@@ -6,7 +6,6 @@ from tournament.models import Tournament, TournamentResult
 class RatingOnlineCalculation(RatingRRCalculation):
     TOURNAMENT_TYPES = [Tournament.ONLINE]
 
-    FIRST_PART_MIN_TOURNAMENTS = 4
     SECOND_PART_MIN_TOURNAMENTS = 3
 
     def get_players(self):
