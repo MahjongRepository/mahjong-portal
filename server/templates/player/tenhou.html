@@ -156,12 +156,12 @@
 
                     {% if forloop.first %}
                         <div class="d-none d-md-block d-print-none">
-                            {% if aggregated_stat.rank_changes %}
+                            {% if tenhou_item.rank_changes %}
                                 <h5>{% trans "Rank chart" %}</h5>
                                 <canvas id="rank_chart"></canvas>
                             {% endif %}
 
-                            {% if aggregated_stat.pt_changes %}
+                            {% if tenhou_item.pt_changes %}
                                 <h5>{% trans "Pt chart" %}</h5>
                                 <canvas id="pt_chart" class="d-none d-md-block d-print-none"></canvas>
                             {% endif %}

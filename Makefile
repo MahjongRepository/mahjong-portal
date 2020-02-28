@@ -1,7 +1,7 @@
 COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), local.yml)
 
 up:
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose -f $(COMPOSE_FILE) up
 
 stop:
 	docker-compose -f $(COMPOSE_FILE) stop
