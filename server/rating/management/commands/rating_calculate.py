@@ -9,7 +9,7 @@ from rating.calculation.ema import RatingEMACalculation
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import Rating, RatingDelta, RatingResult, RatingDate
-from tournament.models import Tournament
+from tournament.models import Tournament, TournamentResult
 
 
 def get_date_string():
@@ -33,30 +33,10 @@ class Command(BaseCommand):
         today = datetime.datetime.now().date()
 
         rating_options = {
-            "rr": {
-                "rating_date": today - datetime.timedelta(days=365 * 2),
-                "calculator": RatingRRCalculation,
-                "rating_type": Rating.RR,
-                "tournament_types": [Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA],
-            },
-            "crr": {
-                "rating_date": today - datetime.timedelta(days=365 * 2),
-                "calculator": RatingCRRCalculation,
-                "rating_type": Rating.CRR,
-                "tournament_types": [Tournament.CRR, Tournament.RR, Tournament.EMA, Tournament.FOREIGN_EMA],
-            },
-            "online": {
-                "rating_date": today - datetime.timedelta(days=913),
-                "calculator": RatingOnlineCalculation,
-                "rating_type": Rating.ONLINE,
-                "tournament_types": [Tournament.ONLINE],
-            },
-            "ema": {
-                "rating_date": today - datetime.timedelta(days=365 * 2),
-                "calculator": RatingEMACalculation,
-                "rating_type": Rating.EMA,
-                "tournament_types": [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP],
-            },
+            "rr": {"calculator": RatingRRCalculation, "rating_type": Rating.RR},
+            "crr": {"calculator": RatingCRRCalculation, "rating_type": Rating.CRR},
+            "online": {"calculator": RatingOnlineCalculation, "rating_type": Rating.ONLINE},
+            "ema": {"calculator": RatingEMACalculation, "rating_type": Rating.EMA},
         }
 
         rating_data = rating_options.get(rating_type)
@@ -67,10 +47,10 @@ class Command(BaseCommand):
         print('Calculating "{}" rating...'.format(rating_type.upper()))
 
         calculator = rating_data["calculator"]()
-        rating_date = rating_data["rating_date"]
+        rating_date = calculator.get_date(today)
         rating = Rating.objects.get(type=rating_data["rating_type"])
         tournaments = (
-            Tournament.public.filter(tournament_type__in=rating_data["tournament_types"])
+            Tournament.public.filter(tournament_type__in=calculator.TOURNAMENT_TYPES)
             .filter(is_upcoming=False)
             .order_by("end_date")
         )
@@ -97,7 +77,7 @@ class Command(BaseCommand):
             print("Calculating dates...")
 
             dates_to_process, rating_date = self.find_tournament_dates_changes(
-                rating_date, today, tournaments, calculator, tournaments_diff
+                rating, rating_date, today, tournaments, calculator, tournaments_diff
             )
 
             important_dates = [
@@ -131,6 +111,7 @@ class Command(BaseCommand):
             # latest_future_date = future_dates[-1]
             #
             # dates_to_process, _ = self.find_tournament_dates_changes(
+            #     rating,
             #     rating_date,
             #     latest_future_date,
             #     tournaments,
@@ -178,7 +159,7 @@ class Command(BaseCommand):
 
             calculator.calculate_players_rating_rank(rating, rating_date)
 
-    def find_tournament_dates_changes(self, start_date, stop_date, tournaments, calculator, tournaments_diff):
+    def find_tournament_dates_changes(self, rating, start_date, stop_date, tournaments, calculator, tournaments_diff):
         continue_work = True
         dates_to_process = []
         while continue_work:
@@ -188,6 +169,17 @@ class Command(BaseCommand):
             # there is no need to rebuild it each day
             limited_tournaments = tournaments.filter(end_date__lte=start_date)
             for tournament in limited_tournaments:
+                # we don't want to add foreign ema tournaments without russian players
+                # to the dates calculations
+                if tournament.tournament_type == Tournament.FOREIGN_EMA and rating.type != Rating.EMA:
+                    has_russian_players = (
+                        TournamentResult.objects.filter(tournament=tournament)
+                        .filter(player__country__code="RU")
+                        .exists()
+                    )
+                    if not has_russian_players:
+                        continue
+
                 if tournament.id not in tournaments_diff:
                     age = calculator.tournament_age(tournament.end_date, start_date)
                     need_to_recalculate = True

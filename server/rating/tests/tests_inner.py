@@ -20,23 +20,35 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         tournament = self.create_tournament(players=40)
         self.assertEqual(calculator.players_coefficient(tournament), 1)
 
+        tournament = self.create_tournament(players=60)
+        self.assertEqual(calculator.players_coefficient(tournament), 1.5)
+
         tournament = self.create_tournament(players=80)
+        self.assertEqual(calculator.players_coefficient(tournament), 1.75)
+
+        tournament = self.create_tournament(players=100)
         self.assertEqual(calculator.players_coefficient(tournament), 2)
 
-        tournament = self.create_tournament(players=92)
-        self.assertEqual(calculator.players_coefficient(tournament), 2.15)
-
         tournament = self.create_tournament(players=120)
-        self.assertEqual(calculator.players_coefficient(tournament), 2.5)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.25)
+
+        tournament = self.create_tournament(players=124)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.26)
+
+        tournament = self.create_tournament(players=140)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.3)
 
         tournament = self.create_tournament(players=160)
-        self.assertEqual(calculator.players_coefficient(tournament), 3)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.35)
 
-        tournament = self.create_tournament(players=240)
-        self.assertEqual(calculator.players_coefficient(tournament), 3)
+        tournament = self.create_tournament(players=180)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.4)
 
-        tournament = self.create_tournament(players=320)
-        self.assertEqual(calculator.players_coefficient(tournament), 3)
+        tournament = self.create_tournament(players=200)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.4)
+
+        tournament = self.create_tournament(players=300)
+        self.assertEqual(calculator.players_coefficient(tournament), 2.4)
 
     def test_tournament_coefficient_and_number_of_sessions(self):
         calculator = RatingRRCalculation()
@@ -151,7 +163,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         calculator.calculate_players_deltas(tournament, rating, now)
 
         rating_delta = RatingDelta.objects.filter(player=first_player).first()
-        self.assertEqual(rating_delta.delta, 330)
+        self.assertEqual(float(rating_delta.delta), 428.55)
         self.assertEqual(rating_delta.base_rank, 1000)
 
         RatingDelta.objects.all().delete()
@@ -160,7 +172,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         calculator.calculate_players_deltas(tournament, rating, now)
 
         rating_delta = RatingDelta.objects.filter(player=first_player).first()
-        self.assertEqual(rating_delta.delta, 165)
+        self.assertEqual(float(rating_delta.delta), 214.30)
         self.assertEqual(rating_delta.base_rank, 1000)
 
     def test_calculate_count_of_sessions_for_ema_tournaments(self):
@@ -211,19 +223,35 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         tournament = self.create_tournament(end_date=now - timedelta(days=364))
         self.assertEqual(calculator.tournament_age(tournament.end_date, now), 100)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365))
-        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 66)
+        tournament = self.create_tournament(end_date=now - timedelta(days=366))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 85.71)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 31))
-        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 66)
+        # 1 month
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 34))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 85.71)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 7 * 31))
-        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 33)
+        # 2+ months
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 68))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 71.43)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2 - 1))
-        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 33)
+        # 4+ months
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 128))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 57.14)
 
-        tournament = self.create_tournament(end_date=now - timedelta(days=365 * 2))
+        # 6+ months
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 188))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 42.86)
+
+        # 8+ months
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 250))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 28.57)
+
+        # 10+ months
+        tournament = self.create_tournament(end_date=now - timedelta(days=365 + 308))
+        self.assertEqual(calculator.tournament_age(tournament.end_date, now), 14.29)
+
+        # 12+ months
+        tournament = self.create_tournament(end_date=now - timedelta(days=(365 * 2) + 5))
         self.assertEqual(calculator.tournament_age(tournament.end_date, now), 0)
 
     def test_calculate_players_rating_rank(self):

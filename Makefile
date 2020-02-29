@@ -17,7 +17,6 @@ build:
 	docker-compose -f $(COMPOSE_FILE) build
 
 test:
-	${MAKE} up
 	docker-compose -f local.yml run --rm web python manage.py test --noinput
 
 lint:

@@ -97,15 +97,16 @@
         <h3>Number of participants</h3>
         <p>Base coefficient is 0.</p>
         <p>Big tournaments attract strong players and therefore, the larger the tournament, the more valuable good result in such tournament. In this regard, the coefficient of the tournament grows depending on the number of participants.</p>
-        <p>For the first 80 participants of the tournament, the coefficient increases by 0.1 for every 4 participants.</p>
-        <p>From 81 to 160 participants of the tournament, the coefficient increases by 0.05 for every 4 participants.</p>
-        <p>After 160 participants, the coefficient is fixed and equal to 3.</p>
-        <p>For example, a tournament with 100 participants will receive an additional coefficient (80 / 4) * 0.1 for the first 80 participants and (20 / 4) * 0.05 for the remaining 20 participants.</p>
-        <p><code>K<sub>number of participants</sub> = (80 / 4) * 0.1 + (20 / 4) * 0.05 = 20 * 0.1 + 5 * 0.05 = 2.25</code></p>
+        <p>For the first 60 participants of the tournament, the coefficient increases by 0.1 for every 4 participants.</p>
+        <p>From 61 to 120 participants of the tournament, the coefficient increases by 0.05 for every 4 participants.</p>
+        <p>From 121 to 180 participants of the tournament, the coefficient increases by 0.01 for every 4 participants.</p>
+        <p>After 180 participants, the coefficient is fixed and equal to 2.4.</p>
+        <p>For example, a tournament with 100 participants will receive an additional coefficient (60 / 4) * 0.1 for the first 60 participants and (40 / 4) * 0.05 for the remaining 40 participants.</p>
+        <p><code>K<sub>number of participants</sub> = (60 / 4) * 0.1 + (40 / 4) * 0.05 = 15 * 0.1 + 10 * 0.05 = 2</code></p>
 
         <h2>Results extinction</h2>
         <p>In the rating calculation formula, the age of the tournament is defined as A.</p>
-        <p>The results of tournaments held over the past 12 months are considered relevant and taken into account in full. Further, the tournament is obsolete by 33% every 6 months. Thus, only tournaments played in the last 2 years count towards rating.</p>
+        <p>The results of tournaments held over the past 12 months are considered relevant and taken into account in full. Further, the tournament is obsolete by 14.29% (1/7) every 2 months. Thus, only tournaments played in the last 2 years count towards rating.</p>
 
         <h1 id="crr">Common russian riichi rating (CRR)</h1>
         <p>All calculations are equal to RR. Difference is only in tournaments that were added to the rating. It contains all tournaments with 12+ players and 3+ sessions.</p>
@@ -114,9 +115,7 @@
         <p>All the calculations are similar to RR with a few exceptions:</p>
         <ol>
             <li>Rating includes all online tournaments with 12+ players and 3+ hanchans.</li>
-            <li>Rating is calculated for a player after his first tournament.</li>
             <li>The second part of the rating formula includes 3 best tournaments instead of 4.</li>
-            <li>Tournaments held in the past two and a half years are taken into account. Results of the tournaments held in the last 12 month are counted fully. Further, the tournament becomes obsolet by 25% each 6 months.</li>
         </ol>
     </div>
 {% endblock %}
