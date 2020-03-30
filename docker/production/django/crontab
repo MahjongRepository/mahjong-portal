@@ -1,5 +1,5 @@
 # each one hour
-0 * * * * root /usr/local/bin/python /app/server/manage.py update_ms_statistics > /proc/1/fd/1 2>/proc/1/fd/2
+# 0 * * * * root /usr/local/bin/python /app/server/manage.py update_ms_statistics > /proc/1/fd/1 2>/proc/1/fd/2
 
 # once a day
 10 1 * * * root /usr/local/bin/python /app/server/manage.py rating_calculate rr > /proc/1/fd/1 2>/proc/1/fd/2
