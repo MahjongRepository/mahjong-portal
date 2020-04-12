@@ -12,7 +12,6 @@ from django.utils import timezone
 
 from online.models import TournamentPlayers, TournamentStatus, TournamentGame, TournamentGamePlayer
 from online.parser import TenhouParser
-from online.team_seating import TeamSeating
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
@@ -302,7 +301,7 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            sortition = self.make_sortition(self.status.current_round)
+            sortition = self.make_sortition(list(pantheon_ids.keys()))
 
             games = []
             for item in sortition:
@@ -335,8 +334,6 @@ class TournamentHandler:
         return games, message
 
     def make_sortition(self, pantheon_ids):
-        return TeamSeating.get_seating_for_round(self.status.current_round)
-
         if self.status.current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
@@ -423,7 +420,13 @@ class TournamentHandler:
                 self.status.save()
                 return (
                     "Все игры успешно завершились. Следующий тур начнётся через {} минут.\n\n"
-                    "Игровое лобби: http://tenhou.net/0/?{}".format(break_minutes, settings.TOURNAMENT_PUBLIC_LOBBY)
+                    "Игровое лобби: http://tenhou.net/0/?{}\n\n"
+                    "После завершения вашей игры отправьте ссылку на лог игры в этот чат. "
+                    "Одну ссылку можно отправлять много раз, так что не бойтесь - ничего не сломается.\n\n"
+                    "Это поможет сократить время турнира и разгрузит админов. "
+                    "Пока ВСЕ ссылки на игры не будут добавлены, следующий тур запустить не получится.".format(
+                        break_minutes, settings.TOURNAMENT_PUBLIC_LOBBY
+                    )
                 )
         else:
             return None

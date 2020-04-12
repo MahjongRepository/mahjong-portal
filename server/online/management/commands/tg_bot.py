@@ -163,8 +163,8 @@ def help_bot(bot, update):
     message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
     message += "5. Регламент турнира:\n https://mahjong.click/ru/online/ \n"
     message += "6. Как получить ссылку на лог игры для flash/windows клиентов?\n https://imgur.com/gallery/7Hv52md \n"
-    message += "7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx \n"
-    message += "8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n"
+    message += "7. Как получить ссылку на лог игры для мобильного/нового клиента?\n https://imgur.com/gallery/rP72mPx\n"
+    message += "8. Как открыть турнирное лобби с мобильного/нового приложения?\n https://imgur.com/gallery/vcjsODf \n"
     message += "9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e"
     bot.send_message(chat_id=update.message.chat_id, text=message, disable_web_page_preview=True)
 
@@ -213,6 +213,18 @@ def start_games(bot, update):
 
     games = TournamentGame.objects.filter(status=TournamentGame.NEW)
     bot.send_message(chat_id=update.message.chat_id, text="Запускаю игры...")
+    bot.send_message(
+        chat_id=update.message.chat_id,
+        text=(
+            "После завершения вашей игры отправьте ссылку на лог игры в этот чат. "
+            "Одну ссылку можно отправлять много раз, так что не бойтесь - ничего сломается.\n\n"
+            "Это поможет сократить время турнира и разгрузит админов. "
+            "Пока ВСЕ ссылки на игры не будут добавлены, следующий тур запустить не получится.\n\n"
+            "Как получить ссылку на лог игры для flash/windows клиентов?\nhttps://imgur.com/gallery/7Hv52md \n\n"
+            "Как получить ссылку на лог игры для мобильного/нового клиента?\nhttps://imgur.com/gallery/rP72mPx \n\n"
+        ),
+        disable_web_page_preview=True,
+    )
 
     for game in games:
         message = tournament_handler.start_game(game)
