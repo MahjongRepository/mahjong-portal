@@ -85,6 +85,7 @@ class TournamentResultAdmin(admin.ModelAdmin):
         "player__first_name_ru",
         "player__last_name_en",
         "player__first_name_en",
+        "player_string",
     ]
     raw_id_fields = ["tournament", "player"]
 
