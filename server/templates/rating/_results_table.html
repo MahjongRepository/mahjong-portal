@@ -35,7 +35,9 @@
                 </td>
                 {% if rating.is_online %}
                     <td>
-                        <nobr>{{ rating_result.player.tenhou_object.get_rank_display }}</nobr>
+                        {% with rating_result.player as player %}
+                            {% include 'player/_online_account.html' %}
+                        {% endwith %}
                     </td>
                 {% endif %}
                 <td>{{ rating_result.score|floatformat:0 }}</td>
