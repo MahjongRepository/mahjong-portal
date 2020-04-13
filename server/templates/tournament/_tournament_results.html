@@ -54,7 +54,9 @@
                 {% endif %}
                 {% if tournament.is_online %}
                     <td>
-                        <nobr>{{ result.player.tenhou_object.get_rank_display }}</nobr>
+                        {% with result.player as player %}
+                            {% include 'player/_online_account.html' %}
+                        {% endwith %}
                     </td>
                 {% endif %}
                 <td>
