@@ -365,6 +365,8 @@ class TournamentHandler:
 
         try:
             response = requests.post(url, data=data, headers=headers, allow_redirects=False)
+            logger.error(data)
+            logger.error(headers)
             logger.error(response)
             logger.error(response.headers)
             logger.error(response.content)
