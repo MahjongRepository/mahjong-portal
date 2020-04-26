@@ -392,7 +392,8 @@ class TournamentHandler:
                 game.status = TournamentGame.STARTED
 
                 message = "Стол: {} запущен.".format(", ".join(player_names))
-        except Exception:
+        except Exception as e:
+            logger.debug(e)
             message = "Стол: {} не получилось запустить. Требуется вмешательство администратора.".format(
                 ", ".join(player_names)
             )
