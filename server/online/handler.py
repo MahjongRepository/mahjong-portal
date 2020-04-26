@@ -366,6 +366,8 @@ class TournamentHandler:
         try:
             response = requests.post(url, data=data, headers=headers, allow_redirects=False)
             logger.error(response)
+            logger.error(response.headers)
+            logger.error(response.content)
             location = unquote(response.headers["location"])
             result = location.split("{}&".format(self.lobby))[1]
 
