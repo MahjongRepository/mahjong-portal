@@ -3,7 +3,7 @@ COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), local.yml)
 up:
 	docker-compose -f $(COMPOSE_FILE) up
 
-up_deamon:
+up_daemon:
 	docker-compose -f $(COMPOSE_FILE) up -d
 
 down:
