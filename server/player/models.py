@@ -49,6 +49,9 @@ class Player(BaseModel):
 
     @property
     def ms_object(self):
+        # temporary disable ms stat
+        return None
+
         ms_obj = self.ms.all().order_by("statistics__rank").first()
         if not ms_obj:
             return None
