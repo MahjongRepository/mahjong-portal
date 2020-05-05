@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-22 06:36+0000\n"
+"POT-Creation-Date: 2020-05-09 14:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,23 +82,272 @@ msgstr "Клуб \"%(name)s\" в %(place)s"
 msgid "Riichi mahjong player %(name)s from %(place)s"
 msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
+#: online/handler.py:67
+#, python-format
+msgid "Games will start soon. Confirmed players: %(confirmed_players)s."
+msgstr "Игры скоро начнутся. Подтвержденных игроков: %(confirmed_players)s."
+
+#: online/handler.py:71
+#, python-format
+msgid ""
+"Confirmation phase is in progress. Confirmed players: %(confirmed_players)s."
+msgstr ""
+"Идёт этап подтверждения. Подтвержденных игроков: %(confirmed_players)s."
+
+#: online/handler.py:76 online/handler.py:697
+msgid "The tournament is over. Thank you for participating!"
+msgstr "Турнир завершён. Спасибо за участие!"
+
+#: online/handler.py:82
+msgid "Games will start soon."
+msgstr "Ждём начала нового тура."
+
+#: online/handler.py:141
+#, python-format
+msgid "Break. The next tour will start in %(date)s."
+msgstr "Перерыв. Следующий тур начнётся через %(date)s."
+
+#: online/handler.py:163
+#, python-format
+msgid "Stage %(current_round)s of %(total_rounds)s."
+msgstr "Тур %(current_round)s из %(total_rounds)s."
+
+#: online/handler.py:169
+#, python-format
+msgid "Finished games: %(finished)s/%(total)s."
+msgstr "Игр завершено: %(finished)s/%(total)s."
+
+#: online/handler.py:176
+msgid "Several games could not start. The administrator will fix this soon."
+msgstr "Несколько игр не смогли запуститься. Администратор скоро это исправит."
+
+#: online/handler.py:230
+msgid "This is not looks like a link to the game log."
+msgstr "Это не похоже на ссылку на лог игры."
+
+#: online/handler.py:250
+msgid ""
+"Fail to add this game. Try again in a moment or you havn't copied the entire "
+"link of the game log."
+msgstr ""
+"Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не "
+"весь log id."
+
+#: online/handler.py:255 online/handler.py:357
+msgid "The game has been added. Thank you."
+msgstr "Игра была добавлена. Спасибо."
+
+#: online/handler.py:263
+#, python-format
+msgid "Fail to add game log. Contact the administrator %(admin_username)s."
+msgstr ""
+"Произошла ошибка при добавлении лога. Обратитесь к администратору "
+"%(admin_username)s."
+
+#: online/handler.py:361
+msgid "The confirmation phase has already ended. Visit our next tournaments."
+msgstr ""
+"Этап подтверждения участия уже завершился. Приходите на следующий турнир."
+
+#: online/handler.py:364
+msgid "The tenhou.net nickname must not be longer than eight characters."
+msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
+
+#: online/handler.py:372
+#, python-format
+msgid ""
+"Your tenhou.net username is out of tournament registration list. Contact the "
+"administrator %(admin_username)s."
+msgstr ""
+"Этот tenhou.net ник не был зарегистрирован на турнир заранее. Обратитесь к "
+"администратору %(admin_username)s."
+
+#: online/handler.py:376
+#, python-format
+msgid ""
+"Nickname \"%(tenhou_nickname)s\" was already confirmed for this tournament."
+msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на турнир."
+
+#: online/handler.py:383
+#, python-format
+msgid ""
+"Nickname \"%(tenhou_nickname)s\" doesn't have game records. Are you sure it "
+"is spelled correctly? Case of letters is important! Contact admin "
+"%(admin_username)s."
+msgstr ""
+"Ником \"%(tenhou_nickname)s\" ещё не играли на тенхе. Вы уверены, что он "
+"правильно написан? Регистр важен! Обратитесь к администратору "
+"%(admin_username)s."
+
+#: online/handler.py:403
+msgid "Your participation in the tournament has been confirmed!"
+msgstr "Ваше участие в турнире было подтверждено!"
+
+#: online/handler.py:646
+#, python-format
+msgid ""
+"Confirmation stage has begun! To confirm your tournament participation go to "
+"%(confirmation_channel)s and send your tenhou.net nickname. Confirmation "
+"stage will be ended at 7-20 UTC time.\n"
+"\n"
+"Useful links:\n"
+"- tournament lobby: %(lobby_link)s\n"
+"- tournament rating table: %(rating_link)s"
+msgstr ""
+"Этап подтверждения начался! Для подтверждения участия перейдите в канал "
+"%(confirmation_channel)s и отправьте ваш ник на тенхе. Этап завершится в "
+"10-20 (МСК).\n"
+"\n"
+" Полезные ссылки:\n"
+" - турнирное лобби: %(lobby_link)s\n"
+" - турнирный рейтинг: %(rating_link)s"
+
+#: online/handler.py:659
+#, python-format
+msgid ""
+"New game was added.\n"
+"\n"
+"Results:\n"
+"```\n"
+"%(player_one)s\n"
+"%(player_two)s\n"
+"%(player_three)s\n"
+"%(player_four)s\n"
+"```\n"
+"Game link: %(pantheon_link)s\n"
+"\n"
+"Tenhou link: %(tenhou_link)s\n"
+"\n"
+"Finished games: %(finished)s/%(total)s."
+msgstr ""
+"Добавлена новая игра.\n"
+"\n"
+"Результаты:\n"
+"```\n"
+"%(player_one)s\n"
+"%(player_two)s\n"
+"%(player_three)s\n"
+"%(player_four)s\n"
+"```\n"
+"Ссылка на игру: %(pantheon_link)s\n"
+"\n"
+"Ссылка на тенху: %(tenhou_link)s\n"
+"\n"
+"Всего игр завершено: %(finished)s/%(total)s."
+
+#: online/handler.py:672
+#, python-format
+msgid ""
+"Confirmation stage has ended, there are %(confirmed_players)s players. Games "
+"starts **in 10 minutes**. Please, follow this link %(lobby_link)s to enter "
+"the tournament lobby. Games will start automatically."
+msgstr ""
+"Этап подтверждение закончился! Подтвердили своё участие "
+"%(confirmed_players)s игроков. Игры начнутся **через 10 минут**. Пожалуйста, "
+"пройдите в лобби %(lobby_link)s и ждите начала игр (игры начнутся "
+"автоматически)."
+
+#: online/handler.py:678
+#, python-format
+msgid ""
+"Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
+"ready.\n"
+"\n"
+"Starting games...\n"
+"\n"
+"After the game please send a link to the game log, it will save some time "
+"for the tournament admin (without all collected logs we can't finish the "
+"tournament round)."
+msgstr ""
+"Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
+"\n"
+"Запускаю игры...\n"
+"\n"
+"После завершения вашей игры отправьте ссылку на лог игры. Одну ссылку можно "
+"отправлять много раз, так что не бойтесь - ничего сломается.\n"
+"\n"
+"Это поможет сократить время турнира и разгрузит админов. Пока ВСЕ ссылки на "
+"игры не будут добавлены, следующий тур запустить не получится."
+
+#: online/handler.py:686
+#, python-format
+msgid ""
+"Game: %(players)s is not started. The table was moved to the end of the "
+"queue."
+msgstr ""
+"Стол: %(players)s не получилось запустить. Стол был отодвинут в конец "
+"очереди."
+
+#: online/handler.py:689
+#, python-format
+msgid ""
+"Game: %(players)s is not started. Missed players %(missed_players)s. The "
+"table was moved to the end of the queue."
+msgstr ""
+"Стол: %(players)s не получилось запустить. Отсутствующие игроки "
+"%(missed_players)s. Стол был отодвинут в конец очереди."
+
+#: online/handler.py:692
+#, python-format
+msgid "Game: %(players)s started."
+msgstr "Стол: %(players)s запущен."
+
+#: online/handler.py:694
+#, python-format
+msgid ""
+"All games finished. Next round starts in %(break_minutes)s minutes.\n"
+"\n"
+"Tournament lobby: %(lobby_link)s"
+msgstr ""
+"Все игры успешно завершились. Следующий тур начнётся через %(break_minutes)s "
+"минут.\n"
+"\n"
+"Игровое лобби: %(lobby_link)s"
+
+#: online/management/commands/ds_bot.py:120
+#, python-format
+msgid ""
+"1. Tournament lobby:\n"
+" %(lobby_link)s \n"
+msgstr ""
+"1. Турнирное лобби:\n"
+" %(lobby_link)s \n"
+
+#: online/management/commands/ds_bot.py:121
+#, python-format
+msgid ""
+"2. Tournament statistics:\n"
+" %(rating_link)s \n"
+msgstr ""
+"2. Турнирная статистика:\n"
+" %(rating_link)s \n"
+
+#: online/management/commands/ds_bot.py:124
+#, python-format
+msgid ""
+"3. Current games:\n"
+" %(current_games_link)s \n"
+msgstr ""
+"3. Текущие игры:\n"
+" %(current_games_link)s \n"
+
 #: player/models.py:41
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: player/tenhou/models.py:169
+#: player/tenhou/models.py:137
 msgid "Kyu lobby"
 msgstr "Кю-лобби"
 
-#: player/tenhou/models.py:170
+#: player/tenhou/models.py:138
 msgid "Dan lobby"
 msgstr "Перводан"
 
-#: player/tenhou/models.py:171
+#: player/tenhou/models.py:139
 msgid "Upperdan lobby"
 msgstr "Втородан"
 
-#: player/tenhou/models.py:172
+#: player/tenhou/models.py:140
 msgid "Phoenix lobby"
 msgstr "Феникс"
 
@@ -194,12 +443,6 @@ msgstr "Текущие игры на tenhou.net"
 #: templates/tenhou/tenhou_accounts.html:74
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
-
-#: templates/base.html:80 templates/ms/ms_accounts.html:5
-#: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:75
-#: templates/ms/ms_accounts.html:76
-msgid "MahjongSoul accounts"
-msgstr "Аккаунты на MahjongSoul"
 
 #: templates/base.html:81 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
@@ -298,16 +541,16 @@ msgstr "Сортировка:"
 #: templates/tournament_admin/managed_tournaments.html:23
 #: templates/tournament_admin/new_tournaments.html:17
 #: templates/tournament_admin/tournament_manage.html:89
-#: templates/website/city.html:16 templates/website/city.html:46
-#: templates/website/erc_2019.html:87 templates/website/wrc_2020.html:84
+#: templates/website/_qualification_table.html:9 templates/website/city.html:16
+#: templates/website/city.html:46
 msgid "Name"
 msgstr "Имя"
 
 #: templates/club/details.html:57 templates/player/details.html:139
 #: templates/player/details.html:149 templates/player/details.html:266
 #: templates/player/ms.html:123 templates/player/ms.html:217
-#: templates/player/tenhou.html:166 templates/player/tenhou.html:176
-#: templates/player/tenhou.html:229 templates/player/tenhou.html:240
+#: templates/player/tenhou.html:174 templates/player/tenhou.html:184
+#: templates/player/tenhou.html:237 templates/player/tenhou.html:248
 #: templates/tenhou/games_history.html:51
 #: templates/tournament/_tournament_results.html:11
 msgid "Games"
@@ -316,35 +559,35 @@ msgstr "Игр"
 #: templates/club/details.html:60 templates/player/details.html:139
 #: templates/player/details.html:152 templates/player/details.html:269
 #: templates/player/ms.html:126 templates/player/ms.html:220
-#: templates/player/tenhou.html:166 templates/player/tenhou.html:179
-#: templates/player/tenhou.html:229 templates/player/tenhou.html:243
+#: templates/player/tenhou.html:174 templates/player/tenhou.html:187
+#: templates/player/tenhou.html:237 templates/player/tenhou.html:251
 msgid "Avg. place"
 msgstr "Ср. место"
 
 #: templates/club/details.html:63 templates/player/details.html:155
 #: templates/player/details.html:272 templates/player/ms.html:129
-#: templates/player/ms.html:223 templates/player/tenhou.html:182
-#: templates/player/tenhou.html:246
+#: templates/player/ms.html:223 templates/player/tenhou.html:190
+#: templates/player/tenhou.html:254
 msgid "1st"
 msgstr "1-e"
 
 #: templates/club/details.html:66 templates/player/details.html:158
 #: templates/player/details.html:275 templates/player/ms.html:132
-#: templates/player/ms.html:226 templates/player/tenhou.html:185
-#: templates/player/tenhou.html:249
+#: templates/player/ms.html:226 templates/player/tenhou.html:193
+#: templates/player/tenhou.html:257
 msgid "2nd"
 msgstr "2-е"
 
 #: templates/club/details.html:69 templates/player/details.html:161
 #: templates/player/details.html:278 templates/player/ms.html:135
-#: templates/player/ms.html:229 templates/player/tenhou.html:188
-#: templates/player/tenhou.html:252
+#: templates/player/ms.html:229 templates/player/tenhou.html:196
+#: templates/player/tenhou.html:260
 msgid "3rd"
 msgstr "3-е"
 
 #: templates/club/details.html:72 templates/player/details.html:164
 #: templates/player/details.html:281 templates/player/ms.html:138
-#: templates/player/tenhou.html:191 templates/player/tenhou.html:255
+#: templates/player/tenhou.html:199 templates/player/tenhou.html:263
 msgid "4th"
 msgstr "4-е"
 
@@ -435,6 +678,11 @@ msgstr "Б часть"
 msgid "Total Quota"
 msgstr "Всего квот"
 
+#: templates/ms/ms_accounts.html:5 templates/ms/ms_accounts.html:10
+#: templates/ms/ms_accounts.html:75 templates/ms/ms_accounts.html:76
+msgid "MahjongSoul accounts"
+msgstr "Аккаунты на MahjongSoul"
+
 #: templates/ms/ms_accounts.html:12
 msgid "Statistics are updating once an hour."
 msgstr ""
@@ -460,15 +708,15 @@ msgid "Player"
 msgstr "Игрок"
 
 #: templates/ms/ms_accounts.html:27 templates/player/details.html:107
-#: templates/player/tenhou.html:43 templates/player/tenhou.html:131
+#: templates/player/tenhou.html:44 templates/player/tenhou.html:134
 #: templates/tenhou/games_history.html:58
 msgid "Rank"
 msgstr "Ранг"
 
 #: templates/ms/ms_accounts.html:28 templates/player/_changes_table.html:9
 #: templates/player/ms.html:24 templates/player/ms.html:64
-#: templates/player/tenhou.html:90 templates/rating/_results_table.html:20
-#: templates/website/erc_2019.html:91 templates/website/wrc_2020.html:88
+#: templates/player/tenhou.html:93 templates/rating/_results_table.html:20
+#: templates/website/_qualification_table.html:13
 msgid "Points"
 msgstr "Очки"
 
@@ -478,14 +726,14 @@ msgstr "Аккаунт"
 
 #: templates/ms/ms_accounts.html:30 templates/player/details.html:111
 #: templates/player/details.html:139 templates/player/ms.html:110
-#: templates/player/ms.html:203 templates/player/tenhou.html:166
-#: templates/player/tenhou.html:229 templates/tenhou/tenhou_accounts.html:23
+#: templates/player/ms.html:203 templates/player/tenhou.html:174
+#: templates/player/tenhou.html:237 templates/tenhou/tenhou_accounts.html:23
 msgid "Last played date"
 msgstr "Дата последней игры"
 
 #: templates/player/_changes_table.html:7 templates/player/_deltas_table.html:9
 #: templates/player/details.html:64 templates/player/details.html:207
-#: templates/player/tenhou.html:297 templates/player/tournaments.html:25
+#: templates/player/tenhou.html:305 templates/player/tournaments.html:25
 #: templates/rating/dates.html:16 templates/tenhou/latest_yakumans.html:18
 #: templates/tournament/_tournaments_table.html:9
 msgid "Date"
@@ -551,7 +799,7 @@ msgid "all player tournaments"
 msgstr "все турниры игрока"
 
 #: templates/player/details.html:100 templates/player/tenhou.html:5
-#: templates/player/tenhou.html:328 templates/player/tenhou.html:329
+#: templates/player/tenhou.html:336 templates/player/tenhou.html:337
 msgid "Tenhou.net profile"
 msgstr "Tenhou.net профиль"
 
@@ -560,38 +808,38 @@ msgid "more information"
 msgstr "больше информации"
 
 #: templates/player/details.html:105 templates/player/details.html:237
-#: templates/player/ms.html:101 templates/player/tenhou.html:129
+#: templates/player/ms.html:101 templates/player/tenhou.html:132
 msgid "Statistics for"
 msgstr "Статистика аккаунта"
 
-#: templates/player/details.html:119 templates/player/tenhou.html:137
+#: templates/player/details.html:119 templates/player/tenhou.html:140
 msgid "Latest places:"
 msgstr "Последние игры:"
 
-#: templates/player/details.html:137 templates/player/tenhou.html:164
+#: templates/player/details.html:137 templates/player/tenhou.html:172
 msgid "Current month"
 msgstr "За текущий месяц"
 
-#: templates/player/details.html:146 templates/player/tenhou.html:173
-#: templates/player/tenhou.html:237 templates/tenhou/games_history.html:62
+#: templates/player/details.html:146 templates/player/tenhou.html:181
+#: templates/player/tenhou.html:245 templates/tenhou/games_history.html:62
 msgid "Lobby"
 msgstr "Лобби"
 
-#: templates/player/details.html:202 templates/player/tenhou.html:292
+#: templates/player/details.html:202 templates/player/tenhou.html:300
 msgid "Collected yakumans"
 msgstr "Собранные якуманы"
 
-#: templates/player/details.html:206 templates/player/tenhou.html:296
+#: templates/player/details.html:206 templates/player/tenhou.html:304
 #: templates/tenhou/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
 
-#: templates/player/details.html:208 templates/player/tenhou.html:298
+#: templates/player/details.html:208 templates/player/tenhou.html:306
 #: templates/tenhou/latest_yakumans.html:19
 msgid "Log"
 msgstr "Игра"
 
-#: templates/player/details.html:222 templates/player/tenhou.html:312
+#: templates/player/details.html:222 templates/player/tenhou.html:320
 #: templates/tenhou/latest_yakumans.html:38
 msgid "link"
 msgstr "ссылка"
@@ -611,13 +859,13 @@ msgid "Sanma"
 msgstr "Хиросима"
 
 #: templates/player/ms.html:98 templates/player/rating_changes.html:13
-#: templates/player/rating_details.html:190 templates/player/tenhou.html:124
+#: templates/player/rating_details.html:190 templates/player/tenhou.html:127
 #: templates/player/tournaments.html:13
 msgid "Player page"
 msgstr "Страница игрока"
 
 #: templates/player/ms.html:113 templates/player/ms.html:207
-#: templates/player/tenhou.html:158
+#: templates/player/tenhou.html:165
 msgid "Pt chart"
 msgstr "График pt"
 
@@ -676,11 +924,11 @@ msgstr "Показать"
 msgid "all results"
 msgstr "все результаты"
 
-#: templates/player/tenhou.html:156
+#: templates/player/tenhou.html:160
 msgid "Rank chart"
 msgstr "График ранга"
 
-#: templates/player/tenhou.html:227
+#: templates/player/tenhou.html:235
 msgid "All time"
 msgstr "За всё время"
 
@@ -695,7 +943,7 @@ msgstr "Турниров"
 
 #: templates/rating/_results_table.html:24
 #: templates/tournament/_tournament_results.html:18
-#: templates/website/erc_2019.html:92 templates/website/wrc_2020.html:89
+#: templates/website/_qualification_table.html:14
 msgctxt "location"
 msgid "From"
 msgstr "Откуда"
@@ -1076,6 +1324,15 @@ msgstr "Пока нет регистраций"
 msgid "Success!"
 msgstr "Успех!"
 
+#: templates/website/_qualification_table.html:8
+#: templates/website/_qualification_table.html:21
+msgid "is going to participate"
+msgstr "собирается участвовать"
+
+#: templates/website/_qualification_table.html:11
+msgid "MF"
+msgstr "Состоит в ФМ"
+
 #: templates/website/championships.html:5
 #: templates/website/championships.html:11
 msgid "Hall of Fame."
@@ -1094,21 +1351,12 @@ msgstr "Турниры и игроки в риичи маджонг из"
 msgid "European Riichi Championship 2019 Qualifications"
 msgstr "Отбор на Чемпионат Европы 2019 года"
 
-#: templates/website/erc_2019.html:78 templates/website/erc_2019.html:132
-#: templates/website/erc_2019.html:133
+#: templates/website/erc_2019.html:78 templates/website/erc_2019.html:87
+#: templates/website/erc_2019.html:88
 msgid "List of players sorted by RR rating (on 1st January 2019)"
 msgstr ""
 "Рейтинг RR на 1 января 2019 года с учетом устаревания турниров, но без учета "
 "еще не завершившихся турниров 2018 года."
-
-#: templates/website/erc_2019.html:86 templates/website/erc_2019.html:99
-#: templates/website/wrc_2020.html:83 templates/website/wrc_2020.html:96
-msgid "is going to participate"
-msgstr "собирается участвовать"
-
-#: templates/website/erc_2019.html:89 templates/website/wrc_2020.html:86
-msgid "MF"
-msgstr "Состоит в ФМ"
 
 #: templates/website/home.html:18
 msgid "Events"
@@ -1159,8 +1407,8 @@ msgstr "ничего не нашлось"
 msgid "World Riichi Championship 2020 Qualifications"
 msgstr "Отбор на Чемпионат Мира 2020 года"
 
-#: templates/website/wrc_2020.html:75 templates/website/wrc_2020.html:129
-#: templates/website/wrc_2020.html:130
+#: templates/website/wrc_2020.html:75 templates/website/wrc_2020.html:84
+#: templates/website/wrc_2020.html:85
 msgid "List of players sorted by RR rating (on 1st February 2020)"
 msgstr "Рейтинг RR на 1 февраля 2020 года."
 
