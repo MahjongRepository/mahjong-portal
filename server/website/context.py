@@ -10,6 +10,6 @@ def context(request):
         "GOOGLE_VERIFICATION_CODE": settings.GOOGLE_VERIFICATION_CODE,
         "YANDEX_VERIFICATION_CODE": settings.YANDEX_VERIFICATION_CODE,
         "SCHEME": settings.SCHEME,
-        "SHORT_DATE_FORMAT": language == "ru" and "d.m.Y" or "d/m/Y",
+        "SHORT_DATE_FORMAT": language == "ru" and "d.m.Y" or "Y-m-d",
         "CURRENT_YEAR": timezone.now().year,
     }
