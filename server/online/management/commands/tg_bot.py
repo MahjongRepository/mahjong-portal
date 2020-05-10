@@ -65,7 +65,7 @@ class TelegramBot:
         help_handler = CommandHandler("help", TelegramBot.help_bot)
 
         # background task
-        updater.job_queue.run_repeating(TelegramBot.check_new_notifications, interval=5, first=0)
+        updater.job_queue.run_repeating(TelegramBot.check_new_notifications, interval=3, first=0)
 
         dispatcher.add_handler(
             CommandHandler(
@@ -131,14 +131,14 @@ class TelegramBot:
 
     @staticmethod
     def check_new_notifications(context: telegram.ext.CallbackContext):
+        notification = TournamentNotification.objects.filter(
+            is_processed=False, destination=TournamentNotification.TELEGRAM, failed=False
+        ).last()
+
+        if not notification:
+            return
+
         try:
-            notification = TournamentNotification.objects.filter(
-                is_processed=False, destination=TournamentNotification.TELEGRAM
-            ).last()
-
-            if not notification:
-                return
-
             message = tournament_handler.get_notification_text("ru", notification)
             context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
 
@@ -147,6 +147,8 @@ class TelegramBot:
 
             logger.info(f"Notification id={notification.id} sent")
         except Exception as e:
+            notification.failed = True
+            notification.save()
             logger.error(e, exc_info=e)
 
     @staticmethod

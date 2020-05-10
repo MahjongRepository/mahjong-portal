@@ -99,6 +99,7 @@ class TournamentNotification(BaseModel):
 
     destination = models.PositiveSmallIntegerField(choices=DESTINATIONS)
     is_processed = models.BooleanField(default=False)
+    failed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-created_on"]
