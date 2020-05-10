@@ -131,20 +131,24 @@ class TelegramBot:
 
     @staticmethod
     def check_new_notifications(context: telegram.ext.CallbackContext):
-        notification = TournamentNotification.objects.filter(
-            is_processed=False, destination=TournamentNotification.TELEGRAM
-        ).last()
+        try:
+            logger.info(settings.TELEGRAM_CHANNEL_NAME)
+            notification = TournamentNotification.objects.filter(
+                is_processed=False, destination=TournamentNotification.TELEGRAM
+            ).last()
 
-        if not notification:
-            return
+            if not notification:
+                return
 
-        message = tournament_handler.get_notification_text("ru", notification)
-        context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
+            message = tournament_handler.get_notification_text("ru", notification)
+            context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
 
-        notification.is_processed = True
-        notification.save()
+            notification.is_processed = True
+            notification.save()
 
-        logger.info(f"Notification id={notification.id} sent")
+            logger.info(f"Notification id={notification.id} sent")
+        except Exception as e:
+            logger.error(e, exc_info=e)
 
     @staticmethod
     def set_game_log(update: Update, context: CallbackContext):
