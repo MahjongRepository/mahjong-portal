@@ -3,7 +3,13 @@ from django import forms
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from online.models import TournamentStatus, TournamentPlayers, TournamentGame, TournamentGamePlayer
+from online.models import (
+    TournamentStatus,
+    TournamentPlayers,
+    TournamentGame,
+    TournamentGamePlayer,
+    TournamentNotification,
+)
 from player.models import Player
 from tournament.models import Tournament, OnlineTournamentRegistration
 
@@ -41,7 +47,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
     list_display = [
         "tournament",
         "player",
-        "telegram_username",
+        "username",
         "tenhou_username",
         "pantheon_id",
         "team_name",
@@ -89,6 +95,13 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
         return mark_safe('<span style="background-color: red; padding: 5px;">Disabled</span>')
 
+    def username(self, obj):
+        if obj.telegram_username:
+            return f"{obj.telegram_username} (tg)"
+
+        if obj.discord_username:
+            return f"{obj.discord_username} (ds)"
+
 
 class TournamentGamePlayerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -120,6 +133,20 @@ class TournamentGameAdmin(admin.ModelAdmin):
     list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "status", "tournament_round"]
 
 
+class TournamentNotificationAdmin(admin.ModelAdmin):
+    list_display = [
+        "tournament",
+        "notification_type",
+        "destination",
+        "is_processed",
+        "message_kwargs",
+        "created_on",
+        "updated_on",
+    ]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "is_processed"]
+
+
 admin.site.register(TournamentStatus, TournamentStatusAdmin)
 admin.site.register(TournamentPlayers, TournamentPlayersAdmin)
 admin.site.register(TournamentGame, TournamentGameAdmin)
+admin.site.register(TournamentNotification, TournamentNotificationAdmin)
