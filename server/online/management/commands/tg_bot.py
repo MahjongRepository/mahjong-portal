@@ -132,7 +132,6 @@ class TelegramBot:
     @staticmethod
     def check_new_notifications(context: telegram.ext.CallbackContext):
         try:
-            logger.info(settings.TELEGRAM_CHANNEL_NAME)
             notification = TournamentNotification.objects.filter(
                 is_processed=False, destination=TournamentNotification.TELEGRAM
             ).last()
