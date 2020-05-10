@@ -65,7 +65,7 @@ class TelegramBot:
         help_handler = CommandHandler("help", TelegramBot.help_bot)
 
         # background task
-        updater.job_queue.run_repeating(TelegramBot.check_new_notifications, interval=2, first=0)
+        updater.job_queue.run_repeating(TelegramBot.check_new_notifications, interval=5, first=0)
 
         dispatcher.add_handler(
             CommandHandler(
