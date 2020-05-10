@@ -436,6 +436,7 @@ class TournamentHandler:
 
             games = []
             for item in sortition:
+                logger.info(item)
                 # shuffle player winds
                 random.shuffle(item)
 
@@ -471,6 +472,7 @@ class TournamentHandler:
 
     def make_sortition(self, pantheon_ids):
         if self.status.current_round == 1:
+            raise AssertionError("Wrong sortition")
             return self._random_sortition(pantheon_ids)
         else:
             return get_pantheon_swiss_sortition()
