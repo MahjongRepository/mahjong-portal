@@ -69,8 +69,26 @@ def tournament_details(request, slug):
         .prefetch_related("player")
     )
 
+    countries = {}
+    for result in results:
+        if not result.player:
+            continue
+
+        country = result.player.country
+        if not country:
+            continue
+
+        if not countries.get(country.id):
+            countries[country.id] = {"count": 0, "name": country.name, "code": country.code}
+
+        countries[country.id]["count"] += 1
+
+    countries = sorted(countries.values(), key=lambda x: x["count"], reverse=True)
+
     return render(
-        request, "tournament/details.html", {"tournament": tournament, "results": results, "page": "tournament"}
+        request,
+        "tournament/details.html",
+        {"tournament": tournament, "results": results, "page": "tournament", "countries": countries},
     )
 
 
