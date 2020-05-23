@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-09 14:35+0000\n"
+"POT-Creation-Date: 2020-05-23 15:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgid ""
 msgstr ""
 "Идёт этап подтверждения. Подтвержденных игроков: %(confirmed_players)s."
 
-#: online/handler.py:76 online/handler.py:697
+#: online/handler.py:76 online/handler.py:710
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
@@ -121,11 +121,11 @@ msgstr "Игр завершено: %(finished)s/%(total)s."
 msgid "Several games could not start. The administrator will fix this soon."
 msgstr "Несколько игр не смогли запуститься. Администратор скоро это исправит."
 
-#: online/handler.py:230
+#: online/handler.py:231
 msgid "This is not looks like a link to the game log."
 msgstr "Это не похоже на ссылку на лог игры."
 
-#: online/handler.py:250
+#: online/handler.py:251
 msgid ""
 "Fail to add this game. Try again in a moment or you havn't copied the entire "
 "link of the game log."
@@ -133,27 +133,27 @@ msgstr ""
 "Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не "
 "весь log id."
 
-#: online/handler.py:255 online/handler.py:357
+#: online/handler.py:256 online/handler.py:358
 msgid "The game has been added. Thank you."
 msgstr "Игра была добавлена. Спасибо."
 
-#: online/handler.py:263
+#: online/handler.py:264
 #, python-format
 msgid "Fail to add game log. Contact the administrator %(admin_username)s."
 msgstr ""
 "Произошла ошибка при добавлении лога. Обратитесь к администратору "
 "%(admin_username)s."
 
-#: online/handler.py:361
+#: online/handler.py:364
 msgid "The confirmation phase has already ended. Visit our next tournaments."
 msgstr ""
 "Этап подтверждения участия уже завершился. Приходите на следующий турнир."
 
-#: online/handler.py:364
+#: online/handler.py:367
 msgid "The tenhou.net nickname must not be longer than eight characters."
 msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
 
-#: online/handler.py:372
+#: online/handler.py:375
 #, python-format
 msgid ""
 "Your tenhou.net username is out of tournament registration list. Contact the "
@@ -162,13 +162,13 @@ msgstr ""
 "Этот tenhou.net ник не был зарегистрирован на турнир заранее. Обратитесь к "
 "администратору %(admin_username)s."
 
-#: online/handler.py:376
+#: online/handler.py:379
 #, python-format
 msgid ""
 "Nickname \"%(tenhou_nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на турнир."
 
-#: online/handler.py:383
+#: online/handler.py:386
 #, python-format
 msgid ""
 "Nickname \"%(tenhou_nickname)s\" doesn't have game records. Are you sure it "
@@ -179,11 +179,11 @@ msgstr ""
 "правильно написан? Регистр важен! Обратитесь к администратору "
 "%(admin_username)s."
 
-#: online/handler.py:403
+#: online/handler.py:407
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:646
+#: online/handler.py:659
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -202,7 +202,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:659
+#: online/handler.py:672
 #, python-format
 msgid ""
 "New game was added.\n"
@@ -235,7 +235,7 @@ msgstr ""
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:672
+#: online/handler.py:685
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -247,7 +247,7 @@ msgstr ""
 "пройдите в лобби %(lobby_link)s и ждите начала игр (игры начнутся "
 "автоматически)."
 
-#: online/handler.py:678
+#: online/handler.py:691
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -264,12 +264,12 @@ msgstr ""
 "Запускаю игры...\n"
 "\n"
 "После завершения вашей игры отправьте ссылку на лог игры. Одну ссылку можно "
-"отправлять много раз, так что не бойтесь - ничего сломается.\n"
+"отправлять много раз, так что не бойтесь - ничего не сломается.\n"
 "\n"
 "Это поможет сократить время турнира и разгрузит админов. Пока ВСЕ ссылки на "
 "игры не будут добавлены, следующий тур запустить не получится."
 
-#: online/handler.py:686
+#: online/handler.py:699
 #, python-format
 msgid ""
 "Game: %(players)s is not started. The table was moved to the end of the "
@@ -278,7 +278,7 @@ msgstr ""
 "Стол: %(players)s не получилось запустить. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:689
+#: online/handler.py:702
 #, python-format
 msgid ""
 "Game: %(players)s is not started. Missed players %(missed_players)s. The "
@@ -287,12 +287,12 @@ msgstr ""
 "Стол: %(players)s не получилось запустить. Отсутствующие игроки "
 "%(missed_players)s. Стол был отодвинут в конец очереди."
 
-#: online/handler.py:692
+#: online/handler.py:705
 #, python-format
 msgid "Game: %(players)s started."
 msgstr "Стол: %(players)s запущен."
 
-#: online/handler.py:694
+#: online/handler.py:707
 #, python-format
 msgid ""
 "All games finished. Next round starts in %(break_minutes)s minutes.\n"
@@ -304,32 +304,37 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/management/commands/ds_bot.py:120
-#, python-format
+#: online/management/commands/ds_bot.py:118
 msgid ""
 "1. Tournament lobby:\n"
-" %(lobby_link)s \n"
+" <%(lobby_link)s> \n"
 msgstr ""
 "1. Турнирное лобби:\n"
-" %(lobby_link)s \n"
+" <%(lobby_link)s> \n"
 
-#: online/management/commands/ds_bot.py:121
-#, python-format
+#: online/management/commands/ds_bot.py:119
 msgid ""
 "2. Tournament statistics:\n"
-" %(rating_link)s \n"
+" <%(rating_link)s> \n"
 msgstr ""
 "2. Турнирная статистика:\n"
-" %(rating_link)s \n"
+" <%(rating_link)s> \n"
 
-#: online/management/commands/ds_bot.py:124
-#, python-format
+#: online/management/commands/ds_bot.py:122
+msgid ""
+"2.1. Team statistics:\n"
+" <%(rating_link)s>/team \n"
+msgstr ""
+"2. Командная статистика:\n"
+" <%(rating_link)s> \n"
+
+#: online/management/commands/ds_bot.py:125
 msgid ""
 "3. Current games:\n"
-" %(current_games_link)s \n"
+" <%(current_games_link)s> \n"
 msgstr ""
 "3. Текущие игры:\n"
-" %(current_games_link)s \n"
+" <%(current_games_link)s> \n"
 
 #: player/models.py:41
 msgid "Substitution player"
@@ -1575,11 +1580,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:136
+#: tournament/views.py:154
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: tournament/views.py:160
+#: tournament/views.py:178
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -1587,11 +1592,11 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:164
+#: tournament/views.py:182
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:170
+#: tournament/views.py:188
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 

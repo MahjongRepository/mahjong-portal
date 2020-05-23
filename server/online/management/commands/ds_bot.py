@@ -111,19 +111,21 @@ class DiscordClient(discord.Client):
             await self.get_help(message)
             return
 
-        logger.info(f'Unsupported message channel="{message.channel.name}", msg="{message.content}".')
-
     async def get_help(self, message: Message):
         self.activate_language(message.channel.name)
 
         m = ""
-        m += _("1. Tournament lobby:\n %(lobby_link)s \n") % {"lobby_link": self.tournament_handler.get_lobby_link()}
-        m += _("2. Tournament statistics:\n %(rating_link)s \n") % {
+        m += _("1. Tournament lobby:\n <%(lobby_link)s> \n") % {"lobby_link": self.tournament_handler.get_lobby_link()}
+        m += _("2. Tournament statistics:\n <%(rating_link)s> \n") % {
             "rating_link": self.tournament_handler.get_rating_link()
         }
-        m += _("3. Current games:\n %(current_games_link)s \n") % {
+        m += _("2.1. Team statistics:\n <%(rating_link)s>/team \n") % {
+            "rating_link": self.tournament_handler.get_rating_link()
+        }
+        m += _("3. Current games:\n <%(current_games_link)s> \n") % {
             "current_games_link": f"https://tenhou.net/wg/?{settings.TOURNAMENT_PUBLIC_LOBBY[:5]}"
         }
+
         await message.channel.send(m)
 
     async def add_game_log(self, message: Message):

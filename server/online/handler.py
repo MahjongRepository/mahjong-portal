@@ -22,6 +22,7 @@ from online.models import (
     TournamentNotification,
 )
 from online.parser import TenhouParser
+from online.team_seating import TeamSeating
 from player.models import Player
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
@@ -55,14 +56,15 @@ class TournamentHandler:
 
         TournamentStatus.objects.get_or_create(tournament=self.tournament)
 
-    @property
-    def status(self):
+    def get_status(self):
         return TournamentStatus.objects.get(tournament_id=self.tournament.id)
 
     def get_tournament_status(self):
-        if not self.status.current_round:
+        status = self.get_status()
+
+        if not status.current_round:
             confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
-            if self.status.registration_closed:
+            if status.registration_closed:
                 return _("Games will start soon. Confirmed players: %(confirmed_players)s.") % {
                     "confirmed_players": confirmed_players
                 }
@@ -71,13 +73,13 @@ class TournamentHandler:
                     "confirmed_players": confirmed_players
                 }
 
-        if self.status.current_round == self.tournament.number_of_sessions:
+        if status.current_round == self.tournament.number_of_sessions:
             return _("The tournament is over. Thank you for participating!")
 
-        if self.status.end_break_time:
+        if status.end_break_time:
             now = timezone.now()
 
-            if now > self.status.end_break_time:
+            if now > status.end_break_time:
                 return _("Games will start soon.")
 
             minutes_dict = {
@@ -114,7 +116,7 @@ class TournamentHandler:
                 54: "секунды",
             }
 
-            delta = self.status.end_break_time - now
+            delta = status.end_break_time - now
             language = translation.get_language()
 
             if delta.seconds > 60:
@@ -141,26 +143,26 @@ class TournamentHandler:
 
         finished_games_count = (
             TournamentGame.objects.filter(tournament=self.tournament)
-            .filter(tournament_round=self.status.current_round)
+            .filter(tournament_round=status.current_round)
             .filter(status=TournamentGame.FINISHED)
             .count()
         )
 
         failed_games_count = (
             TournamentGame.objects.filter(tournament=self.tournament)
-            .filter(tournament_round=self.status.current_round)
+            .filter(tournament_round=status.current_round)
             .filter(status=TournamentGame.FAILED_TO_START)
             .count()
         )
 
         total_games = (
             TournamentGame.objects.filter(tournament=self.tournament)
-            .filter(tournament_round=self.status.current_round)
+            .filter(tournament_round=status.current_round)
             .count()
         )
 
         message = _("Stage %(current_round)s of %(total_rounds)s.") % {
-            "current_round": self.status.current_round,
+            "current_round": status.current_round,
             "total_rounds": self.tournament.number_of_sessions,
         }
 
@@ -177,7 +179,7 @@ class TournamentHandler:
         return message
 
     def open_registration(self):
-        status = self.status
+        status = self.get_status()
         status.registration_closed = False
         status.save()
 
@@ -187,7 +189,7 @@ class TournamentHandler:
         )
 
     def close_registration(self):
-        status = self.status
+        status = self.get_status()
         status.registration_closed = True
         status.save()
 
@@ -226,6 +228,7 @@ class TournamentHandler:
         return "Готово"
 
     def add_game_log(self, log_link):
+        status = self.get_status()
         error_message = _("This is not looks like a link to the game log.")
 
         log_link = log_link.replace("https://", "http://")
@@ -256,7 +259,7 @@ class TournamentHandler:
         games = (
             TournamentGame.objects.filter(tournament=self.tournament)
             .filter(game_players__player__tenhou_username__in=players)
-            .filter(tournament_round=self.status.current_round)
+            .filter(tournament_round=status.current_round)
             .distinct()
         )
         error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
@@ -328,12 +331,12 @@ class TournamentHandler:
         finished_games = (
             TournamentGame.objects.filter(tournament=self.tournament)
             .filter(status=TournamentGame.FINISHED)
-            .filter(tournament_round=self.status.current_round)
+            .filter(tournament_round=status.current_round)
         )
 
         total_games = (
             TournamentGame.objects.filter(tournament=self.tournament)
-            .filter(tournament_round=self.status.current_round)
+            .filter(tournament_round=status.current_round)
             .count()
         )
 
@@ -356,7 +359,9 @@ class TournamentHandler:
         return _("The game has been added. Thank you."), True
 
     def confirm_participation_in_tournament(self, tenhou_nickname, telegram_username=None, discord_username=None):
-        if self.status.registration_closed:
+        status = self.get_status()
+
+        if status.registration_closed:
             return _("The confirmation phase has already ended. Visit our next tournaments.")
 
         if len(tenhou_nickname) > 8:
@@ -403,7 +408,7 @@ class TournamentHandler:
         return _("Your participation in the tournament has been confirmed!")
 
     def prepare_next_round(self):
-        status = self.status
+        status = self.get_status()
 
         if not status.current_round:
             status.current_round = 0
@@ -432,7 +437,8 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()))
+            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
             for item in sortition:
@@ -470,17 +476,16 @@ class TournamentHandler:
 
         return message
 
-    def make_sortition(self, pantheon_ids):
-        if self.status.current_round == 1:
-            raise AssertionError("Wrong sortition")
+    def make_sortition(self, pantheon_ids, current_round):
+        if current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
             return get_pantheon_swiss_sortition()
 
     def start_games(self):
-        games = TournamentGame.objects.filter(tournament=self.tournament).filter(
-            tournament_round=self.status.current_round
-        )
+        status = self.get_status()
+
+        games = TournamentGame.objects.filter(tournament=self.tournament).filter(tournament_round=status.current_round)
 
         for game in games:
             self.start_game(game)
@@ -493,6 +498,7 @@ class TournamentHandler:
         players = game.game_players.all().order_by("wind")
 
         player_names = [x.player.tenhou_username for x in players]
+        escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
 
         url = "http://tenhou.net/cs/edit/start.cgi"
         data = {
@@ -518,7 +524,7 @@ class TournamentHandler:
                 logger.error(result)
                 game.status = TournamentGame.FAILED_TO_START
                 self.create_notification(
-                    TournamentNotification.GAME_FAILED, kwargs={"players": ", ".join(player_names)}
+                    TournamentNotification.GAME_FAILED, kwargs={"players": ", ".join(escaped_player_names)}
                 )
             elif result.startswith("MEMBER NOT FOUND"):
                 missed_player_ids = [x for x in result.split("\r\n")[1:] if x]
@@ -540,23 +546,28 @@ class TournamentHandler:
                 game.status = TournamentGame.FAILED_TO_START
                 self.create_notification(
                     TournamentNotification.GAME_FAILED_NO_MEMBERS,
-                    kwargs={"players": ", ".join(player_names), "missed_players": ", ".join(missed_player_nicknames)},
+                    kwargs={
+                        "players": ", ".join(escaped_player_names),
+                        "missed_players": ", ".join(missed_player_nicknames),
+                    },
                 )
             else:
                 game.status = TournamentGame.STARTED
                 self.create_notification(
-                    TournamentNotification.GAME_STARTED, kwargs={"players": ", ".join(player_names)}
+                    TournamentNotification.GAME_STARTED, kwargs={"players": ", ".join(escaped_player_names)}
                 )
         except Exception as e:
             logger.error(e, exc_info=e)
 
             game.status = TournamentGame.FAILED_TO_START
-            self.create_notification(TournamentNotification.GAME_FAILED, kwargs={"players": ", ".join(player_names)})
+            self.create_notification(
+                TournamentNotification.GAME_FAILED, kwargs={"players": ", ".join(escaped_player_names)}
+            )
 
         game.save()
 
     def check_round_was_finished(self):
-        status = self.status
+        status = self.get_status()
 
         finished_games = (
             TournamentGame.objects.filter(tournament=self.tournament)
@@ -581,7 +592,9 @@ class TournamentHandler:
             return None
 
     def new_tg_chat_member(self, username: str):
-        if not self.status.current_round:
+        status = self.get_status()
+
+        if not status.current_round:
             message = "Добро пожаловать в чат онлайн турнира! \n"
             if not username:
                 message += (
