@@ -382,7 +382,7 @@ class TournamentHandler:
             }
 
         account_started_date = get_started_date_for_account(tenhou_nickname)
-        if not account_started_date:
+        if not account_started_date and telegram_username != TournamentHandler.TELEGRAM_ADMIN_USERNAME[1:]:
             return _(
                 'Nickname "%(tenhou_nickname)s" doesn\'t have game records. '
                 "Are you sure it is spelled correctly? Case of letters is important! Contact admin %(admin_username)s."
