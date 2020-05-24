@@ -36,9 +36,6 @@ class TournamentHandler:
     # in minutes
     TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5, 5]
 
-    TELEGRAM_ADMIN_USERNAME = "@Nihisil"
-    DISCORD_ADMIN_ID = "235770112823656449"
-
     TELEGRAM_DESTINATION = "tg"
     DISCORD_DESTINATION = "ds"
 
@@ -382,7 +379,7 @@ class TournamentHandler:
             }
 
         account_started_date = get_started_date_for_account(tenhou_nickname)
-        if not account_started_date and telegram_username != TournamentHandler.TELEGRAM_ADMIN_USERNAME[1:]:
+        if not account_started_date and telegram_username != settings.TELEGRAM_ADMIN_USERNAME[1:]:
             return _(
                 'Nickname "%(tenhou_nickname)s" doesn\'t have game records. '
                 "Are you sure it is spelled correctly? Case of letters is important! Contact admin %(admin_username)s."
