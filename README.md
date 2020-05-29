@@ -38,8 +38,8 @@ If needed, restore the database backup for the new installation.
 On your host machine you can set up these cron commands to get backups:
 
 ```
-# once a hour
-0 * * * * /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh hourly
+# every 6 hours
+0 */6 * * * /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh hourly
 # once a week
 0 0 * * 0 /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh weekly
 # once a month
