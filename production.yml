@@ -59,11 +59,8 @@ services:
       - ./backups:/backups
 
   nginx:
-    build:
-      context: .
-      dockerfile: ./docker/production/nginx/Dockerfile
-    restart: always
-    image: protal_nginx
+    # my personal image based on https://github.com/nginx-le/nginx-le
+    image: docker.pkg.github.com/life-records/nginx-le/nginx-le:latest
     env_file:
       - ./.envs/.production.env
     depends_on:
