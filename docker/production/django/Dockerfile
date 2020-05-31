@@ -1,4 +1,4 @@
-FROM python:3.8.1
+FROM python:3.8.3-slim
 
 ENV PYTHONUNBUFFERED 1
 
