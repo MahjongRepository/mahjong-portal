@@ -22,6 +22,8 @@ services:
       options:
         max-size: '10m'
         max-file: '5'
+    ports:
+      - '6101:6101'
     command: /start.sh
 
   cronjobs:
