@@ -22,7 +22,6 @@ from online.models import (
     TournamentNotification,
 )
 from online.parser import TenhouParser
-from online.team_seating import TeamSeating
 from player.models import Player
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
@@ -434,8 +433,8 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
-            sortition = TeamSeating.get_seating_for_round(status.current_round)
+            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
             for item in sortition:
