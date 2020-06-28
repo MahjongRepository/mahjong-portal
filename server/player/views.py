@@ -44,9 +44,7 @@ def player_details(request, slug, year=None, month=None, day=None):
     )[:10]
 
     tenhou_data = TenhouNickname.objects.filter(player=player, is_main=True)
-    # temporary disable ms stat
-    # ms_data = MSAccount.objects.filter(player=player).first()
-    ms_data = []
+    ms_data = MSAccount.objects.filter(player=player).first()
     club_ratings = (
         ClubRating.objects.filter(player=player).prefetch_related("club", "club__city").order_by("-games_count")
     )

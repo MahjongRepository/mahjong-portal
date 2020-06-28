@@ -17,7 +17,7 @@ from ms.rpc import Lobby
 import ms.protocol_pb2 as pb
 
 
-MS_HOST = "https://www.majsoul.com"
+MS_HOST = "https://game.maj-soul.com"
 
 
 def get_date_string():
@@ -53,7 +53,7 @@ class MSBaseCommand(BaseCommand):
 
             async with session.get("{}/1/v{}/config.json".format(MS_HOST, version)) as res:
                 config = await res.json()
-                url = config["ip"][0]["region_urls"]["mainland"]
+                url = config["ip"][0]["region_urls"][1]
 
             async with session.get(url + "?service=ws-gateway&protocol=ws&ssl=true") as res:
                 servers = await res.json()
