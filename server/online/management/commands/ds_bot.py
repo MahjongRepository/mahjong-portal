@@ -6,12 +6,12 @@ from discord import Message
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils.translation import activate
+from django.utils.translation import gettext as _
 
 from online.handler import TournamentHandler
 from online.models import TournamentNotification
 from tournament.models import Tournament
 from utils.logs import set_up_logging
-from django.utils.translation import gettext as _
 
 logger = logging.getLogger()
 

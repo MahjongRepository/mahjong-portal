@@ -1,14 +1,14 @@
 from django.conf.urls import url
 
 from player.views import (
-    player_details,
-    player_rating_details,
     player_by_id_details,
-    player_tournaments,
     player_by_id_tenhou_details,
-    player_tenhou_details,
-    player_rating_changes,
+    player_details,
     player_ms_details,
+    player_rating_changes,
+    player_rating_details,
+    player_tenhou_details,
+    player_tournaments,
 )
 
 urlpatterns = [

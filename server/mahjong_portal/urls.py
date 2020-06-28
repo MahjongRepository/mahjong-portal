@@ -1,19 +1,19 @@
+from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
-from django.conf.urls import include, url
+from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
 from django.views.decorators.cache import cache_page
-from django.contrib.auth import views as auth_views
 
 from mahjong_portal.sitemap import (
-    TournamentSitemap,
-    TournamentAnnouncementSitemap,
     ClubSitemap,
+    EMATournamentListSitemap,
     PlayerSitemap,
     RatingSitemap,
     StaticSitemap,
+    TournamentAnnouncementSitemap,
     TournamentListSitemap,
-    EMATournamentListSitemap,
+    TournamentSitemap,
 )
 from website.views import players_api
 

@@ -5,9 +5,9 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from club.club_games.models import ClubSession, ClubSessionResult, ClubRating, ClubSessionSyncData
+from club.club_games.models import ClubRating, ClubSession, ClubSessionResult, ClubSessionSyncData
 from club.models import Club
-from club.pantheon_games.models import PantheonSession, PantheonSessionResult, PantheonRound
+from club.pantheon_games.models import PantheonRound, PantheonSession, PantheonSessionResult
 from player.models import Player
 from player.tenhou.models import TenhouAggregatedStatistics
 

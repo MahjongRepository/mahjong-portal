@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.tenhou.models import TenhouNickname, CollectedYakuman
+from player.tenhou.models import CollectedYakuman, TenhouNickname
 
 
 def get_date_string():

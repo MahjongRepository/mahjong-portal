@@ -7,7 +7,6 @@ from django.http import HttpResponse
 from online.models import TournamentPlayers
 from utils.general import make_random_letters_and_digit_string
 
-
 logger = logging.getLogger()
 
 

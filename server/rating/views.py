@@ -1,12 +1,12 @@
-from django.http import JsonResponse, Http404
-from django.shortcuts import render, get_object_or_404
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
-from rating.models import Rating, RatingResult, RatingDelta, TournamentCoefficients, RatingDate
+from rating.models import Rating, RatingDate, RatingDelta, RatingResult, TournamentCoefficients
 from rating.utils import get_latest_rating_date, parse_rating_date
 from settings.models import Country
 from tournament.models import Tournament

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from rating.views import rating_details, rating_list, rating_tournaments, rating_dates
+from rating.views import rating_dates, rating_details, rating_list, rating_tournaments
 
 urlpatterns = [
     url(r"^riichi/list/$", rating_list, name="rating_list"),

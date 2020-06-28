@@ -5,11 +5,9 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils.translation import activate
-from telegram import Update, ParseMode
-from telegram.error import Unauthorized, BadRequest, TimedOut, NetworkError, ChatMigrated, TelegramError
-from telegram.ext import CommandHandler, CallbackContext, Defaults
-from telegram.ext import MessageHandler, Filters
-from telegram.ext import Updater
+from telegram import ParseMode, Update
+from telegram.error import BadRequest, ChatMigrated, NetworkError, TelegramError, TimedOut, Unauthorized
+from telegram.ext import CallbackContext, CommandHandler, Defaults, Filters, MessageHandler, Updater
 
 from online.handler import TournamentHandler
 from online.models import TournamentGame, TournamentNotification

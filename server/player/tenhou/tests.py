@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from player.models import Player
-from player.tenhou.models import TenhouNickname, TenhouGameLog, TenhouStatistics
+from player.tenhou.models import TenhouGameLog, TenhouNickname, TenhouStatistics
 from utils.tenhou.points_calculator import FourPlayersPointsCalculator
 
 

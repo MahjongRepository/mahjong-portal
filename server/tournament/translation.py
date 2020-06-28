@@ -1,4 +1,4 @@
-from modeltranslation.translator import translator, TranslationOptions
+from modeltranslation.translator import TranslationOptions, translator
 
 from tournament.models import Tournament
 

@@ -4,7 +4,7 @@ import io
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
 from player.models import Player

@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.db import transaction
 
-from player.tenhou.models import TenhouStatistics, TenhouGameLog, TenhouAggregatedStatistics
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouStatistics
 from utils.general import get_month_first_day, get_month_last_day
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.points_calculator import FourPlayersPointsCalculator

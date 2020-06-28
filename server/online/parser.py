@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import codecs
+import re
 import struct
 from urllib.parse import unquote
-
-import re
 
 import requests
 

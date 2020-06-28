@@ -1,17 +1,17 @@
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from online.models import (
-    TournamentStatus,
-    TournamentPlayers,
     TournamentGame,
     TournamentGamePlayer,
     TournamentNotification,
+    TournamentPlayers,
+    TournamentStatus,
 )
 from player.models import Player
-from tournament.models import Tournament, OnlineTournamentRegistration
+from tournament.models import OnlineTournamentRegistration, Tournament
 
 
 class TournamentGameForm(forms.ModelForm):

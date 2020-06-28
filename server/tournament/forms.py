@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from tournament.models import TournamentRegistration, OnlineTournamentRegistration, TournamentApplication
+from tournament.models import OnlineTournamentRegistration, TournamentApplication, TournamentRegistration
 
 
 class TournamentRegistrationForm(forms.ModelForm):

@@ -1,13 +1,13 @@
 from collections import defaultdict
 
 from django.db.models import F
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
 from club.club_games.models import ClubRating
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
-from player.tenhou.models import TenhouNickname, TenhouAggregatedStatistics
-from rating.models import RatingDelta, Rating, RatingResult, TournamentCoefficients
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
+from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
 from rating.utils import get_latest_rating_date, parse_rating_date
 from tournament.models import TournamentResult
 

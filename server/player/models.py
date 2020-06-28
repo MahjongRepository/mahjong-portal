@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from mahjong_portal.models import BaseModel
-from settings.models import Country, City
+from settings.models import City, Country
 
 
 class Player(BaseModel):

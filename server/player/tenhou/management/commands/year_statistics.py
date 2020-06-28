@@ -1,13 +1,13 @@
-from django.core.management.base import BaseCommand
 from datetime import datetime
 
 import pytz
+from django.core.management.base import BaseCommand
 from django.db.models import Sum
 
 from player.models import Player
 from player.tenhou.models import TenhouGameLog
 from settings.models import City
-from tournament.models import TournamentResult, Tournament
+from tournament.models import Tournament, TournamentResult
 
 
 class Command(BaseCommand):

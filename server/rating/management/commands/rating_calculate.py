@@ -8,7 +8,7 @@ from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.ema import RatingEMACalculation
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
-from rating.models import Rating, RatingDelta, RatingResult, RatingDate
+from rating.models import Rating, RatingDate, RatingDelta, RatingResult
 from tournament.models import Tournament, TournamentResult
 
 

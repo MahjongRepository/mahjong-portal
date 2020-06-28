@@ -4,10 +4,10 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from tournament.models import (
-    Tournament,
-    TournamentRegistration,
     OnlineTournamentRegistration,
+    Tournament,
     TournamentApplication,
+    TournamentRegistration,
     TournamentResult,
 )
 
