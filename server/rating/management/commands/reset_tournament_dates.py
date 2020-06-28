@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from rating.models import RatingDate, RatingResult, RatingDelta, Rating
+from rating.models import Rating, RatingDate, RatingDelta, RatingResult
 from tournament.models import Tournament
 
 

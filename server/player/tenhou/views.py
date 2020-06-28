@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 
-from player.tenhou.models import TenhouNickname, CollectedYakuman, TenhouGameLog, TenhouAggregatedStatistics
+from player.tenhou.models import CollectedYakuman, TenhouAggregatedStatistics, TenhouGameLog, TenhouNickname
 from utils.tenhou.current_tenhou_games import get_latest_wg_games
 
 

@@ -2,10 +2,10 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.tenhou.models import TenhouStatistics, TenhouNickname
+from player.tenhou.models import TenhouNickname, TenhouStatistics
 from utils.tenhou.helper import (
-    recalculate_tenhou_statistics_for_four_players,
     download_all_games_from_arcturus,
+    recalculate_tenhou_statistics_for_four_players,
     save_played_games,
 )
 

@@ -10,7 +10,7 @@ from django.utils import timezone
 from player.models import Player
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 from rating.models import RatingDelta, RatingResult, TournamentCoefficients
-from tournament.models import TournamentResult, Tournament
+from tournament.models import Tournament, TournamentResult
 from utils.general import get_tournament_coefficient
 
 

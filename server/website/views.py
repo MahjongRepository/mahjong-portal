@@ -3,8 +3,8 @@ import io
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.utils import translation
 from django.utils.text import slugify
 from django.utils.translation import get_language

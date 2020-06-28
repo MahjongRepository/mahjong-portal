@@ -1,14 +1,14 @@
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.utils.translation import gettext as _
 
 from player.models import Player
 from settings.models import City
-from tournament.forms import TournamentRegistrationForm, OnlineTournamentRegistrationForm, TournamentApplicationForm
-from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
+from tournament.forms import OnlineTournamentRegistrationForm, TournamentApplicationForm, TournamentRegistrationForm
+from tournament.models import OnlineTournamentRegistration, Tournament, TournamentRegistration, TournamentResult
 
 
 def tournament_list(request, tournament_type=None, year=None):

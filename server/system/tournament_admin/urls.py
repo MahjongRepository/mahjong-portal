@@ -1,16 +1,16 @@
 from django.conf.urls import url
 
 from system.tournament_admin.views import (
-    new_tournaments,
-    upload_results,
-    managed_tournaments,
-    tournament_manage,
-    toggle_registration,
-    toggle_premoderation,
-    tournament_edit,
-    remove_registration,
     approve_registration,
+    managed_tournaments,
+    new_tournaments,
+    remove_registration,
     toggle_highlight,
+    toggle_premoderation,
+    toggle_registration,
+    tournament_edit,
+    tournament_manage,
+    upload_results,
 )
 
 urlpatterns = [

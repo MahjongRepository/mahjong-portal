@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import floatformat
 
-from rating.models import RatingResult, Rating
+from rating.models import Rating, RatingResult
 
 
 class Command(BaseCommand):

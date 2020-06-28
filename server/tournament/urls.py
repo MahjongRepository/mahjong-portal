@@ -1,11 +1,11 @@
 from django.conf.urls import url
 
 from tournament.views import (
-    tournament_list,
-    tournament_details,
     tournament_announcement,
-    tournament_registration,
     tournament_application,
+    tournament_details,
+    tournament_list,
+    tournament_registration,
 )
 
 urlpatterns = [

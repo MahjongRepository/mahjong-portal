@@ -1,18 +1,23 @@
 name: Linters and Tests
 on: [push]
-
 jobs:
-  build:
+  lint_and_test:
+    name: Run linters and unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-python@v1
-      - name: Set Python for linters
-        run: echo "::set-env name=PY::$(python --version --version | sha256sum | cut -d' ' -f1)"
-      - uses: actions/cache@v1
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
-      - uses: pre-commit/action@v1.0.1
-      - name: Run tests
+      - uses: actions/checkout@v2
+
+      - name: Build docker container
+        run: make build_docker
+
+      - name: Lint imports order
+        run: make lint-isort
+
+      - name: Lint python code style
+        run: make lint-python-code-style
+
+      - name: Lint with flake8
+        run: make lint-flake8
+
+      - name: Run unit tests
         run: make test

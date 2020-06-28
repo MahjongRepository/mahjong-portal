@@ -1,13 +1,13 @@
 import csv
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
 from player.models import Player
-from utils.general import transliterate_name
 from system.decorators import tournament_manager_auth_required
-from system.tournament_admin.forms import UploadResultsForm, TournamentForm
-from tournament.models import Tournament, TournamentResult, TournamentRegistration, OnlineTournamentRegistration
+from system.tournament_admin.forms import TournamentForm, UploadResultsForm
+from tournament.models import OnlineTournamentRegistration, Tournament, TournamentRegistration, TournamentResult
+from utils.general import transliterate_name
 
 
 @login_required

@@ -1,6 +1,6 @@
-from modeltranslation.translator import translator, TranslationOptions
+from modeltranslation.translator import TranslationOptions, translator
 
-from settings.models import Country, City
+from settings.models import City, Country
 
 
 class CountryTranslationOptions(TranslationOptions):

@@ -24,7 +24,7 @@ class Command(BaseCommand):
         for game in games:
             for player in game["players"]:
                 # we found a player from our database
-                # and this is not hirosima
+                # and this is not sanma
                 if len(game["players"]) == 4 and player["name"] in player_profiles:
                     found_players[player["name"]] = player["rate"]
 

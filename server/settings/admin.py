@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from settings.models import Country, City
+from settings.models import City, Country
 
 
 class CountryAdmin(admin.ModelAdmin):

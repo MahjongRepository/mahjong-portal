@@ -2,7 +2,7 @@ from django import template
 from django.template.defaultfilters import date
 from django.utils.translation import gettext as _
 
-from mahjong_portal.templatetags.russian_words_morph import prepositional, genitive
+from mahjong_portal.templatetags.russian_words_morph import genitive, prepositional
 
 register = template.Library()
 

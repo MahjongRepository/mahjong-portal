@@ -2,7 +2,7 @@ import datetime
 
 from django.shortcuts import render
 
-from rating.models import RatingResult, Rating
+from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 
 

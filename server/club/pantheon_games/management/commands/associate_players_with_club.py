@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from club.models import Club
-from club.pantheon_games.models import PantheonEvent, PantheonSession, PantheonSessionResult, PantheonPlayer
+from club.pantheon_games.models import PantheonEvent, PantheonPlayer, PantheonSession, PantheonSessionResult
 from player.models import Player
 
 

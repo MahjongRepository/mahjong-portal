@@ -1,17 +1,17 @@
 from django.conf.urls import url
 
 from website.views import (
-    home,
     about,
-    search,
+    championships,
     city_page,
-    online_tournament_rules,
     contacts,
-    iormc_2018,
     ermc_qualification_2019,
     export_tournament_results,
+    home,
+    iormc_2018,
+    online_tournament_rules,
     rating_faq,
-    championships,
+    search,
     wrc_qualification_2020,
 )
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from player.tenhou.models import TenhouStatistics, TenhouAggregatedStatistics
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouStatistics
 
 
 class TenhouStatisticsAdmin(admin.ModelAdmin):

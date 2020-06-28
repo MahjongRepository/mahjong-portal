@@ -5,7 +5,7 @@ from copy import copy
 from datetime import timedelta
 from random import randint
 from typing import Dict, Optional
-from urllib.parse import unquote, urlparse, parse_qs
+from urllib.parse import parse_qs, unquote, urlparse
 
 import requests
 from django.conf import settings
@@ -15,18 +15,18 @@ from django.utils.translation import activate
 from django.utils.translation import gettext as _
 
 from online.models import (
-    TournamentPlayers,
-    TournamentStatus,
     TournamentGame,
     TournamentGamePlayer,
     TournamentNotification,
+    TournamentPlayers,
+    TournamentStatus,
 )
 from online.parser import TenhouParser
 from player.models import Player
 from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
-from utils.pantheon import add_user_to_pantheon, get_pantheon_swiss_sortition, add_tenhou_game_to_pantheon
+from utils.pantheon import add_tenhou_game_to_pantheon, add_user_to_pantheon, get_pantheon_swiss_sortition
 
 logger = logging.getLogger()
 

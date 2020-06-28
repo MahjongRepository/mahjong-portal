@@ -1,11 +1,11 @@
 from django.conf.urls import url
 
 from player.tenhou.views import (
+    games_history,
     get_current_tenhou_games,
     get_current_tenhou_games_async,
     latest_yakumans,
     tenhou_accounts,
-    games_history,
 )
 
 urlpatterns = [

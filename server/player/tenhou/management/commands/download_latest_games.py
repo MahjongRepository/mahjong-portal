@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.tenhou.models import TenhouNickname, TenhouGameLog
+from player.tenhou.models import TenhouGameLog, TenhouNickname
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.helper import parse_log_line, recalculate_tenhou_statistics_for_four_players
 
