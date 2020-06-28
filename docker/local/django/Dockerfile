@@ -7,6 +7,8 @@ COPY ./server/requirements /requirements
 RUN pip install --upgrade pip
 RUN pip install -r /requirements/local.txt
 
+RUN useradd -ms /bin/bash docker-user
+
 COPY ./docker/local/django/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -20,5 +22,7 @@ RUN apt-get install -y gettext
 
 COPY . /app
 WORKDIR /app/server
+
+USER docker-user
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -10,7 +10,7 @@ You need to have installed docker and docker compose.
 
 Steps to run the project:
 
-1. `make build`
+1. `make build_docker`
 2. `make initial_data` (run this command only once, for the initial project setup)
 3. `make up`
 
@@ -35,7 +35,7 @@ If needed, restore the database backup for the new installation.
 
 ## DB Backups
 
-On your host machine you can set up these cron commands to get backups:
+On your host machine you can set up these cron commands to make backups:
 
 ```
 # every 6 hours

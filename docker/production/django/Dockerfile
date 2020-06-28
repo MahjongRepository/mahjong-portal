@@ -7,6 +7,8 @@ COPY ./server/requirements /requirements
 RUN pip install --upgrade pip
 RUN pip install -r /requirements/production.txt
 
+RUN useradd -ms /bin/bash docker-user
+
 COPY ./docker/production/django/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
@@ -26,5 +28,7 @@ RUN chmod 0644 /etc/cron.d/crontab
 
 COPY . /app
 WORKDIR /app/server
+
+USER docker-user
 
 ENTRYPOINT ["/entrypoint.sh"]
