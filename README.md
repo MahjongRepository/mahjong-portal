@@ -1,10 +1,10 @@
-It is working with Python **3.6+** only.
+The project is working with Python **3.6+** only.
 
-The project is web-application to accumulate, calculate and display russian riichi-mahjong tournaments and ratings.
+It is web-application to accumulate, calculate and display russian riichi-mahjong tournaments and ratings.
 
-# Local
+## Local
 
-## Project set up
+### Project set up
 
 You need to have installed docker and docker compose.
 
@@ -16,14 +16,9 @@ Steps to run the project:
 
 After these steps you will be able to access website here: http://0.0.0.0:8060/
 
-## Development workflow
+## Production
 
-1. Install to your host system `sudo pip3 install pre-commit==2.1.0`
-2. `pre-commit install`
-
-# Production
-
-## Docker set up
+### Docker set up
 
 You need to have installed docker and docker compose.
 
@@ -33,7 +28,7 @@ For static files serving and SSL configuration you need to set up the server upf
 
 If needed, restore the database backup for the new installation.
 
-## DB Backups
+### DB Backups
 
 On your host machine you can set up these cron commands to make backups:
 
