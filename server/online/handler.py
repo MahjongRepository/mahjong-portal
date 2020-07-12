@@ -69,8 +69,8 @@ class TournamentHandler:
                     "confirmed_players": confirmed_players
                 }
 
-        if status.current_round == self.tournament.number_of_sessions:
-            return _("The tournament is over. Thank you for participating!")
+        # if status.current_round == self.tournament.number_of_sessions:
+        #     return _("The tournament is over. Thank you for participating!")
 
         if status.end_break_time:
             now = timezone.now()
@@ -574,7 +574,8 @@ class TournamentHandler:
 
         if finished_games.count() == games.count() and not status.end_break_time:
             if status.current_round == self.tournament.number_of_sessions:
-                self.create_notification(TournamentNotification.TOURNAMENT_FINISHED)
+                pass
+                # self.create_notification(TournamentNotification.TOURNAMENT_FINISHED)
             else:
                 index = status.current_round - 1
                 break_minutes = self.TOURNAMENT_BREAKS_TIME[index]
