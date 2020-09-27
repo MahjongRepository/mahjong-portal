@@ -124,6 +124,7 @@ class TelegramBot:
     @staticmethod
     def open_registration(update: Update, context: CallbackContext):
         logger.info("Open confirmation stage")
+        logger.info(f"Chat ID {update.message.chat_id}")
         tournament_handler.open_registration()
         context.bot.send_message(chat_id=update.message.chat_id, text="Ok")
 
@@ -138,7 +139,8 @@ class TelegramBot:
 
         try:
             message = tournament_handler.get_notification_text("ru", notification)
-            context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
+            # context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
+            context.bot.send_message(chat_id=f"{settings.TELEGRAM_CHANNEL_NAME}", text=message)
 
             notification.is_processed = True
             notification.save()
