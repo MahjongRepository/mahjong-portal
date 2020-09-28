@@ -23,7 +23,6 @@ from online.models import (
 )
 from online.parser import TenhouParser
 from player.models import Player
-from player.tenhou.management.commands.add_tenhou_account import get_started_date_for_account
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
 from utils.pantheon import add_tenhou_game_to_pantheon, add_user_to_pantheon, get_pantheon_swiss_sortition
