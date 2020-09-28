@@ -9,7 +9,8 @@
     <div>
         <h2>{% trans 'MahjongSoul accounts' %}</h2>
 
-        <p>{% trans 'Statistics are updating once an hour.'|urlize %}</p>
+        {# <p>{% trans 'Statistics are updating once an hour.'|urlize %}</p> #}
+
         <div class="filters">
             <a href="{% url 'ms_accounts' 'four' %}">
                 <span class="badge badge-{% if four_players %}success{% else %}primary{% endif %}">{% trans 'four players' %}</span>
