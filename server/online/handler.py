@@ -473,22 +473,10 @@ class TournamentHandler:
         return message
 
     def make_sortition(self, pantheon_ids, current_round):
-        sortition = [
-            [[231, 570, 235, 9],   [225, 227, 315, 390], [262, 214, 847, 10],  [230, 218, 432, 391], [319, 252, 65, 723]],
-            [[235, 230, 315, 262], [231, 847, 319, 218], [390, 10, 391, 252],  [432, 225, 723, 570], [65, 214, 227, 9]],
-            [[9, 10, 218, 225],    [227, 570, 319, 262], [847, 252, 432, 315], [391, 214, 235, 723], [390, 230, 231, 65]],
-            [[390, 235, 319, 432], [225, 262, 252, 231], [315, 214, 570, 218], [847, 723, 230, 9],   [65, 227, 391, 10]],
-            [[231, 432, 214, 227], [391, 319, 9, 315],   [10, 252, 570, 230],  [218, 262, 390, 723], [847, 65, 235, 225]],
-            [[319, 225, 230, 214], [227, 235, 252, 218], [65, 9, 262, 432],    [570, 390, 847, 391], [231, 723, 10, 315]],
-            [[235, 10, 319, 432],  [391, 225, 262, 231], [315, 570, 65, 218],  [252, 9, 214, 390],   [227, 230, 723, 847]]
-        ]
-        return sortition[current_round - 1]
-
-    # def make_sortition(self, pantheon_ids, current_round):
-    #     if current_round == 1:
-    #         return self._random_sortition(pantheon_ids)
-    #     else:
-    #         return get_pantheon_swiss_sortition()
+        if current_round == 1:
+            return self._random_sortition(pantheon_ids)
+        else:
+            return get_pantheon_swiss_sortition()
 
     def start_games(self):
         status = self.get_status()

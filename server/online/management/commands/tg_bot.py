@@ -139,8 +139,7 @@ class TelegramBot:
 
         try:
             message = tournament_handler.get_notification_text("ru", notification)
-            # context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
-            context.bot.send_message(chat_id=f"{settings.TELEGRAM_CHANNEL_NAME}", text=message)
+            context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
 
             notification.is_processed = True
             notification.save()
