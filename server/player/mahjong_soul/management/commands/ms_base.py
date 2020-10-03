@@ -66,7 +66,6 @@ class MSBaseCommand(BaseCommand):
         channel = MSRPCChannel(endpoint)
 
         lobby = Lobby(channel)
-        lobby.version = version
 
         await channel.connect(MS_HOST)
         print("Connection was established")
@@ -81,10 +80,8 @@ class MSBaseCommand(BaseCommand):
         req = pb.ReqLogin()
         req.account = username
         req.password = hmac.new(b"lailai", password.encode(), hashlib.sha256).hexdigest()
-        req.device.device_type = "pc"
-        req.device.browser = "safari"
+        req.device.is_browser = True
         req.random_key = uuid_key
-        req.client_version = lobby.version
         req.gen_access_token = True
         req.currency_platforms.append(2)
 
