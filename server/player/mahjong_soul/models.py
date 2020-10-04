@@ -78,11 +78,11 @@ class MSAccountStatistic(models.Model):
             return 20000
 
     def get_points_history_for_latest_rank(self):
-        data = MSPointsHistory.objects.filter(stat_object=self).order_by("-rank")
-        rank = data and data.first().rank or None
-        if not rank:
-            return []
-        return MSPointsHistory.objects.filter(stat_object=self, rank=rank).order_by("created_on")
+        history = MSPointsHistory.objects.filter(stat_object=self).order_by("-rank_index")
+        rank_index = getattr(history.first(), "rank_index", None)
+        if rank_index is None:
+            return MSPointsHistory.objects.none()
+        return history.filter(rank_index=rank_index).order_by("created_on")
 
     def last_played_date(self):
         data = MSPointsHistory.objects.filter(stat_object=self).order_by("-created_on")
