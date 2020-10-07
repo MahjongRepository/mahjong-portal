@@ -151,11 +151,9 @@
                                     {% trans 'Delete' %}
                                 </a>
 
-                                {% if not tournament.is_online %}
-                                    <a href="{% url 'toggle_highlight' tournament.id registration_item.id %}" class="btn btn-primary" style="margin-top: 5px">
-                                        {% trans 'Color' %}
-                                    </a>
-                                {% endif %}
+                                <a href="{% url 'toggle_highlight' tournament.id registration_item.id %}" class="btn btn-primary" style="margin-top: 5px">
+                                    {% trans 'Color' %}
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
