@@ -117,8 +117,7 @@ class MSBaseCommand(BaseCommand):
 
         request = pb.ReqOauth2Login()
         request.access_token = data["access_token"]
-        request.device.device_type = "pc"
-        request.device.browser = "safari"
+        request.device.is_browser = True
         request.random_key = data["random_key"]
         request.client_version = lobby.version
         request.currency_platforms.append(2)
