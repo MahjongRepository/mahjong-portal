@@ -1,4 +1,5 @@
 import csv
+import typing as ty
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect, render
@@ -8,6 +9,16 @@ from system.decorators import tournament_manager_auth_required
 from system.tournament_admin.forms import TournamentForm, UploadResultsForm
 from tournament.models import OnlineTournamentRegistration, Tournament, TournamentRegistration, TournamentResult
 from utils.general import transliterate_name
+
+
+def update_placing(rows: ty.List[list]) -> None:
+    """Update players placing according to their score."""
+    rows.sort(key=lambda row: (-row[5], -row[3]))  # ORDER BY games DESC, scores DESC
+    place, scores, games = None, None, None
+    for i, row in enumerate(rows, start=1):
+        if row[3] != scores or row[5] != games:
+            place, scores, games = i, row[3], row[5]
+        row[0] = place
 
 
 @login_required
@@ -40,10 +51,10 @@ def upload_results(request, tournament_id):
 
             filtered_results = []
             for row in reader:
-                place = row["place"]
+                place = int(row["place"])
                 name = row.get("name", "")
-                scores = row["scores"]
-                games = row.get("games", 0)
+                scores = int(row["scores"])
+                games = int(row.get("games", 0))
 
                 ema_id = row.get("ema", "").strip()
                 load_player = row.get("load_player", "true").strip().lower()
@@ -91,6 +102,10 @@ def upload_results(request, tournament_id):
                                 transliterate_name(first_name), first_name, transliterate_name(last_name), last_name
                             )
                         )
+
+            auto_placing: bool = form.cleaned_data.get("auto_placing", False)
+            if auto_placing:
+                update_placing(filtered_results)
 
             # everything is fine
             if not not_found_users:
