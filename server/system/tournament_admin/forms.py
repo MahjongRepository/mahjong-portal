@@ -7,6 +7,7 @@ class UploadResultsForm(forms.Form):
     csv_file = forms.FileField()
     switch_names = forms.BooleanField(required=False)
     ema = forms.BooleanField(required=False)
+    auto_placing = forms.BooleanField(required=False, initial=True)
 
 
 class TournamentForm(forms.ModelForm):
