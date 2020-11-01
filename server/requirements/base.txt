@@ -7,7 +7,7 @@ python-dateutil==2.8.1
 ms-api==0.8.125
 
 python-telegram-bot==12.8
-discord.py==1.3.3
+discord.py==1.5.1
 
 pymorphy2==0.8
 pymorphy2-dicts-ru==2.4.404381.4453942

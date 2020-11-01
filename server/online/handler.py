@@ -434,6 +434,7 @@ class TournamentHandler:
 
             # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
             from online.team_seating import TeamSeating
+
             sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
