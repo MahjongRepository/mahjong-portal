@@ -363,6 +363,8 @@ class TournamentHandler:
             return _("The tenhou.net nickname must not be longer than eight characters.")
 
         try:
+            print(tenhou_nickname)
+            print(self.tournament.id)
             registration = OnlineTournamentRegistration.objects.get(
                 tenhou_nickname=tenhou_nickname, tournament=self.tournament
             )
