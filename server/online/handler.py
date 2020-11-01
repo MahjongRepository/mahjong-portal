@@ -363,17 +363,15 @@ class TournamentHandler:
             return _("The tenhou.net nickname must not be longer than eight characters.")
 
         try:
-            print(tenhou_nickname)
-            print(self.tournament.id)
             registration = OnlineTournamentRegistration.objects.get(
-                tenhou_nickname=tenhou_nickname, tournament=self.tournament
+                tenhou_nickname__iexact=tenhou_nickname, tournament=self.tournament
             )
         except OnlineTournamentRegistration.DoesNotExist:
             return _(
                 "Your tenhou.net username is out of tournament registration list. Contact the administrator %(admin_username)s."
             ) % {"admin_username": self.get_admin_username()}
 
-        if TournamentPlayers.objects.filter(tenhou_username=tenhou_nickname, tournament=self.tournament).exists():
+        if TournamentPlayers.objects.filter(tenhou_nickname__iexact=tenhou_nickname, tournament=self.tournament).exists():
             return _('Nickname "%(tenhou_nickname)s" was already confirmed for this tournament.') % {
                 "tenhou_nickname": tenhou_nickname
             }
