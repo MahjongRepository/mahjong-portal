@@ -371,7 +371,9 @@ class TournamentHandler:
                 "Your tenhou.net username is out of tournament registration list. Contact the administrator %(admin_username)s."
             ) % {"admin_username": self.get_admin_username()}
 
-        if TournamentPlayers.objects.filter(tenhou_username__iexact=tenhou_nickname, tournament=self.tournament).exists():
+        if TournamentPlayers.objects.filter(
+            tenhou_username__iexact=tenhou_nickname, tournament=self.tournament
+        ).exists():
             return _('Nickname "%(tenhou_nickname)s" was already confirmed for this tournament.') % {
                 "tenhou_nickname": tenhou_nickname
             }
