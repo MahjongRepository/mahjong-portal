@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 06:42+0000\n"
+"POT-Creation-Date: 2020-12-17 04:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,50 +82,46 @@ msgstr "Клуб \"%(name)s\" в %(place)s"
 msgid "Riichi mahjong player %(name)s from %(place)s"
 msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
-#: online/handler.py:65
+#: online/handler.py:63
 #, python-format
 msgid "Games will start soon. Confirmed players: %(confirmed_players)s."
 msgstr "Игры скоро начнутся. Подтвержденных игроков: %(confirmed_players)s."
 
-#: online/handler.py:69
+#: online/handler.py:67
 #, python-format
 msgid ""
 "Confirmation phase is in progress. Confirmed players: %(confirmed_players)s."
 msgstr ""
 "Идёт этап подтверждения. Подтвержденных игроков: %(confirmed_players)s."
 
-#: online/handler.py:74 online/handler.py:709
-msgid "The tournament is over. Thank you for participating!"
-msgstr "Турнир завершён. Спасибо за участие!"
-
-#: online/handler.py:80
+#: online/handler.py:78
 msgid "Games will start soon."
 msgstr "Ждём начала нового тура."
 
-#: online/handler.py:139
+#: online/handler.py:137
 #, python-format
 msgid "Break. The next tour will start in %(date)s."
 msgstr "Перерыв. Следующий тур начнётся через %(date)s."
 
-#: online/handler.py:161
+#: online/handler.py:159
 #, python-format
 msgid "Stage %(current_round)s of %(total_rounds)s."
 msgstr "Тур %(current_round)s из %(total_rounds)s."
 
-#: online/handler.py:167
+#: online/handler.py:165
 #, python-format
 msgid "Finished games: %(finished)s/%(total)s."
 msgstr "Игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:174
+#: online/handler.py:172
 msgid "Several games could not start. The administrator will fix this soon."
 msgstr "Несколько игр не смогли запуститься. Администратор скоро это исправит."
 
-#: online/handler.py:229
+#: online/handler.py:227
 msgid "This is not looks like a link to the game log."
 msgstr "Это не похоже на ссылку на лог игры."
 
-#: online/handler.py:249
+#: online/handler.py:247
 msgid ""
 "Fail to add this game. Try again in a moment or you havn't copied the entire "
 "link of the game log."
@@ -133,27 +129,27 @@ msgstr ""
 "Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не "
 "весь log id."
 
-#: online/handler.py:254 online/handler.py:356
+#: online/handler.py:252 online/handler.py:354
 msgid "The game has been added. Thank you."
 msgstr "Игра была добавлена. Спасибо."
 
-#: online/handler.py:262
+#: online/handler.py:260
 #, python-format
 msgid "Fail to add game log. Contact the administrator %(admin_username)s."
 msgstr ""
 "Произошла ошибка при добавлении лога. Обратитесь к администратору "
 "%(admin_username)s."
 
-#: online/handler.py:362
+#: online/handler.py:360
 msgid "The confirmation phase has already ended. Visit our next tournaments."
 msgstr ""
 "Этап подтверждения участия уже завершился. Приходите на следующий турнир."
 
-#: online/handler.py:365
+#: online/handler.py:363
 msgid "The tenhou.net nickname must not be longer than eight characters."
 msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
 
-#: online/handler.py:373
+#: online/handler.py:371
 #, python-format
 msgid ""
 "Your tenhou.net username is out of tournament registration list. Contact the "
@@ -168,22 +164,11 @@ msgid ""
 "Nickname \"%(tenhou_nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на турнир."
 
-#: online/handler.py:384
-#, python-format
-msgid ""
-"Nickname \"%(tenhou_nickname)s\" doesn't have game records. Are you sure it "
-"is spelled correctly? Case of letters is important! Contact admin "
-"%(admin_username)s."
-msgstr ""
-"Ником \"%(tenhou_nickname)s\" ещё не играли на тенхе. Вы уверены, что он "
-"правильно написан? Регистр важен! Обратитесь к администратору "
-"%(admin_username)s."
-
 #: online/handler.py:405
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:658
+#: online/handler.py:662
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -202,7 +187,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:671
+#: online/handler.py:675
 #, python-format
 msgid ""
 "New game was added.\n"
@@ -235,19 +220,19 @@ msgstr ""
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:684
+#: online/handler.py:688
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
-"starts **in 10 minutes**. Please, follow this link %(lobby_link)s to enter "
-"the tournament lobby. Games will start automatically."
+"starts in 10 minutes. Please, follow this link %(lobby_link)s to enter the "
+"tournament lobby. Games will start automatically."
 msgstr ""
 "Этап подтверждение закончился! Подтвердили своё участие "
-"%(confirmed_players)s игроков. Игры начнутся **через 10 минут**. Пожалуйста, "
+"%(confirmed_players)s игроков. Игры начнутся через 10 минут. Пожалуйста, "
 "пройдите в лобби %(lobby_link)s и ждите начала игр (игры начнутся "
 "автоматически)."
 
-#: online/handler.py:690
+#: online/handler.py:694
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -269,7 +254,7 @@ msgstr ""
 "Это поможет сократить время турнира и разгрузит админов. Пока ВСЕ ссылки на "
 "игры не будут добавлены, следующий тур запустить не получится."
 
-#: online/handler.py:698
+#: online/handler.py:702
 #, python-format
 msgid ""
 "Game: %(players)s is not started. The table was moved to the end of the "
@@ -278,21 +263,26 @@ msgstr ""
 "Стол: %(players)s не получилось запустить. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:701
+#: online/handler.py:705
 #, python-format
 msgid ""
 "Game: %(players)s is not started. Missed players %(missed_players)s. The "
-"table was moved to the end of the queue."
+"table was moved to the end of the queue. \n"
+"\n"
+"Missed players please enter the tournament lobby: %(lobby_link)s."
 msgstr ""
 "Стол: %(players)s не получилось запустить. Отсутствующие игроки "
-"%(missed_players)s. Стол был отодвинут в конец очереди."
+"%(missed_players)s. Стол был отодвинут в конец очереди. \n"
+"\n"
+"Отсутствующие игроки зайдите (или перезайдите) в турнирное лобби: "
+"%(lobby_link)s."
 
-#: online/handler.py:704
+#: online/handler.py:709
 #, python-format
 msgid "Game: %(players)s started."
 msgstr "Стол: %(players)s запущен."
 
-#: online/handler.py:706
+#: online/handler.py:711
 #, python-format
 msgid ""
 "All games finished. Next round starts in %(break_minutes)s minutes.\n"
@@ -303,6 +293,10 @@ msgstr ""
 "минут.\n"
 "\n"
 "Игровое лобби: %(lobby_link)s"
+
+#: online/handler.py:714
+msgid "The tournament is over. Thank you for participating!"
+msgstr "Турнир завершён. Спасибо за участие!"
 
 #: online/management/commands/ds_bot.py:118
 #, python-format
@@ -326,7 +320,7 @@ msgstr ""
 #, python-format
 msgid ""
 "2.1. Team statistics:\n"
-" <%(rating_link)s/team> \n"
+" <%(rating_link)s>/team \n"
 msgstr ""
 "2. Командная статистика:\n"
 " <%(rating_link)s/team> \n"
@@ -452,6 +446,12 @@ msgstr "Текущие игры на tenhou.net"
 #: templates/tenhou/tenhou_accounts.html:74
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
+
+#: templates/base.html:80 templates/ms/ms_accounts.html:5
+#: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:76
+#: templates/ms/ms_accounts.html:77
+msgid "MahjongSoul accounts"
+msgstr "Аккаунты на MahjongSoul"
 
 #: templates/base.html:81 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
@@ -616,7 +616,7 @@ msgstr "Обновлялось"
 msgid "Riichi mahjong russian clubs"
 msgstr "Российские риичи маджонг клубы"
 
-#: templates/club/list.html:20 templates/ms/ms_accounts.html:31
+#: templates/club/list.html:20 templates/ms/ms_accounts.html:32
 #: templates/tenhou/tenhou_accounts.html:24
 #: templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:64
@@ -687,28 +687,17 @@ msgstr "Б часть"
 msgid "Total Quota"
 msgstr "Всего квот"
 
-#: templates/ms/ms_accounts.html:5 templates/ms/ms_accounts.html:10
-#: templates/ms/ms_accounts.html:75 templates/ms/ms_accounts.html:76
-msgid "MahjongSoul accounts"
-msgstr "Аккаунты на MahjongSoul"
-
-#: templates/ms/ms_accounts.html:12
-msgid "Statistics are updating once an hour."
-msgstr ""
-"Статистика обновляется раз в час. Добавить свой аккаунт можно написав в "
-"личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
-
-#: templates/ms/ms_accounts.html:15 templates/ms/ms_accounts.html:75
-#: templates/ms/ms_accounts.html:76
+#: templates/ms/ms_accounts.html:16 templates/ms/ms_accounts.html:76
+#: templates/ms/ms_accounts.html:77
 msgid "four players"
 msgstr "четыре игрока"
 
-#: templates/ms/ms_accounts.html:18 templates/ms/ms_accounts.html:75
-#: templates/ms/ms_accounts.html:76
+#: templates/ms/ms_accounts.html:19 templates/ms/ms_accounts.html:76
+#: templates/ms/ms_accounts.html:77
 msgid "sanma"
 msgstr "хиросима"
 
-#: templates/ms/ms_accounts.html:26 templates/tenhou/games_history.html:19
+#: templates/ms/ms_accounts.html:27 templates/tenhou/games_history.html:19
 #: templates/tenhou/games_history.html:57
 #: templates/tenhou/latest_yakumans.html:17
 #: templates/tenhou/tenhou_accounts.html:18 templates/website/iormc.html:37
@@ -716,24 +705,24 @@ msgstr "хиросима"
 msgid "Player"
 msgstr "Игрок"
 
-#: templates/ms/ms_accounts.html:27 templates/player/details.html:107
+#: templates/ms/ms_accounts.html:28 templates/player/details.html:107
 #: templates/player/tenhou.html:44 templates/player/tenhou.html:134
 #: templates/tenhou/games_history.html:58
 msgid "Rank"
 msgstr "Ранг"
 
-#: templates/ms/ms_accounts.html:28 templates/player/_changes_table.html:9
+#: templates/ms/ms_accounts.html:29 templates/player/_changes_table.html:9
 #: templates/player/ms.html:24 templates/player/ms.html:64
 #: templates/player/tenhou.html:93 templates/rating/_results_table.html:20
 #: templates/website/_qualification_table.html:13
 msgid "Points"
 msgstr "Очки"
 
-#: templates/ms/ms_accounts.html:29
+#: templates/ms/ms_accounts.html:30
 msgid "Account"
 msgstr "Аккаунт"
 
-#: templates/ms/ms_accounts.html:30 templates/player/details.html:111
+#: templates/ms/ms_accounts.html:31 templates/player/details.html:111
 #: templates/player/details.html:139 templates/player/ms.html:110
 #: templates/player/ms.html:203 templates/player/tenhou.html:174
 #: templates/player/tenhou.html:237 templates/tenhou/tenhou_accounts.html:23
@@ -1017,12 +1006,6 @@ msgstr "часов потратили"
 #: templates/tenhou/games_history.html:60
 msgid "Delta"
 msgstr "Дельта"
-
-#: templates/tenhou/tenhou_accounts.html:11
-msgid "Statistics are updating every 5 minutes."
-msgstr ""
-"Статистика обновляется каждые 5 минут. Добавить свой аккаунт можно написав в "
-"личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
 
 #: templates/tenhou/tenhou_accounts.html:19
 #: templates/tournament/announcement.html:68 templates/website/city.html:47
@@ -1321,11 +1304,11 @@ msgstr "Одобрить"
 msgid "Delete"
 msgstr "Удалить"
 
-#: templates/tournament_admin/tournament_manage.html:156
+#: templates/tournament_admin/tournament_manage.html:155
 msgid "Color"
 msgstr "Цвет"
 
-#: templates/tournament_admin/tournament_manage.html:166
+#: templates/tournament_admin/tournament_manage.html:164
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
@@ -1663,3 +1646,22 @@ msgstr "Тсуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казое"
+
+#~ msgid ""
+#~ "Nickname \"%(tenhou_nickname)s\" doesn't have game records. Are you sure "
+#~ "it is spelled correctly? Case of letters is important! Contact admin "
+#~ "%(admin_username)s."
+#~ msgstr ""
+#~ "Ником \"%(tenhou_nickname)s\" ещё не играли на тенхе. Вы уверены, что он "
+#~ "правильно написан? Регистр важен! Обратитесь к администратору "
+#~ "%(admin_username)s."
+
+#~ msgid "Statistics are updating once an hour."
+#~ msgstr ""
+#~ "Статистика обновляется раз в час. Добавить свой аккаунт можно написав в "
+#~ "личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
+
+#~ msgid "Statistics are updating every 5 minutes."
+#~ msgstr ""
+#~ "Статистика обновляется каждые 5 минут. Добавить свой аккаунт можно "
+#~ "написав в личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"

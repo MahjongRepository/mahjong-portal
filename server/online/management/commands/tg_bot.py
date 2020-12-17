@@ -8,13 +8,14 @@ from django.utils.translation import activate
 from telegram import ParseMode, Update
 from telegram.error import BadRequest, ChatMigrated, NetworkError, TelegramError, TimedOut, Unauthorized
 from telegram.ext import CallbackContext, CommandHandler, Defaults, Filters, MessageHandler, Updater
+from telegram.utils.helpers import escape_markdown
 
 from online.handler import TournamentHandler
 from online.models import TournamentGame, TournamentNotification
 from tournament.models import Tournament
 from utils.logs import set_up_logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("tournament_bot")
 tournament_handler = TournamentHandler()
 
 
@@ -53,7 +54,7 @@ class TelegramBot:
             TournamentHandler.TELEGRAM_DESTINATION,
         )
 
-        defaults = Defaults(parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+        defaults = Defaults(parse_mode=ParseMode.MARKDOWN_V2, disable_web_page_preview=True)
         updater = Updater(token=settings.TELEGRAM_TOKEN, use_context=True, defaults=defaults)
         dispatcher = updater.dispatcher
 
@@ -63,7 +64,8 @@ class TelegramBot:
         help_handler = CommandHandler("help", TelegramBot.help_bot)
 
         # background task
-        updater.job_queue.run_repeating(TelegramBot.check_new_notifications, interval=3, first=0)
+        logging.getLogger("apscheduler.executors.default").setLevel(logging.CRITICAL)
+        updater.job_queue.run_repeating(TelegramBot.check_new_notifications, interval=2, first=0)
 
         dispatcher.add_handler(
             CommandHandler(
@@ -139,9 +141,13 @@ class TelegramBot:
 
         try:
             message = tournament_handler.get_notification_text("ru", notification)
+            message = escape_markdown(message, version=2)
+            message = message.replace("\`", "`")  # noqa: W605
+
             context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
 
             notification.is_processed = True
+            notification.failed = False
             notification.save()
 
             logger.info(f"Notification id={notification.id} sent")

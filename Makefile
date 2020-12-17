@@ -26,6 +26,23 @@ initial_data:
 test:
 	docker-compose -f local.yml run -u `id -u` --rm web python manage.py test --noinput
 
+# usage example "make db_restore dump=~/Downloads/edcat.sql"
+db_restore:
+	docker-compose -f local.yml up --detach db
+
+	docker-compose -f local.yml run --rm db bash -c \
+  	'PGPASSWORD=$$POSTGRES_PASSWORD dropdb -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB --if-exists' \
+  	--env-file .envs/.local/.postgres
+
+	docker-compose -f local.yml run --rm db bash -c \
+	'PGPASSWORD=$$POSTGRES_PASSWORD createdb -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB' \
+	--env-file .envs/.local/.postgres
+
+	docker-compose -f local.yml run \
+	-v $(dump):/tmp/dump.sql \
+	--rm db bash -c 'PGPASSWORD=$$POSTGRES_PASSWORD psql -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB < /tmp/dump.sql' \
+	--env-file .envs/.local/.postgres
+
 #### Code formatters and linters ####
 
 lint: lint-isort lint-python-code-style lint-flake8

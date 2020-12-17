@@ -13,7 +13,7 @@ from online.models import TournamentNotification
 from tournament.models import Tournament
 from utils.logs import set_up_logging
 
-logger = logging.getLogger()
+logger = logging.getLogger("tournament_bot")
 
 
 class Command(BaseCommand):

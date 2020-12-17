@@ -27,7 +27,7 @@ from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
 from utils.pantheon import add_tenhou_game_to_pantheon, add_user_to_pantheon, get_pantheon_swiss_sortition
 
-logger = logging.getLogger()
+logger = logging.getLogger("tournament_bot")
 
 
 class TournamentHandler:
@@ -548,6 +548,7 @@ class TournamentHandler:
                     kwargs={
                         "players": ", ".join(escaped_player_names),
                         "missed_players": ", ".join(missed_player_nicknames),
+                        "lobby_link": self.get_lobby_link(),
                     },
                 )
             else:
@@ -685,7 +686,7 @@ class TournamentHandler:
             ),
             TournamentNotification.CONFIRMATION_ENDED: _(
                 "Confirmation stage has ended, there are %(confirmed_players)s players. "
-                "Games starts **in 10 minutes**. "
+                "Games starts in 10 minutes. "
                 "Please, follow this link %(lobby_link)s to enter the tournament lobby. "
                 "Games will start automatically."
             ),
@@ -701,8 +702,9 @@ class TournamentHandler:
                 "Game: %(players)s is not started. The table was moved to the end of the queue."
             ),
             TournamentNotification.GAME_FAILED_NO_MEMBERS: _(
-                "Game: %(players)s is not started. "
-                "Missed players %(missed_players)s. The table was moved to the end of the queue."
+                "Game: %(players)s is not started. Missed players %(missed_players)s. "
+                "The table was moved to the end of the queue. \n\n"
+                "Missed players please enter the tournament lobby: %(lobby_link)s."
             ),
             TournamentNotification.GAME_STARTED: _("Game: %(players)s started."),
             TournamentNotification.ROUND_FINISHED: _(

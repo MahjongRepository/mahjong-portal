@@ -143,7 +143,13 @@ class TournamentNotificationAdmin(admin.ModelAdmin):
         "created_on",
         "updated_on",
     ]
-    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "is_processed", "failed", "destination"]
+    list_filter = [
+        ["tournament", admin.RelatedOnlyFieldListFilter],
+        "notification_type",
+        "is_processed",
+        "failed",
+        "destination",
+    ]
 
 
 admin.site.register(TournamentStatus, TournamentStatusAdmin)
