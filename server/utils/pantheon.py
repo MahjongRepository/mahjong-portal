@@ -26,6 +26,7 @@ def add_user_to_pantheon(record: TournamentPlayers):
             "alias": "",
             "displayName": "",
             "tenhouId": record.tenhou_username,
+            "isReplacement": "",
         },
         "id": make_random_letters_and_digit_string(),
     }

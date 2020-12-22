@@ -7,6 +7,7 @@ from random import randint
 from typing import Dict, Optional
 from urllib.parse import parse_qs, unquote, urlparse
 
+import pytz
 import requests
 from django.conf import settings
 from django.db import transaction
@@ -60,7 +61,7 @@ class TournamentHandler:
         if not status.current_round:
             confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
             if status.registration_closed:
-                return _("Games will start soon. Confirmed players: %(confirmed_players)s.") % {
+                return _("Games will start at 7-30 AM UTC. Confirmed players: %(confirmed_players)s.") % {
                     "confirmed_players": confirmed_players
                 }
             else:
@@ -434,10 +435,9 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
-            from online.team_seating import TeamSeating
-
-            sortition = TeamSeating.get_seating_for_round(status.current_round)
+            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            # from online.team_seating import TeamSeating
+            # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
             for item in sortition:
@@ -587,7 +587,12 @@ class TournamentHandler:
                 status.save()
                 self.create_notification(
                     TournamentNotification.ROUND_FINISHED,
-                    {"break_minutes": break_minutes, "lobby_link": self.get_lobby_link()},
+                    {
+                        "break_minutes": break_minutes,
+                        "lobby_link": self.get_lobby_link(),
+                        "current_round": status.current_round + 1,
+                        "total_rounds": self.tournament.number_of_sessions,
+                    },
                 )
         else:
             return None
@@ -635,6 +640,8 @@ class TournamentHandler:
     ):
         activate(lang)
 
+        status = self.get_status()
+
         kwargs = copy(notification.message_kwargs)
         if extra_kwargs:
             kwargs.update(extra_kwargs)
@@ -670,6 +677,24 @@ class TournamentHandler:
                     % kwargs
                 )
 
+        if notification.notification_type == TournamentNotification.ROUND_FINISHED:
+            if self.destination == TournamentHandler.DISCORD_DESTINATION:
+                kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.UTC).strftime("%H-%M")
+
+            if self.destination == TournamentHandler.TELEGRAM_DESTINATION:
+                kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.timezone("Europe/Moscow")).strftime(
+                    "%H-%M"
+                )
+
+            return (
+                _(
+                    "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
+                    "starts in %(break_minutes)s minutes at %(break_end)s UTC.\n\n"
+                    "Tournament lobby: %(lobby_link)s"
+                )
+                % kwargs
+            )
+
         messages = {
             TournamentNotification.GAME_ENDED: _(
                 "New game was added.\n\n"
@@ -686,7 +711,7 @@ class TournamentHandler:
             ),
             TournamentNotification.CONFIRMATION_ENDED: _(
                 "Confirmation stage has ended, there are %(confirmed_players)s players. "
-                "Games starts in 10 minutes. "
+                "Games starts in 10 minutes at 7-30 AM UTC. "
                 "Please, follow this link %(lobby_link)s to enter the tournament lobby. "
                 "Games will start automatically."
             ),
@@ -694,9 +719,10 @@ class TournamentHandler:
                 "Round %(current_round)s of %(total_rounds)s starts. "
                 "Tournament seating is ready.\n\n"
                 "Starting games...\n\n"
-                "After the game please send a link to the game log, "
-                "it will save some time for the tournament admin "
-                "(without all collected logs we can't finish the tournament round)."
+                "After the game please send the game log link to the #game_logs channel. "
+                "The game log should be sent before the new round starts. "
+                "If there is no log, all players from this game "
+                "will get -30000 scores as a round result (their real scores will not be counted). "
             ),
             TournamentNotification.GAME_FAILED: _(
                 "Game: %(players)s is not started. The table was moved to the end of the queue."
@@ -707,12 +733,9 @@ class TournamentHandler:
                 "Missed players please enter the tournament lobby: %(lobby_link)s."
             ),
             TournamentNotification.GAME_STARTED: _("Game: %(players)s started."),
-            TournamentNotification.ROUND_FINISHED: _(
-                "All games finished. Next round starts in %(break_minutes)s minutes.\n\n"
-                "Tournament lobby: %(lobby_link)s"
-            ),
             TournamentNotification.TOURNAMENT_FINISHED: _("The tournament is over. Thank you for participating!"),
         }
+
         return messages.get(notification.notification_type) % kwargs
 
     def get_lobby_link(self):

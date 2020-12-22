@@ -50,13 +50,20 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
         "username",
         "tenhou_username",
         "pantheon_id",
-        "team_name",
-        "team_number",
-        "add_to_pantheon_action",
-        "disable_in_pantheon_sortition",
+        "is_replacement",
+        # "team_name",
+        # "team_number",
+        "pantheon",
+        "sortition",
+        "replacement",
     ]
 
-    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "added_to_pantheon", "enabled_in_pantheon"]
+    list_filter = [
+        ["tournament", admin.RelatedOnlyFieldListFilter],
+        "added_to_pantheon",
+        "enabled_in_pantheon",
+        "is_replacement",
+    ]
 
     def player(self, obj):
         if obj.pantheon_id:
@@ -78,7 +85,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
         return None
 
-    def add_to_pantheon_action(self, obj):
+    def pantheon(self, obj):
         if not obj.pantheon_id:
             return mark_safe('<span style="background-color: red; padding: 5px;">MISSED PANTHEON ID</span>')
 
@@ -88,7 +95,11 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
         return "Added"
 
-    def disable_in_pantheon_sortition(self, obj):
+    def replacement(self, obj):
+        url = reverse("toggle_replacement_flag_in_pantheon", kwargs={"record_id": obj.id})
+        return mark_safe(f'<a href="{url}" class="button">Set: {not obj.is_replacement}</a>')
+
+    def sortition(self, obj):
         if obj.enabled_in_pantheon:
             url = reverse("disable_user_in_pantheon", kwargs={"record_id": obj.id})
             return mark_safe('<a href="{}" class="button">Disable</a>'.format(url))

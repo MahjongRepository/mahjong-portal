@@ -141,10 +141,20 @@ class TelegramBot:
 
         try:
             message = tournament_handler.get_notification_text("ru", notification)
-            message = escape_markdown(message, version=2)
-            message = message.replace("\`", "`")  # noqa: W605
+            message = TelegramBot.escape_tg_message(message)
 
-            context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
+            sent_message = context.bot.send_message(chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}", text=message)
+            pin_types = [
+                TournamentNotification.ROUND_FINISHED,
+                TournamentNotification.CONFIRMATION_ENDED,
+                TournamentNotification.TOURNAMENT_FINISHED,
+            ]
+            if notification.notification_type in pin_types:
+                context.bot.pin_chat_message(
+                    chat_id=f"@{settings.TELEGRAM_CHANNEL_NAME}",
+                    message_id=sent_message.message_id,
+                    disable_notification=False,
+                )
 
             notification.is_processed = True
             notification.failed = False
@@ -162,13 +172,14 @@ class TelegramBot:
         activate("ru")
 
         if not len(context.args):
-            update.message.reply_text("Укажите ссылку на ханчан после команды.")
+            update.message.reply_text(TelegramBot.escape_tg_message("Укажите ссылку на ханчан после команды."))
             return
 
         # it can take some time to add log, so lets show typing notification
         context.bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 
         message, success = tournament_handler.add_game_log(context.args[0])
+        message = TelegramBot.escape_tg_message(message)
         update.message.reply_text(message)
 
     @staticmethod
@@ -176,6 +187,7 @@ class TelegramBot:
         logger.info("Get tournament status command")
         activate("ru")
         message = tournament_handler.get_tournament_status()
+        message = TelegramBot.escape_tg_message(message)
         context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
     @staticmethod
@@ -200,6 +212,7 @@ class TelegramBot:
             "8. Как открыть турнирное лобби с мобильного/нового приложения?\n https://imgur.com/gallery/vcjsODf \n"
         )
         message += "9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e"
+        message = TelegramBot.escape_tg_message(message)
         context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
     @staticmethod
@@ -208,7 +221,7 @@ class TelegramBot:
         logger.info("Nickname command. {}, {}".format(update.message.from_user.username, context.args))
 
         if not len(context.args):
-            update.message.reply_text(text="Укажите ваш tenhou.net ник после команды.")
+            update.message.reply_text(text=TelegramBot.escape_tg_message("Укажите ваш tenhou.net ник после команды."))
             return
 
         telegram_username = update.message.from_user.username
@@ -217,7 +230,7 @@ class TelegramBot:
                 "Перед привязкой tenhou.net ника нужно установить username в настройках "
                 "телеграма. Инструкция: http://telegramzy.ru/nik-v-telegramm/"
             )
-            update.message.reply_text(text)
+            update.message.reply_text(TelegramBot.escape_tg_message(text))
             return
 
         # it can take some time to validate nickname, so lets show typing notification
@@ -227,6 +240,7 @@ class TelegramBot:
         message = tournament_handler.confirm_participation_in_tournament(
             tenhou_nickname, telegram_username=telegram_username
         )
+        message = TelegramBot.escape_tg_message(message)
         update.message.reply_text(message)
 
     @staticmethod
@@ -239,6 +253,7 @@ class TelegramBot:
             return
 
         message = tournament_handler.new_tg_chat_member(username)
+        message = TelegramBot.escape_tg_message(message)
         update.message.reply_text(message)
 
     @staticmethod
@@ -246,6 +261,7 @@ class TelegramBot:
         logger.info("Prepare next round")
 
         message = tournament_handler.prepare_next_round()
+        message = TelegramBot.escape_tg_message(message)
         context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
     @staticmethod
@@ -253,7 +269,8 @@ class TelegramBot:
         logger.info("Start games")
 
         games = TournamentGame.objects.filter(status=TournamentGame.NEW)
-        context.bot.send_message(chat_id=update.message.chat_id, text="Запускаю игры...")
+        message = TelegramBot.escape_tg_message("Запускаю игры...")
+        context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
         for game in games:
             tournament_handler.start_game(game)
@@ -265,7 +282,8 @@ class TelegramBot:
         logger.info("Start failed games")
 
         games = TournamentGame.objects.filter(Q(status=TournamentGame.FAILED_TO_START) | Q(status=TournamentGame.NEW))
-        context.bot.send_message(chat_id=update.message.chat_id, text="Запускаю игры...")
+        message = TelegramBot.escape_tg_message("Запускаю игры...")
+        context.bot.send_message(chat_id=update.message.chat_id, text=message)
 
         for game in games:
             tournament_handler.start_game(game)
@@ -283,7 +301,14 @@ class TelegramBot:
         logger.info("Send team names to pantheon")
 
         message = tournament_handler.send_team_names_to_pantheon()
+        message = TelegramBot.escape_tg_message(message)
         context.bot.send_message(chat_id=update.message.chat_id, text=message)
+
+    @staticmethod
+    def escape_tg_message(message):
+        message = escape_markdown(message, version=2)
+        message = message.replace("\`", "`")  # noqa: W605
+        return message
 
     @staticmethod
     def error_callback(update: Update, context: CallbackContext):

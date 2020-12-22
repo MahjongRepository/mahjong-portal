@@ -24,8 +24,12 @@ class TournamentPlayers(BaseModel):
     tenhou_username = models.CharField(max_length=8)
 
     pantheon_id = models.PositiveIntegerField(null=True, blank=True)
+    # was user info synced with pantheon or not
     added_to_pantheon = models.BooleanField(default=False)
+    # is user added to the pantheon seating or not
     enabled_in_pantheon = models.BooleanField(default=True)
+    # affects user scores (replacement get -30000 per game)
+    is_replacement = models.BooleanField(default=False)
 
     team_name = models.CharField(max_length=1000, null=True, blank=True)
     team_number = models.PositiveIntegerField(null=True, blank=True)
