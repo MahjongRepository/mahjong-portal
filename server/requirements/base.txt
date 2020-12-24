@@ -4,7 +4,7 @@ psycopg2==2.8.5
 django-bootstrap4==2.1.1
 dj-database-url==0.5.0
 python-dateutil==2.8.1
-ms-api==0.8.125
+ms-api==0.8.188
 
 python-telegram-bot==13.1
 discord.py==1.5.1

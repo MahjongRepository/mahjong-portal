@@ -119,7 +119,6 @@ class MSBaseCommand(BaseCommand):
         request.access_token = data["access_token"]
         request.device.is_browser = True
         request.random_key = data["random_key"]
-        request.client_version = lobby.version
         request.currency_platforms.append(2)
 
         response = await lobby.oauth2_login(request)
