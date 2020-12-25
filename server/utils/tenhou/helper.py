@@ -2,8 +2,8 @@
 from datetime import datetime
 from urllib.parse import quote
 
+import pytz
 import requests
-from bs4 import BeautifulSoup
 from django.db import transaction
 
 from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouStatistics
@@ -45,7 +45,7 @@ def parse_log_line(line):
     return {"players": players, "game_rules": game_rules, "game_time": game_time, "game_length": game_length}
 
 
-def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None):
+def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None, four_players_rate=None):
     with transaction.atomic():
         games = tenhou_object.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS)
 
@@ -175,6 +175,9 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
             # we need to erase user rate when user lost 4 dan
             stat.rate = 0
 
+        if four_players_rate:
+            stat.rate = four_players_rate
+
         stat.rank = rank
         stat.pt = calculated_rank["pt"]
         stat.end_pt = calculated_rank["end_pt"]
@@ -186,98 +189,135 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         stat.save()
 
 
-def download_all_games_from_arcturus(tenhou_username, username_created_at):
-    url = "http://arcturus.su/tenhou/ranking/ranking.pl?name={}&d1={}".format(
-        quote(tenhou_username, safe=""), username_created_at.strftime("%Y%m%d")
+def download_all_games_from_nodochi(tenhou_username):
+    url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
+    response = requests.get(url).json()
+
+    lobbies_dict = {
+        "0": TenhouStatistics.KYU_LOBBY,
+        "1": TenhouStatistics.DAN_LOBBY,
+        "2": TenhouStatistics.UPPERDAN_LOBBY,
+        "3": TenhouStatistics.PHOENIX_LOBBY,
+    }
+
+    lobbies_tenhou_dict = {
+        "0": "般",
+        "1": "上",
+        "2": "特",
+        "3": "鳳",
+    }
+
+    lobbies_data = {
+        TenhouStatistics.KYU_LOBBY: {
+            "all": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+            "current_month": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+        },
+        TenhouStatistics.DAN_LOBBY: {
+            "all": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+            "current_month": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+        },
+        TenhouStatistics.UPPERDAN_LOBBY: {
+            "all": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+            "current_month": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+        },
+        TenhouStatistics.PHOENIX_LOBBY: {
+            "all": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+            "current_month": {"played_games": 0, 1: 0, 2: 0, 3: 0, 4: 0},
+        },
+    }
+
+    if response.get("rate"):
+        four_games_rate = response.get("rate").get("4", None)
+    else:
+        four_games_rate = None
+
+    account_start_date = datetime.utcfromtimestamp(int(response["rseq"][-1][0])).replace(
+        tzinfo=pytz.timezone("Asia/Tokyo")
     )
 
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, "html.parser", from_encoding="utf-8")
+    games = response.get("list", [])
 
-    places_dict = {"1位": 1, "2位": 2, "3位": 3, "4位": 4}
+    month_first_day = get_month_first_day().date()
+    month_last_day = get_month_last_day().date()
 
-    records = soup.find("div", {"id": "records"}).text.split("\n")
     player_games = []
-    for record in records:
-        if not record:
-            continue
+    for game in games:
+        # usual and phoenix games
+        if game["sctype"] == "b" or game["sctype"] == "c":
+            # api doesnt' return player place we had to assume from game results
+            place = None
+            for x in range(1, 5):
+                if game["player{}".format(x)] == tenhou_username:
+                    place = x
+                    break
 
-        temp_array = record.strip().split("|")
-        game_rules = temp_array[5].strip()[:-1]
+            if game["playlength"] == "1":
+                game_type = "東"
+            else:
+                game_type = "南"
 
-        place = places_dict[temp_array[0].strip()]
-        lobby_number = temp_array[1].strip()
+            game_date = datetime.utcfromtimestamp(int(game["starttime"])).replace(tzinfo=pytz.timezone("Asia/Tokyo"))
 
-        # we don't have game length for custom lobby
-        try:
-            game_length = int(temp_array[2].strip())
-        except ValueError:
-            game_length = None
+            lobby_name = lobbies_dict[game["playerlevel"]]
+            lobbies_data[lobby_name]["all"]["played_games"] += 1
+            lobbies_data[lobby_name]["all"][place] += 1
 
-        date = temp_array[3].strip()
-        time = temp_array[4].strip()
-        date = datetime.strptime("{} {} +0900".format(date, time), "%Y-%m-%d %H:%M %z")
+            if month_first_day <= game_date.date() <= month_last_day:
+                lobbies_data[lobby_name]["current_month"]["played_games"] += 1
+                lobbies_data[lobby_name]["current_month"][place] += 1
 
-        player_games.append(
-            {
-                "place": place,
-                "game_rules": game_rules,
-                "game_length": game_length,
-                "game_date": date,
-                "lobby_number": lobby_number,
-            }
-        )
+            # emulate game_rules string from arcturus
+            game_rules = ""
+            if int(game["playernum"]) == 4:
+                game_rules = "四"
+            else:
+                game_rules = "二"
+            game_rules += lobbies_tenhou_dict[game["playerlevel"]]
+            game_rules += game_type
 
-    return player_games
+            player_games.append(
+                {
+                    "game_date": game_date,
+                    "place": place,
+                    "lobby": lobbies_tenhou_dict[game["playerlevel"]],
+                    "game_type": game_type,
+                    "lobby_number": game.get("lobby") or "L0000",
+                    "game_rules": game_rules,
+                    "game_length": int(game.get("during") or 0),
+                }
+            )
+
+    return player_games, account_start_date, four_games_rate
 
 
 def save_played_games(tenhou_object, player_games):
     filtered_games = []
     for game in player_games:
+        if game["game_date"] < tenhou_object.username_created_at:
+            continue
+
         # let's collect stat only from usual games for 4 players
         if game["lobby_number"] == "L0000" and game["game_rules"][0] == "四":
             filtered_games.append(game)
 
     with transaction.atomic():
         for result in filtered_games:
-            TenhouGameLog.objects.get_or_create(
-                game_players=TenhouGameLog.FOUR_PLAYERS,
-                tenhou_object=tenhou_object,
-                place=result["place"],
-                game_date=result["game_date"],
-                game_rules=result["game_rules"],
-                game_length=result["game_length"],
-                lobby=lobbies_dict[result["game_rules"][1]],
-            )
-
-
-def get_started_date_for_account(tenhou_nickname):
-    url = "http://arcturus.su/tenhou/ranking/ranking.pl?name={}".format(quote(tenhou_nickname, safe=""))
-
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, "html.parser", from_encoding="utf-8")
-
-    previous_date = None
-    account_start_date = None
-
-    records = soup.find("div", {"id": "records"}).text.split("\n")
-    for record in records:
-        if not record:
-            continue
-
-        temp_array = record.strip().split("|")
-        date = datetime.strptime(temp_array[3].strip(), "%Y-%m-%d")
-
-        # let's initialize start date with first date in the list
-        if not account_start_date:
-            account_start_date = date
-
-        if previous_date:
-            delta = date - previous_date
-            # it means that account wasn't used long time and was wiped
-            if delta.days > 180:
-                account_start_date = date
-
-        previous_date = date
-
-    return account_start_date
+            try:
+                TenhouGameLog.objects.get(
+                    game_players=TenhouGameLog.FOUR_PLAYERS,
+                    tenhou_object=tenhou_object,
+                    place=result["place"],
+                    game_date=result["game_date"],
+                    lobby=lobbies_dict[result["game_rules"][1]],
+                )
+            # after moving to nodochi game_rules changed, so we can't use get_or_create anymore
+            except TenhouGameLog.DoesNotExist:
+                TenhouGameLog.objects.create(
+                    game_players=TenhouGameLog.FOUR_PLAYERS,
+                    tenhou_object=tenhou_object,
+                    place=result["place"],
+                    game_date=result["game_date"],
+                    game_rules=result["game_rules"],
+                    game_length=result["game_length"],
+                    lobby=lobbies_dict[result["game_rules"][1]],
+                )

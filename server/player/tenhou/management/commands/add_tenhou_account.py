@@ -4,8 +4,7 @@ from django.utils import timezone
 from player.models import Player
 from player.tenhou.models import TenhouNickname
 from utils.tenhou.helper import (
-    download_all_games_from_arcturus,
-    get_started_date_for_account,
+    download_all_games_from_nodochi,
     recalculate_tenhou_statistics_for_four_players,
     save_played_games,
 )
@@ -29,18 +28,20 @@ class Command(BaseCommand):
 
         player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
         tenhou_nickname = options.get("tenhou_nickname")
-        account_start_date = get_started_date_for_account(tenhou_nickname)
+
+        player_games, account_start_date, four_players_rate = download_all_games_from_nodochi(tenhou_nickname)
+
+        if not player_games:
+            print("Not correct account")
+            return
 
         is_main = TenhouNickname.objects.filter(player=player, is_active=True).count() == 0
         tenhou_object = TenhouNickname.objects.create(
             is_main=is_main, player=player, tenhou_username=tenhou_nickname, username_created_at=account_start_date
         )
 
-        player_games = download_all_games_from_arcturus(
-            tenhou_object.tenhou_username, tenhou_object.username_created_at
-        )
         save_played_games(tenhou_object, player_games)
 
-        recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games)
+        recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate)
 
         print("{0}: End".format(get_date_string()))

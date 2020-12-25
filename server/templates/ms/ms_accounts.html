@@ -2,14 +2,14 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans 'MahjongSoul accounts' %}
+    {% trans 'Mahjong Soul accounts' %}
 {% endblock %}
 
 {% block content %}
     <div>
-        <h2>{% trans 'MahjongSoul accounts' %}</h2>
+        <h2>{% trans 'Mahjong Soul accounts' %}</h2>
 
-        {# <p>{% trans 'Statistics are updating once an hour.'|urlize %}</p> #}
+         <p>{% trans 'Statistics updated once an hour.'|urlize %}</p>
 
         <div class="filters">
             <a href="{% url 'ms_accounts' 'four' %}">
@@ -73,6 +73,6 @@
 {% endblock %}
 
 {% block meta_tags %}
-    <meta name="description" content="{% trans 'MahjongSoul accounts' %}. {% if four_players %}{% trans 'four players'|title %}{% else %}{% trans 'sanma'|title %}{% endif %}">
-    <meta property="og:description" content="{% trans 'MahjongSoul accounts' %}. {% if four_players %}{% trans 'four players'|title %}{% else %}{% trans 'sanma'|title %}{% endif %}">
+    <meta name="description" content="{% trans 'Mahjong Soul accounts' %}. {% if four_players %}{% trans 'four players'|title %}{% else %}{% trans 'sanma'|title %}{% endif %}">
+    <meta property="og:description" content="{% trans 'Mahjong Soul accounts' %}. {% if four_players %}{% trans 'four players'|title %}{% else %}{% trans 'sanma'|title %}{% endif %}">
 {% endblock %}

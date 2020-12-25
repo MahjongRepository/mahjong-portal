@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-21 15:56+0000\n"
+"POT-Creation-Date: 2020-12-24 05:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,7 +170,7 @@ msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:670
+#: online/handler.py:669
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -189,7 +189,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:689
+#: online/handler.py:691
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -203,7 +203,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/handler.py:696
+#: online/handler.py:700
 #, python-format
 msgid ""
 "New game was added.\n"
@@ -236,7 +236,7 @@ msgstr ""
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:709
+#: online/handler.py:713
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -248,7 +248,7 @@ msgstr ""
 "Пожалуйста, пройдите в лобби %(lobby_link)s и ждите начала игр (игры "
 "начнутся автоматически)."
 
-#: online/handler.py:715
+#: online/handler.py:719
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -272,7 +272,7 @@ msgstr ""
 "игроки игравшие эту игру получают по -30000 очков к финальным результатам. "
 "Независимо от реальных набранных очков."
 
-#: online/handler.py:724
+#: online/handler.py:728
 #, python-format
 msgid ""
 "Game: %(players)s is not started. The table was moved to the end of the "
@@ -281,7 +281,7 @@ msgstr ""
 "Стол: %(players)s не получилось запустить. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:727
+#: online/handler.py:731
 #, python-format
 msgid ""
 "Game: %(players)s is not started. Missed players %(missed_players)s. The "
@@ -295,12 +295,12 @@ msgstr ""
 "Отсутствующие игроки зайдите (или перезайдите) в турнирное лобби: "
 "%(lobby_link)s."
 
-#: online/handler.py:731
+#: online/handler.py:735
 #, python-format
 msgid "Game: %(players)s started."
 msgstr "Стол: %(players)s запущен."
 
-#: online/handler.py:733
+#: online/handler.py:736
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
@@ -456,8 +456,8 @@ msgstr "Аккаунты tenhou.net"
 #: templates/base.html:80 templates/ms/ms_accounts.html:5
 #: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:76
 #: templates/ms/ms_accounts.html:77
-msgid "MahjongSoul accounts"
-msgstr "Аккаунты на MahjongSoul"
+msgid "Mahjong Soul accounts"
+msgstr "Аккаунты на Mahjong Soul"
 
 #: templates/base.html:81 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
@@ -470,8 +470,8 @@ msgstr "История игр на tenhou.net"
 #: templates/tenhou/latest_yakumans.html:10
 #: templates/tenhou/latest_yakumans.html:50
 #: templates/tenhou/latest_yakumans.html:51
-msgid "Latest yakumans"
-msgstr "Якуманы"
+msgid "Yakumans from tenhou.net"
+msgstr "Якуманы с tenhou.net"
 
 #: templates/base.html:87 templates/tournament/application.html:85
 #: tournament/models.py:336
@@ -692,6 +692,12 @@ msgstr "Б часть"
 #: templates/ema/quotas.html:22 templates/ema/quotas.html:42
 msgid "Total Quota"
 msgstr "Всего квот"
+
+#: templates/ms/ms_accounts.html:12
+msgid "Statistics updated once an hour."
+msgstr ""
+"Статистика обновляется раз в час. Добавить свой аккаунт можно написав в "
+"личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
 
 #: templates/ms/ms_accounts.html:16 templates/ms/ms_accounts.html:76
 #: templates/ms/ms_accounts.html:77
@@ -1012,6 +1018,12 @@ msgstr "часов потратили"
 #: templates/tenhou/games_history.html:60
 msgid "Delta"
 msgstr "Дельта"
+
+#: templates/tenhou/tenhou_accounts.html:11
+msgid "Statistics updated every 5 minutes."
+msgstr ""
+"Статистика обновляется раз в 5 минут. Добавить свой аккаунт можно написав в "
+"личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
 
 #: templates/tenhou/tenhou_accounts.html:19
 #: templates/tournament/announcement.html:68 templates/website/city.html:47
