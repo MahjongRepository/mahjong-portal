@@ -84,6 +84,9 @@ class TournamentNotification(BaseModel):
     CONFIRMATION_ENDED = "confirmation_ended"
     ROUND_FINISHED = "round_finished"
     TOURNAMENT_FINISHED = "tournament_finished"
+    GAME_PRE_ENDED = "game_pre_ended"
+    GAME_PENALTY = "game_penalty"
+    GAME_LOG_REMINDER = "game_log_reminder"
 
     NOTIFICATION_TYPES = [
         [GAME_STARTED, GAME_STARTED],
@@ -95,6 +98,8 @@ class TournamentNotification(BaseModel):
         [GAMES_PREPARED, GAMES_PREPARED],
         [ROUND_FINISHED, ROUND_FINISHED],
         [TOURNAMENT_FINISHED, TOURNAMENT_FINISHED],
+        [GAME_PRE_ENDED, GAME_PRE_ENDED],
+        [GAME_PENALTY, GAME_PENALTY],
     ]
 
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)

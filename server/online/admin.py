@@ -140,8 +140,19 @@ class TournamentGamePlayerInline(admin.TabularInline):
 class TournamentGameAdmin(admin.ModelAdmin):
     form = TournamentGameForm
     inlines = [TournamentGamePlayerInline]
-    list_display = ["tournament", "tournament_round", "status", "log_id", "created_on", "updated_on"]
+    list_display = ["tournament", "tournament_round", "status", "log_id", "created_on", "updated_on", "admin_actions"]
     list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "status", "tournament_round"]
+
+    def admin_actions(self, obj):
+        if not obj.status == TournamentGame.FINISHED:
+            return ""
+
+        if obj.log_id:
+            return ""
+
+        # game was finished and users didn't send log id
+        url = reverse("add_penalty_game", kwargs={"game_id": obj.id})
+        return mark_safe('<a href="{}" class="button">Penalty</a>'.format(url))
 
 
 class TournamentNotificationAdmin(admin.ModelAdmin):

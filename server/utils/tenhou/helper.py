@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 import pytz
 import requests
@@ -321,3 +321,12 @@ def save_played_games(tenhou_object, player_games):
                     game_length=result["game_length"],
                     lobby=lobbies_dict[result["game_rules"][1]],
                 )
+
+
+def parse_names_from_tenhou_chat_message(message: str):
+    tmp = message.split(" ")[1:-1]
+    results = []
+    for item in tmp:
+        name = item.split("(")[0]
+        results.append(unquote(name))
+    return results

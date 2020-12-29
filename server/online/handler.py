@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 import logging
 import random
+import threading
 from copy import copy
 from datetime import timedelta
 from random import randint
-from typing import Dict, Optional
+from time import sleep
+from typing import Dict, List, Optional
 from urllib.parse import parse_qs, unquote, urlparse
 
 import pytz
 import requests
 from django.conf import settings
 from django.db import transaction
+from django.db.transaction import get_connection
 from django.utils import timezone, translation
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
@@ -27,6 +30,7 @@ from player.models import Player
 from tournament.models import OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
 from utils.pantheon import add_tenhou_game_to_pantheon, add_user_to_pantheon, get_pantheon_swiss_sortition
+from utils.tenhou.helper import parse_names_from_tenhou_chat_message
 
 logger = logging.getLogger("tournament_bot")
 
@@ -240,6 +244,9 @@ class TournamentHandler:
 
         log_id = attributes["log"][0]
 
+        if TournamentGame.objects.filter(log_id=log_id).exists():
+            return _("The game has been added. Thank you."), True
+
         try:
             parser = TenhouParser()
             players = parser.get_player_names(log_id)
@@ -249,23 +256,30 @@ class TournamentHandler:
                 False,
             )
 
-        if TournamentGame.objects.filter(log_id=log_id).exists():
-            return _("The game has been added. Thank you."), True
+        with transaction.atomic():
+            cursor = get_connection().cursor()
+            cursor.execute(f"LOCK TABLE {TournamentGame._meta.db_table}")
 
-        games = (
-            TournamentGame.objects.filter(tournament=self.tournament)
-            .filter(game_players__player__tenhou_username__in=players)
-            .filter(tournament_round=status.current_round)
-            .distinct()
-        )
-        error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
-            "admin_username": self.get_admin_username()
-        }
-        if games.count() >= 2:
-            logger.error("Log add. Too much games.")
-            return error_message, False
+            try:
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(game_players__player__tenhou_username__in=players)
+                    .filter(tournament_round=status.current_round)
+                    .distinct()
+                )
+                error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                    "admin_username": self.get_admin_username()
+                }
+                if games.count() >= 2:
+                    logger.error("Log add. Too much games.")
+                    return error_message, False
 
-        game = games.first()
+                game = games.first()
+                game.log_id = log_id
+                game.save()
+            finally:
+                cursor.close()
+
         response = add_tenhou_game_to_pantheon(log_link)
         if response.status_code == 500:
             logger.error("Log add. Pantheon 500.")
@@ -320,7 +334,6 @@ class TournamentHandler:
                 f"{player_info['place']}. {display_name}\n{tenhou_nickname} {scores} ({rating_delta})"
             )
 
-        game.log_id = log_id
         game.status = TournamentGame.FINISHED
         game.save()
 
@@ -509,8 +522,7 @@ class TournamentHandler:
 
         try:
             response = requests.post(url, data=data, headers=headers, allow_redirects=False)
-            location = unquote(response.headers["location"])
-            result = location.split("{}&".format(self.lobby))[1]
+            result = unquote(response.content.decode("utf-8"))
 
             if result.startswith("FAILED"):
                 logger.error(result)
@@ -524,23 +536,13 @@ class TournamentHandler:
                     tournament=self.tournament
                 )
 
-                missed_player_nicknames = []
-                for missed_player in missed_player_objects:
-                    if missed_player.telegram_username:
-                        missed_player_nicknames.append(
-                            f"@{missed_player.telegram_username} ({self.TELEGRAM_DESTINATION})"
-                        )
-                    if missed_player.discord_username:
-                        missed_player_nicknames.append(
-                            f"@{missed_player.discord_username} ({self.DISCORD_DESTINATION})"
-                        )
-
+                missed_players_str = self.get_players_message_string(missed_player_objects)
                 game.status = TournamentGame.FAILED_TO_START
                 self.create_notification(
                     TournamentNotification.GAME_FAILED_NO_MEMBERS,
                     kwargs={
                         "players": ", ".join(escaped_player_names),
-                        "missed_players": ", ".join(missed_player_nicknames),
+                        "missed_players": missed_players_str,
                         "lobby_link": self.get_lobby_link(),
                     },
                 )
@@ -571,8 +573,7 @@ class TournamentHandler:
 
         if finished_games.count() == games.count() and not status.end_break_time:
             if status.current_round == self.tournament.number_of_sessions:
-                pass
-                # self.create_notification(TournamentNotification.TOURNAMENT_FINISHED)
+                self.create_notification(TournamentNotification.TOURNAMENT_FINISHED)
             else:
                 index = status.current_round - 1
                 break_minutes = self.TOURNAMENT_BREAKS_TIME[index]
@@ -714,8 +715,8 @@ class TournamentHandler:
                 "Starting games...\n\n"
                 "After the game please send the game log link to the #game_logs channel. "
                 "The game log should be sent before the new round starts. "
-                "If there is no log, all players from this game "
-                "will get -30000 scores as a round result (their real scores will not be counted). "
+                "If there is no log when next round start, all players from this game "
+                "will get -30000 scores as a round result (their real scores will not be counted)."
             ),
             TournamentNotification.GAME_FAILED: _(
                 "Game: %(players)s is not started. The table was moved to the end of the queue."
@@ -727,6 +728,15 @@ class TournamentHandler:
             ),
             TournamentNotification.GAME_STARTED: _("Game: %(players)s started."),
             TournamentNotification.TOURNAMENT_FINISHED: _("The tournament is over. Thank you for participating!"),
+            TournamentNotification.GAME_PRE_ENDED: _("%(message)s\n\n"),
+            TournamentNotification.GAME_LOG_REMINDER: _(
+                "Players: %(player_names)s please send link to game log.\n\n"
+                "If there is no log when next round start, all players from this game "
+                "will get -30000 scores as a round result (their real scores will not be counted)."
+            ),
+            TournamentNotification.GAME_PENALTY: _(
+                "Players: %(player_names)s you got -30000 penalty because of not sent link to game log."
+            ),
         }
 
         return messages.get(notification.notification_type) % kwargs
@@ -742,6 +752,69 @@ class TournamentHandler:
             return settings.TELEGRAM_ADMIN_USERNAME
         if self.destination == self.DISCORD_DESTINATION:
             return f"<@{settings.DISCORD_ADMIN_ID}>"
+
+    def game_pre_end(self, end_game_message: str):
+        status = self.get_status()
+
+        tenhou_nicknames = parse_names_from_tenhou_chat_message(end_game_message)
+        game = (
+            TournamentGame.objects.filter(tournament=self.tournament)
+            .filter(game_players__player__tenhou_username__in=tenhou_nicknames)
+            .filter(tournament_round=status.current_round)
+            .distinct()
+            .first()
+        )
+
+        if not game:
+            logger.error(f"Can't find game to finish. {tenhou_nicknames}")
+            return
+
+        game.status = TournamentGame.FINISHED
+        game.save()
+
+        self.create_notification(
+            TournamentNotification.GAME_PRE_ENDED, kwargs={"message": unquote(end_game_message)},
+        )
+
+        # postpone reminder
+        thread = threading.Thread(target=self.send_log_reminder_message, args=(end_game_message,))
+        thread.daemon = True
+        thread.start()
+
+    def send_log_reminder_message(self, end_game_message: str):
+        # lets give some time for players before spamming with message
+        sleep(120)
+
+        tenhou_nicknames = parse_names_from_tenhou_chat_message(end_game_message)
+        players = TournamentPlayers.objects.filter(tenhou_username__in=tenhou_nicknames).filter(
+            tournament=self.tournament
+        )
+
+        status = self.get_status()
+        game = (
+            TournamentGame.objects.filter(tournament=self.tournament)
+            .filter(game_players__player__tenhou_username__in=tenhou_nicknames)
+            .filter(tournament_round=status.current_round)
+            .filter(log_id__isnull=True)
+            .first()
+        )
+
+        # players already submitted game log
+        if not game:
+            return
+
+        self.create_notification(
+            TournamentNotification.GAME_LOG_REMINDER, kwargs={"player_names": self.get_players_message_string(players)},
+        )
+
+    def get_players_message_string(self, players: List[TournamentPlayers]):
+        player_names = []
+        for player in players:
+            if player.telegram_username:
+                player_names.append(f"@{player.telegram_username} ({TournamentHandler.TELEGRAM_DESTINATION})")
+            if player.discord_username:
+                player_names.append(f"@{player.discord_username} ({TournamentHandler.DISCORD_DESTINATION})")
+        return ", ".join(player_names)
 
     def _random_sortition(self, pantheon_ids):
         # default random.shuffle function doesn't produce good results

@@ -198,6 +198,7 @@ TOURNAMENT_ID = os.environ.get("TOURNAMENT_ID", None)
 TOURNAMENT_PUBLIC_LOBBY = os.environ.get("TOURNAMENT_PUBLIC_LOBBY", None)
 TOURNAMENT_PRIVATE_LOBBY = os.environ.get("TOURNAMENT_PRIVATE_LOBBY", None)
 TOURNAMENT_GAME_TYPE = os.environ.get("TOURNAMENT_GAME_TYPE", None)
+TOURNAMENT_API_TOKEN = os.environ.get("TOURNAMENT_API_TOKEN", None)
 
 # mahjong soul statistics fetching
 MS_USERNAME = os.environ.get("MS_USERNAME", None)
