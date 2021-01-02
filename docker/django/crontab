@@ -17,8 +17,5 @@
 # 23:55 Tokyo time
 55 14 * * * root /usr/local/bin/python /app/server/manage.py update_tenhou_yakuman > /proc/1/fd/1 2>/proc/1/fd/2
 
-# once a week 23:00 tokyo time
-# 00 14 * * 0 root /usr/local/bin/python /app/server/manage.py download_all_games > /proc/1/fd/1 2>/proc/1/fd/2
-
 # each 10 minutes
 */10 * * * * root /usr/local/bin/python /app/server/manage.py update_tenhou_rate > /proc/1/fd/1 2>/proc/1/fd/2

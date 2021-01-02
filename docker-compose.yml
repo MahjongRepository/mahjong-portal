@@ -7,12 +7,12 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./docker/local/django/Dockerfile
+      dockerfile: docker/django/Dockerfile
     image: portal_local_web
     depends_on:
       - db
     env_file:
-      - ./.envs/.local/.django
+      - .envs/.local
       - ./.envs/.local/.postgres
     volumes:
       - .:/app

@@ -1,4 +1,4 @@
-FROM python:3.8.3-slim
+FROM python:3.9.1-slim
 
 ENV PYTHONUNBUFFERED 1
 
@@ -16,16 +16,14 @@ RUN pip install --upgrade pip
 RUN pip install -r /requirements/local.txt
 
 COPY ./docker/local/django/entrypoint.sh /entrypoint.sh
-RUN sed -i 's/\r//' /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY ./docker/local/django/cron_entrypoint.sh /cron_entrypoint.sh
+COPY ./docker/local/django/backup.sh /backup.sh
 
-COPY ./docker/local/django/start.sh /start.sh
-RUN sed -i 's/\r//' /start.sh
-RUN chmod +x /start.sh
+ADD ./docker/production/django/crontab /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab
 
 # clean up apt packages
-RUN apt-get remove -y libpq-dev gcc python-dev \
- && rm -rf /var/lib/apt/lists/*
+RUN apt-get remove -y libpq-dev gcc python-dev && rm -rf /var/lib/apt/lists/*
 
 COPY . /app
 WORKDIR /app/server

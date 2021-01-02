@@ -5,7 +5,7 @@ DIR="/backups"
 
 mkdir -p $DIR/$TYPE/
 
-# Perform rotations
+# perform rotations
 if [[ "$TYPE" == "hourly" ]]; then
     FILENAME=$DIR/hourly/`date +%Y-%m-%d-%H-%M-%S.sql.gz`
 

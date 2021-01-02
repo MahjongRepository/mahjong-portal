@@ -1,0 +1,40 @@
+Django==3.1.4
+django-modeltranslation==0.16.1
+psycopg2==2.8.6
+django-bootstrap4==2.3.1
+dj-database-url==0.5.0
+python-dateutil==2.8.1
+ms-api==0.8.188
+
+python-telegram-bot==13.1
+discord.py==1.5.1
+
+pymorphy2==0.9.1
+pymorphy2-dicts-ru==2.4.417127.4579844
+
+# for search
+django-haystack==3.0
+Whoosh==2.7.4
+
+# for web parsing
+beautifulsoup4==4.9.3
+requests==2.25.1
+
+# for monitoring
+raven==6.10.0
+
+# to read pyproject.toml configuration
+toml==0.10.2
+
+# for formatting checks and linters
+isort==5.6.4
+black==20.8b1
+flake8==3.8.4
+flake8-bugbear==20.11.1
+
+# better python terminal
+ipython==7.19.0
+
+# for production
+gunicorn==20.0.4
+gevent==20.12.1

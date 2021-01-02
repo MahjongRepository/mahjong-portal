@@ -1,0 +1,14 @@
+SECRET_KEY=hA(HD78f9ahf98ashf9924h&&das7dasfhiuasf9
+DEBUG=true
+DJANGO_LOG_LEVEL=DEBUG
+
+ALLOWED_HOSTS=0.0.0.0
+
+# https://docs.djangoproject.com/en/3.0/topics/async/#async-safety
+DJANGO_ALLOW_ASYNC_UNSAFE=true
+
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+POSTGRES_DB=LOCAL_DB
+POSTGRES_USER=portal
+POSTGRES_PASSWORD=password
