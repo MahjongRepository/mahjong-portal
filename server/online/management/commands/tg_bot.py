@@ -97,14 +97,6 @@ class TelegramBot:
 
         dispatcher.add_handler(
             CommandHandler(
-                "start_failed_games",
-                TelegramBot.start_failed_games,
-                filters=Filters.user(username=settings.TELEGRAM_ADMIN_USERNAME),
-            )
-        )
-
-        dispatcher.add_handler(
-            CommandHandler(
                 "send_team_names_to_pantheon",
                 TelegramBot.send_team_names_to_pantheon,
                 filters=Filters.user(username=settings.TELEGRAM_ADMIN_USERNAME),
@@ -268,19 +260,6 @@ class TelegramBot:
     def start_games(update: Update, context: CallbackContext):
         logger.info("Start games")
 
-        games = TournamentGame.objects.filter(status=TournamentGame.NEW)
-        message = TelegramBot.escape_tg_message("Запускаю игры...")
-        context.bot.send_message(chat_id=update.message.chat_id, text=message)
-
-        for game in games:
-            tournament_handler.start_game(game)
-
-        context.bot.send_message(chat_id=update.message.chat_id, text="Ok")
-
-    @staticmethod
-    def start_failed_games(update: Update, context: CallbackContext):
-        logger.info("Start failed games")
-
         games = TournamentGame.objects.filter(Q(status=TournamentGame.FAILED_TO_START) | Q(status=TournamentGame.NEW))
         message = TelegramBot.escape_tg_message("Запускаю игры...")
         context.bot.send_message(chat_id=update.message.chat_id, text=message)
@@ -288,7 +267,7 @@ class TelegramBot:
         for game in games:
             tournament_handler.start_game(game)
 
-        context.bot.send_message(chat_id=update.message.chat_id, text="Ok")
+        context.bot.send_message(chat_id=update.message.chat_id, text=f"{len(games)} processed")
 
     @staticmethod
     def close_registration(update: Update, context: CallbackContext):

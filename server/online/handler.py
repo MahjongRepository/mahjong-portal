@@ -446,20 +446,24 @@ class TournamentHandler:
             # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
-            for item in sortition:
-                logger.info(item)
+            for game_index, item in enumerate(sortition):
+                logger.info(f"Preparing table with player_ids={item}")
+
                 # shuffle player winds
                 random.shuffle(item)
 
                 try:
                     game = TournamentGame.objects.create(
-                        status=TournamentGame.NEW, tournament=self.tournament, tournament_round=status.current_round
+                        status=TournamentGame.NEW,
+                        tournament=self.tournament,
+                        tournament_round=status.current_round,
+                        game_index=game_index + 1,
                     )
 
                     for wind in range(0, len(item)):
                         player_id = pantheon_ids[item[wind]].id
-
                         TournamentGamePlayer.objects.create(game=game, player_id=player_id, wind=wind)
+
                     games.append(game)
                 except Exception as e:
                     logger.error("Failed to prepare a game. Pantheon ids={}".format(item), exc_info=e)
@@ -528,7 +532,8 @@ class TournamentHandler:
                 logger.error(result)
                 game.status = TournamentGame.FAILED_TO_START
                 self.create_notification(
-                    TournamentNotification.GAME_FAILED, kwargs={"players": ", ".join(escaped_player_names)}
+                    TournamentNotification.GAME_FAILED,
+                    kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                 )
             elif result.startswith("MEMBER NOT FOUND"):
                 missed_player_ids = [x for x in result.split("\r\n")[1:] if x]
@@ -544,12 +549,14 @@ class TournamentHandler:
                         "players": ", ".join(escaped_player_names),
                         "missed_players": missed_players_str,
                         "lobby_link": self.get_lobby_link(),
+                        "game_index": game.game_index,
                     },
                 )
             else:
                 game.status = TournamentGame.STARTED
                 self.create_notification(
-                    TournamentNotification.GAME_STARTED, kwargs={"players": ", ".join(escaped_player_names)}
+                    TournamentNotification.GAME_STARTED,
+                    kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                 )
         except Exception as e:
             logger.error(e, exc_info=e)
@@ -719,14 +726,14 @@ class TournamentHandler:
                 "will get -30000 scores as a round result (their real scores will not be counted)."
             ),
             TournamentNotification.GAME_FAILED: _(
-                "Game: %(players)s is not started. The table was moved to the end of the queue."
+                "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
             TournamentNotification.GAME_FAILED_NO_MEMBERS: _(
-                "Game: %(players)s is not started. Missed players %(missed_players)s. "
+                "Game №%(game_index)s: %(players)s. Is not started. Missed players %(missed_players)s. "
                 "The table was moved to the end of the queue. \n\n"
                 "Missed players please enter the tournament lobby: %(lobby_link)s."
             ),
-            TournamentNotification.GAME_STARTED: _("Game: %(players)s started."),
+            TournamentNotification.GAME_STARTED: _("Game №%(game_index)s: %(players)s. Started."),
             TournamentNotification.TOURNAMENT_FINISHED: _("The tournament is over. Thank you for participating!"),
             TournamentNotification.GAME_PRE_ENDED: _("%(message)s\n\n"),
             TournamentNotification.GAME_LOG_REMINDER: _(

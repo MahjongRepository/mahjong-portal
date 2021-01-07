@@ -49,6 +49,7 @@ class TournamentGame(BaseModel):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     tournament_round = models.PositiveSmallIntegerField(null=True, blank=True)
     log_id = models.CharField(max_length=32, null=True, blank=True)
+    game_index = models.PositiveSmallIntegerField(default=0)
 
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
 
