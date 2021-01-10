@@ -788,6 +788,8 @@ class TournamentHandler:
         thread.daemon = True
         thread.start()
 
+        self.check_round_was_finished()
+
     def send_log_reminder_message(self, end_game_message: str):
         # lets give some time for players before spamming with message
         sleep(120)
