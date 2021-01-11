@@ -85,6 +85,8 @@ class Command(BaseCommand):
                 datetime.date(2019, 1, 1),
                 # WRC 2020 qualification date
                 datetime.date(2020, 2, 1),
+                # Online tournaments qualification date
+                datetime.date(2021, 2, 1),
             ]
 
             dates_to_process = dates_to_process + important_dates
