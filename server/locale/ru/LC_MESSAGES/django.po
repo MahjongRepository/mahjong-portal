@@ -1475,10 +1475,6 @@ msgstr "Он будет показан только администратору
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: tournament/models.py:231 tournament/models.py:269
-msgid "Team name"
-msgstr "Название команды"
-
 #: tournament/models.py:258
 msgid "Your contact (email, phone, etc.)"
 msgstr "Контактные данные (почта, телефон, т.п.)"
