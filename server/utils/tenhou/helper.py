@@ -189,7 +189,7 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         stat.save()
 
 
-def download_all_games_from_nodochi(tenhou_username):
+def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
     url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
     response = requests.get(url).json()
 
@@ -252,9 +252,12 @@ def download_all_games_from_nodochi(tenhou_username):
     month_last_day = get_month_last_day().date()
 
     player_games = []
+    if only_ranking_games:
+        game_types = ["b", "c"]
+    else:
+        game_types = ["a", "b", "c"]
     for game in games:
-        # usual and phoenix games
-        if game["sctype"] == "b" or game["sctype"] == "c":
+        if game["sctype"] in game_types:
             # api doesnt' return player place we had to assume from game results
             place = None
             for x in range(1, 5):
