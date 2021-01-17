@@ -231,11 +231,22 @@ def download_all_games_from_nodochi(tenhou_username):
     else:
         four_games_rate = None
 
-    account_start_date = datetime.utcfromtimestamp(int(response["rseq"][-1][0])).replace(
+    games = response.get("list", [])
+    if not games:
+        return [], None, None
+
+    account_start_date = datetime.utcfromtimestamp(int(games[0]["starttime"])).replace(
         tzinfo=pytz.timezone("Asia/Tokyo")
     )
-
-    games = response.get("list", [])
+    last_game_time = account_start_date
+    for game in games[1:]:
+        current_game_date = datetime.utcfromtimestamp(int(game["starttime"])).replace(
+            tzinfo=pytz.timezone("Asia/Tokyo")
+        )
+        delta = current_game_date - last_game_time
+        last_game_time = current_game_date
+        if delta.days > 180:
+            account_start_date = current_game_date
 
     month_first_day = get_month_first_day().date()
     month_last_day = get_month_last_day().date()
