@@ -66,9 +66,9 @@
                             <th scope="col">{% trans 'Tenhou.net nickname' %}</th>
                         {% endif %}
                         <th scope="col">{% trans 'Dan' %}</th>
-                        {% if tournament.display_notes %}
-                            <th scope="col">{% trans 'Team' %}</th>
-                        {% endif %}
+{#                        {% if tournament.display_notes %}#}
+{#                            <th scope="col">{% trans 'Team' %}</th>#}
+{#                        {% endif %}#}
                     </tr>
                     </thead>
                     <tbody>
@@ -101,11 +101,11 @@
                                     {% include 'player/_online_account.html' %}
                                 {% endwith %}
                             </td>
-                            {% if tournament.display_notes %}
-                                <td>
-                                    {{ registration_item.notes }}
-                                </td>
-                            {% endif %}
+{#                            {% if tournament.display_notes %}#}
+{#                                <td>#}
+{#                                    {{ registration_item.notes }}#}
+{#                                </td>#}
+{#                            {% endif %}#}
                         </tr>
                     {% endfor %}
                     </tbody>
