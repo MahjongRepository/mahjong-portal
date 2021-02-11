@@ -2,6 +2,7 @@ import csv
 import typing as ty
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from player.models import Player
@@ -241,7 +242,11 @@ def remove_registration(request, tournament_id, registration_id, **kwargs):
 def toggle_highlight(request, tournament_id, registration_id, **kwargs):
     tournament = kwargs["tournament"]
 
-    registration = get_object_or_404(TournamentRegistration, tournament=tournament, id=registration_id)
+    try:
+        registration = get_object_or_404(TournamentRegistration, tournament=tournament, id=registration_id)
+    except Http404:
+        registration = get_object_or_404(OnlineTournamentRegistration, tournament=tournament, id=registration_id)
+
     registration.is_highlighted = not registration.is_highlighted
     registration.save()
 

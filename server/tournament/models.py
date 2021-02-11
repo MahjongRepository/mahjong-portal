@@ -253,6 +253,7 @@ class OnlineTournamentRegistration(BaseModel):
     last_name = models.CharField(max_length=255, verbose_name=_("Last name"))
     city = models.CharField(max_length=255, verbose_name=_("City"))
     tenhou_nickname = models.CharField(max_length=255, verbose_name=_("Tenhou.net nickname"))
+    is_highlighted = models.BooleanField(default=False)
     contact = models.CharField(
         max_length=255,
         verbose_name=_("Your contact (email, phone, etc.)"),
