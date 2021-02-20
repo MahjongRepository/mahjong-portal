@@ -26,7 +26,7 @@ initial_data:
 test:
 	docker-compose -f local.yml run -u `id -u` --rm web python manage.py test --noinput
 
-# usage example "make db_restore dump=~/Downloads/edcat.sql"
+# usage example "make db_restore dump=~/Downloads/dump.sql"
 db_restore:
 	docker-compose -f local.yml up --detach db
 

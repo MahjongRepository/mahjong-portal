@@ -683,7 +683,7 @@ class TournamentHandler:
                 kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.UTC).strftime("%H-%M")
 
             if self.destination == TournamentHandler.TELEGRAM_DESTINATION:
-                kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.timezone("Europe/Moscow")).strftime(
+                kwargs["break_end"] = status.end_break_time.astimezone(pytz.timezone("Europe/Moscow")).strftime(
                     "%H-%M"
                 )
 
