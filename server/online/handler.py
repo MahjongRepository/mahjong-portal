@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 import random
 import threading
@@ -441,9 +442,12 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
-            # from online.team_seating import TeamSeating
-            # sortition = TeamSeating.get_seating_for_round(status.current_round)
+            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            from online.team_seating import TeamSeating
+
+            with open(TeamSeating.processed_seating) as f:
+                data = json.loads(f.read())
+            sortition = data["seating"][status.current_round]
 
             games = []
             for game_index, item in enumerate(sortition):
@@ -683,9 +687,7 @@ class TournamentHandler:
                 kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.UTC).strftime("%H-%M")
 
             if self.destination == TournamentHandler.TELEGRAM_DESTINATION:
-                kwargs["break_end"] = status.end_break_time.astimezone(pytz.timezone("Europe/Moscow")).strftime(
-                    "%H-%M"
-                )
+                kwargs["break_end"] = status.end_break_time.astimezone(pytz.timezone("Europe/Moscow")).strftime("%H-%M")
 
             return (
                 _(
