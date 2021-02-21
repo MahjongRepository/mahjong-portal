@@ -513,7 +513,7 @@ class TournamentHandler:
         player_names = [x.player.tenhou_username for x in players]
         escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
 
-        url = "http://tenhou.net/cs/edit/start.cgi"
+        url = "https://tenhou.net/cs/edit/cmd_start.cgi"
         data = {
             "L": self.lobby,
             "R2": self.game_type,
