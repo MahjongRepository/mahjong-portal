@@ -447,7 +447,7 @@ class TournamentHandler:
 
             with open(TeamSeating.processed_seating) as f:
                 data = json.loads(f.read())
-            sortition = data["seating"][status.current_round]
+            sortition = data["seating"][status.current_round - 1]
 
             games = []
             for game_index, item in enumerate(sortition):
