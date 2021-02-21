@@ -454,7 +454,7 @@ class TournamentHandler:
                 logger.info(f"Preparing table with player_ids={item}")
 
                 # shuffle player winds
-                random.shuffle(item)
+                # random.shuffle(item)
 
                 try:
                     game = TournamentGame.objects.create(
