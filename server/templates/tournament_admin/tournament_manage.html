@@ -89,7 +89,9 @@
                         <th scope="col">{% trans 'Name' %}</th>
                         <th scope="col">{% trans 'City' %}</th>
                         <th scope="col">{% trans 'Registered at' %}</th>
-                        <th scope="col">{% trans 'Phone' %}</th>
+                        {% if not tournament.is_online %}
+                            <th scope="col">{% trans 'Phone' %}</th>
+                        {% endif %}
                         <th scope="col">{% trans 'Additional contact' %}</th>
                         {% if tournament.display_notes %}
                             <th scope="col">{% trans 'Notes' %}</th>
@@ -130,8 +132,21 @@
                                     {% endtimezone %}
                                 </nobr>
                             </td>
-                            <td>{{ registration_item.phone }}</td>
-                            <td>{{ registration_item.additional_contact|default:'-' }}</td>
+                            {% if tournament.is_o %}
+                                <td>
+                                    {{ registration_item.notes }}
+                                </td>
+                            {% endif %}
+                            {% if not tournament.is_online %}
+                                <td>{{ registration_item.phone }}</td>
+                            {% endif %}
+                            <td>
+                                {% if tournament.is_online %}
+                                    {{ registration_item.contact|default:'-' }}
+                                {% else %}
+                                    {{ registration_item.additional_contact|default:'-' }}
+                                {% endif %}
+                            </td>
                             {% if tournament.display_notes %}
                                 <td>
                                     {{ registration_item.notes }}
