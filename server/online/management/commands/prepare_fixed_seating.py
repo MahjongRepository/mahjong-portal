@@ -1,4 +1,5 @@
 import json
+import random
 
 from django.core.management.base import BaseCommand
 
@@ -14,6 +15,7 @@ class Command(BaseCommand):
         tournament_id = options["tournament_id"]
         tournament = Tournament.objects.get(id=tournament_id)
         assert tournament.tournament_type == Tournament.ONLINE
+
         registrations = tournament.online_tournament_registrations.all()
 
         pantheon_id_map = {}
@@ -33,6 +35,8 @@ class Command(BaseCommand):
             for t in tables_text:
                 players_ids = list(set([int(x) for x in t.split("-")]))
                 assert len(players_ids) == 4
+
+                random.shuffle(players_ids)
                 seating.append([pantheon_id_map[x] for x in players_ids])
 
             rounds.append(seating)
@@ -44,8 +48,11 @@ class Command(BaseCommand):
 
         print("Seating was saved to {}".format(TeamSeating.processed_seating))
 
+        # from player.models import Player
+        # from django.utils.translation import activate
+        # activate('ru')
         # for i, round_item in enumerate(rounds):
-        #     print(f'Hanchan {i + 1}')
+        #     print(f'\nХанчан {i + 1}\n')
         #     for j, table in enumerate(round_item):
-        #         print(f"Table {j + 1}")
+        #         print(f"Стол {j + 1}")
         #         print(', '.join([Player.objects.get(pantheon_id=x).full_name for x in table]))
