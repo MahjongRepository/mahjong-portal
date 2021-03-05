@@ -188,20 +188,20 @@ class TelegramBot:
 
         message = "1. Турнирное лобби:\n {} \n".format(tournament_handler.get_lobby_link())
         message += "2. Статистика:\n {} \n".format(tournament_handler.get_rating_link())
-        message += "2.1. Командная статистика:\n {}/team \n".format(tournament_handler.get_rating_link())
+        # message += "2.1. Командная статистика:\n {}/team \n".format(tournament_handler.get_rating_link())
         message += "3. Текущие игры в лобби:\n https://tenhou.net/wg/?{} \n".format(
             settings.TOURNAMENT_PUBLIC_LOBBY[:5]
         )
         message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
         message += "5. Регламент турнира:\n https://mahjong.click/ru/online/ \n"
         message += (
-            "6. Как получить ссылку на лог игры для flash/windows клиентов?\n https://imgur.com/gallery/7Hv52md \n"
+            "6. Как получить ссылку на лог игры для windows клиента?\n https://imgur.com/gallery/7Hv52md \n"
         )
         message += (
-            "7. Как получить ссылку на лог игры для мобильного/нового клиента?\n https://imgur.com/gallery/rP72mPx\n"
+            "7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx\n"
         )
         message += (
-            "8. Как открыть турнирное лобби с мобильного/нового приложения?\n https://imgur.com/gallery/vcjsODf \n"
+            "8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n"
         )
         message += "9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e"
         message = TelegramBot.escape_tg_message(message)
