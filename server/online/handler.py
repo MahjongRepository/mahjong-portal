@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import random
 import threading
@@ -38,21 +37,7 @@ logger = logging.getLogger("tournament_bot")
 
 class TournamentHandler:
     # in minutes
-    TOURNAMENT_BREAKS_TIME = [
-        # day one
-        5,
-        5,
-        30,
-        5,
-        5,
-        5,
-        # day two
-        5,
-        5,
-        30,
-        5,
-        5
-    ]
+    TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5, 5]
 
     TELEGRAM_DESTINATION = "tg"
     DISCORD_DESTINATION = "ds"
@@ -456,19 +441,20 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
-            from online.team_seating import TeamSeating
-
-            with open(TeamSeating.processed_seating) as f:
-                data = json.loads(f.read())
-            sortition = data["seating"][status.current_round - 1]
+            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            # from online.team_seating import TeamSeating
+            # import json
+            #
+            # with open(TeamSeating.processed_seating) as f:
+            #     data = json.loads(f.read())
+            # sortition = data["seating"][status.current_round - 1]
 
             games = []
             for game_index, item in enumerate(sortition):
                 logger.info(f"Preparing table with player_ids={item}")
 
                 # shuffle player winds
-                # random.shuffle(item)
+                random.shuffle(item)
 
                 try:
                     game = TournamentGame.objects.create(

@@ -194,15 +194,9 @@ class TelegramBot:
         )
         message += '4. Отправка лога игры через команду "/log http://tenhou.net..." \n'
         message += "5. Регламент турнира:\n https://mahjong.click/ru/online/ \n"
-        message += (
-            "6. Как получить ссылку на лог игры для windows клиента?\n https://imgur.com/gallery/7Hv52md \n"
-        )
-        message += (
-            "7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx\n"
-        )
-        message += (
-            "8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n"
-        )
+        message += "6. Как получить ссылку на лог игры для windows клиента?\n https://imgur.com/gallery/7Hv52md \n"
+        message += "7. Как получить ссылку на лог игры для мобильного клиента?\n https://imgur.com/gallery/rP72mPx\n"
+        message += "8. Как открыть турнирное лобби с мобильного приложения?\n https://imgur.com/gallery/vcjsODf \n"
         message += "9. Как открыть турнирное лобби с windows приложения?\n https://imgur.com/gallery/8vB307e"
         message = TelegramBot.escape_tg_message(message)
         context.bot.send_message(chat_id=update.message.chat_id, text=message)
