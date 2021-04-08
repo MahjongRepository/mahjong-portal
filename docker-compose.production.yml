@@ -15,7 +15,7 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/server/collected_static
-      - .:/app
+      - ./server/:/app
     restart: always
     logging:
       driver: json-file

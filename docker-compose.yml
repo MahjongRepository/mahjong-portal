@@ -1,33 +1,29 @@
 version: '3'
 
 volumes:
-  local_postgres_data: {}
+  postgres_data: {}
 
 services:
   web:
     build:
       context: .
       dockerfile: docker/django/Dockerfile
-    image: portal_local_web
+    image: mahjong-portal
+    env_file:
+      - ./.envs/.local
     depends_on:
       - db
-    env_file:
-      - .envs/.local
-      - ./.envs/.local/.postgres
     volumes:
-      - .:/app
+      - ./server/:/app
     ports:
       - '8060:8060'
-    command: /start.sh
+    command: python manage.py runserver 0.0.0.0:8060
 
   db:
-    build:
-      context: .
-      dockerfile: ./docker/postgres/Dockerfile
-    image: portal_local_postgresql
+    image: postgres:12.3-alpine
     volumes:
-      - local_postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     env_file:
-      - ./.envs/.local/.postgres
-    ports:
-      - '5462:5432'
+      - ./.envs/.local
+#    ports:
+#      - '5462:5432'

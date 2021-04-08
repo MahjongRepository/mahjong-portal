@@ -1,4 +1,4 @@
-COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), local.yml)
+COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), docker-compose.yml)
 
 up:
 	docker-compose -f $(COMPOSE_FILE) up
