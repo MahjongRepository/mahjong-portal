@@ -1194,6 +1194,10 @@ msgstr "Основная информация"
 msgid "Additional info"
 msgstr "Дополнительная информация"
 
+#: tournament/models.py:231 tournament/models.py:269
+msgid "Team name"
+msgstr "Название команды"
+
 #: templates/tournament/application.html:52
 msgid "Dates"
 msgstr "Даты"
