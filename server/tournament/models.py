@@ -267,7 +267,7 @@ class OnlineTournamentRegistration(BaseModel):
 
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
 
-    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
+    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Team name"))
 
     class Meta:
         unique_together = ["tenhou_nickname", "tournament"]
