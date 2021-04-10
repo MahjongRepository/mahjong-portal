@@ -782,7 +782,8 @@ class TournamentHandler:
         game.save()
 
         self.create_notification(
-            TournamentNotification.GAME_PRE_ENDED, kwargs={"message": unquote(end_game_message)},
+            TournamentNotification.GAME_PRE_ENDED,
+            kwargs={"message": unquote(end_game_message)},
         )
 
         # postpone reminder
@@ -815,7 +816,8 @@ class TournamentHandler:
             return
 
         self.create_notification(
-            TournamentNotification.GAME_LOG_REMINDER, kwargs={"player_names": self.get_players_message_string(players)},
+            TournamentNotification.GAME_LOG_REMINDER,
+            kwargs={"player_names": self.get_players_message_string(players)},
         )
 
     def get_players_message_string(self, players: List[TournamentPlayers]):

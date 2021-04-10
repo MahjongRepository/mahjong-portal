@@ -159,9 +159,9 @@ LOGGING = {
             "level": DJANGO_LOG_LEVEL,
             "propagate": False,
         },
-        'django.utils.autoreload': {
-            'level': 'INFO',
-        }
+        "django.utils.autoreload": {
+            "level": "INFO",
+        },
     },
 }
 

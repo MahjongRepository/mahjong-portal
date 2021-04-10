@@ -15,7 +15,8 @@ class MahjongSoulViewTestCase(TestCase):
         player = Player.objects.create()
         self.ms_account = MSAccount.objects.create(player=player, account_name="test", account_id=101)
         self.stat_object = MSAccountStatistic.objects.create(
-            account=self.ms_account, game_type=MSAccountStatistic.FOUR_PLAYERS,
+            account=self.ms_account,
+            game_type=MSAccountStatistic.FOUR_PLAYERS,
         )
 
     def test_get_points_history_for_latest_rank_expect_only_latest_rank(self):
@@ -31,7 +32,8 @@ class MahjongSoulViewTestCase(TestCase):
         history = self.stat_object.get_points_history_for_latest_rank()
         self.assertEqual(history.count(), 2)
         self.assertEqual(
-            history.last().created_on, datetime(2020, 10, 4, 1, 0, 0, tzinfo=pytz.utc),
+            history.last().created_on,
+            datetime(2020, 10, 4, 1, 0, 0, tzinfo=pytz.utc),
         )
 
     def create_points_history(self, records):
@@ -42,7 +44,10 @@ class MahjongSoulViewTestCase(TestCase):
                 rank_index += 1
             history.append(
                 MSPointsHistory.objects.create(
-                    stat_object=self.stat_object, points=record["points"], rank=record["rank"], rank_index=rank_index,
+                    stat_object=self.stat_object,
+                    points=record["points"],
+                    rank=record["rank"],
+                    rank_index=rank_index,
                 ),
             )
             history[-1].created_on = record["date"]

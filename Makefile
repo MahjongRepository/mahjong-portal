@@ -61,5 +61,5 @@ format-python-code:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web black .
 
 format-isort:
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web isort -rc .
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web isort .
 

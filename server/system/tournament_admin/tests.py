@@ -13,7 +13,8 @@ class TestUpdatePlacing(TestCase):
         ]
         update_placing(rows)
         self.assertListEqual(
-            [(row[0], row[3]) for row in rows], [(1, 100), (2, 0), (3, -100)],
+            [(row[0], row[3]) for row in rows],
+            [(1, 100), (2, 0), (3, -100)],
         )
 
     def test_repeated_scores(self):
@@ -28,7 +29,8 @@ class TestUpdatePlacing(TestCase):
         ]
         update_placing(rows)
         self.assertListEqual(
-            [(row[0], row[3]) for row in rows], [(1, 100), (2, 0), (2, 0), (2, 0), (5, -100), (5, -100), (7, -200)],
+            [(row[0], row[3]) for row in rows],
+            [(1, 100), (2, 0), (2, 0), (2, 0), (5, -100), (5, -100), (7, -200)],
         )
 
     def test_different_game_counts(self):
@@ -40,5 +42,6 @@ class TestUpdatePlacing(TestCase):
         ]
         update_placing(rows)
         self.assertListEqual(
-            [(row[0], row[3]) for row in rows], [(1, 0), (2, -100), (3, -100), (4, 100)],
+            [(row[0], row[3]) for row in rows],
+            [(1, 0), (2, -100), (3, -100), (4, 100)],
         )
