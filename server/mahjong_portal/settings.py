@@ -30,6 +30,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 SITE_ID = 1
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 INSTALLED_APPS = [
     # it had to be placed before contrib.admin
     "modeltranslation",
