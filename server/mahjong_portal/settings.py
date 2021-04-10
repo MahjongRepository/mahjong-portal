@@ -2,6 +2,16 @@ import os
 
 import dj_database_url
 
+if os.environ.get("SENTRY_DSN"):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"),
+        integrations=[DjangoIntegration()],
+    )
+
+
 SCHEME = "https"
 
 AUTH_USER_MODEL = "account.User"
@@ -34,7 +44,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "bootstrap4",
     "haystack",
-    "raven.contrib.django.raven_compat",
     "mahjong_portal",
     "club",
     "club.pantheon_games",
@@ -150,6 +159,9 @@ LOGGING = {
             "level": DJANGO_LOG_LEVEL,
             "propagate": False,
         },
+        'django.utils.autoreload': {
+            'level': 'INFO',
+        }
     },
 }
 
@@ -169,10 +181,6 @@ HAYSTACK_CONNECTIONS = {
         "PATH": os.path.join(BASE_DIR, "whoosh_index"),
     }
 }
-
-# https://sentry.io
-if os.environ.get("RAVEN_CONFIG"):
-    RAVEN_CONFIG = {"dsn": os.environ.get("RAVEN_CONFIG")}
 
 TENHOU_WG_URL = "https://mjv.jp/0/wg/0.js"
 TENHOU_LATEST_GAMES_URL = "http://tenhou.net/sc/raw/list.cgi"
