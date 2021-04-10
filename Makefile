@@ -13,7 +13,7 @@ logs:
 	docker-compose -f $(COMPOSE_FILE) logs -f
 
 shell:
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web bash
+	docker-compose -f $(COMPOSE_FILE) run --user=root --rm web sh
 
 build_docker:
 	docker-compose -f $(COMPOSE_FILE) build
@@ -30,18 +30,18 @@ test:
 db_restore:
 	docker-compose -f $(COMPOSE_FILE) up --detach db
 
-	docker-compose -f $(COMPOSE_FILE) run --rm db bash -c \
+	docker-compose -f $(COMPOSE_FILE) run --rm db sh -c \
   	'PGPASSWORD=$$POSTGRES_PASSWORD dropdb -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB --if-exists' \
-  	--env-file .envs/.local/.postgres
+  	--env-file .envs/.local
 
-	docker-compose -f $(COMPOSE_FILE) run --rm db bash -c \
+	docker-compose -f $(COMPOSE_FILE) run --rm db sh -c \
 	'PGPASSWORD=$$POSTGRES_PASSWORD createdb -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB' \
-	--env-file .envs/.local/.postgres
+	--env-file .envs/.local
 
 	docker-compose -f $(COMPOSE_FILE) run \
 	-v $(dump):/tmp/dump.sql \
-	--rm db bash -c 'PGPASSWORD=$$POSTGRES_PASSWORD psql -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB < /tmp/dump.sql' \
-	--env-file .envs/.local/.postgres
+	--rm db sh -c 'PGPASSWORD=$$POSTGRES_PASSWORD psql -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB < /tmp/dump.sql' \
+	--env-file .envs/.local
 
 #### Code formatters and linters ####
 
