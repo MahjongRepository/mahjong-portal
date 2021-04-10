@@ -24,10 +24,6 @@ COPY ./docker/django/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-COPY ./docker/django/cron_entrypoint.sh /cron_entrypoint.sh
-RUN sed -i 's/\r//' /cron_entrypoint.sh
-RUN chmod +x /cron_entrypoint.sh
-
 ADD ./docker/django/crontab /etc/crontabs/root
 
 RUN addgroup -S docker && adduser -S docker-user -G docker
