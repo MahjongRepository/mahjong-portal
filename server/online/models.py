@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from mahjong_portal.models import BaseModel
@@ -105,7 +104,7 @@ class TournamentNotification(BaseModel):
 
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     notification_type = models.CharField(choices=NOTIFICATION_TYPES, max_length=300)
-    message_kwargs = JSONField(blank=True)
+    message_kwargs = models.JSONField(blank=True)
 
     destination = models.PositiveSmallIntegerField(choices=DESTINATIONS)
     is_processed = models.BooleanField(default=False)
