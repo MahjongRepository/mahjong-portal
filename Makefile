@@ -3,15 +3,15 @@ COMPOSE_FILE=$(or $(COMPOSE_FILE_VAR), docker-compose.yml)
 up:
 	docker-compose -f $(COMPOSE_FILE) up
 
-up_daemon:
+up-daemon:
 	docker-compose -f $(COMPOSE_FILE) up -d
 
 down:
 	docker-compose -f $(COMPOSE_FILE) stop
 
-release: down update_production up_daemon
+run-production-update: down run-migrations-collectstatic-search-index up-daemon
 
-update_production:
+run-migrations-collectstatic-search-index:
 	docker-compose -f $(COMPOSE_FILE) pull
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py migrate
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py collectstatic --noinput --clear --verbosity 0
@@ -23,19 +23,19 @@ logs:
 shell:
 	docker-compose -f $(COMPOSE_FILE) run --user=root --rm web sh
 
-build_docker:
+build-docker:
 	docker-compose -f $(COMPOSE_FILE) build
 
-initial_data:
+initial-data:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py flush --noinput
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py migrate --noinput
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py initial_data
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py initial-data
 
 test:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py test --noinput
 
-# usage example "make db_restore dump=~/Downloads/dump.sql"
-db_restore:
+# usage example "make db-restore dump=~/Downloads/dump.sql"
+db-restore:
 	docker-compose -f $(COMPOSE_FILE) up --detach db
 
 	docker-compose -f $(COMPOSE_FILE) run --rm db sh -c \
@@ -50,6 +50,12 @@ db_restore:
 	-v $(dump):/tmp/dump.sql \
 	--rm db sh -c 'PGPASSWORD=$$POSTGRES_PASSWORD psql -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB < /tmp/dump.sql' \
 	--env-file .envs/.local
+
+release-docker-image:
+	docker buildx build --push \
+		--build-arg mode=production \
+		--tag ghcr.io/mahjongrepository/mahjong-portal:latest \
+		--file ./docker/django/Dockerfile .
 
 #### Code formatters and linters ####
 

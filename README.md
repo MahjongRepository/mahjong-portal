@@ -10,8 +10,8 @@ You need to have installed docker and docker compose.
 
 Steps to run the project:
 
-1. `make build_docker`
-2. `make initial_data` (run this command only once, for the initial project setup)
+1. `make build-docker`
+2. `make initial-data` (run this command only once, for the initial project setup)
 3. `make up`
 
 After these steps you will be able to access website here: http://0.0.0.0:8060/
