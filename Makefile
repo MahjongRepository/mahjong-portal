@@ -9,6 +9,14 @@ up_daemon:
 down:
 	docker-compose -f $(COMPOSE_FILE) stop
 
+release: down update_production up_daemon
+
+update_production:
+	docker-compose -f $(COMPOSE_FILE) pull
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py migrate
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py collectstatic --noinput --clear --verbosity 0
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py rebuild_index --noinput
+
 logs:
 	docker-compose -f $(COMPOSE_FILE) logs -f
 
