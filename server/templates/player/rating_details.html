@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block additional_js %}
-    <script src="{% static 'js/сhart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="{% static 'js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
+
     <script>
         var last_rating_place = {{ last_rating_place }};
         var ctx = document.getElementById("rating_chart").getContext('2d');
@@ -17,29 +19,19 @@
 
         {% for x in filtered_results %}
             labels.push('{{ x.result.date|date:SHORT_DATE_FORMAT }}');
-            tournaments = [];
-            {% for c in x.coefficients %}
-                tournaments.push({
-                    'name': '{{ c.tournament_name }}',
-                    'age': '{{ c.age|floatformat:"0" }}',
-                    'previous_age': '{{ c.previous_age|floatformat:"0" }}',
-                });
-            {% endfor %}
-            rating_data.push(
-                {
-                    'x': '{{ x.result.date|date:SHORT_DATE_FORMAT }}',
-                    'y': '{{ x.result.score|safe }}',
-                    'tournaments': tournaments,
-                });
+            rating_data.push({
+                'x': '{{ x.result.date|date:SHORT_DATE_FORMAT }}',
+                'y': '{{ x.result.score|safe }}',
+            });
             places_data.push({
                 'x': '{{ x.result.date|date:SHORT_DATE_FORMAT }}',
                 'y': '{{ x.result.place }}',
-                'tournaments': tournaments,
             });
         {% endfor %}
 
         var font_size = 15;
         var ratingChart = new Chart(ctx, {
+            responsive: true,
             type: 'line',
             data: {
                 labels: labels,
@@ -58,7 +50,7 @@
                         fill: false,
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgb(75, 192, 192)',
-                        yAxisID: 'y-axis-2'
+                        yAxisID: 'y-axis-2',
                     }
                 ]
             },
@@ -67,110 +59,40 @@
                 hoverMode: 'index',
                 stacked: false,
                 scales: {
-                    yAxes: [
-                        {
-                            type: 'linear',
+                    'y-axis-1': {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            fontSize: font_size,
                             display: true,
-                            position: 'left',
-                            id: 'y-axis-1',
-                            scaleLabel: {
-                                fontSize: font_size,
-                                display: true,
-                                labelString: '{% trans 'Rating' %}'
-                            }
-                        },
-                        {
-                            type: 'linear',
+                            labelString: '{% trans 'Rating' %}'
+                        }
+                    },
+                    'y-axis-2': {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        id: 'y-axis-2',
+                        min: 1,
+                        reverse: true,
+                        beginAtZero: false,
+                        title: {
+                            fontSize: font_size,
                             display: true,
-                            position: 'right',
-                            id: 'y-axis-2',
-                            ticks: {
-                                min: 1,
-                                reverse: true,
-                                beginAtZero: false
-                            },
-                            scaleLabel: {
-                                fontSize: font_size,
-                                display: true,
-                                labelString: '{% trans 'Place' %}'
-                            }
-                        }]
+                            labelString: '{% trans 'Place' %}'
+                        }
+                    },
                 },
                 legend: {
                     display: true,
                     labels: {
                         fontSize: font_size
                     }
-                },
-                tooltips: {
-                    callbacks: {
-                        title: function(tooltipItems, data) {
-                            var result = [tooltipItems[0].xLabel]
-                            console.log( data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index])
-                            var tournaments = data.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index].tournaments
-                            for(var i in tournaments){
-                                var tournament = tournaments[i]
-                                result.push(tournament.name + ': ' + tournament.previous_age + '% -> ' + tournament.age + "%")
-                            }
-                            return result
-                        }
-                    }
                 }
             }
         });
 
-        $(document).ready(function () {
-            var default_chart = localStorage.getItem('default_chart');
-            if (!default_chart) {
-                default_chart = 'normalized'
-            }
-
-            if (default_chart === 'normalized') {
-                display_normalized_chart();
-            } else {
-                display_original_chart();
-            }
-
-            $('#normalized-toggle').click(function () {
-                display_normalized_chart();
-            });
-
-            $('#original-toggle').click(function () {
-                display_original_chart();
-            });
-        });
-
-        function display_original_chart() {
-            $('#original-toggle').addClass('badge-success');
-            $('#original-toggle').removeClass('badge-light');
-
-            $('#normalized-toggle').removeClass('badge-success');
-            $('#normalized-toggle').addClass('badge-light');
-
-            ratingChart.options.scales.yAxes[0].ticks = {
-                min: 0,
-                max: 1000,
-                beginAtZero: true
-            };
-            ratingChart.options.scales.yAxes[1].ticks.max = last_rating_place;
-            ratingChart.update();
-
-            localStorage.setItem('default_chart', 'original');
-        }
-
-        function display_normalized_chart() {
-            $('#normalized-toggle').addClass('badge-success');
-            $('#normalized-toggle').removeClass('badge-light');
-
-            $('#original-toggle').removeClass('badge-success');
-            $('#original-toggle').addClass('badge-light');
-
-            ratingChart.options.scales.yAxes[0].ticks = {};
-            delete ratingChart.options.scales.yAxes[1].ticks.max;
-            ratingChart.update();
-
-            localStorage.setItem('default_chart', 'normalized');
-        }
     </script>
 {% endblock %}
 
@@ -209,14 +131,6 @@
             <div class="card card-body">
                 {{ rating_result.rating_calculation|linebreaks }}
             </div>
-        </div>
-
-        <div class="mt-3 d-none d-md-block d-print-none">
-            <p>
-                {% trans 'Chart scale:' %}
-                <span class="badge badge-light" id="normalized-toggle">{% trans 'normalized' %}</span>
-                <span class="badge badge-light" id="original-toggle">{% trans 'original' %}</span>
-            </p>
         </div>
 
         <canvas id="rating_chart" class="d-none d-md-block d-print-none"></canvas>

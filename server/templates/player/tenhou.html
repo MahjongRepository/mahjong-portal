@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block additional_js %}
-    <script src="{% static 'js/сhart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="{% static 'js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
+
     <script>
         var rank_changes = [];
         var ranks = [];
@@ -37,6 +39,7 @@
 
         if (rank_changes.length) {
             var rankChart = new Chart('rank_chart', {
+                responsive: true,
                 type: 'line',
                 data: {
                     datasets: [
@@ -46,26 +49,18 @@
                             fill: false,
                             borderColor: 'rgb(153, 102, 255)',
                             backgroundColor: 'rgb(153, 102, 255)',
-                            steppedLine: true
+                            stepped: true
                         }
                     ]
                 },
                 options: {
                     scales: {
-                        xAxes: [{
+                        x: {
                             type: 'time'
-                        }],
-                        yAxes: [{
+                        },
+                        y: {
                             type: 'category',
                             labels: ranks
-                        }]
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]['y'] || '';
-                                {# Понятия не имею почему без этого тултип кривой #}
-                            }
                         }
                     }
                 }
@@ -86,6 +81,7 @@
 
         if (pt_changes.length) {
             var ptChart = new Chart('pt_chart', {
+                responsive: true,
                 type: 'line',
                 data: {
                     datasets: [
@@ -101,17 +97,14 @@
                 },
                 options: {
                     scales: {
-                        xAxes: [{
+                        x: {
                             type: 'category',
-                            labels: labels
-                        }],
-                        yAxes: [{
-                            type: 'linear',
-                            ticks: {
-                                min: 0,
-                                max: {{ tenhou_data.0.dan_settings.end_pt }}
-                            }
-                        }]
+                            labels: labels,
+                        },
+                        y: {
+                            min: 0,
+                            max: {{ tenhou_data.0.dan_settings.end_pt }}
+                        }
                     }
                 }
             });
@@ -155,7 +148,7 @@
                     {% endwith %}
 
                     {% if forloop.first %}
-                        <div class="d-none d-md-block d-print-none">
+                        <div class="d-block d-print-none">
                             {% if tenhou_item.rank_changes %}
                                 <h5>{% trans "Rank chart" %}</h5>
                                 <canvas id="rank_chart"></canvas>
@@ -163,7 +156,7 @@
 
                             {% if tenhou_item.pt_changes %}
                                 <h5>{% trans "Pt chart" %}</h5>
-                                <canvas id="pt_chart" class="d-none d-md-block d-print-none"></canvas>
+                                <canvas id="pt_chart" class="d-block d-print-none"></canvas>
                             {% endif %}
                         </div>
                     {% endif %}

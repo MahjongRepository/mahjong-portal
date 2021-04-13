@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block additional_js %}
-    <script src="{% static 'js/сhart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="{% static 'js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
+
     <script>
         var four_players_pt_data = [];
         var four_players_pt_labels = [];
@@ -16,7 +18,8 @@
         {% endfor %}
 
         if (four_players_pt_data) {
-            var ptChart = new Chart('pt_chart_four', {
+            new Chart('pt_chart_four', {
+                responsive: true,
                 type: 'line',
                 data: {
                     datasets: [
@@ -32,17 +35,15 @@
                 },
                 options: {
                     scales: {
-                        xAxes: [{
+                        x: {
                             type: 'category',
                             labels: four_players_pt_labels
-                        }],
-                        yAxes: [{
+                        },
+                        y: {
                             type: 'linear',
-                            ticks: {
-                                min: 0,
-                                max: {{ ms_data.four_players_statistics.max_pt_for_chart|default:0 }}
-                            }
-                        }]
+                            min: 0,
+                            max: {{ ms_data.four_players_statistics.max_pt_for_chart|default:0 }}
+                        }
                     }
                 }
             });
@@ -56,7 +57,8 @@
         {% endfor %}
 
         if (three_players_pt_data) {
-            var ptChart = new Chart('pt_chart_three', {
+            new Chart('pt_chart_three', {
+                responsive: true,
                 type: 'line',
                 data: {
                     datasets: [
@@ -72,17 +74,15 @@
                 },
                 options: {
                     scales: {
-                        xAxes: [{
+                        x: {
                             type: 'category',
                             labels: three_players_pt_labels
-                        }],
-                        yAxes: [{
+                        },
+                        y: {
                             type: 'linear',
-                            ticks: {
-                                min: 0,
-                                max: {{ ms_data.three_players_statistics.max_pt_for_chart|default:0 }}
-                            }
-                        }]
+                            min: 0,
+                            max: {{ ms_data.three_players_statistics.max_pt_for_chart|default:0 }}
+                        }
                     }
                 }
             });
