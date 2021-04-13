@@ -37,7 +37,7 @@ services:
     command: ['cron', '-f']
 
   db:
-    image: postgres:12.3-alpine
+    image: postgres:13.2-alpine
     env_file:
       - ./.envs/.production.env
     restart: always
