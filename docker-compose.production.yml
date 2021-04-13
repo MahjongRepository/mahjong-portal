@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./server/collected_static:/app/server/collected_static
+      - ./server/collected_static:/app/collected_static/
       - ./tmp:/tmp
     restart: always
     logging:
