@@ -1,21 +1,21 @@
 # each one hour
-0 * * * * root /usr/local/bin/python /app/server/manage.py update_ms_statistics > /proc/1/fd/1 2>/proc/1/fd/2
+0 * * * * python /app/manage.py update_ms_statistics
 
 # once a day
-10 1 * * * root /usr/local/bin/python /app/server/manage.py rating_calculate rr > /proc/1/fd/1 2>/proc/1/fd/2
-20 1 * * * root /usr/local/bin/python /app/server/manage.py rating_calculate crr > /proc/1/fd/1 2>/proc/1/fd/2
-30 1 * * * root /usr/local/bin/python /app/server/manage.py rating_calculate online > /proc/1/fd/1 2>/proc/1/fd/2
-40 1 * * * root /usr/local/bin/python /app/server/manage.py rating_calculate ema > /proc/1/fd/1 2>/proc/1/fd/2
+10 1 * * * python /app/manage.py rating_calculate rr
+20 1 * * * python /app/manage.py rating_calculate crr
+30 1 * * * python /app/manage.py rating_calculate online
+40 1 * * * python /app/manage.py rating_calculate ema
 
 # once a day
-10 0 * * * root /usr/local/bin/python /app/server/manage.py associate_players_with_club > /proc/1/fd/1 2>/proc/1/fd/2
-20 0 * * * root /usr/local/bin/python /app/server/manage.py load_pantheon_data --rebuild-from-zero 1 > /proc/1/fd/1 2>/proc/1/fd/2
+10 0 * * * python /app/manage.py associate_players_with_club
+20 0 * * * python /app/manage.py load_pantheon_data --rebuild-from-zero 1
 
 # each 3 minutes
-*/3 * * * * root /usr/local/bin/python /app/server/manage.py download_latest_games > /proc/1/fd/1 2>/proc/1/fd/2
+*/3 * * * * python /app/manage.py download_latest_games
 
 # 23:55 Tokyo time
-55 14 * * * root /usr/local/bin/python /app/server/manage.py update_tenhou_yakuman > /proc/1/fd/1 2>/proc/1/fd/2
+55 14 * * * python /app/manage.py update_tenhou_yakuman
 
 # each 10 minutes
-*/10 * * * * root /usr/local/bin/python /app/server/manage.py update_tenhou_rate > /proc/1/fd/1 2>/proc/1/fd/2
+*/10 * * * * python /app/manage.py update_tenhou_rate
