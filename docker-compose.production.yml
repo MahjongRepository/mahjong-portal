@@ -12,6 +12,7 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/server/collected_static
+      - ./tmp:/tmp
     restart: always
     logging:
       driver: json-file
@@ -28,6 +29,8 @@ services:
       - db
     env_file:
       - ./.envs/.production.env
+    volumes:
+      - ./tmp:/tmp
     restart: always
     logging:
       driver: json-file
