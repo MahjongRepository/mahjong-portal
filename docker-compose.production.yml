@@ -37,6 +37,7 @@ services:
       options:
         max-size: '10m'
         max-file: '5'
+    user: root
     command: ['crond', '-f']
 
   db:
