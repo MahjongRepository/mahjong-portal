@@ -34,7 +34,7 @@ services:
       options:
         max-size: '10m'
         max-file: '5'
-    command: ['cron', '-f']
+    command: ['crond', '-f']
 
   db:
     image: postgres:13.2-alpine
