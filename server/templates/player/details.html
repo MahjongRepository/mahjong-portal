@@ -7,7 +7,12 @@
 
 {% block content %}
     <div>
-        <h1>{{ player.full_name }}</h1>
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         {% include 'player/_player_header.html' %}
 
         {% if rating_results %}

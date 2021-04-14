@@ -7,7 +7,6 @@
 
 {% block content %}
     <div>
-        <h1>{{ player.full_name }}</h1>
         {% include 'player/_player_header.html' %}
 
         <p><a href="{% url 'player_details' player.slug %}">{% trans 'Player page' %}</a></p>

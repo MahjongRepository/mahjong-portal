@@ -58,6 +58,10 @@ class Player(BaseModel):
     def latest_ema_id(self):
         return int(Player.ema_queryset().first().ema_id)
 
+    @property
+    def attaching_request_in_progress(self):
+        return self.attaching_request.filter(is_processed=False).exists()
+
     @staticmethod
     def ema_queryset():
         return (

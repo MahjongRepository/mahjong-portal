@@ -1,5 +1,52 @@
 {% load i18n russian_words_morph %}
 
+<div class="row">
+    <div class="col">
+        <h1>{{ player.full_name }}</h1>
+    </div>
+    <div class="col text-right mt-2">
+        {% if user.is_authenticated %}
+            {% if player.attaching_request_in_progress %}
+                <p class="small">{% trans 'Request is processing...' %}</p>
+            {% else %}
+                {% if user.attached_player_id == player.id %}
+                    <span class="badge badge-primary">{% trans "It's me!" %}</span>
+                {% else %}
+                    <button type="button" data-toggle="modal" data-target="#requestModal" class="btn btn-sm btn-success">{% trans "Request verification" %}</button>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        <div class="modal fade" id="requestModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{% trans 'Request verification' %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'request_player_and_user_connection' player.slug %}" class="form" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-body text-justify">
+                            <p>{% trans 'You can create a request for connecting your account to the already exists player information. ' %}</p>
+                            <p>{% trans 'For that please provide your social media contacts (tg, vk, something else), so the admin will be able to verify your identity.' %}</p>
+                            <p>{% trans 'Verification usually takes a couple of days and once it has been done you will be able to change player info (name, city, etc.) and you will be able to apply for tournaments with simplifying flow.' %}</p>
+                            <div class="form-group">
+                                <textarea required name="contacts" class="form-control" rows="3" placeholder="{% trans 'Your social media contacts.' %}"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Close' %}</button>
+                            <button type="submit" class="btn btn-primary">{% trans 'Request' %}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% with player.titles.all as titles %}
     {% if titles %}
         <p>

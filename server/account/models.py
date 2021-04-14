@@ -16,5 +16,9 @@ class User(AbstractUser):
 
 class AttachingPlayerRequest(BaseModel):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    player = models.ForeignKey(Player, on_delete=models.PROTECT)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name="attaching_request")
     is_processed = models.BooleanField(default=False)
+    contacts = models.TextField()
+
+    def __unicode__(self):
+        return self.player.__unicode__()

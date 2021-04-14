@@ -1,7 +1,13 @@
+from django.contrib import messages
 from django.contrib.auth import login
-from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 
 from account.forms import UserCreationForm
+from account.models import AttachingPlayerRequest
+from player.models import Player
 
 
 def account_settings(request):
@@ -17,3 +23,16 @@ def sign_up(request):
             login(request, user)
             return redirect("home")
     return render(request, "account/sign_up.html", {"form": form})
+
+
+@login_required
+@require_POST
+def request_player_and_user_connection(request, slug):
+    player = get_object_or_404(Player, slug=slug)
+    contacts = request.POST.get("contacts")
+    if not contacts:
+        return redirect("player_details", slug)
+
+    AttachingPlayerRequest.objects.create(user=request.user, player=player, contacts=contacts)
+    messages.success(request, _("Request was created."))
+    return redirect("player_details", player.slug)
