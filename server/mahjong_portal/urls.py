@@ -1,7 +1,6 @@
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
 from django.views.decorators.cache import cache_page
 
@@ -53,6 +52,5 @@ urlpatterns += i18n_patterns(
     url(r"^ms/", include("player.mahjong_soul.urls")),
     url(r"^system/", include("system.urls")),
     url(r"^ema/", include("ema.urls")),
-    url(r"^login/$", auth_views.LoginView.as_view(template_name="account/login.html"), name="login"),
-    url(r"^logout/$", auth_views.LogoutView.as_view(), name="logout"),
+    url(r"^account/", include("account.urls")),
 )

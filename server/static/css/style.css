@@ -1,5 +1,5 @@
-body {
-    margin-top: 80px;
+main > .container {
+    padding: 80px 15px 0;
 }
 
 @media print {
@@ -16,7 +16,6 @@ body {
 
 .languageChange select {
     width: 150px;
-    margin-top: 40px;
     margin-right: 20px;
 }
 
