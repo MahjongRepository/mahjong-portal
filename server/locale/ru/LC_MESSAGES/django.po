@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-14 02:46+0000\n"
+"POT-Creation-Date: 2021-04-15 23:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -447,13 +447,13 @@ msgid "Sign up"
 msgstr "Зарегистрироваться"
 
 #: templates/account/login.html:20 templates/account/sign_up.html:9
-#: templates/base.html:131
+#: templates/base.html:124
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
 
-#: templates/account/settings.html:6 templates/base.html:124
-msgid "Account settings"
+#: templates/account/settings.html:6 templates/base.html:103
+msgid "User settings"
 msgstr "Настройки аккаунта"
 
 #: templates/account/settings.html:8
@@ -487,12 +487,11 @@ msgstr "О рейтингах"
 msgid "WRC 2020"
 msgstr "WRC 2020"
 
-#: templates/base.html:57 templates/base.html:107
-#: templates/club/tournaments.html:5 templates/club/tournaments.html:27
-#: templates/club/tournaments.html:34 templates/club/tournaments.html:35
-#: templates/player/rating_details.html:161 templates/player/tournaments.html:5
-#: templates/player/tournaments.html:15 templates/player/tournaments.html:62
-#: templates/player/tournaments.html:63
+#: templates/base.html:57 templates/club/tournaments.html:5
+#: templates/club/tournaments.html:27 templates/club/tournaments.html:34
+#: templates/club/tournaments.html:35 templates/player/rating_details.html:161
+#: templates/player/tournaments.html:5 templates/player/tournaments.html:15
+#: templates/player/tournaments.html:62 templates/player/tournaments.html:63
 #: templates/tournament_admin/managed_tournaments.html:12
 #: templates/tournament_admin/tournament_edit.html:12
 #: templates/tournament_admin/tournament_manage.html:12
@@ -562,11 +561,15 @@ msgstr "Заявка на турнир"
 msgid "Championships"
 msgstr "Чемпионаты"
 
-#: templates/base.html:102
+#: templates/base.html:105
+msgid "My profile"
+msgstr "Мой профиль"
+
+#: templates/base.html:108
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:103 templates/ema_players_admin/add_player.html:5
+#: templates/base.html:109 templates/ema_players_admin/add_player.html:5
 #: templates/ema_players_admin/players_list.html:5
 #: templates/system_index.html:5
 #: templates/tournament_admin/managed_tournaments.html:5
@@ -578,15 +581,23 @@ msgstr "Django админка"
 msgid "Admin page"
 msgstr "Админка"
 
-#: templates/base.html:126
+#: templates/base.html:113
+msgid "My tournaments"
+msgstr "Мои турниры"
+
+#: templates/base.html:116
+msgid "EMA players"
+msgstr "EMA игроки"
+
+#: templates/base.html:119
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:149
+#: templates/base.html:142
 msgid "source code"
 msgstr "исходный код"
 
-#: templates/base.html:174 templates/base.html:175
+#: templates/base.html:167 templates/base.html:168
 msgid "Search"
 msgstr "Поиск"
 
@@ -870,7 +881,7 @@ msgstr "Это я!"
 #: templates/player/_player_header.html:15
 #: templates/player/_player_header.html:24
 msgid "Request verification"
-msgstr "Запрос подтверждения"
+msgstr "Запросить подтверждение"
 
 #: templates/player/_player_header.html:32
 msgid ""

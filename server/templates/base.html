@@ -92,27 +92,6 @@
                     <a class="dropdown-item" href="{% url 'championships' %}">{% trans 'Championships' %}</a>
                 </div>
             </li>
-            {% if user.is_superuser or user.is_tournament_manager or user.is_ema_players_manager %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Admin
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% if user.is_superuser %}
-                            <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans 'Django admin' %}</a>
-                            <a class="dropdown-item" href="{% url 'system_index' %}">{% trans 'Admin page' %}</a>
-                            <a class="dropdown-item" href="{% url 'transliterate_text' %}">Transliterate</a>
-                        {% endif %}
-                        {% if user.is_tournament_manager %}
-                            <a class="dropdown-item" href="{% url 'managed_tournaments' %}">{% trans 'Tournaments' %}</a>
-                        {% endif %}
-                        {% if user.is_ema_players_manager %}
-                            <a class="dropdown-item" href="{% url 'list_of_ema_players' %}">EMA игроки</a>
-                        {% endif %}
-
-                    </div>
-                </li>
-            {% endif %}
         </ul>
         {% if user.is_authenticated %}
             <ul class="navbar-nav ">
@@ -121,7 +100,24 @@
                         {{ user.username }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdown">
-                        <a class="dropdown-item" href="{% url 'account_settings' %}">{% trans 'Account settings' %}</a>
+                        <a class="dropdown-item" href="{% url 'account_settings' %}">{% trans 'User settings' %}</a>
+                        {% if user.attached_player %}
+                            <a class="dropdown-item" href="{% url 'player_details' user.attached_player.slug %}">{% trans 'My profile' %}</a>
+                        {% endif %}
+                        {% if user.is_tournament_manager %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'managed_tournaments' %}">{% trans 'My tournaments' %}</a>
+                        {% endif %}
+                        {% if user.is_ema_players_manager %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'list_of_ema_players' %}">{% trans 'EMA players' %}</a>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">{% trans 'Django admin' %}</a>
+                            <a class="dropdown-item" href="{% url 'new_tournaments' %}">{% trans 'New tournaments' %}</a>
+                            <a class="dropdown-item" href="{% url 'transliterate_text' %}">Transliterate</a>
+                        {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'logout' %}">{% trans 'Logout' %}</a>
                     </div>
