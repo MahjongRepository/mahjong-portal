@@ -79,3 +79,9 @@ main > .container {
     color: #fff;
     background-color: #72A0C1;
 }
+
+.verified-player-badge {
+    width: 20px;
+    height: 20px;
+    fill: #28a745;
+}

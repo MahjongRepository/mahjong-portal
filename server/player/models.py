@@ -62,6 +62,10 @@ class Player(BaseModel):
     def attaching_request_in_progress(self):
         return self.attaching_request.filter(is_processed=False).exists()
 
+    @property
+    def is_verified(self):
+        return self.attaching_request.filter(is_processed=True).exists()
+
     @staticmethod
     def ema_queryset():
         return (

@@ -1,8 +1,8 @@
-{% load i18n russian_words_morph %}
+{% load i18n russian_words_morph static %}
 
 <div class="row">
     <div class="col">
-        <h1>{{ player.full_name }}</h1>
+        <h1>{{ player.full_name }}{% if player.is_verified %}{% include 'player/_verified_player.html' %}{% endif %}</h1>
     </div>
     <div class="col text-right mt-2">
         {% if user.is_authenticated %}
@@ -11,8 +11,6 @@
             {% else %}
                 {% if user.attached_player_id == player.id %}
                     <span class="badge badge-primary">{% trans "It's me!" %}</span>
-                {% else %}
-                    <button type="button" data-toggle="modal" data-target="#requestModal" class="btn btn-sm btn-success">{% trans "Request verification" %}</button>
                 {% endif %}
             {% endif %}
         {% endif %}
