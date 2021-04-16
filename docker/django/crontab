@@ -12,7 +12,7 @@
 
 # once a day
 10 0 * * * python /app/manage.py associate_players_with_club
-20 0 * * * python /app/manage.py load_pantheon_data --rebuild-from-zero 1
+40 0 * * * python /app/manage.py load_pantheon_data --rebuild-from-zero 1
 
 # each 3 minutes
 */3 * * * * python /app/manage.py download_latest_games

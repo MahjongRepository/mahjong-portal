@@ -29,14 +29,9 @@
             {% include 'tournament/_tournaments_table.html' %}
         {% endif %}
 
-        {% if club.rating_description %}
-            <h2>{% trans 'Club rating' %}</h2>
-            <p>{{ club.rating_description|linebreaksbr|urlize }}</p>
-        {% endif %}
-
         {% if club_rating %}
-            <h2 id="stat">{% trans 'Club statistics' %}</h2>
-            <p>{% trans 'We are displaying here players with 10+ club games from the last 180 days.' %}</p>
+            <h3 id="stat">{% trans 'Club statistics' %}</h3>
+            <p>{% trans 'We are displaying here players with 10+ club games from the last 360 days.' %}</p>
             <p> {% trans 'Sorting:' %}
                 <select id="sortingSelect" class="form-control d-inline" style="width: 300px; ">
                     {% for key, value in sorting.items %}
@@ -114,8 +109,23 @@
             </div>
         {% endif %}
 
+        {% if club.current_club_rating_pantheon_id %}
+            <h2>{% trans 'Club games' %}</h2>
+            <p>
+                {% trans 'Current rating games:' %} <a href="{{ club.get_link_to_club_rating }}" target="_blank">{{ club.get_link_to_club_rating }}</a>
+            </p>
+            {% if club.pantheon_ids %}
+                <p class="mb-0">{% trans 'Previous club rating events:' %}</p>
+                <ul class="mt-0">
+                    {% for event_link in club.get_links_to_previous_games %}
+                        <li><a href="{{ event_link }}" target="_blank">{{ event_link }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+
         {% if club_sessions %}
-            <h2>{% trans 'Latest 10 club games' %}</h2>
+            <h3>{% trans 'Latest 10 club games' %}</h3>
 
             {% timezone club.timezone %}
                 <p>{% trans 'Total games: ' %} {{ total_sessions }}</p>

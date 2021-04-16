@@ -1,3 +1,5 @@
+import json
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -28,7 +30,7 @@ class Command(BaseCommand):
             clubs = Club.objects.exclude(pantheon_ids__isnull=True)
 
         for club in clubs:
-            event_ids = club.pantheon_ids.split(",")
+            event_ids = club.pantheon_ids.split(",") + club.current_club_rating_pantheon_id
             print("")
             print("Processing: id={}, {}".format(club.id, club.name))
             print("Events: {}".format(event_ids))
@@ -54,6 +56,7 @@ class Command(BaseCommand):
         player_ids = list(set(player_ids))
         players = PantheonPlayer.objects.filter(id__in=player_ids)
 
+        missed_players = []
         # set pantheon ids
         for pantheon_player in players:
             temp = pantheon_player.display_name.split(" ")
@@ -82,7 +85,6 @@ class Command(BaseCommand):
                     # if we have multiple players with same name
                     # let's try to add city to query
                     try:
-                        print(last_name)
                         player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name, city=club.city)
                     except (Player.DoesNotExist, Player.MultipleObjectsReturned):
                         # two players with same name from the same city
@@ -92,12 +94,17 @@ class Command(BaseCommand):
             if player:
                 club.players.add(player)
             else:
-                games = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
-                if games >= 10:
-                    print(
-                        "Missed player: id={}, {}, Games: {} ".format(
-                            pantheon_player.id, pantheon_player.display_name, games
-                        )
+                games_count = PantheonSessionResult.objects.filter(player_id=pantheon_player.id).count()
+                if games_count >= 10:
+                    missed_players.append(
+                        {
+                            "pantheon_id": pantheon_player.id,
+                            "name": pantheon_player.display_name,
+                            "games_count": games_count,
+                        }
                     )
+
+        missed_players = sorted(missed_players, key=lambda x: -x["games_count"])
+        print(json.dumps(missed_players, indent=2))
 
         print("Associating completed")

@@ -29,14 +29,12 @@ class ClubAdmin(admin.ModelAdmin):
                     "slug",
                     "description_ru",
                     "description_en",
-                    "rating_description_ru",
-                    "rating_description_en",
                 ]
             },
         ],
         ["Contacts", {"fields": ["website"]}],
         ["Location", {"fields": ["country", "city", "lat", "lng", "timezone"]}],
-        ["System", {"fields": ["pantheon_ids"]}],
+        ["System", {"fields": ["current_club_rating_pantheon_id", "pantheon_ids"]}],
     ]
 
 

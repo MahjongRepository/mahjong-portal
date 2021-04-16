@@ -17,7 +17,7 @@ def get_date_string():
 
 
 class Command(BaseCommand):
-    NUMBER_OF_CLUB_STATISTICS_DAYS = 180
+    NUMBER_OF_CLUB_STATISTICS_DAYS = 360
 
     def add_arguments(self, parser):
         parser.add_argument("--rebuild-from-zero", default=False, type=bool)
@@ -35,7 +35,7 @@ class Command(BaseCommand):
             clubs = Club.objects.exclude(pantheon_ids__isnull=True)
 
         for club in clubs:
-            event_ids = club.pantheon_ids.split(",")
+            event_ids = club.pantheon_ids.split(",") + club.current_club_rating_pantheon_id
             print("")
             print("Processing: id={}, {}".format(club.id, club.name))
             print("Events: {}".format(event_ids))
