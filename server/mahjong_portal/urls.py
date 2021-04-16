@@ -53,4 +53,5 @@ urlpatterns += i18n_patterns(
     url(r"^system/", include("system.urls")),
     url(r"^ema/", include("ema.urls")),
     url(r"^account/", include("account.urls")),
+    url(r"^wiki/", include("wiki.urls")),
 )
