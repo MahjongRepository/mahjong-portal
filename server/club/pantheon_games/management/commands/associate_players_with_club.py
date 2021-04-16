@@ -30,7 +30,7 @@ class Command(BaseCommand):
             clubs = Club.objects.exclude(pantheon_ids__isnull=True)
 
         for club in clubs:
-            event_ids = club.pantheon_ids.split(",") + club.current_club_rating_pantheon_id
+            event_ids = club.pantheon_ids.split(",") + [club.current_club_rating_pantheon_id]
             print("")
             print("Processing: id={}, {}".format(club.id, club.name))
             print("Events: {}".format(event_ids))
