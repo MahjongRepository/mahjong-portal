@@ -12,6 +12,7 @@ services:
       - db
     volumes:
       - ./server/collected_static:/app/collected_static/
+      - ./server/whoosh_index:/app/whoosh_index/
       - ./tmp:/tmp
     restart: always
     logging:
@@ -30,6 +31,7 @@ services:
     env_file:
       - ./.envs/.production.env
     volumes:
+      - ./server/whoosh_index:/app/whoosh_index/
       - ./tmp:/tmp
     restart: always
     logging:
