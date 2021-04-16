@@ -1,5 +1,3 @@
-import json
-
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -105,6 +103,9 @@ class Command(BaseCommand):
                     )
 
         missed_players = sorted(missed_players, key=lambda x: -x["games_count"])
-        print(json.dumps(missed_players, indent=2))
+        for missed_player in missed_players:
+            print(
+                f"Missed player: id={missed_player['pantheon_id']}, {missed_player['name']}, Games: {missed_player['games_count']} "
+            )
 
         print("Associating completed")
