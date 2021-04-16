@@ -38,3 +38,11 @@ class Club(BaseModel):
     def get_links_to_previous_games(self):
         ids = sorted([int(x) for x in self.pantheon_ids.split(",")], reverse=True)
         return [self.get_link_to_club_rating(x) for x in ids]
+
+    def get_all_pantheon_ids(self):
+        ids = []
+        if self.pantheon_ids:
+            ids.extend(self.pantheon_ids.split(","))
+        if self.current_club_rating_pantheon_id:
+            ids.append(self.current_club_rating_pantheon_id)
+        return ids

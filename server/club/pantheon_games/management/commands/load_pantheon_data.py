@@ -32,10 +32,13 @@ class Command(BaseCommand):
         if club_id:
             clubs = Club.objects.filter(id=club_id)
         else:
-            clubs = Club.objects.exclude(pantheon_ids__isnull=True)
+            clubs = Club.objects.all()
 
         for club in clubs:
-            event_ids = club.pantheon_ids.split(",") + [club.current_club_rating_pantheon_id]
+            event_ids = club.get_all_pantheon_ids()
+            if not event_ids:
+                continue
+
             print("")
             print("Processing: id={}, {}".format(club.id, club.name))
             print("Events: {}".format(event_ids))
