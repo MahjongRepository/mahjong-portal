@@ -11,3 +11,6 @@ class PlayerIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         return self.get_model().objects.all()
+
+    def get_updated_field(self):
+        return "updated_on"

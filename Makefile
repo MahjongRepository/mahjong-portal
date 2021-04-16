@@ -14,8 +14,7 @@ run-production-update: down run-migrations-collectstatic-search-index up-daemon
 run-migrations-collectstatic-search-index:
 	docker-compose -f $(COMPOSE_FILE) pull
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py migrate
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py collectstatic --noinput --clear --verbosity 0
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py rebuild_index --noinput
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py collectstatic --noinput --clear
 
 logs:
 	docker-compose -f $(COMPOSE_FILE) logs -f
