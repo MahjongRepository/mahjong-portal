@@ -54,7 +54,7 @@ release-docker-image:
 	docker buildx build --push \
 		--build-arg mode=production \
 		--tag ghcr.io/mahjongrepository/mahjong-portal:latest \
-		--tag ghcr.io/mahjongrepository/mahjong-portal:$(shell git show-ref refs/heads/master --hash) \
+		--tag ghcr.io/mahjongrepository/mahjong-portal:$(shell git show-ref refs/heads/master --hash=7) \
 		--file ./docker/django/Dockerfile .
 
 #### Code formatters and linters ####
