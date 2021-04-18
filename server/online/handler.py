@@ -381,9 +381,7 @@ class TournamentHandler:
                 tenhou_nickname__iexact=tenhou_nickname, tournament=self.tournament
             )
         except OnlineTournamentRegistration.DoesNotExist:
-            return _(
-                "Your tenhou.net username is out of tournament registration list. Contact the administrator %(admin_username)s."
-            ) % {"admin_username": self.get_admin_username()}
+            return _("You need to register for the tournament on mahjong.click first.")
 
         if TournamentPlayers.objects.filter(
             tenhou_username__iexact=tenhou_nickname, tournament=self.tournament
