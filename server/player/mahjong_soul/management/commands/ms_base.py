@@ -50,7 +50,7 @@ class MSBaseCommand(BaseCommand):
 
             async with session.get("{}/1/v{}/config.json".format(MS_HOST, version)) as res:
                 config = await res.json()
-                url = config["ip"][0]["region_urls"][1]
+                url = config["ip"][0]["region_urls"][1]["url"]
 
             async with session.get(url + "?service=ws-gateway&protocol=ws&ssl=true") as res:
                 servers = await res.json()
