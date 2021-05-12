@@ -28,6 +28,7 @@
                     <th scope="col">{% trans 'Rank' %}</th>
                     <th scope="col">{% trans 'Points' %}</th>
                     <th scope="col">{% trans 'Account' %}</th>
+                    <th scope="col">{% trans 'Games' %}</th>
                     <th scope="col">{% trans 'Last played date' %}</th>
                     <th scope="col">{% trans 'City' %}</th>
                 </tr>
@@ -49,6 +50,9 @@
                         </td>
                         <td>
                             {{ stat.account.account_name }}
+                        </td>
+                        <td>
+                            {{ stat.played_games }}
                         </td>
                         <td>
                             {{ stat.last_played_date|date:SHORT_DATE_FORMAT }}

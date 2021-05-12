@@ -64,6 +64,10 @@ class MSAccountStatistic(models.Model):
     def __str__(self):
         return self.__unicode__()
 
+    @property
+    def played_games(self):
+        return self.tonpusen_games + self.hanchan_games
+
     def get_rank_display(self):
         return RANK_LABELS.get(self.rank)
 
