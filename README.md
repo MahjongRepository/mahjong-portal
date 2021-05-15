@@ -34,9 +34,9 @@ On your host machine you can set up these cron commands to make backups:
 
 ```
 # every 6 hours
-0 */6 * * * /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh hourly
+0 */6 * * * cd /root/portal/ && make db-backup backup_type=hourly
 # once a week
-0 0 * * 0 /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh weekly
+0 0 * * 0 cd /root/portal/ && make db-backup backup_type=weekly
 # once a month
-0 0 1 * * /usr/local/bin/docker-compose -f /path/to/project/production.yml run --rm db bash backup.sh monthly
+0 0 2 * * cd /root/portal/ && make db-backup backup_type=monthly
 ```

@@ -50,6 +50,15 @@ db-restore:
 	--rm db sh -c 'PGPASSWORD=$$POSTGRES_PASSWORD psql -U $$POSTGRES_USER -h $$POSTGRES_HOST $$POSTGRES_DB < /tmp/dump.sql' \
 	--env-file .envs/.local
 
+db-backup:
+	/usr/local/bin/docker-compose -f $(COMPOSE_FILE) up --detach db
+	/usr/local/bin/docker-compose -f $(COMPOSE_FILE) run \
+		-v /tmp/:/tmp/ \
+		--user=root \
+		--rm db sh -c \
+  		'PGPASSWORD=$$POSTGRES_PASSWORD pg_dump -h db -U $$POSTGRES_USER $$POSTGRES_DB > /tmp/portal.sql'
+	bash ./docker/django/backup.sh $(backup_type)
+
 release-docker-image:
 	docker buildx build --push \
 		--build-arg mode=production \
