@@ -14,6 +14,7 @@ services:
       - ./server/collected_static:/app/collected_static/
       - ./server/whoosh_index:/app/whoosh_index/
       - ./tmp:/tmp
+      - ./server/shared/:/app/shared/
     restart: always
     logging:
       driver: json-file

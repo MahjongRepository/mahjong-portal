@@ -7,8 +7,8 @@ from online.models import TournamentPlayers
 
 
 class TeamSeating:
-    initial_seating = os.path.join(settings.BASE_DIR, "initial_seating.txt")
-    processed_seating = os.path.join(settings.BASE_DIR, "team_seating.json")
+    initial_seating = os.path.join(settings.BASE_DIR, "shared", "initial_seating.txt")
+    processed_seating = os.path.join(settings.BASE_DIR, "shared", "team_seating.json")
 
     @staticmethod
     def get_seating_for_round(round_number):
@@ -47,7 +47,7 @@ class TeamSeating:
 
         # we need to be sure that there is only 4 players in all teams
         for key in teams.keys():
-            assert len(teams[key]) == 4
+            assert len(teams[key]) == 4, f"{key} = {len(teams[key])}"
 
         team_players_map = {}
 

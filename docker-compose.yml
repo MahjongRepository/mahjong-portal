@@ -15,6 +15,7 @@ services:
       - db
     volumes:
       - ./server/:/app
+      - ./server/shared/:/app/shared/
     ports:
       - '8060:8060'
     command: python manage.py runserver 0.0.0.0:8060

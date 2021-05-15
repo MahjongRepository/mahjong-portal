@@ -10,6 +10,7 @@ server/team_seating.json
 server/.ms
 server/.flake8
 server/pyproject.toml
+server/shared
 
 *.log
 *.pot

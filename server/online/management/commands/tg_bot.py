@@ -188,7 +188,7 @@ class TelegramBot:
 
         message = "1. Турнирное лобби:\n {} \n".format(tournament_handler.get_lobby_link())
         message += "2. Статистика:\n {} \n".format(tournament_handler.get_rating_link())
-        # message += "2.1. Командная статистика:\n {}/team \n".format(tournament_handler.get_rating_link())
+        message += "2.1. Командная статистика:\n {}/team \n".format(tournament_handler.get_rating_link())
         message += "3. Текущие игры в лобби:\n https://tenhou.net/wg/?{} \n".format(
             settings.TOURNAMENT_PUBLIC_LOBBY[:5]
         )

@@ -14,6 +14,7 @@ settings_local.py
 backups
 db.sqlite3
 whoosh_index
+server/shared
 
 initial_seating.txt
 team_seating.json
