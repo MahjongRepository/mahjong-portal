@@ -34,9 +34,9 @@ On your host machine you can set up these cron commands to make backups:
 
 ```
 # every 6 hours
-0 */6 * * * cd /root/portal/ && make db-backup backup_type=hourly
+0 */6 * * * cd /root/portal/ && make db-backup backup_type=hourly && /root/upload_files.sh
 # once a week
-0 0 * * 0 cd /root/portal/ && make db-backup backup_type=weekly
+0 0 * * 0 cd /root/portal/ && make db-backup backup_type=weekly && /root/upload_files.sh
 # once a month
-0 0 2 * * cd /root/portal/ && make db-backup backup_type=monthly
+0 0 2 * * cd /root/portal/ && make db-backup backup_type=monthly && /root/upload_files.sh
 ```

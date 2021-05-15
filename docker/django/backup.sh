@@ -20,3 +20,4 @@ else
 fi
 
 zip -r $FILENAME $BACKUP_FILE
+rm $BACKUP_FILE
