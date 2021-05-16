@@ -160,6 +160,10 @@ class TelegramBot:
 
     @staticmethod
     def set_game_log(update: Update, context: CallbackContext):
+        if update.message.from_user is None:
+            update.message.reply_text("Вы что-то делаете не так. Обратитесь к администратору.")
+            return
+
         logger.info("Set game log command. {}, {}".format(update.message.from_user.username, context.args))
         activate("ru")
 
@@ -204,6 +208,11 @@ class TelegramBot:
     @staticmethod
     def set_tenhou_nickname(update: Update, context: CallbackContext):
         activate("ru")
+
+        if update.message.from_user is None:
+            update.message.reply_text("Вы что-то делаете не так. Обратитесь к администратору.")
+            return
+
         logger.info("Nickname command. {}, {}".format(update.message.from_user.username, context.args))
 
         if not len(context.args):
