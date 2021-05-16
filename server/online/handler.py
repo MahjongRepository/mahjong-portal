@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import random
 import threading
 from copy import copy
 from datetime import timedelta
@@ -449,7 +448,7 @@ class TournamentHandler:
                 logger.info(f"Preparing table with player_ids={item}")
 
                 # shuffle player winds
-                random.shuffle(item)
+                # random.shuffle(item)
 
                 try:
                     game = TournamentGame.objects.create(

@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 from django.conf import settings
 
@@ -77,6 +78,9 @@ class TeamSeating:
             for t in tables_text:
                 players_ids = [int(x) for x in t.split("-")]
                 assert len(players_ids) == 4
+
+                # shuffle player winds
+                random.shuffle(players_ids)
 
                 tables.append(players_ids)
 
