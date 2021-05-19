@@ -188,6 +188,8 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         stat.month_average_place = month_average_place
         stat.save()
 
+        return stat
+
 
 def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
     url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
