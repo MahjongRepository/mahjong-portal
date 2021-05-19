@@ -63,7 +63,11 @@
                         <th scope="col">{% trans 'Name' %}</th>
                         <th scope="col">{% trans 'City' %}</th>
                         {% if tournament.is_online %}
-                            <th scope="col">{% trans 'Tenhou.net nickname' %}</th>
+                            {% if tournament.is_majsoul_tournament %}
+                                <th scope="col">{% trans 'Majsoul nickname' %}</th>
+                            {% else %}
+                                <th scope="col">{% trans 'Tenhou.net nickname' %}</th>
+                            {% endif %}
                         {% endif %}
                         <th scope="col">{% trans 'Dan' %}</th>
                         {% if tournament.display_notes %}
@@ -93,9 +97,11 @@
                                     {{ registration_item.city }}
                                 {% endif %}
                             </td>
+
                             {% if tournament.is_online %}
                                 <td>{{ registration_item.tenhou_nickname }}</td>
                             {% endif %}
+
                             <td>
                                 {% with registration_item.player as player %}
                                     {% include 'player/_online_account.html' %}

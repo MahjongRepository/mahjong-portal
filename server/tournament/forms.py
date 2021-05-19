@@ -42,6 +42,9 @@ class OnlineTournamentRegistrationForm(forms.ModelForm):
         else:
             del self.fields["notes"]
 
+        if tournament.is_majsoul_tournament:
+            self.fields["tenhou_nickname"].label = _("Majsoul nickname")
+
 
 class TournamentApplicationForm(forms.ModelForm):
     allow_to_save_data = forms.BooleanField(required=True)

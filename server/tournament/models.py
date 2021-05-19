@@ -64,6 +64,7 @@ class Tournament(BaseModel):
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
     is_event = models.BooleanField(default=False)
+    is_majsoul_tournament = models.BooleanField(default=False)
 
     russian_cup = models.BooleanField(default=False)
 
