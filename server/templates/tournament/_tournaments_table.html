@@ -42,7 +42,7 @@
                 {% else %}
                     <th scope="row">{{ forloop.counter }}</th>
                 {% endif %}
-                <td><a href="{{ tournament.get_url }}">{{ tournament.name }}</a></td>
+                <td><a href="{{ tournament.get_url }}">{{ tournament.name|truncatewords:4 }}</a></td>
                 <td>
                     {% if tournament.is_upcoming %}
                         <nobr>{{ tournament.start_date|date:SHORT_DATE_FORMAT }}</nobr>
