@@ -15,12 +15,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("{0}: Start".format(get_date_string()))
 
-        tenhou_objects = TenhouNickname.objects.all()
+        tenhou_objects = TenhouNickname.objects.filter(is_active=True)
         now = timezone.now().date()
         for tenhou_object in tenhou_objects:
             delta = now - tenhou_object.last_played_date
             # let's check account deactivation in advance
             if delta.days >= 140:
+                print()
                 print(f"{tenhou_object.tenhou_username} didn't play ranking games in {delta.days} days.")
                 print("Checking not ranking games...")
 
@@ -53,6 +54,6 @@ class Command(BaseCommand):
                     tenhou_object.save()
 
                 # let's be gentle and don't ddos nodochi
-                sleep(15)
+                sleep(10)
 
         print("{0}: End".format(get_date_string()))
