@@ -18,7 +18,7 @@ class ParseLogLinesTestCase(TestCase):
         self.assertEqual(results["players"][3]["name"], "橋から")
         self.assertEqual(results["players"][3]["place"], 4)
 
-        self.assertEqual(results["game_rules"], "四上南喰赤－")
+        self.assertEqual(results["game_rules"], "四上南")
 
     def test_parse_line_with_brace_symbol_in_name(self):
         line = "23:56 | 11 | 三般東喰赤－ | 烏龍茶(黒)(+43.0) misery20(-7.0) NoName(-36.0)"
