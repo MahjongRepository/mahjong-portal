@@ -37,8 +37,7 @@ logger = logging.getLogger("tournament_bot")
 
 class TournamentHandler:
     # in minutes
-    #TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5, 5]
-    TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5]
+    TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5, 5]
 
     TELEGRAM_DESTINATION = "tg"
     DISCORD_DESTINATION = "ds"
