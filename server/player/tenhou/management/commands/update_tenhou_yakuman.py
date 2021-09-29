@@ -34,7 +34,7 @@ class Command(BaseCommand):
         url = "http://tenhou.net/sc/ykm.js"
         print(url)
 
-        current_date = datetime.datetime.now().replace(tzinfo=pytz.timezone("Asia/Tokyo"))
+        current_date = datetime.datetime.now().astimezone(pytz.timezone("Asia/Tokyo"))
         current_year = current_date.year
         data = requests.get(url).content.decode("utf-8")
         self.parse_and_create_records(player_profiles, data, current_year)
@@ -43,7 +43,7 @@ class Command(BaseCommand):
         """
         Download historical data
         """
-        current_date = datetime.datetime.now().replace(tzinfo=pytz.timezone("Asia/Tokyo"))
+        current_date = datetime.datetime.now().astimezone(pytz.timezone("Asia/Tokyo"))
         current_year = current_date.year
 
         # 2006 - 2009 years have old format
@@ -110,7 +110,7 @@ class Command(BaseCommand):
             if name in player_profiles:
                 date = "{} {}".format(year, yakuman_date)
                 date = datetime.datetime.strptime(date, "%Y %m/%d %H:%M")
-                date = date.replace(tzinfo=pytz.timezone("Asia/Tokyo"))
+                date = date.astimezone(pytz.timezone("Asia/Tokyo"))
 
                 tenhou_object = player_profiles[name]
 

@@ -99,7 +99,7 @@ class Command(BaseCommand):
                 prepared_results[item.player_id]["order"] = item.order
 
             prepared_results = [x[1] for x in prepared_results.items()]
-            date = session.end_date.replace(tzinfo=pytz.timezone("CET"))
+            date = session.end_date.astimezone(pytz.timezone("CET"))
             club_session = ClubSession.objects.create(
                 club=club, date=date, pantheon_id=session.representational_hash, pantheon_event_id=session.event_id
             )

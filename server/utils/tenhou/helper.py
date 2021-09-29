@@ -20,7 +20,7 @@ def parse_log_line(line):
 
     game_time = line[0:5]
     game_length = int(line[8:10])
-    game_rules = line[13:19]
+    game_rules = line[13:16]
     players = line[22 : len(line)]
 
     temp_players = players.split(" ")
@@ -237,14 +237,10 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
     if not games:
         return [], None, None
 
-    account_start_date = datetime.utcfromtimestamp(int(games[0]["starttime"])).replace(
-        tzinfo=pytz.timezone("Asia/Tokyo")
-    )
+    account_start_date = datetime.utcfromtimestamp(int(games[0]["starttime"])).astimezone(pytz.timezone("Asia/Tokyo"))
     last_game_time = account_start_date
     for game in games[1:]:
-        current_game_date = datetime.utcfromtimestamp(int(game["starttime"])).replace(
-            tzinfo=pytz.timezone("Asia/Tokyo")
-        )
+        current_game_date = datetime.utcfromtimestamp(int(game["starttime"])).astimezone(pytz.timezone("Asia/Tokyo"))
         delta = current_game_date - last_game_time
         last_game_time = current_game_date
         if delta.days > 180:
@@ -272,7 +268,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
             else:
                 game_type = "南"
 
-            game_date = datetime.utcfromtimestamp(int(game["starttime"])).replace(tzinfo=pytz.timezone("Asia/Tokyo"))
+            game_date = datetime.utcfromtimestamp(int(game["starttime"])).astimezone(pytz.timezone("Asia/Tokyo"))
 
             lobby_name = lobbies_dict[game["playerlevel"]]
             lobbies_data[lobby_name]["all"]["played_games"] += 1
