@@ -83,7 +83,7 @@ class MSBaseCommand(BaseCommand):
         req.device.is_browser = True
         req.random_key = uuid_key
         req.gen_access_token = True
-        req.client_version_string = "web-0.9.255"
+        req.client_version_string = "web-0.9.303"
         req.currency_platforms.append(2)
 
         res = await lobby.login(req)
