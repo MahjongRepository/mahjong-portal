@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
 from django.template.defaultfilters import floatformat
 from django.utils import timezone
@@ -21,6 +23,10 @@ class RatingEMACalculation(RatingRRCalculation):
             .exclude(is_hide=True)
             .order_by("-last_name")
         )
+
+    def get_date(self, rating_date):
+        # two years ago
+        return rating_date - timedelta(days=365 * 2)
 
     def calculate_players_rating_rank(self, rating, rating_date):
         results = []
