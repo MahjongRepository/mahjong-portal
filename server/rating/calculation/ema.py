@@ -3,15 +3,19 @@ from django.template.defaultfilters import floatformat
 from django.utils import timezone
 
 from player.models import Player
+from rating.calculation.common import RatingDatesMixin
 from rating.calculation.rr import RatingRRCalculation
 from rating.models import RatingDelta, RatingResult, TournamentCoefficients
 from tournament.models import Tournament, TournamentResult
 from utils.general import get_tournament_coefficient
 
 
-class RatingEMACalculation(RatingRRCalculation):
+class RatingEMACalculation(RatingRRCalculation, RatingDatesMixin):
     TOURNAMENT_TYPES = [Tournament.EMA, Tournament.FOREIGN_EMA, Tournament.CHAMPIONSHIP]
     IS_EMA = True
+
+    def get_date(self, rating_date):
+        return RatingDatesMixin.get_date(self, rating_date)
 
     def get_players(self):
         return list(
