@@ -5,9 +5,9 @@
 */50 * * * * python /app/manage.py update_index --age 1
 
 # once a day
-10 1 * * * python /app/manage.py rating_calculate rr
-20 1 * * * python /app/manage.py rating_calculate crr
-30 1 * * * python /app/manage.py rating_calculate online
+# 10 1 * * * python /app/manage.py rating_calculate rr
+# 20 1 * * * python /app/manage.py rating_calculate crr
+# 30 1 * * * python /app/manage.py rating_calculate online
 # 40 1 * * * python /app/manage.py rating_calculate ema
 
 # once a day
