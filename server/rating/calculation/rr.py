@@ -1,6 +1,6 @@
 import itertools
 import math
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q
@@ -28,9 +28,9 @@ class RatingRRCalculation:
 
     # RR rating was frozen in 2020-2021
     # Freeze date is one week after last RR tournament in 2020
-    freeze_date = datetime(2020, 3, 16).date()
+    freeze_start = datetime(2020, 3, 16).date()
     # Unfreeze date is one week before first RR tournament in 2021
-    unfreeze_date = datetime(2021, 10, 30).date()
+    freeze_stop = datetime(2021, 10, 30).date()
 
     def __init__(self):
         self.players = self.get_players()
@@ -52,11 +52,11 @@ class RatingRRCalculation:
         return base_query
 
     def get_date(self, rating_date):
-        if rating_date >= self.unfreeze_date:
+        if rating_date >= self.freeze_stop:
             # two years ago skipping the freeze (if less than two years passed after unfreeze)
-            after_freeze = rating_date - self.unfreeze_date
+            after_freeze = rating_date - self.freeze_stop
             if after_freeze < timedelta(days=365 * 2):
-                return self.freeze_date - timedelta(days=365 * 2) + after_freeze
+                return self.freeze_start - timedelta(days=365 * 2) + after_freeze
 
         # two years ago
         return rating_date - timedelta(days=365 * 2)
@@ -324,11 +324,11 @@ class RatingRRCalculation:
         Check about page for detailed description
         """
 
-        if end_date < self.unfreeze_date <= rating_date:
+        if end_date < self.freeze_stop <= rating_date:
             # Freeze time accounting case
-            assert(end_date <= self.freeze_date)
-            diff_after = relativedelta(rating_date, self.unfreeze_date)
-            diff_before = relativedelta(self.freeze_date, end_date)
+            assert end_date <= self.freeze_start
+            diff_after = relativedelta(rating_date, self.freeze_stop)
+            diff_before = relativedelta(self.freeze_start, end_date)
             diff = diff_after + diff_before
         else:
             # Simple case
