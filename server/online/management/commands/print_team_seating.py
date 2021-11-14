@@ -1,4 +1,5 @@
 import json
+from time import sleep
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -9,6 +10,11 @@ from online.team_seating import TeamSeating
 from player.models import Player
 from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
 from tournament.models import OnlineTournamentRegistration
+from utils.tenhou.helper import (
+    download_all_games_from_nodochi,
+    recalculate_tenhou_statistics_for_four_players,
+    save_played_games,
+)
 
 
 class Command(BaseCommand):
@@ -19,7 +25,6 @@ class Command(BaseCommand):
 
         tenhou_nicknames = {}
         players = TournamentPlayers.objects.filter(tournament_id=settings.TOURNAMENT_ID)
-        # player = Player.objects.all().first()
 
         for tournament_player in players:
             try:
@@ -29,23 +34,28 @@ class Command(BaseCommand):
                 ).first()
                 tenhou_nicknames[tournament_player.tenhou_username] = stat_obj.rank
             except TenhouNickname.DoesNotExist:
-                pass
-                # player_games, account_start_date, four_players_rate =
-                # download_all_games_from_nodochi(tournament_player.tenhou_username)
-                #
-                # is_main = False
-                # tenhou_object = TenhouNickname.objects.create(
-                #     is_main=is_main, player=player, tenhou_username=tournament_player.tenhou_username,
-                #     username_created_at=account_start_date
-                # )
-                #
-                # save_played_games(tenhou_object, player_games)
-                # stat_obj = recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate)
-                #
-                # sleep(2)
+                print(f"Downloading tenhou stat for {tournament_player.tenhou_username}...")
+                player_games, account_start_date, four_players_rate = download_all_games_from_nodochi(
+                    tournament_player.tenhou_username
+                )
+
+                is_main = False
+                player = Player.objects.all().first()
+                tenhou_object = TenhouNickname.objects.create(
+                    is_main=is_main,
+                    player=player,
+                    tenhou_username=tournament_player.tenhou_username,
+                    username_created_at=account_start_date,
+                )
+
+                save_played_games(tenhou_object, player_games)
+                stat_obj = recalculate_tenhou_statistics_for_four_players(
+                    tenhou_object, player_games, four_players_rate
+                )
+                tenhou_nicknames[tournament_player.tenhou_username] = stat_obj.rank
+                sleep(2)
 
         for nickname in tenhou_nicknames.keys():
-            dan = 0
             stat_rank = tenhou_nicknames[nickname]
             if stat_rank >= 10:
                 dan = stat_rank - 9

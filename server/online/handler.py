@@ -37,8 +37,7 @@ logger = logging.getLogger("tournament_bot")
 
 class TournamentHandler:
     # in minutes
-    TOURNAMENT_BREAKS_TIME = [5, 5, 5, 5, 5, 5, 30, 5, 5, 5, 5, 5, 5]
-    # TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5, 5]
+    TOURNAMENT_BREAKS_TIME = [5, 5, 30, 5, 5, 5]
 
     TELEGRAM_DESTINATION = "tg"
     DISCORD_DESTINATION = "ds"
@@ -440,9 +439,10 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
-            # from online.team_seating import TeamSeating
-            # sortition = TeamSeating.get_seating_for_round(status.current_round)
+            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            from online.team_seating import TeamSeating
+
+            sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
             for game_index, item in enumerate(sortition):

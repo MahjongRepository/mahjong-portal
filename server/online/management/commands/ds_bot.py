@@ -119,9 +119,9 @@ class DiscordClient(discord.Client):
         m += _("2. Tournament statistics:\n <%(rating_link)s> \n") % {
             "rating_link": self.tournament_handler.get_rating_link()
         }
-        # m += _("2.1. Team statistics:\n <%(rating_link)s>/team \n") % {
-        #     "rating_link": self.tournament_handler.get_rating_link()
-        # }
+        m += _("2.1. Team statistics:\n <%(rating_link)s>/team \n") % {
+            "rating_link": self.tournament_handler.get_rating_link()
+        }
         m += _("3. Current games:\n <%(current_games_link)s> \n") % {
             "current_games_link": f"https://tenhou.net/wg/?{settings.TOURNAMENT_PUBLIC_LOBBY[:5]}"
         }
