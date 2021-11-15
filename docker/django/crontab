@@ -8,7 +8,7 @@
 10 1 * * * python /app/manage.py rating_calculate rr
 20 1 * * * python /app/manage.py rating_calculate crr
 30 1 * * * python /app/manage.py rating_calculate online
-40 1 * * * python /app/manage.py rating_calculate ema
+# 40 1 * * * python /app/manage.py rating_calculate ema
 
 # once a day
 10 0 * * * python /app/manage.py associate_players_with_club
