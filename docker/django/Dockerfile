@@ -2,7 +2,7 @@ FROM python:3.9.7-alpine
 
 ENV PYTHONUNBUFFERED=1
 
-RUN python3 -m pip install pip==21.2.4
+RUN python3 -m pip install pip==21.3.1
 
 COPY ./server/requirements/base.txt /requirements.txt
 COPY ./server/requirements/base.txt /base.txt

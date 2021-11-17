@@ -47,7 +47,9 @@ class AddPlayerForm(forms.ModelForm):
                     raise forms.ValidationError(mark_safe(message))
 
             except Player.MultipleObjectsReturned:
-                raise forms.ValidationError("Игроков с таким именем уже несколько. Обратитесь к администратору.")
+                raise forms.ValidationError(
+                    "Игроков с таким именем уже несколько. Обратитесь к администратору."
+                ) from None
             except Player.DoesNotExist:
                 pass
 

@@ -22,6 +22,6 @@ def parse_rating_date(year, month, day):
             today = rating_date
             is_last = False
         except ValueError:
-            raise Http404
+            raise Http404 from None
 
     return today, rating_date, is_last
