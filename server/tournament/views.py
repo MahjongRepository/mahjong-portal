@@ -122,6 +122,8 @@ def tournament_announcement(request, slug):
             .prefetch_related("city_object")
             .order_by("created_on")
         )
+        if tournament.display_notes:
+            registration_results = registration_results.order_by("notes", "created_on")
 
     return render(
         request,
