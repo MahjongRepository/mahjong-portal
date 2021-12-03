@@ -28,11 +28,11 @@ class MSBaseCommand(BaseCommand):
         asyncio.run(self.run(settings.MS_USERNAME, settings.MS_PASSWORD, *args, **options))
 
     async def run(self, username, password, *args, **options):
-        lobby, channel = await self.connect()
+        lobby, channel, version_to_force = await self.connect()
 
-        result = await self.re_login(lobby)
+        result = await self.re_login(lobby, version_to_force)
         if not result:
-            result = await self.login(lobby, username, password)
+            result = await self.login(lobby, username, password, version_to_force)
 
         if not result:
             print("Exit")
@@ -43,10 +43,12 @@ class MSBaseCommand(BaseCommand):
         await channel.close()
 
     async def connect(self):
+        version_to_force = ""
         async with aiohttp.ClientSession() as session:
             async with session.get("{}/1/version.json".format(MS_HOST)) as res:
                 version = await res.json()
                 version = version["version"]
+                version_to_force = version.replace(".w", "")
 
             async with session.get("{}/1/v{}/config.json".format(MS_HOST, version)) as res:
                 config = await res.json()
@@ -70,10 +72,11 @@ class MSBaseCommand(BaseCommand):
         await channel.connect(MS_HOST)
         print("Connection was established")
 
-        return lobby, channel
+        return lobby, channel, version_to_force
 
-    async def login(self, lobby, username, password):
+    async def login(self, lobby, username, password, version_to_force):
         print("Login with username and password")
+        print(f"Version {version_to_force}")
 
         uuid_key = str(uuid.uuid1())
 
@@ -83,7 +86,7 @@ class MSBaseCommand(BaseCommand):
         req.device.is_browser = True
         req.random_key = uuid_key
         req.gen_access_token = True
-        req.client_version_string = "web-0.9.333"
+        req.client_version_string = f"web-{version_to_force}"
         req.currency_platforms.append(2)
 
         res = await lobby.login(req)
@@ -99,7 +102,9 @@ class MSBaseCommand(BaseCommand):
 
         return True
 
-    async def re_login(self, lobby):
+    async def re_login(self, lobby, version_to_force):
+        print(f"Version {version_to_force}")
+
         if not os.path.exists(self.TOKEN_PATH):
             print("Access token is not present")
             return False
@@ -120,6 +125,7 @@ class MSBaseCommand(BaseCommand):
         request.access_token = data["access_token"]
         request.device.is_browser = True
         request.random_key = data["random_key"]
+        request.client_version_string = f"web-{version_to_force}"
         request.currency_platforms.append(2)
 
         response = await lobby.oauth2_login(request)
