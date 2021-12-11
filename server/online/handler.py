@@ -439,10 +439,9 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
 
-            # sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
-            from online.team_seating import TeamSeating
-
-            sortition = TeamSeating.get_seating_for_round(status.current_round)
+            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            # from online.team_seating import TeamSeating
+            # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
             for game_index, item in enumerate(sortition):
