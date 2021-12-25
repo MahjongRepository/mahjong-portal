@@ -5,12 +5,12 @@ toml==0.10.2
 
 # for formatting checks and linters
 isort==5.10.1
-black==21.10b0
+black==21.12b0
 flake8==4.0.1
-flake8-bugbear==21.9.2
+flake8-bugbear==21.11.29
 flake8-print==4.0.0
 flake8-simplify==0.14.2
 dlint==0.12.0
 
 # better python terminal
-ipython==7.29.0
+ipython==7.30.1
