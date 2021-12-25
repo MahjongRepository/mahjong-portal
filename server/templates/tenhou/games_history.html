@@ -30,11 +30,11 @@
                             </td>
                             <td style="text-align: center">
                                 <nobr>
-                                    <span class="badge badge-info">
+                                    <span class="badge bg-primary">
                                         {{ game.get_rank_display }}
                                     </span>
                                     ->
-                                    <span class="badge badge-{{ game.badge_class }}">
+                                    <span class="badge bg-{{ game.badge_class }}">
                                         {{ game.get_next_rank_display }}
                                     </span>
                                 </nobr>
@@ -79,11 +79,11 @@
                             <td>
                                 <nobr>
                                     {% if game.delta > 0 %}
-                                        <span class="badge badge-success">{{ game.delta }}</span>
+                                        <span class="badge bg-success">{{ game.delta }}</span>
                                     {% elif game.delta == 0 %}
-                                        <span class="badge badge-secondary">{{ game.delta }}</span>
+                                        <span class="badge bg-secondary">{{ game.delta }}</span>
                                     {% else %}
-                                        <span class="badge badge-danger">{{ game.delta }}</span>
+                                        <span class="badge bg-danger">{{ game.delta }}</span>
                                     {% endif %}
                                 </nobr>
                             </td>

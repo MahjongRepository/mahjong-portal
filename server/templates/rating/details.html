@@ -28,7 +28,7 @@
                 {% else %}
                     <a href="{% url 'rating' 'ema' country_data.country.code rating_date.year rating_date.month rating_date.day %}">
                 {% endif %}
-                    <span class="badge badge-{% if country_data.country.code == country_code %}success{% else %}primary{% endif %}">
+                    <span class="badge bg-{% if country_data.country.code == country_code %}success{% else %}primary{% endif %}">
                         {{ country_data.country }} ({{ country_data.players }})
                     </span>
                 </a>

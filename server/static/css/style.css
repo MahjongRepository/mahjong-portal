@@ -2,6 +2,10 @@ main > .container {
     padding: 80px 15px 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 @media print {
     body {
         margin-top: 0;

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n bootstrap4 %}
+{% load i18n django_bootstrap5 %}
 
 {% block title %}
     {% trans 'Admin page' %}
@@ -11,7 +11,7 @@
         <form action="{% url 'add_new_player' %}" method="POST">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <div class="text-right">
+            <div class="text-end">
                 <input class="btn btn-primary" type="submit" value="Добавить">
             </div>
         </form>

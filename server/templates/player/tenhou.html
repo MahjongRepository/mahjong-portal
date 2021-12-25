@@ -132,13 +132,13 @@
                                     {% trans 'Latest places:' %}<br>
                                     {% for x in latest_games %}
                                         {% if x.place == 1 %}
-                                            <span class="badge badge-success" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-success" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% elif x.place == 2 %}
-                                            <span class="badge badge-info" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-primary" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% elif x.place == 3 %}
-                                            <span class="badge badge-secondary" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-secondary" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% elif x.place == 4 %}
-                                            <span class="badge badge-danger" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-danger" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% endif %}
                                     {% endfor %}
                                 </p>

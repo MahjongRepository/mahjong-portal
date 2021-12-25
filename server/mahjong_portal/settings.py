@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.sitemaps",
     "django.contrib.sites",
-    "bootstrap4",
+    "django_bootstrap5",
     "haystack",
     "mahjong_portal",
     "club",

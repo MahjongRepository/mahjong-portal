@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n bootstrap4 %}
+{% load i18n django_bootstrap5 %}
 
 {% block content %}
     <div class="col-lg-6">
@@ -15,11 +15,9 @@
 
             {% bootstrap_form form %}
 
-            {% buttons %}
-                <div class="text-right">
-                    <button type="submit" class="btn btn-primary">{% trans 'Sign up' context 'action' %}</button>
-                </div>
-            {% endbuttons %}
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">{% trans 'Sign up' context 'action' %}</button>
+            </div>
         </form>
 
     </div>

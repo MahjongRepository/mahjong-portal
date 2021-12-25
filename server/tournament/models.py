@@ -108,6 +108,12 @@ class Tournament(BaseModel):
         return "info"
 
     @property
+    def text_badge_class(self):
+        if self.is_online():
+            return "text-dark"
+        return ""
+
+    @property
     def type_help_text(self):
         if self.is_ema():
             return "EMA, RR, CRR"

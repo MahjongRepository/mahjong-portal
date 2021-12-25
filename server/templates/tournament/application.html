@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize bootstrap4 %}
+{% load i18n humanize django_bootstrap5 %}
 
 {% block title %}
     {% trans 'Tournament application' %}
@@ -92,11 +92,9 @@
 
             {% bootstrap_field form.allow_to_save_data %}
 
-            {% buttons %}
-                <div class="text-right">
-                    <button type="submit" class="btn btn-success">{% trans 'Submit' context 'new tournament' %}</button>
-                </div>
-            {% endbuttons %}
+            <div class="text-end">
+                <button type="submit" class="btn btn-success">{% trans 'Submit' context 'new tournament' %}</button>
+            </div>
         </form>
     </div>
 {% endblock %}

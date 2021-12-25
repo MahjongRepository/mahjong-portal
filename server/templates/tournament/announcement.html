@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n humanize bootstrap4 %}
+{% load i18n humanize django_bootstrap5 %}
 
 {% block title %}
     {{ tournament.name }}
@@ -43,11 +43,9 @@
 
                 {% bootstrap_form form %}
 
-                {% buttons %}
-                    <div class="text-right">
-                        <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
-                    </div>
-                {% endbuttons %}
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+                </div>
             </form>
         {% elif tournament.registration_link %}
             <h3>{% trans 'Registration' %}</h3>

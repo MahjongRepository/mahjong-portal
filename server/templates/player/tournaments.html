@@ -32,11 +32,11 @@
                             <th scope="row">{{ forloop.counter }}</th>
                             <td>
                                 {% if tournament_result.base_rank > 500 %}
-                                    <span class="badge badge-success">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                    <span class="badge bg-success">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% elif tournament_result.base_rank == 0 %}
-                                    <span class="badge badge-primary">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                    <span class="badge bg-primary">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% else %}
-                                    <span class="badge badge-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                    <span class="badge bg-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>

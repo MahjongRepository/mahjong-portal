@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="table-responsive-sm">
-    <div class="text-right mb-0 {% if countries_data %}mt-3{% endif %}">
+    <div class="text-end mb-0 {% if countries_data %}mt-3{% endif %}">
         <p class="small mb-0">
             {% trans 'Rating date' %} {{ today }} ({% trans 'latest changes' %} {{ rating_date }}).
             <a href="{% url 'rating_dates' rating.slug %}">{% trans 'All dates' %}</a>

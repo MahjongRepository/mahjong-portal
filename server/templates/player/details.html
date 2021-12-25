@@ -77,11 +77,11 @@
                             <th scope="row">{{ forloop.counter }}</th>
                             <td>
                                 {% if tournament_result.base_rank > 500 %}
-                                    <span class="badge badge-success">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                    <span class="badge bg-success">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% elif tournament_result.base_rank == 0 %}
-                                    <span class="badge badge-primary">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                    <span class="badge bg-primary">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% else %}
-                                    <span class="badge badge-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                    <span class="badge bg-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
                             <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
@@ -124,13 +124,13 @@
                                     {% trans 'Latest places:' %}<br>
                                     {% for x in latest_games %}
                                         {% if x.place == 1 %}
-                                            <span class="badge badge-success" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-success" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% elif x.place == 2 %}
-                                            <span class="badge badge-info" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-primary" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% elif x.place == 3 %}
-                                            <span class="badge badge-secondary" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-secondary" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% elif x.place == 4 %}
-                                            <span class="badge badge-danger" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
+                                            <span class="badge bg-danger" title="{{ x.game_end_date }} UTC+3">{{ x.place }}</span>
                                         {% endif %}
                                     {% endfor %}
                                 </p>

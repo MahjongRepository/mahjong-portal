@@ -20,11 +20,11 @@
             {% for year in years %}
                 {% if tournament_type %}
                     <a href="{% url 'tournament_ema_list' 'ema' year %}">
-                        <span class="badge badge-{% if selected_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
+                        <span class="badge bg-{% if selected_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
                     </a>
                 {% else %}
                     <a href="{% url 'tournament_list' year %}">
-                        <span class="badge badge-{% if selected_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
+                        <span class="badge bg-{% if selected_year == year %}success{% else %}primary{% endif %}">{{ year }}</span>
                     </a>
                 {% endif %}
             {% endfor %}
