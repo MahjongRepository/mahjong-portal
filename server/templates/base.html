@@ -163,12 +163,12 @@
                 </form>
             </div>
             <div class="col text-end">
-                <form class="form-inline my-2 my-lg-0 d-md-none d-lg-block" action="{% url 'search' %}">
+                <form class="form-inline" action="{% url 'search' %}">
                     <div class="row">
-                        <div class="col-10">
+                        <div class="col-lg-10 col-sm-6">
                             <input class="form-control me-sm-2" type="text" name="q" placeholder="{% trans 'Search' %}" aria-label="{% trans 'Search' %}" {% if search_query %}value="{{ search_query }}"{% endif %} required="required">
                         </div>
-                        <div class="col-2">
+                        <div class="col-lg-2 col-sm-6">
                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">{% trans 'Search' %}</button>
                         </div>
                     </div>
