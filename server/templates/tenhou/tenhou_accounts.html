@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n tenhou_helper %}
 
 {% block title %}
     {% trans 'Tenhou accounts' %}
@@ -39,7 +39,7 @@
                         </td>
                         <td>
                             {% if account.rate %}
-                                R{{ account.rate|floatformat:0 }}
+                                R{{ account.rate|display_rate }}
                             {% endif %}
                         </td>
                         <td>

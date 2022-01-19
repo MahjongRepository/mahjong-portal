@@ -22,3 +22,14 @@ def percentage(total_items, part):
         return floatformat(0, 2)
 
     return floatformat((part / total_items) * 100, 2)
+
+
+@register.filter
+def display_rate(value):
+    """
+    Tenhou just use int(rate) to display current player rate
+    """
+    try:
+        return int(value)
+    except ValueError:
+        return value

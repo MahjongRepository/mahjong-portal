@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper tz static %}
+{% load i18n russian_words_morph meta_tags_helper tz static tenhou_helper %}
 
 {% block title %}
     {{ player.full_name }}. {% trans 'Tenhou.net profile' %}
@@ -123,7 +123,7 @@
                 {% with tenhou_item.four_players_aggregated_statistics as aggregated_stat %}
                     <h4>{% trans 'Statistics for' %} {{ tenhou_item.tenhou_username }}</h4>
                     <p class="mt-3">
-                        {% trans 'Rank' %}: {{ aggregated_stat.get_rank_display }}, {{ aggregated_stat.pt }} / {{ aggregated_stat.end_pt }}pt{% if aggregated_stat.rate %}, R{{ aggregated_stat.rate|floatformat:0 }}{% endif %}
+                        {% trans 'Rank' %}: {{ aggregated_stat.get_rank_display }}, {{ aggregated_stat.pt }} / {{ aggregated_stat.end_pt }}pt{% if aggregated_stat.rate %}, R{{ aggregated_stat.rate|display_rate }}{% endif %}
                     </p>
                     {% with tenhou_item.prepare_latest_places as latest_games %}
                         {% timezone 'Europe/Moscow' %}

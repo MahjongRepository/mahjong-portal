@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper tz %}
+{% load i18n russian_words_morph meta_tags_helper tz tenhou_helper %}
 
 {% block title %}
     {{ player.full_name }}
@@ -109,7 +109,7 @@
                 {% with tenhou_item.four_players_aggregated_statistics as aggregated_stat %}
                     <h5>{% trans 'Statistics for' %} {{ tenhou_item.tenhou_username }}</h5>
                     <p class="mt-3">
-                        {% trans 'Rank' %}: {{ aggregated_stat.get_rank_display }}, {{ aggregated_stat.pt }} / {{ aggregated_stat.end_pt }}pt{% if aggregated_stat.rate %}, R{{ aggregated_stat.rate|floatformat:0 }}{% endif %}
+                        {% trans 'Rank' %}: {{ aggregated_stat.get_rank_display }}, {{ aggregated_stat.pt }} / {{ aggregated_stat.end_pt }}pt{% if aggregated_stat.rate %}, R{{ aggregated_stat.rate|display_rate }}{% endif %}
                     </p>
                     {% if tenhou_item.last_played_date %}
                         <p>
