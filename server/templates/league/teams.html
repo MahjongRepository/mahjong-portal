@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ league.name }}. {% trans 'Teams' %}">
+    <meta property="og:description" content="{{ league.name }}. {% trans 'Teams' %}" />
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ league.name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'league_details' league.slug %}">{% trans 'League' %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans 'Teams' %}</li>
+            </ol>
+        </nav>
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">{% trans 'Team' %}</th>
+                        <th scope="col">{% trans 'Scores' %}</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for team in league.teams.all %}
+                        <tr>
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+                            <td>
+                                <strong>{{ team.name|truncatewords:4 }}</strong>
+                            </td>
+                            <td>
+                                0
+                            </td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            {% with players=team.players.all %}
+                                {% for player in players %}
+                                    <td>
+                                        {{ player.name }}
+                                    </td>
+                                {% endfor %}
+                                {% if players|length == 3 %}
+                                    <td colspan="2"></td>
+                                {% endif %}
+                                {% if players|length == 4 %}
+                                    <td></td>
+                                {% endif %}
+                            {% endwith %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

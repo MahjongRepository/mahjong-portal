@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ league.name }}. {% trans 'Schedule' %}">
+    <meta property="og:description" content="{{ league.name }}. {% trans 'Schedule' %}" />
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ league.name }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'league_details' league.slug %}">{% trans 'League' %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans 'Schedule' %}</li>
+            </ol>
+        </nav>
+        <p>{% trans 'Coming soon...' %}</p>
+    </div>
+{% endblock %}

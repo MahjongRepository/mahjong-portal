@@ -16,3 +16,4 @@ server/shared
 *.pot
 *.pyc
 .DS_Store
+league_teams.csv

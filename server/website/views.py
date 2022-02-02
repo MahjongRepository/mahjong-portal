@@ -11,6 +11,7 @@ from django.utils.translation import get_language
 from haystack.forms import ModelSearchForm
 
 from club.models import Club
+from league.models import League
 from player.models import Player, PlayerQuotaEvent
 from player.tenhou.models import TenhouAggregatedStatistics
 from rating.models import Rating, RatingResult
@@ -42,6 +43,8 @@ def home(request):
         Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
     )
 
+    leagues = League.objects.all()
+
     return render(
         request,
         "website/home.html",
@@ -54,6 +57,7 @@ def home(request):
             "rating_date": rating_date,
             "today": today,
             "is_last": True,
+            "leagues": leagues,
         },
     )
 

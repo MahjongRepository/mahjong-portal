@@ -35,6 +35,31 @@
         </tr>
         </thead>
         <tbody>
+        {% for league in leagues %}
+            <th scope="row">-</th>
+            <td><a href="{% url 'league_details' league.slug %}">{{ league.name|truncatewords:4 }}</a></td>
+            <td>
+                <nobr>{{ league.end_date|date:SHORT_DATE_FORMAT }}</nobr>
+            </td>
+            <td>
+                {% trans 'Russia' %}
+            </td>
+            <td>
+            <span class="badge bg-warning text-dark">
+                ONLINE
+            </span>
+            </td>
+            <td>
+                {{ league.players.count|default:'-' }}
+            </td>
+            <td>
+            -
+            </td>
+            <td>
+                {{ league.games }}
+            </td>
+        {% endfor %}
+
         {% for tournament in tournaments %}
             <tr {% if tournament.id in top_tournament_ids %}class="table-success" {% endif %}>
                 {% if reverse_counter %}

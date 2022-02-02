@@ -1,15 +1,10 @@
 from modeltranslation.translator import TranslationOptions, translator
 
-from player.models import Player, PlayerTitle
+from league.models import League
 
 
-class PlayerTranslationOptions(TranslationOptions):
-    fields = ["first_name", "last_name"]
+class LeagueTranslationOptions(TranslationOptions):
+    fields = ["name", "description"]
 
 
-class PlayerTitleOptions(TranslationOptions):
-    fields = ["text"]
-
-
-translator.register(Player, PlayerTranslationOptions)
-translator.register(PlayerTitle, PlayerTitleOptions)
+translator.register(League, LeagueTranslationOptions)

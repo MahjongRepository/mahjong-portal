@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ league.name }}. {{ league.description }}">
+    <meta property="og:description" content="{{ league.name }}. {{ league.description }}" />
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ league.name }}</h1>
+        <p>{{ league.description }}</p>
+        <ul>
+            <li>
+                <a href="{% url 'league_teams' league.slug %}">{% trans 'Teams' %}</a>
+            </li>
+            <li>
+                <a href="{% url 'league_schedule' league.slug %}">{% trans 'Schedule' %}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
