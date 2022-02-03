@@ -25,8 +25,8 @@ class LeagueTeamAdmin(admin.ModelAdmin):
 
 
 class LeaguePlayerAdmin(admin.ModelAdmin):
-    search_fields = ["name", "team__name"]
-    list_display = ["name", "team"]
+    search_fields = ["name", "team__name", "tenhou_nickname"]
+    list_display = ["name", "tenhou_nickname", "team"]
 
 
 admin.site.register(League, LeagueAdmin)

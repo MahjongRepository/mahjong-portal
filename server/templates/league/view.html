@@ -9,7 +9,7 @@
 {% block content %}
     <div>
         <h1>{{ league.name }}</h1>
-        <p>{{ league.description }}</p>
+        <p>{{ league.description|linebreaksbr|urlize }}</p>
         <ul>
             <li>
                 <a href="{% url 'league_teams' league.slug %}">{% trans 'Teams' %}</a>
@@ -18,5 +18,8 @@
                 <a href="{% url 'league_schedule' league.slug %}">{% trans 'Schedule' %}</a>
             </li>
         </ul>
+        <p>
+            <button class="btn btn-lg btn-primary disabled" style="width: 300px">{% trans 'Sign in (not working yet)' %}</button>
+        </p>
     </div>
 {% endblock %}

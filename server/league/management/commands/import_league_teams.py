@@ -21,4 +21,6 @@ class Command(BaseCommand):
             team_objects[team_name] = LeagueTeam.objects.create(name=team_name, league=league, number=i + 1)
 
         for record in records:
-            LeaguePlayer.objects.create(name=record["name"], team=team_objects[record["team"]])
+            LeaguePlayer.objects.create(
+                name=record["name"], team=team_objects[record["team"]], tenhou_nickname=record["nick"]
+            )
