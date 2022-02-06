@@ -1,6 +1,7 @@
 import json
 import os.path
 import random
+import shutil
 from statistics import stdev
 
 from django.conf import settings
@@ -8,8 +9,8 @@ from django.core.management.base import BaseCommand
 
 NUMBER_OF_TEAMS = 26
 NUMBER_OF_UNIQUE_SESSIONS = 13
-ITERATIONS = 10000
-ALL_SEATING_FILE = os.path.join(settings.BASE_DIR, "league_seating.json")
+ITERATIONS = 1000000
+ALL_SEATING_FOLDER = os.path.join(settings.BASE_DIR, "shared", "league_seating")
 
 
 class Command(BaseCommand):
@@ -18,12 +19,15 @@ class Command(BaseCommand):
     """
 
     def handle(self, *args, **options):
+        if os.path.exists(ALL_SEATING_FOLDER):
+            shutil.rmtree(ALL_SEATING_FOLDER)
+        os.mkdir(ALL_SEATING_FOLDER)
 
         for i in range(ITERATIONS):
             print(f"Iteration {i + 1}/{ITERATIONS}")
             seating = {
-                "max_min_difference": None,
-                "stdev": None,
+                "max_min_difference": 100,
+                "stdev": 100,
                 "sessions": [],
                 "teams_stat": {},
             }
@@ -45,38 +49,12 @@ class Command(BaseCommand):
 
             self._calculate_seating_teams_stat(seating)
 
-            if seating["max_min_difference"] <= 7:
-                self._print_stat(seating)
+            if seating["max_min_difference"] <= 6:
+                number_of_played_sessions = list(set([x["played_sessions"] for x in seating["teams_stat"].values()]))
+                assert len(number_of_played_sessions) == 1, "all teams should play same number of sessions"
 
-                with open(ALL_SEATING_FILE, "r") as f:
-                    data = json.loads(f.read())
-
-                data["data"].append(seating)
-
-                with open(ALL_SEATING_FILE, "w") as f:
-                    f.write(json.dumps(data))
-
-    def _print_stat(self, seating):
-        number_of_played_sessions = list(set([x["played_sessions"] for x in seating["teams_stat"].values()]))
-        assert len(number_of_played_sessions) == 1, "all teams should play same number of sessions"
-
-        played_against_other_team_session_numbers = []
-        for team_number in range(NUMBER_OF_TEAMS):
-            played_against_other_team_session_numbers.extend(
-                seating["teams_stat"][team_number]["played_against_other_teams"].values()
-            )
-
-        print(
-            f"sessions played per team: {number_of_played_sessions[0]} (games per team {number_of_played_sessions[0] * 2})"
-        )
-        print(f"max-min: {seating['max_min_difference']}")
-        print(f"stdev: {seating['stdev']:.4f}")
-        # for i, session in enumerate(seating["sessions"]):
-        #     tables_str = []
-        #     for table in session:
-        #         tables_str.append("-".join([str(x) for x in table]))
-        #     print(f"Session: #{i + 1}")
-        #     print(" ".join(tables_str))
+                with open(os.path.join(ALL_SEATING_FOLDER, f"{i}.json"), "w") as f:
+                    f.write(json.dumps(seating))
 
     def _play_session(self):
         all_tables = []
