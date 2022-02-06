@@ -17,4 +17,4 @@ server/shared
 *.pyc
 .DS_Store
 league_teams.csv
-league_seating.txt
+league_seating.json

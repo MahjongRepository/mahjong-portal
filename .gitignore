@@ -19,7 +19,7 @@ server/shared
 initial_seating.txt
 team_seating.json
 league_teams.csv
-league_seating.txt
+league_seating.json
 
 yakuman
 tmp
