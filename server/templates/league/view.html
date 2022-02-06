@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
+{% load tz %}
 {% load i18n %}
+
+{% block title %}
+    {{ league.name }}
+{% endblock %}
 
 {% block meta_tags %}
     <meta name="description" content="{{ league.name }}. {{ league.description }}">
@@ -18,8 +23,44 @@
                 <a href="{% url 'league_schedule' league.slug %}">{% trans 'Schedule' %}</a>
             </li>
         </ul>
+
         <p>
-            <button class="btn btn-lg btn-primary disabled" style="width: 300px">{% trans 'Sign in (not working yet)' %}</button>
+            <button class="btn btn-primary disabled" style="width: 300px">{% trans 'Sign in (not working yet)' %}</button>
         </p>
+
+        {% if upcoming_session %}
+            <h3>{% trans 'Upcoming session' %}</h3>
+            {% timezone 'Europe/Moscow' %}
+                <p class="mb-1">{% trans 'Starting' %} {{ upcoming_session.start_time|date:'d M. H-i' }} (МСК). {% trans 'Playing two games.' %}</p>
+                <p class="mb-0">{% trans 'Not playing teams for this session:' %}</p>
+                <ul class="mt-0">
+                    {% for team in missing_teams_for_session %}
+                        <li>{{ team }}</li>
+                    {% endfor %}
+                </ul>
+            {% endtimezone %}
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">東</th>
+                        <th scope="col">南</th>
+                        <th scope="col">西</th>
+                        <th scope="col">北</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for game in upcoming_session.games.all %}
+                        <tr>
+                            {% for player in game.players.all %}
+                                <td width="25%">{{ player.team.name|truncatewords:3 }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

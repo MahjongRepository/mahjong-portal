@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block meta_tags %}
-    <meta name="description" content="{{ league.name }}. {% trans 'Teams' %}">
-    <meta property="og:description" content="{{ league.name }}. {% trans 'Teams' %}" />
+{% block title %}
+    {{ league.name }}. {% trans 'Teams' %}
 {% endblock %}
 
 {% block content %}
@@ -33,11 +32,9 @@
                             <td>
                                 {{ forloop.counter }}
                             </td>
-                            <td>
+                            <td colspan="5">
                                 <strong>{{ team.name }}</strong>
                             </td>
-                            <td></td>
-                            <td colspan="3"></td>
                         </tr>
                         <tr>
                             <td></td>

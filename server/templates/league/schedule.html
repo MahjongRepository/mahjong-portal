@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block meta_tags %}
-    <meta name="description" content="{{ league.name }}. {% trans 'Schedule' %}">
-    <meta property="og:description" content="{{ league.name }}. {% trans 'Schedule' %}" />
+{% block title %}
+    {{ league.name }}. {% trans 'Schedule' %}
 {% endblock %}
 
 {% block content %}

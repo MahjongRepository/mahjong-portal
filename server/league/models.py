@@ -39,3 +39,42 @@ class LeaguePlayer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class LeagueSession(models.Model):
+    PLANNED = 0
+    FINISHED = 1
+    STATUSES = [
+        [PLANNED, "Planned"],
+        [FINISHED, "Finished"],
+    ]
+    league = models.ForeignKey(League, on_delete=models.PROTECT, related_name="sessions")
+    number = models.PositiveSmallIntegerField()
+    status = models.PositiveSmallIntegerField(choices=STATUSES, default=PLANNED)
+    start_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ["number"]
+
+
+class LeagueGame(models.Model):
+    NEW = 0
+    STARTED = 1
+    FINISHED = 2
+    STATUSES = [
+        [NEW, "New"],
+        [STARTED, "Started"],
+        [FINISHED, "Finished"],
+    ]
+    session = models.ForeignKey(LeagueSession, on_delete=models.PROTECT, related_name="games")
+    status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
+
+
+class LeagueGamePlayer(models.Model):
+    position = models.PositiveSmallIntegerField()
+    game = models.ForeignKey(LeagueGame, on_delete=models.PROTECT, related_name="players")
+    team = models.ForeignKey(LeagueTeam, on_delete=models.PROTECT, related_name="games")
+    player_pantheon_id = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["position"]
