@@ -14,6 +14,9 @@
                 <li class="breadcrumb-item active" aria-current="page">{% trans 'Schedule' %}</li>
             </ol>
         </nav>
-        <p>{% trans 'Coming soon...' %}</p>
+        {% for session in sessions %}
+            <h3>{% trans "Session " %} #{{ session.number|add:1 }}</h3>
+            {% include 'league/_schedule_item.html' %}
+        {% endfor %}
     </div>
 {% endblock %}

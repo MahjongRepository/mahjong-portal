@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-06 15:12+0000\n"
+"POT-Creation-Date: 2022-02-07 04:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -788,6 +788,18 @@ msgstr "Всего квот"
 msgid "Admin page"
 msgstr "Админка"
 
+#: templates/league/_schedule_item.html:5
+msgid "Starting"
+msgstr "Начнётся"
+
+#: templates/league/_schedule_item.html:5
+msgid "Playing two games."
+msgstr "Играем два ханчана."
+
+#: templates/league/_schedule_item.html:6
+msgid "Not playing teams for this session:"
+msgstr "Команды пропускающие эту сессию:"
+
 #: templates/league/schedule.html:5 templates/league/schedule.html:14
 #: templates/league/view.html:23
 msgid "Schedule"
@@ -797,9 +809,9 @@ msgstr "Расписание"
 msgid "League"
 msgstr "Лига"
 
-#: templates/league/schedule.html:17
-msgid "Coming soon..."
-msgstr "Скоро будет..."
+#: templates/league/schedule.html:18
+msgid "Session "
+msgstr "Сессия"
 
 #: templates/league/teams.html:5 templates/league/teams.html:14
 #: templates/league/view.html:20
@@ -817,18 +829,6 @@ msgstr "Войти (пока не работает)"
 #: templates/league/view.html:32
 msgid "Upcoming session"
 msgstr "Следующая сессия"
-
-#: templates/league/view.html:34
-msgid "Starting"
-msgstr "Начнётся"
-
-#: templates/league/view.html:34
-msgid "Playing two games."
-msgstr "Играем два ханчана."
-
-#: templates/league/view.html:35
-msgid "Not playing teams for this session:"
-msgstr "Команды пропускающие эту сессию:"
 
 #: templates/ms/ms_accounts.html:12
 msgid "Statistics updated once an hour."

@@ -215,8 +215,12 @@ TOURNAMENT_API_TOKEN = os.environ.get("TOURNAMENT_API_TOKEN", None)
 MS_USERNAME = os.environ.get("MS_USERNAME", None)
 MS_PASSWORD = os.environ.get("MS_PASSWORD", None)
 
-CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
-
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/tmp/django_cache",
+    }
+}
 
 # support for non docker installations
 try:

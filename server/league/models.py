@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 
 
@@ -55,6 +56,20 @@ class LeagueSession(models.Model):
 
     class Meta:
         ordering = ["number"]
+
+    def missing_teams_for_session(self):
+        all_teams = cache.get("all_league_teams")
+        if not all_teams:
+            all_teams = LeagueTeam.objects.all()
+            cache.set("all_league_teams", all_teams, timeout=60 * 60 * 24)
+
+        playing_team_ids = []
+        for game in self.games.all():
+            for player in game.players.all():
+                if player.team_id not in playing_team_ids:
+                    playing_team_ids.append(player.team_id)
+
+        return [x for x in all_teams if x.id not in playing_team_ids]
 
 
 class LeagueGame(models.Model):

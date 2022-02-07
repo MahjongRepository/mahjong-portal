@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load tz %}
+
+{% timezone 'Europe/Moscow' %}
+    <p class="mb-1">{% trans 'Starting' %} {{ session.start_time|date:'d M. H-i' }} (МСК). {% trans 'Playing two games.' %}</p>
+    <p class="mb-0">{% trans 'Not playing teams for this session:' %}</p>
+    <ul class="mt-0">
+        {% for team in session.missing_teams_for_session %}
+            <li>{{ team }}</li>
+        {% endfor %}
+    </ul>
+{% endtimezone %}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th scope="col">東</th>
+            <th scope="col">南</th>
+            <th scope="col">西</th>
+            <th scope="col">北</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for game in session.games.all %}
+            <tr>
+                {% for player in game.players.all %}
+                    <td width="25%">{{ player.team.name|truncatewords:3 }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
