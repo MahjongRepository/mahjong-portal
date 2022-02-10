@@ -2,8 +2,6 @@ FROM python:3.9.9-alpine
 
 ENV PYTHONUNBUFFERED=1
 
-RUN mkdir "/django_cache"
-
 RUN python3 -m pip install pip==21.3.1
 
 COPY ./server/requirements/base.txt /requirements.txt
