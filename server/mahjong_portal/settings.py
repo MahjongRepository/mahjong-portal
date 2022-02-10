@@ -219,7 +219,7 @@ MS_PASSWORD = os.environ.get("MS_PASSWORD", None)
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": "/tmp/django_cache",
+        "LOCATION": "/django_cache",
     }
 }
 
