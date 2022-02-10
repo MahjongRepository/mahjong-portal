@@ -1,6 +1,8 @@
 from django.core.cache import cache
 from django.db import models
 
+from account.models import User
+
 
 class League(models.Model):
     name = models.CharField(max_length=255)
@@ -33,7 +35,7 @@ class LeaguePlayer(models.Model):
     name = models.CharField(max_length=255)
     tenhou_nickname = models.CharField(max_length=8, null=True, blank=True)
     team = models.ForeignKey(LeagueTeam, on_delete=models.PROTECT, related_name="players")
-    pantheon_id = models.IntegerField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         ordering = ["name"]
@@ -65,11 +67,16 @@ class LeagueSession(models.Model):
 
         playing_team_ids = []
         for game in self.games.all():
-            for player in game.players.all():
-                if player.team_id not in playing_team_ids:
-                    playing_team_ids.append(player.team_id)
+            for game_slot in game.slots.all():
+                if game_slot.team_id not in playing_team_ids:
+                    playing_team_ids.append(game_slot.team_id)
 
         return [x for x in all_teams if x.id not in playing_team_ids]
+
+    def all_games(self):
+        if hasattr(self, "_custom_games"):
+            return self._custom_games
+        return self.games.all()
 
 
 class LeagueGame(models.Model):
@@ -84,12 +91,17 @@ class LeagueGame(models.Model):
     session = models.ForeignKey(LeagueSession, on_delete=models.PROTECT, related_name="games")
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
 
+    class Meta:
+        ordering = ["id"]
 
-class LeagueGamePlayer(models.Model):
+
+class LeagueGameSlot(models.Model):
     position = models.PositiveSmallIntegerField()
-    game = models.ForeignKey(LeagueGame, on_delete=models.PROTECT, related_name="players")
+    game = models.ForeignKey(LeagueGame, on_delete=models.PROTECT, related_name="slots")
     team = models.ForeignKey(LeagueTeam, on_delete=models.PROTECT, related_name="games")
-    player_pantheon_id = models.PositiveSmallIntegerField(null=True, blank=True)
+    assigned_player = models.ForeignKey(
+        LeaguePlayer, on_delete=models.PROTECT, related_name="games", null=True, blank=True
+    )
 
     class Meta:
         ordering = ["position"]

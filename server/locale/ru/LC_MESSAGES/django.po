@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-07 04:07+0000\n"
+"POT-Creation-Date: 2022-02-10 06:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,47 +20,33 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: account/admin.py:14
+#: account/admin.py:15
 msgid "Personal info"
 msgstr "Информация"
 
-#: account/admin.py:16
+#: account/admin.py:17
 msgid "Permissions"
 msgstr "Права"
 
-#: account/admin.py:29
+#: account/admin.py:30
 msgid "Important dates"
 msgstr "Важные даты"
 
-#: account/forms.py:17
-msgid "The two password fields didn’t match."
-msgstr "Пароли не совпадают."
-
 #: account/forms.py:18
-msgid "User with this email already exist."
-msgstr "Пользователь с таким email уже зарегистрирован."
+msgid "Email"
+msgstr ""
 
-#: account/forms.py:19
-msgid "User with this username already exist."
-msgstr "Пользователь с таким username уже зарегистрирован."
-
-#: account/forms.py:21
-msgid "Required field."
-msgstr "Обязательное поле."
-
-#: account/forms.py:23
+#: account/forms.py:20
 msgid "Password"
 msgstr "Пароль"
 
-#: account/forms.py:29
-msgid "Password confirmation"
-msgstr "Подтверждение пароля"
+#: account/forms.py:27
+msgid ""
+"Please enter a correct email and password. Note that both fields may be case-"
+"sensitive."
+msgstr "Неверный пароль или email. Учтите что оба поля могут быть чувствительны к регистру."
 
-#: account/forms.py:32
-msgid "Enter the same password as before, for verification."
-msgstr "Введите пароль повторно."
-
-#: account/views.py:37
+#: account/views.py:58
 msgid "Request was created."
 msgstr "Запрос был создан."
 
@@ -428,20 +414,21 @@ msgstr "500 ошибка"
 msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
-#: templates/account/login.html:6
-msgid "Login"
-msgstr "Вход"
+#: templates/account/login.html:6 templates/league/view.html:29
+msgid "Login through Pantheon"
+msgstr "Войти через Pantheon"
+
+#: templates/account/login.html:8
+msgid "Please use your login and password from https://r.riichi.top/ to login."
+msgstr "Используйте свой email и пароль от пантеона https://r.riichi.top/ для входа."
 
 #: templates/account/login.html:9
-msgid "If you don't have an account yet:"
-msgstr "Если у вас нет аккаунта:"
+msgid ""
+"We are not storing these credentials, they are used only during the login "
+"process."
+msgstr "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: templates/account/login.html:9 templates/account/sign_up.html:19
-msgctxt "action"
-msgid "Sign up"
-msgstr "Зарегистрироваться"
-
-#: templates/account/login.html:19 templates/account/sign_up.html:9
+#: templates/account/login.html:18 templates/base.html:130
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
@@ -453,14 +440,6 @@ msgstr "Настройки аккаунта"
 #: templates/account/settings.html:8
 msgid "Under development!"
 msgstr "В разработке!"
-
-#: templates/account/sign_up.html:6
-msgid "Sign up"
-msgstr "Регистрация"
-
-#: templates/account/sign_up.html:9
-msgid "If you already have an account:"
-msgstr "Если у вас уже есть аккаунт:"
 
 #: templates/base.html:39 templates/website/home.html:5
 msgid "Mahjong portal"
@@ -788,13 +767,13 @@ msgstr "Всего квот"
 msgid "Admin page"
 msgstr "Админка"
 
+#: templates/league/_schedule_games_table.html:22
+msgid "I'm playing!"
+msgstr "Я играю!"
+
 #: templates/league/_schedule_item.html:5
 msgid "Starting"
 msgstr "Начнётся"
-
-#: templates/league/_schedule_item.html:5
-msgid "Playing two games."
-msgstr "Играем два ханчана."
 
 #: templates/league/_schedule_item.html:6
 msgid "Not playing teams for this session:"
@@ -822,11 +801,11 @@ msgstr "Команды"
 msgid "Team"
 msgstr "Команда"
 
-#: templates/league/view.html:28
-msgid "Sign in (not working yet)"
-msgstr "Войти (пока не работает)"
+#: templates/league/view.html:34
+msgid "My team games"
+msgstr "Игры моей команды"
 
-#: templates/league/view.html:32
+#: templates/league/view.html:41
 msgid "Upcoming session"
 msgstr "Следующая сессия"
 

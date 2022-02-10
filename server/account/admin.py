@@ -7,11 +7,12 @@ from account.models import AttachingPlayerRequest, User
 
 class CustomUserAdmin(UserAdmin):
     ordering = ["-date_joined"]
+    search_fields = ("username", "first_name", "last_name", "email", "new_pantheon_id")
     list_display = ("username", "email", "attached_player", "date_joined")
 
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (_("Personal info"), {"fields": ("email", "attached_player")}),
+        (_("Personal info"), {"fields": ("email", "attached_player", "new_pantheon_id")}),
         (
             _("Permissions"),
             {

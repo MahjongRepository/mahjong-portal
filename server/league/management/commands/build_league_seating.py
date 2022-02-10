@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand
 
 NUMBER_OF_TEAMS = 26
 NUMBER_OF_UNIQUE_SESSIONS = 13
-INITIAL_SEATING_ITERATIONS = 1000000
+INITIAL_SEATING_ITERATIONS = 10000000
 IMPROVE_SEATING_ITERATIONS = 50
 
 ALL_SEATING_FOLDER = os.path.join(settings.BASE_DIR, "shared", "league_seating")
@@ -36,8 +36,8 @@ class Command(BaseCommand):
                 "teams_stat": {},
             }
 
-            first_session_tables = self._play_session()
-            second_session_tables = self._play_session()
+            first_session_tables = self._play_session(0)
+            second_session_tables = self._play_session(13)
 
             all_sessions = first_session_tables + second_session_tables
             assert len(all_sessions) == NUMBER_OF_UNIQUE_SESSIONS * 2, "wrong number of played sessions"
@@ -46,15 +46,15 @@ class Command(BaseCommand):
             self._calculate_seating_teams_stat(seating)
 
             if seating["max_min_difference"] <= 6:
+                self._minimize_team_intersections(seating)
+
                 number_of_played_sessions = list(set([x["played_sessions"] for x in seating["teams_stat"].values()]))
                 assert len(number_of_played_sessions) == 1, "all teams should play same number of sessions"
-
-                self._minimize_team_intersections(seating)
 
                 with open(os.path.join(ALL_SEATING_FOLDER, f"{i}.json"), "w") as f:
                     f.write(json.dumps(seating))
 
-    def _play_session(self):
+    def _play_session(self, shift):
         all_tables = []
         for session_number in range(NUMBER_OF_UNIQUE_SESSIONS):
             skipped_teams_in_session = [(session_number * 2), (session_number * 2) + 1]
@@ -66,7 +66,13 @@ class Command(BaseCommand):
             for i in range(0, len(playing_this_session_teams), 4):
                 session_tables.append(playing_this_session_teams[i : i + 4])
 
-            all_tables.append(session_tables)
+            all_tables.append(
+                {
+                    "session_number": session_number + shift,
+                    "session_tables": session_tables,
+                }
+            )
+
         return all_tables
 
     def _calculate_seating_teams_stat(self, seating):
@@ -78,7 +84,7 @@ class Command(BaseCommand):
                     continue
                 seating["teams_stat"][team_number]["played_against_other_teams"][other_team_number] = 0
 
-        for session in seating["sessions"]:
+        for session in [x["session_tables"] for x in seating["sessions"]]:
             for table in session:
                 for team_number in table:
                     seating["teams_stat"][team_number]["played_sessions"] += 1
@@ -169,7 +175,7 @@ class Command(BaseCommand):
                 randomly_shuffled_rounds = seating["sessions"]
                 random.shuffle(randomly_shuffled_rounds)
 
-                for r in randomly_shuffled_rounds:
+                for r in [x["session_tables"] for x in randomly_shuffled_rounds]:
                     table_with_max = None
                     table_with_min = None
                     for t in r:

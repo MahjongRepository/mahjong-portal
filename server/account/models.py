@@ -10,6 +10,7 @@ class User(AbstractUser):
     is_tournament_manager = models.BooleanField(default=False)
     is_ema_players_manager = models.BooleanField(default=False)
     managed_tournaments = models.ManyToManyField(Tournament, blank=True)
+    new_pantheon_id = models.PositiveIntegerField(null=True, blank=True)
 
     attached_player = models.ForeignKey(Player, null=True, blank=True, on_delete=models.PROTECT)
 

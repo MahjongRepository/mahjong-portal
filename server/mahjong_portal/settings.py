@@ -204,6 +204,7 @@ DISCORD_ADMIN_ID = os.environ.get("DISCORD_ADMIN_ID", None)
 PANTHEON_URL = os.environ.get("PANTHEON_URL", None)
 PANTHEON_EVENT_ID = os.environ.get("PANTHEON_EVENT_ID", None)
 PANTHEON_ADMIN_TOKEN = os.environ.get("PANTHEON_ADMIN_TOKEN", None)
+PANTHEON_AUTH_URL = os.environ.get("PANTHEON_AUTH_URL", None)
 
 TOURNAMENT_ID = os.environ.get("TOURNAMENT_ID", None)
 TOURNAMENT_PUBLIC_LOBBY = os.environ.get("TOURNAMENT_PUBLIC_LOBBY", None)

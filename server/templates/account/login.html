@@ -3,13 +3,12 @@
 
 {% block content %}
     <div class="col-lg-6">
-        <h2>{% trans 'Login' %}</h2>
+        <h2>{% trans 'Login through Pantheon' %}</h2>
 
-        <p>
-            {% trans "If you don't have an account yet:" %} <a class="btn btn-sm btn-outline-primary" href="{% url 'sign_up' %}">{% trans 'Sign up' context 'action' %}</a>
-        </p>
+        <p class="mb-0">{% trans 'Please use your login and password from https://r.riichi.top/ to login.'|urlize %}</p>
+        <p class="mt-0">{% trans 'We are not storing these credentials, they are used only during the login process.' %}</p>
 
-        <form action="{% url 'login' %}" method="post" class="form-horizontal" role="form">
+        <form action="{% url 'do_login' %}" method="post" class="form-horizontal" role="form">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}" />
 

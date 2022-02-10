@@ -24,9 +24,18 @@
             </li>
         </ul>
 
-        <p>
-            <button class="btn btn-primary disabled" style="width: 300px">{% trans 'Sign in (not working yet)' %}</button>
-        </p>
+        {% if not user.is_authenticated %}
+            <p>
+                <a href="{% url 'do_login' %}?next={% url 'league_details' league.slug %}" class="btn btn-primary">{% trans 'Login through Pantheon' %}</a>
+            </p>
+        {% endif %}
+
+        {% if my_team_games %}
+            <h3>{% trans 'My team games' %}</h3>
+            {% with games=my_team_games user_team_id=user_team_id %}
+                {% include 'league/_schedule_games_table.html' %}
+            {% endwith %}
+        {% endif %}
 
         {% if upcoming_session %}
             <h3>{% trans 'Upcoming session' %}</h3>

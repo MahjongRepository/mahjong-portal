@@ -1,89 +1,77 @@
+import requests
 from django import forms
-from django.contrib.auth import password_validation
-from django.contrib.auth.forms import UsernameField
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from sentry_sdk import capture_exception
 
-from account.models import User
+from utils.general import make_random_letters_and_digit_string
 
 
-class UserCreationForm(forms.ModelForm):
+class LoginForm(forms.Form):
     """
-    A form that creates a user, with no privileges, from the given username and
-    password.
+    Base class for authenticating users. Extend this to get a form that accepts
+    email/password logins.
     """
 
-    error_messages = {
-        "password_mismatch": _("The two password fields didn’t match."),
-        "email_already_exists": _("User with this email already exist."),
-        "username_already_exists": _("User with this username already exist."),
-    }
-    email = forms.EmailField(max_length=254, help_text=_("Required field."))
-    password1 = forms.CharField(
+    next = forms.CharField(widget=forms.HiddenInput())
+    email = forms.EmailField(label=_("Email"), widget=forms.TextInput(attrs={"autofocus": True}))
+    password = forms.CharField(
         label=_("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    password2 = forms.CharField(
-        label=_("Password confirmation"),
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
-        strip=False,
-        help_text=_("Enter the same password as before, for verification."),
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
+        required=True,
     )
 
-    class Meta:
-        model = User
-        fields = ("email", "username")
-        field_classes = {"username": UsernameField}
+    error_messages = {
+        "invalid_login": _("Please enter a correct email and password. Note that both fields may be case-sensitive."),
+    }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self._meta.model.USERNAME_FIELD in self.fields:
-            self.fields[self._meta.model.USERNAME_FIELD].widget.attrs["autofocus"] = True
+    def clean(self):
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
 
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise ValidationError(
-                self.error_messages["password_mismatch"],
-                code="password_mismatch",
-            )
-        return password2
-
-    def clean_email(self):
-        email = self.cleaned_data.get("email", "").lower()
-        if User.objects.filter(email=email).exists():
-            raise ValidationError(
-                self.error_messages["email_already_exists"],
-                code="email_already_exist",
-            )
-        return email
-
-    def clean_username(self):
-        username = self.cleaned_data.get("username", "")
-        if User.objects.filter(username__iexact=username).exists():
-            raise ValidationError(
-                self.error_messages["username_already_exists"],
-                code="username_already_exists",
-            )
-        return username
-
-    def _post_clean(self):
-        super()._post_clean()
-        # Validate the password after self.instance is updated with form data
-        # by super().
-        password = self.cleaned_data.get("password2")
-        if password:
+        if email is not None and password:
             try:
-                password_validation.validate_password(password, self.instance)
-            except ValidationError as error:
-                self.add_error("password2", error)
+                data = {
+                    "jsonrpc": "2.0",
+                    "method": "authorize",
+                    "params": {"email": email, "password": password},
+                    "id": make_random_letters_and_digit_string(),
+                }
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
+                headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
+                response = requests.post(settings.PANTHEON_AUTH_URL, json=data, headers=headers)
+
+                if response.json().get("error"):
+                    raise self.get_invalid_login_error()
+
+                pantheon_id, auth_token = response.json()["result"]
+
+                data = {
+                    "jsonrpc": "2.0",
+                    "method": "me",
+                    "params": {"id": pantheon_id, "clientSideToken": auth_token},
+                    "id": make_random_letters_and_digit_string(),
+                }
+
+                headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
+                response = requests.post(settings.PANTHEON_AUTH_URL, json=data, headers=headers)
+                if response.json().get("error"):
+                    raise self.get_invalid_login_error()
+
+                assert response.json()["result"]["email"]
+                self.user_data = response.json()["result"]
+            except Exception as e:
+                capture_exception(e)
+                raise self.get_invalid_login_error() from None
+
+        return self.cleaned_data
+
+    def get_invalid_login_error(self):
+        self.add_error("email", "")
+        self.add_error("password", "")
+        return ValidationError(
+            self.error_messages["invalid_login"],
+            code="invalid_login",
+        )

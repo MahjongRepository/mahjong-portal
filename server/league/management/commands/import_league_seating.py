@@ -7,7 +7,7 @@ import pytz
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from league.models import League, LeagueGame, LeagueGamePlayer, LeagueSession, LeagueTeam
+from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer, LeagueSession, LeagueTeam
 
 NUMBER_OF_TEAMS = 26
 ALL_SEATING_FOLDER = os.path.join(settings.BASE_DIR, "shared", "league_seating")
@@ -17,7 +17,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         league = League.objects.all().first()
 
-        LeagueGamePlayer.objects.all().delete()
+        LeaguePlayer.objects.all().update(user=None)
+        LeagueGameSlot.objects.all().delete()
         LeagueGame.objects.all().delete()
         LeagueSession.objects.all().delete()
 
@@ -54,7 +55,8 @@ class Command(BaseCommand):
 
         print("\n".join(["".join(["{:3}".format(item) for item in row]) for row in team_intersections_matrix]))
 
-        for i, session in enumerate(best_seating["sessions"]):
+        best_seating["sessions"] = sorted(best_seating["sessions"], key=lambda x: x["session_number"])
+        for i, session in enumerate([x["session_tables"] for x in best_seating["sessions"]]):
             if i <= 2:
                 start_time = initial_sessions[i]
             else:
@@ -64,8 +66,9 @@ class Command(BaseCommand):
             session_obj = LeagueSession.objects.create(league=league, number=i, start_time=start_time)
 
             for table in session:
-                game = LeagueGame.objects.create(session=session_obj)
-                for team_position, team_number in enumerate(table):
-                    LeagueGamePlayer.objects.create(
-                        position=team_position, game=game, team=LeagueTeam.objects.get(number=team_number)
-                    )
+                for _ in range(2):
+                    game = LeagueGame.objects.create(session=session_obj)
+                    for team_position, team_number in enumerate(table):
+                        LeagueGameSlot.objects.create(
+                            position=team_position, game=game, team=LeagueTeam.objects.get(number=team_number)
+                        )

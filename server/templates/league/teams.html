@@ -41,7 +41,11 @@
                             {% with players=team.players.all %}
                                 {% for player in players %}
                                     <td>
-                                        {{ player.name }} <br>
+                                        {% if player.user_id %}
+                                            <a href="#">{{ player.name }}</a> <br>
+                                        {% else %}
+                                            {{ player.name }} <br>
+                                        {% endif %}
                                         {{ player.tenhou_nickname }}
                                     </td>
                                 {% endfor %}
