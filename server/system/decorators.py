@@ -8,7 +8,7 @@ from tournament.models import Tournament
 
 def tournament_manager_auth_required(view_func):
     def _checklogin(request, *args, **kwargs):
-        redirect_url = redirect(reverse("login") + "?next={0}".format(request.path))
+        redirect_url = redirect(reverse("do_login") + "?next={0}".format(request.path))
 
         if not request.user.is_authenticated:
             return redirect_url
