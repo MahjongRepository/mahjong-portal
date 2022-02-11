@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-10 06:15+0000\n"
+"POT-Creation-Date: 2022-02-11 02:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,9 @@ msgstr "Пароль"
 msgid ""
 "Please enter a correct email and password. Note that both fields may be case-"
 "sensitive."
-msgstr "Неверный пароль или email. Учтите что оба поля могут быть чувствительны к регистру."
+msgstr ""
+"Неверный пароль или email. Учтите что оба поля могут быть чувствительны к "
+"регистру."
 
 #: account/views.py:58
 msgid "Request was created."
@@ -420,13 +422,15 @@ msgstr "Войти через Pantheon"
 
 #: templates/account/login.html:8
 msgid "Please use your login and password from https://r.riichi.top/ to login."
-msgstr "Используйте свой email и пароль от пантеона https://r.riichi.top/ для входа."
+msgstr ""
+"Используйте свой email и пароль от пантеона https://r.riichi.top/ для входа."
 
 #: templates/account/login.html:9
 msgid ""
 "We are not storing these credentials, they are used only during the login "
 "process."
-msgstr "Мы не храним эту информацию, пароль будет использован только во время входа."
+msgstr ""
+"Мы не храним эту информацию, пароль будет использован только во время входа."
 
 #: templates/account/login.html:18 templates/base.html:130
 msgctxt "action"
@@ -800,6 +804,10 @@ msgstr "Команды"
 #: templates/league/teams.html:22 templates/tournament/announcement.html:73
 msgid "Team"
 msgstr "Команда"
+
+#: templates/league/teams.html:47
+msgid "captain"
+msgstr "капитан"
 
 #: templates/league/view.html:34
 msgid "My team games"

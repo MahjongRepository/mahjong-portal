@@ -36,9 +36,10 @@ class LeaguePlayer(models.Model):
     tenhou_nickname = models.CharField(max_length=8, null=True, blank=True)
     team = models.ForeignKey(LeagueTeam, on_delete=models.PROTECT, related_name="players")
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    is_captain = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ["name"]
+        ordering = ["-is_captain", "name"]
 
     def __str__(self):
         return self.name

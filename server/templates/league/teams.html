@@ -42,9 +42,9 @@
                                 {% for player in players %}
                                     <td>
                                         {% if player.user_id %}
-                                            <a href="#">{{ player.name }}</a> <br>
+                                            <a href="#">{{ player.name }}</a> {% if player.is_captain %}({% trans 'captain' %}){% endif %}<br>
                                         {% else %}
-                                            {{ player.name }} <br>
+                                            {{ player.name }} {% if player.is_captain %}({% trans 'captain' %}){% endif %}<br>
                                         {% endif %}
                                         {{ player.tenhou_nickname }}
                                     </td>
