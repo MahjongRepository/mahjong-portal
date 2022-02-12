@@ -39,7 +39,7 @@
 
         {% if upcoming_session %}
             <h3>{% trans 'Upcoming session' %}</h3>
-            {% with session=upcoming_session %}
+            {% with session=upcoming_session is_upcoming_games=True %}
                 {% include 'league/_schedule_item.html' %}
             {% endwith %}
         {% endif %}

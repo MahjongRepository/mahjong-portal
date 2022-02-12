@@ -209,13 +209,13 @@ class TournamentHandler:
         data = {
             "jsonrpc": "2.0",
             "method": "updatePlayersTeams",
-            "params": {"eventId": settings.PANTHEON_EVENT_ID, "teamNameMap": team_names},
+            "params": {"eventId": settings.PANTHEON_TOURNAMENT_EVENT_ID, "teamNameMap": team_names},
             "id": make_random_letters_and_digit_string(),
         }
 
         headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
 
-        response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+        response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
         if response.status_code == 500:
             logger.error("Log add. Pantheon 500.")
             return "Pantheon 500 error"
@@ -291,7 +291,7 @@ class TournamentHandler:
             return error_message, False
 
         game_info = content["result"]["games"][0]
-        pantheon_url = f"https://gui.mjtop.net/eid{settings.PANTHEON_EVENT_ID}/game/{game_info['hash']}"
+        pantheon_url = f"https://gui.mjtop.net/eid{settings.PANTHEON_TOURNAMENT_EVENT_ID}/game/{game_info['hash']}"
 
         pantheon_players = {}
         for pantheon_player_id in content["result"]["players"].keys():
@@ -748,7 +748,7 @@ class TournamentHandler:
         return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
 
     def get_rating_link(self):
-        return f"https://gui.mjtop.net/eid{settings.PANTHEON_EVENT_ID}/stat"
+        return f"https://gui.mjtop.net/eid{settings.PANTHEON_TOURNAMENT_EVENT_ID}/stat"
 
     def get_admin_username(self):
         if self.destination == self.TELEGRAM_DESTINATION:

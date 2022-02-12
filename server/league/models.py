@@ -95,6 +95,12 @@ class LeagueGame(models.Model):
     class Meta:
         ordering = ["id"]
 
+    def __str__(self):
+        return f"Game: {self.id}"
+
+    def is_new(self):
+        return self.status == LeagueGame.NEW
+
 
 class LeagueGameSlot(models.Model):
     position = models.PositiveSmallIntegerField()
@@ -106,3 +112,7 @@ class LeagueGameSlot(models.Model):
 
     class Meta:
         ordering = ["position"]
+
+    @property
+    def assigned_player_short_name(self):
+        return self.assigned_player.name.split(" ")[0]

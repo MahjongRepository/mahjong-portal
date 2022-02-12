@@ -31,11 +31,15 @@ def disable_user_in_pantheon(request, record_id):
     data = {
         "jsonrpc": "2.0",
         "method": "updatePlayerSeatingFlagCP",
-        "params": {"playerId": record.pantheon_id, "eventId": settings.PANTHEON_EVENT_ID, "ignoreSeating": 1},
+        "params": {
+            "playerId": record.pantheon_id,
+            "eventId": settings.PANTHEON_TOURNAMENT_EVENT_ID,
+            "ignoreSeating": 1,
+        },
         "id": make_random_letters_and_digit_string(),
     }
 
-    response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+    response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
     if response.status_code == 500:
         return HttpResponse("Disable player. 500 response")
 
@@ -72,7 +76,7 @@ def toggle_replacement_flag_in_pantheon(request, record_id):
         "id": make_random_letters_and_digit_string(),
     }
 
-    response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+    response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
     if response.status_code == 500:
         return HttpResponse("updatePlayer. 500 response")
 
@@ -96,13 +100,13 @@ def add_penalty_game(request, game_id):
         "jsonrpc": "2.0",
         "method": "addPenaltyGame",
         "params": {
-            "eventId": settings.PANTHEON_EVENT_ID,
+            "eventId": settings.PANTHEON_TOURNAMENT_EVENT_ID,
             "players": [x.player.pantheon_id for x in game.game_players.all()],
         },
         "id": make_random_letters_and_digit_string(),
     }
 
-    response = requests.post(settings.PANTHEON_URL, json=data, headers=headers)
+    response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
     if response.status_code == 500:
         return HttpResponse("addPenaltyGame. 500 response")
 

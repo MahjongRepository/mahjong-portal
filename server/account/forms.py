@@ -41,7 +41,7 @@ class LoginForm(forms.Form):
                 }
 
                 headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
-                response = requests.post(settings.PANTHEON_AUTH_URL, json=data, headers=headers)
+                response = requests.post(settings.PANTHEON_AUTH_API_URL, json=data, headers=headers)
 
                 if response.json().get("error"):
                     raise self.get_invalid_login_error()
@@ -56,7 +56,7 @@ class LoginForm(forms.Form):
                 }
 
                 headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
-                response = requests.post(settings.PANTHEON_AUTH_URL, json=data, headers=headers)
+                response = requests.post(settings.PANTHEON_AUTH_API_URL, json=data, headers=headers)
                 if response.json().get("error"):
                     raise self.get_invalid_login_error()
 

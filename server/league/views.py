@@ -1,8 +1,13 @@
-from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from random import shuffle
+from urllib.parse import unquote
+
+import requests
+from django.conf import settings
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from league.models import League, LeagueGameSlot, LeaguePlayer, LeagueSession
+from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer, LeagueSession
 
 
 def league_details(request, slug):
@@ -70,4 +75,39 @@ def league_confirm_slot(request, slot_id):
         raise Http404
     slot.assigned_player = player
     slot.save()
+    return redirect(request.META.get("HTTP_REFERER"))
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def start_game(request, game_id):
+    game = LeagueGame.objects.get(id=game_id)
+    slots = game.slots.all()
+
+    player_names = [x.assigned_player.tenhou_nickname for x in slots]
+    shuffle(player_names)
+
+    url = "https://tenhou.net/cs/edit/cmd_start.cgi"
+    data = {
+        "L": settings.LEAGUE_PRIVATE_TENHOU_LOBBY,
+        "R2": settings.LEAGUE_GAME_TYPE,
+        "RND": "default",
+        "WG": 1,
+        "M": "\r\n".join([x for x in player_names]),
+    }
+
+    headers = {
+        "Origin": "http://tenhou.net",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Referer": "http://tenhou.net/cs/edit/?{}".format(settings.LEAGUE_PRIVATE_TENHOU_LOBBY),
+    }
+
+    response = requests.post(url, data=data, headers=headers, allow_redirects=False)
+    result = unquote(response.content.decode("utf-8"))
+    if result.startswith("FAILED") or result.startswith("MEMBER NOT FOUND"):
+        return HttpResponse(result)
+
+    game.status = LeagueGame.NEW
+    game.save()
+
     return redirect(request.META.get("HTTP_REFERER"))
