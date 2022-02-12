@@ -2,16 +2,16 @@
 gunicorn==20.1.0
 
 # main deps
-Django==3.2.10
-django-modeltranslation==0.17.3
-psycopg2==2.9.2
-django-bootstrap5==21.2
+Django==3.2.12
+django-modeltranslation==0.17.5
+psycopg2==2.9.3
+django-bootstrap5==21.3
 dj-database-url==0.5.0
 python-dateutil==2.8.2
-ms-api==0.9.310
+ms-api==0.10.1.3
 
 # online tournaments
-python-telegram-bot==13.9
+python-telegram-bot==13.11
 discord.py==1.7.3
 
 # better names declension
@@ -24,7 +24,7 @@ Whoosh==2.7.4
 
 # for web parsing
 beautifulsoup4==4.10.0
-requests==2.26.0
+requests==2.27.1
 
 # for monitoring
-sentry-sdk==1.5.1
+sentry-sdk==1.5.5
