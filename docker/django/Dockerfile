@@ -38,4 +38,7 @@ RUN rm -r /app/requirements/
 
 ENTRYPOINT ["/entrypoint.sh"]
 
+RUN mkdir -p /django_cache
+RUN chown docker-user /django_cache
+
 USER docker-user
