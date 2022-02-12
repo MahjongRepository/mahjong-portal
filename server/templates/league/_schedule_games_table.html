@@ -38,7 +38,7 @@
                     </td>
                     <td>
                         {% if game.is_new %}
-                            <a href="{% url "start_game" game.id %}" class="btn btn-sm btn-success">{% trans 'Start game' %}</a>
+                            <a href="{% url "start_game" game.id %}" class="btn btn-sm btn-success">{% trans 'Start game' %} {{ game.id }}</a>
                         {% endif %}
                     </td>
                 </tr>

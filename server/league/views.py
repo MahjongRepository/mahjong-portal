@@ -107,7 +107,7 @@ def start_game(request, game_id):
     if result.startswith("FAILED") or result.startswith("MEMBER NOT FOUND"):
         return HttpResponse(result)
 
-    game.status = LeagueGame.NEW
+    game.status = LeagueGame.STARTED
     game.save()
 
     return redirect(request.META.get("HTTP_REFERER"))
