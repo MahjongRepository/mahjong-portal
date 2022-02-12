@@ -15,7 +15,8 @@
                 {% for slot in game.slots.all %}
                     <td width="25%" {% if slot.assigned_player_id %}class="table-success"{% endif %}>
                         {{ slot.team.name|truncatewords:3 }}
-                        {% if user.is_superuser and slot.assigned_player_id %}
+{#                        {% if user.is_superuser and slot.assigned_player_id %}#}
+                        {% if slot.assigned_player_id %}
                             ({{ slot.assigned_player_short_name }})
                         {% endif %}
                         {% if slot.team_id == user_team_id %}
