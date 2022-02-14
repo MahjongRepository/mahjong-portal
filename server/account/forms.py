@@ -32,6 +32,7 @@ class LoginForm(forms.Form):
         password = self.cleaned_data.get("password")
 
         if email is not None and password:
+            email = email.lower().strip()
             try:
                 data = {
                     "jsonrpc": "2.0",
