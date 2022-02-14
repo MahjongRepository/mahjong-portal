@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load tz %}
 {% load i18n %}
 
 {% block title %}
@@ -16,7 +17,18 @@
         </nav>
         {% for session in sessions %}
             <h3>{% trans "Session " %} #{{ session.number|add:1 }}</h3>
-            {% include 'league/_schedule_item.html' %}
+            {% timezone 'Europe/Moscow' %}
+                <p class="mb-1">{% trans 'Starting' %} {{ session.start_time|date:'d M. H-i' }} (МСК).</p>
+                <p class="mb-0">{% trans 'Not playing teams for this session:' %}</p>
+                <ul class="mt-0">
+                    {% for team in session.missing_teams_for_session %}
+                        <li>{{ team }}</li>
+                    {% endfor %}
+                </ul>
+            {% endtimezone %}
+            {% with games=session.all_games is_upcoming_games=True %}
+                {% include 'league/_schedule_games_table.html' %}
+            {% endwith %}
         {% endfor %}
     </div>
 {% endblock %}

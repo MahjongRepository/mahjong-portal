@@ -46,9 +46,11 @@ class LeaguePlayer(models.Model):
 
 
 class LeagueSession(models.Model):
-    PLANNED = 0
-    FINISHED = 1
+    NEW = 0
+    PLANNED = 1
+    FINISHED = 2
     STATUSES = [
+        [NEW, "New"],
         [PLANNED, "Planned"],
         [FINISHED, "Finished"],
     ]
@@ -75,8 +77,8 @@ class LeagueSession(models.Model):
         return [x for x in all_teams if x.id not in playing_team_ids]
 
     def all_games(self):
-        if hasattr(self, "_custom_games"):
-            return self._custom_games
+        if hasattr(self, "custom_games"):
+            return self.custom_games
         return self.games.all()
 
 

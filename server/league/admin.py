@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer, LeagueTeam
+from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer, LeagueSession, LeagueTeam
 
 
 class LeagueForm(forms.ModelForm):
@@ -33,6 +33,11 @@ class LeagueGameAdmin(admin.ModelAdmin):
     list_display = ["status", "session"]
 
 
+class LeagueSessionAdmin(admin.ModelAdmin):
+    list_display = ["number", "status"]
+    list_filter = ["status"]
+
+
 class LeagueGameSlotAdmin(admin.ModelAdmin):
     search_fields = ["assigned_player__name"]
     list_display = ["game", "team", "assigned_player"]
@@ -43,3 +48,4 @@ admin.site.register(LeagueTeam, LeagueTeamAdmin)
 admin.site.register(LeaguePlayer, LeaguePlayerAdmin)
 admin.site.register(LeagueGame, LeagueGameAdmin)
 admin.site.register(LeagueGameSlot, LeagueGameSlotAdmin)
+admin.site.register(LeagueSession, LeagueSessionAdmin)
