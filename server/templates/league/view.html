@@ -46,14 +46,14 @@
             {% if upcoming_session.my_team_games %}
                 <h3>{% trans 'My team games' %}</h3>
 
-                {% with games=upcoming_session.my_team_games user_team_id=user_team_id %}
+                {% with games=upcoming_session.my_team_games user_team_id=user_team_id show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}
                     {% include 'league/_schedule_games_table.html' %}
                 {% endwith %}
 
                 <h3>{% trans 'Games' %}</h3>
             {% endif %}
 
-            {% with games=upcoming_session.all_games is_upcoming_games=True %}
+            {% with games=upcoming_session.all_games is_upcoming_games=True show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}
                 {% include 'league/_schedule_games_table.html' %}
             {% endwith %}
         {% endfor %}

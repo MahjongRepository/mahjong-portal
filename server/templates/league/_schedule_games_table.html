@@ -15,12 +15,16 @@
                 {% for slot in game.slots.all %}
                     <td width="25%" {% if slot.assigned_player_id %}class="table-success"{% endif %}>
                         {{ slot.team.name|truncatewords:3 }}
-                        {% if user.is_superuser and slot.assigned_player_id %}
-                            ({{ slot.assigned_player_short_name }})
+                        {% if slot.assigned_player_id %}
+                            {% if user.is_superuser or show_assigned_players_for_all %}
+                                ({{ slot.assigned_player_short_name }})
+                            {% endif %}
                         {% endif %}
                         {% if slot.team_id == user_team_id %}
                             {% if slot.assigned_player_id %}
-                                ({{ slot.assigned_player_short_name }})
+                                {% if not show_assigned_players_for_all %}
+                                    ({{ slot.assigned_player_short_name }})
+                                {% endif %}
                             {% else %}
                                 <a href="{% url 'league_confirm_slot' slot.id %}" class="btn btn-primary btn-sm">{% trans "I'm playing!" %}</a>
                             {% endif %}

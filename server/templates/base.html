@@ -70,9 +70,9 @@
                 <li class="nav-item {% if page == 'club' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'club_list' %}">{% trans 'Clubs' %}</a>
                 </li>
-                <li class="nav-item {% if page == 'wiki' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'wiki_home' %}">{% trans 'Wiki' %}</a>
-                </li>
+{#                <li class="nav-item {% if page == 'wiki' %}active{% endif %}">#}
+{#                    <a class="nav-link" href="{% url 'wiki_home' %}">{% trans 'Wiki' %}</a>#}
+{#                </li>#}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {% trans 'Online' %}
@@ -94,6 +94,9 @@
                         <a class="dropdown-item" href="{% url 'tournament_application' %}">{% trans 'Tournament application' %}</a>
                         <a class="dropdown-item" href="{% url 'championships' %}">{% trans 'Championships' %}</a>
                     </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'league_details' 'yoroshiku-league' %}">{% trans 'Yoroshiku League' %}</a>
                 </li>
             </ul>
             {% if user.is_authenticated %}
