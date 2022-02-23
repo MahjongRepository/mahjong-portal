@@ -16,7 +16,7 @@
                     <td width="25%" {% if slot.assigned_player_id %}class="table-success"{% endif %}>
                         {{ slot.team.name|truncatewords:3 }}
                         {% if slot.assigned_player_id %}
-                            {% if user.is_superuser or show_assigned_players_for_all %}
+                            {% if user.is_superuser or user.is_league_manager or show_assigned_players_for_all %}
                                 ({{ slot.assigned_player_short_name }})
                             {% endif %}
                         {% endif %}

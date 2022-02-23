@@ -8,6 +8,7 @@ from tournament.models import Tournament
 
 class User(AbstractUser):
     is_tournament_manager = models.BooleanField(default=False)
+    is_league_manager = models.BooleanField(default=False)
     is_ema_players_manager = models.BooleanField(default=False)
     managed_tournaments = models.ManyToManyField(Tournament, blank=True)
     new_pantheon_id = models.PositiveIntegerField(null=True, blank=True)
