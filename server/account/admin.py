@@ -21,6 +21,7 @@ class CustomUserAdmin(UserAdmin):
                     "is_staff",
                     "is_superuser",
                     "is_tournament_manager",
+                    "is_league_manager",
                     "is_ema_players_manager",
                     "user_permissions",
                     "managed_tournaments",
