@@ -6,39 +6,39 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.timezone import now
 
-from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer, LeagueSession
+from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer
 
 
 def league_details(request, slug):
     league = get_object_or_404(League, slug=slug)
-    upcoming_sessions = league.sessions.filter(status=LeagueSession.PLANNED).prefetch_related("games", "games__slots")
-
+    # upcoming_sessions = league.sessions.filter(status=LeagueSession.PLANNED).prefetch_related("games", "games__slots")
+    #
+    # user_team_id = None
+    # for upcoming_session in upcoming_sessions:
+    #     upcoming_session_games = upcoming_session.games.all()
+    #
+    #     my_team_games = []
+    #     if request.user.is_authenticated:
+    #         try:
+    #             player = LeaguePlayer.objects.get(user=request.user)
+    #             user_team_id = player.team_id
+    #             for game in upcoming_session_games:
+    #                 for game_slot in game.slots.all():
+    #                     if game_slot.team_id == player.team_id:
+    #                         my_team_games.append(game)
+    #             upcoming_session_games = [
+    #                 x for x in upcoming_session_games if x.id not in [y.id for y in my_team_games]
+    #             ]
+    #         except LeaguePlayer.DoesNotExist:
+    #             pass
+    #
+    #     upcoming_session.custom_games = upcoming_session_games
+    #     upcoming_session.my_team_games = my_team_games
+    #     start_in_minutes = (upcoming_session.start_time - now()).total_seconds() / 60
+    #     upcoming_session.show_assigned_players_for_all = start_in_minutes <= 60
+    upcoming_sessions = []
     user_team_id = None
-    for upcoming_session in upcoming_sessions:
-        upcoming_session_games = upcoming_session.games.all()
-
-        my_team_games = []
-        if request.user.is_authenticated:
-            try:
-                player = LeaguePlayer.objects.get(user=request.user)
-                user_team_id = player.team_id
-                for game in upcoming_session_games:
-                    for game_slot in game.slots.all():
-                        if game_slot.team_id == player.team_id:
-                            my_team_games.append(game)
-                upcoming_session_games = [
-                    x for x in upcoming_session_games if x.id not in [y.id for y in my_team_games]
-                ]
-            except LeaguePlayer.DoesNotExist:
-                pass
-
-        upcoming_session.custom_games = upcoming_session_games
-        upcoming_session.my_team_games = my_team_games
-        start_in_minutes = (upcoming_session.start_time - now()).total_seconds() / 60
-        upcoming_session.show_assigned_players_for_all = start_in_minutes <= 60
-
     return render(
         request,
         "league/view.html",
@@ -51,27 +51,29 @@ def league_details(request, slug):
 
 
 def league_teams(request, slug):
-    league = get_object_or_404(League, slug=slug)
-    return render(
-        request,
-        "league/teams.html",
-        {
-            "league": league,
-        },
-    )
+    return redirect("/")
+    # league = get_object_or_404(League, slug=slug)
+    # return render(
+    #     request,
+    #     "league/teams.html",
+    #     {
+    #         "league": league,
+    #     },
+    # )
 
 
 def league_schedule(request, slug):
-    league = get_object_or_404(League, slug=slug)
-    sessions = league.sessions.exclude(status=LeagueSession.FINISHED).prefetch_related("games", "games__slots")
-    return render(
-        request,
-        "league/schedule.html",
-        {
-            "league": league,
-            "sessions": sessions,
-        },
-    )
+    return redirect("/")
+    # league = get_object_or_404(League, slug=slug)
+    # sessions = league.sessions.exclude(status=LeagueSession.FINISHED).prefetch_related("games", "games__slots")
+    # return render(
+    #     request,
+    #     "league/schedule.html",
+    #     {
+    #         "league": league,
+    #         "sessions": sessions,
+    #     },
+    # )
 
 
 @login_required
