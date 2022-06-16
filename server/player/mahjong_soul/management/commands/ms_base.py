@@ -62,7 +62,7 @@ class MSBaseCommand(BaseCommand):
 
                 servers = servers["servers"]
                 server = random.choice(servers)
-                endpoint = "wss://{}/".format(server)
+                endpoint = "wss://{}/gateway".format(server)
 
         print("Chosen endpoint: {}".format(endpoint))
         channel = MSRPCChannel(endpoint)
