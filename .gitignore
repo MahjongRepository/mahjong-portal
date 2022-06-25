@@ -11,6 +11,7 @@ env
 settings_local.py
 .DS_Store
 .idea
+*.iml
 backups
 db.sqlite3
 whoosh_index
