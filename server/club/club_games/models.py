@@ -6,12 +6,23 @@ from player.models import Player
 from player.tenhou.models import TenhouAggregatedStatistics
 
 
+# Disable club rating for now, since we are not syncing data with new pantheon yet
+class EmptyResponseManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(EmptyResponseManager, self).get_queryset()
+        return queryset.none()
+
+
 class ClubSessionSyncData(BaseModel):
+    objects = EmptyResponseManager()
+
     club = models.OneToOneField(Club, on_delete=models.CASCADE, related_name="sync_info")
     last_session_id = models.PositiveIntegerField(null=True, blank=True)
 
 
 class ClubSession(BaseModel):
+    objects = EmptyResponseManager()
+
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="club_sessions")
     date = models.DateTimeField()
 
@@ -23,6 +34,8 @@ class ClubSession(BaseModel):
 
 
 class ClubSessionResult(BaseModel):
+    objects = EmptyResponseManager()
+
     club_session = models.ForeignKey(ClubSession, on_delete=models.CASCADE, related_name="results")
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     player_string = models.CharField(max_length=255, null=True, blank=True)
@@ -41,6 +54,8 @@ class ClubSessionResult(BaseModel):
 
 
 class ClubRating(BaseModel):
+    objects = EmptyResponseManager()
+
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name="rating")
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     player_string = models.CharField(max_length=255, null=True, blank=True)

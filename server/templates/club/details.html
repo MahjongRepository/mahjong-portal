@@ -109,20 +109,20 @@
             </div>
         {% endif %}
 
-        {% if club.current_club_rating_pantheon_id %}
-            <h2>{% trans 'Club games' %}</h2>
-            <p>
-                {% trans 'Current rating games:' %} <a href="{{ club.get_link_to_club_rating }}" target="_blank">{{ club.get_link_to_club_rating }}</a>
-            </p>
-            {% if club.pantheon_ids %}
-                <p class="mb-0">{% trans 'Previous club rating events:' %}</p>
-                <ul class="mt-0">
-                    {% for event_link in club.get_links_to_previous_games %}
-                        <li><a href="{{ event_link }}" target="_blank">{{ event_link }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endif %}
+{#        {% if club.current_club_rating_pantheon_id %}#}
+{#            <h2>{% trans 'Club games' %}</h2>#}
+{#            <p>#}
+{#                {% trans 'Current rating games:' %} <a href="{{ club.get_link_to_club_rating }}" target="_blank">{{ club.get_link_to_club_rating }}</a>#}
+{#            </p>#}
+{#            {% if club.pantheon_ids %}#}
+{#                <p class="mb-0">{% trans 'Previous club rating events:' %}</p>#}
+{#                <ul class="mt-0">#}
+{#                    {% for event_link in club.get_links_to_previous_games %}#}
+{#                        <li><a href="{{ event_link }}" target="_blank">{{ event_link }}</a></li>#}
+{#                    {% endfor %}#}
+{#                </ul>#}
+{#            {% endif %}#}
+{#        {% endif %}#}
 
         {% if club_sessions %}
             <h3>{% trans 'Latest 10 club games' %}</h3>
