@@ -385,19 +385,19 @@ msgid "Substitution player"
 msgstr "Игрок замены"
 
 #: player/tenhou/models.py:137
-msgid "Kyu lobby"
+msgid "Ippan"
 msgstr "Кю-лобби"
 
 #: player/tenhou/models.py:138
-msgid "Dan lobby"
+msgid "Joukyuu"
 msgstr "Перводан"
 
 #: player/tenhou/models.py:139
-msgid "Upperdan lobby"
+msgid "Tokujou"
 msgstr "Втородан"
 
 #: player/tenhou/models.py:140
-msgid "Phoenix lobby"
+msgid "Houou"
 msgstr "Феникс"
 
 #: templates/404.html:5 templates/404.html:10
@@ -1735,7 +1735,7 @@ msgstr "Чуренпото"
 
 #: utils/tenhou/yakuman_list.py:8
 msgid "Daburu Chuuren Poutou"
-msgstr "Чуренпото (одинарный)"
+msgstr "Чуренпото (9 сторон)"
 
 #: utils/tenhou/yakuman_list.py:9
 msgid "Daburu Kokushi Musou"
@@ -1755,7 +1755,7 @@ msgstr "Кокуши мусо"
 
 #: utils/tenhou/yakuman_list.py:13
 msgid "Ryuuiisou"
-msgstr "Рюисоу"
+msgstr "Рюисо"
 
 #: utils/tenhou/yakuman_list.py:14
 msgid "Shousuushii"
@@ -1775,8 +1775,8 @@ msgstr "Суканцу"
 
 #: utils/tenhou/yakuman_list.py:19
 msgid "Tsuu iisou"
-msgstr "Тсуисо"
+msgstr "Цуисо"
 
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
-msgstr "Казое"
+msgstr "Казоэ"
