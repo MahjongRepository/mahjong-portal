@@ -134,10 +134,10 @@ class TenhouStatistics(models.Model):
     PHOENIX_LOBBY = 3
 
     LOBBIES = [
-        [KYU_LOBBY, gettext_lazy("Kyu lobby")],
-        [DAN_LOBBY, gettext_lazy("Dan lobby")],
-        [UPPERDAN_LOBBY, gettext_lazy("Upperdan lobby")],
-        [PHOENIX_LOBBY, gettext_lazy("Phoenix lobby")],
+        [KYU_LOBBY, gettext_lazy("Ippan")],
+        [DAN_LOBBY, gettext_lazy("Joukyuu")],
+        [UPPERDAN_LOBBY, gettext_lazy("Tokujou")],
+        [PHOENIX_LOBBY, gettext_lazy("Houou")],
     ]
 
     ALL_TIME = 0
