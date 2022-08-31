@@ -36,12 +36,6 @@
 
             {% timezone 'Europe/Moscow' %}
                 <p class="mb-1">{% trans 'Starting' %} {{ upcoming_session.start_time|date:'d M. H-i' }} (МСК).</p>
-                <p class="mb-0">{% trans 'Not playing teams for this session:' %}</p>
-                <ul class="mt-0">
-                    {% for team in upcoming_session.missing_teams_for_session %}
-                        <li>{{ team }}</li>
-                    {% endfor %}
-                </ul>
             {% endtimezone %}
 
             {% if upcoming_session.my_team_games %}

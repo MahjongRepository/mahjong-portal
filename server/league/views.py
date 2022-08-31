@@ -38,8 +38,7 @@ def league_details(request, slug):
         upcoming_session.my_team_games = my_team_games
         start_in_minutes = (upcoming_session.start_time - now()).total_seconds() / 60
         upcoming_session.show_assigned_players_for_all = start_in_minutes <= 60
-    upcoming_sessions = []
-    user_team_id = None
+
     return render(
         request,
         "league/view.html",

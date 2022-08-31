@@ -65,20 +65,6 @@ class LeagueSession(models.Model):
     def __str__(self):
         return f"Session: {self.number}"
 
-    def missing_teams_for_session(self):
-        all_teams = cache.get("all_league_teams")
-        if not all_teams:
-            all_teams = LeagueTeam.objects.all()
-            cache.set("all_league_teams", all_teams, timeout=60 * 60 * 24)
-
-        playing_team_ids = []
-        for game in self.games.all():
-            for game_slot in game.slots.all():
-                if game_slot.team_id not in playing_team_ids:
-                    playing_team_ids.append(game_slot.team_id)
-
-        return [x for x in all_teams if x.id not in playing_team_ids]
-
     def all_games(self):
         if hasattr(self, "custom_games"):
             return self.custom_games
