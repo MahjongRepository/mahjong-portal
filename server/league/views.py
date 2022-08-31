@@ -22,7 +22,7 @@ def league_details(request, slug):
         my_team_games = []
         if request.user.is_authenticated:
             try:
-                player = LeaguePlayer.objects.get(user=request.user)
+                player = LeaguePlayer.objects.get(user=request.user, team__league=league)
                 user_team_id = player.team_id
                 for game in upcoming_session_games:
                     for game_slot in game.slots.all():
