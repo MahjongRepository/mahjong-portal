@@ -76,8 +76,10 @@ def league_schedule(request, slug):
 
 @login_required
 def league_confirm_slot(request, slot_id):
+    # TODO don't use hardcoded league
+    league = League.objects.get(slug="yoroshiku-league-2")
     slot = get_object_or_404(LeagueGameSlot, id=slot_id)
-    player = get_object_or_404(LeaguePlayer, user=request.user)
+    player = get_object_or_404(LeaguePlayer, user=request.user, team__league=league)
     if slot.team_id != player.team_id:
         raise Http404
     slot.assigned_player = player
