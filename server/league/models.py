@@ -62,6 +62,9 @@ class LeagueSession(models.Model):
     class Meta:
         ordering = ["number"]
 
+    def __str__(self):
+        return f"Session: {self.number}"
+
     def missing_teams_for_session(self):
         all_teams = cache.get("all_league_teams")
         if not all_teams:

@@ -10,10 +10,10 @@ class Command(BaseCommand):
         with open("league_teams.csv", "r") as f:
             records = list(csv.DictReader(f))
 
-        league = League.objects.all().first()
+        league = League.objects.get(slug="yoroshiku-league-2")
 
-        LeaguePlayer.objects.all().delete()
-        LeagueTeam.objects.all().delete()
+        LeaguePlayer.objects.filter(team__league=league).delete()
+        LeagueTeam.objects.filter(league=league).delete()
 
         team_names = sorted(list(set([x["team"] for x in records])))
         team_objects = {}

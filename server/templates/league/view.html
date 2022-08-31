@@ -13,53 +13,50 @@
 
 {% block content %}
     <div>
-        <h1>{{ league.name }}</h1>
-{#        <p>{{ league.description|linebreaksbr|urlize }}</p>#}
+        <h1 class="mb-3">{{ league.name }}</h1>
+        <p>{{ league.description|linebreaksbr|urlize }}</p>
 
-        <div class="alert alert-warning">
-            Лига закрыта. Подробности тут: <a href="https://t.me/yoroshiku_league_chat/2717">https://t.me/yoroshiku_league_chat/2717</a>
-        </div>
-{#        <ul>#}
-{#            <li>#}
-{#                <a href="{% url 'league_teams' league.slug %}">{% trans 'Teams' %}</a>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a href="{% url 'league_schedule' league.slug %}">{% trans 'Schedule' %}</a>#}
-{#            </li>#}
-{#        </ul>#}
-{##}
-{#        {% if not user.is_authenticated %}#}
-{#            <p>#}
-{#                <a href="{% url 'do_login' %}?next={% url 'league_details' league.slug %}" class="btn btn-primary">{% trans 'Login through Pantheon' %}</a>#}
-{#            </p>#}
-{#        {% endif %}#}
-{##}
-{#        {% for upcoming_session in upcoming_sessions %}#}
-{#            <h3>{% trans "Session " %} #{{ upcoming_session.number|add:1 }}</h3>#}
-{##}
-{#            {% timezone 'Europe/Moscow' %}#}
-{#                <p class="mb-1">{% trans 'Starting' %} {{ upcoming_session.start_time|date:'d M. H-i' }} (МСК).</p>#}
-{#                <p class="mb-0">{% trans 'Not playing teams for this session:' %}</p>#}
-{#                <ul class="mt-0">#}
-{#                    {% for team in upcoming_session.missing_teams_for_session %}#}
-{#                        <li>{{ team }}</li>#}
-{#                    {% endfor %}#}
-{#                </ul>#}
-{#            {% endtimezone %}#}
-{##}
-{#            {% if upcoming_session.my_team_games %}#}
-{#                <h3>{% trans 'My team games' %}</h3>#}
-{##}
-{#                {% with games=upcoming_session.my_team_games user_team_id=user_team_id show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}#}
-{#                    {% include 'league/_schedule_games_table.html' %}#}
-{#                {% endwith %}#}
-{##}
-{#                <h3>{% trans 'Games' %}</h3>#}
-{#            {% endif %}#}
-{##}
-{#            {% with games=upcoming_session.all_games is_upcoming_games=True show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}#}
-{#                {% include 'league/_schedule_games_table.html' %}#}
-{#            {% endwith %}#}
-{#        {% endfor %}#}
+        <ul>
+            <li>
+                <a href="{% url 'league_teams' league.slug %}">{% trans 'Teams' %}</a>
+            </li>
+            <li>
+                <a href="{% url 'league_schedule' league.slug %}">{% trans 'Schedule' %}</a>
+            </li>
+        </ul>
+
+        {% if not user.is_authenticated %}
+            <p>
+                <a href="{% url 'do_login' %}?next={% url 'league_details' league.slug %}" class="btn btn-primary">{% trans 'Login through Pantheon' %}</a>
+            </p>
+        {% endif %}
+
+        {% for upcoming_session in upcoming_sessions %}
+            <h3>{% trans "Session " %} #{{ upcoming_session.number|add:1 }}</h3>
+
+            {% timezone 'Europe/Moscow' %}
+                <p class="mb-1">{% trans 'Starting' %} {{ upcoming_session.start_time|date:'d M. H-i' }} (МСК).</p>
+                <p class="mb-0">{% trans 'Not playing teams for this session:' %}</p>
+                <ul class="mt-0">
+                    {% for team in upcoming_session.missing_teams_for_session %}
+                        <li>{{ team }}</li>
+                    {% endfor %}
+                </ul>
+            {% endtimezone %}
+
+            {% if upcoming_session.my_team_games %}
+                <h3>{% trans 'My team games' %}</h3>
+
+                {% with games=upcoming_session.my_team_games user_team_id=user_team_id show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}
+                    {% include 'league/_schedule_games_table.html' %}
+                {% endwith %}
+
+                <h3>{% trans 'Games' %}</h3>
+            {% endif %}
+
+            {% with games=upcoming_session.all_games is_upcoming_games=True show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}
+                {% include 'league/_schedule_games_table.html' %}
+            {% endwith %}
+        {% endfor %}
     </div>
 {% endblock %}
