@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-31 03:19+0000\n"
+"POT-Creation-Date: 2022-08-31 10:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Неверный пароль или email. Учтите что оба поля могут быть чувствительны к "
 "регистру."
 
-#: account/views.py:58
+#: account/views.py:60
 msgid "Request was created."
 msgstr "Запрос был создан."
 
@@ -416,7 +416,7 @@ msgstr "500 ошибка"
 msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
-#: templates/account/login.html:6
+#: templates/account/login.html:6 templates/league/view.html:30
 msgid "Login through Pantheon"
 msgstr "Войти через Pantheon"
 
@@ -538,6 +538,10 @@ msgstr "Заявка на турнир"
 msgid "Championships"
 msgstr "Чемпионаты"
 
+#: templates/base.html:99
+msgid "Yoroshiku League 2"
+msgstr ""
+
 #: templates/base.html:110
 msgid "Django admin"
 msgstr "Django админка"
@@ -606,12 +610,13 @@ msgstr "Сортировка:"
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/details.html:52 templates/ms/ms_accounts.html:31
-#: templates/player/details.html:144 templates/player/details.html:154
-#: templates/player/details.html:271 templates/player/ms.html:122
-#: templates/player/ms.html:216 templates/player/tenhou.html:166
-#: templates/player/tenhou.html:176 templates/player/tenhou.html:229
-#: templates/player/tenhou.html:240 templates/tenhou/games_history.html:51
+#: templates/club/details.html:52 templates/league/view.html:48
+#: templates/ms/ms_accounts.html:31 templates/player/details.html:144
+#: templates/player/details.html:154 templates/player/details.html:271
+#: templates/player/ms.html:122 templates/player/ms.html:216
+#: templates/player/tenhou.html:166 templates/player/tenhou.html:176
+#: templates/player/tenhou.html:229 templates/player/tenhou.html:240
+#: templates/tenhou/games_history.html:51
 #: templates/tenhou/tenhou_accounts.html:23
 #: templates/tournament/_tournament_results.html:11
 msgid "Games"
@@ -764,6 +769,7 @@ msgid "Start game"
 msgstr "Запустить игру"
 
 #: templates/league/schedule.html:6 templates/league/schedule.html:15
+#: templates/league/view.html:24
 msgid "Schedule"
 msgstr "Расписание"
 
@@ -771,19 +777,16 @@ msgstr "Расписание"
 msgid "League"
 msgstr "Лига"
 
-#: templates/league/schedule.html:19
+#: templates/league/schedule.html:19 templates/league/view.html:35
 msgid "Session "
 msgstr "Сессия"
 
-#: templates/league/schedule.html:21
+#: templates/league/schedule.html:21 templates/league/view.html:38
 msgid "Starting"
 msgstr "Начнётся"
 
-#: templates/league/schedule.html:22
-msgid "Not playing teams for this session:"
-msgstr "Команды пропускающие эту сессию:"
-
 #: templates/league/teams.html:5 templates/league/teams.html:14
+#: templates/league/view.html:21
 msgid "Teams"
 msgstr "Команды"
 
@@ -794,6 +797,10 @@ msgstr "Команда"
 #: templates/league/teams.html:45 templates/league/teams.html:47
 msgid "captain"
 msgstr "капитан"
+
+#: templates/league/view.html:42
+msgid "My team games"
+msgstr "Игры моей команды"
 
 #: templates/ms/ms_accounts.html:12
 msgid "Statistics updated once an hour."
@@ -1762,3 +1769,6 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
+
+#~ msgid "Not playing teams for this session:"
+#~ msgstr "Команды пропускающие эту сессию:"
