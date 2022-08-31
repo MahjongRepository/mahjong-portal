@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 from account.forms import LoginForm
 from account.models import AttachingPlayerRequest, User
-from league.models import LeaguePlayer
+from league.models import LeaguePlayer, League
 from player.models import Player
 
 
@@ -31,7 +31,9 @@ def do_login(request):
             login(request, user)
 
             try:
-                league_player = LeaguePlayer.objects.get(name=form.user_data["title"])
+                # TODO don't use hardcoded league
+                league = League.objects.get(slug="yoroshiku-league-2")
+                league_player = LeaguePlayer.objects.get(name=form.user_data["title"], team__league=league)
                 league_player.user = user
                 league_player.save()
             except LeaguePlayer.DoesNotExist:
