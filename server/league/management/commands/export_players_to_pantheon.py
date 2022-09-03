@@ -11,7 +11,7 @@ from utils.general import make_random_letters_and_digit_string
 class Command(BaseCommand):
     def handle(self, *args, **options):
         league = League.objects.get(slug="yoroshiku-league-2")
-        players_to_export = LeaguePlayer.objects.filter(team__league=league)
+        players_to_export = LeaguePlayer.objects.filter(team__league=league).exclude(user__isnull=True)
 
         team_names = {}
         for player in players_to_export:
