@@ -83,7 +83,7 @@ class LeagueGame(models.Model):
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)
 
     class Meta:
-        ordering = ["id"]
+        ordering = ["-id"]
 
     def __str__(self):
         return f"Game: {self.id}"

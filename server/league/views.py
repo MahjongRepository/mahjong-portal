@@ -114,9 +114,10 @@ def start_game(request, game_id):
     response = requests.post(url, data=data, headers=headers, allow_redirects=False)
     result = unquote(response.content.decode("utf-8"))
     if result.startswith("FAILED") or result.startswith("MEMBER NOT FOUND"):
-        return HttpResponse(result)
+        # TODO show warning?
+        pass
+    else:
+        game.status = LeagueGame.STARTED
+        game.save()
 
-    game.status = LeagueGame.STARTED
-    game.save()
-
-    return redirect(request.META.get("HTTP_REFERER"))
+    return HttpResponse(result)
