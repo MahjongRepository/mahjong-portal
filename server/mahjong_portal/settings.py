@@ -207,7 +207,7 @@ PANTHEON_AUTH_API_URL = os.environ.get("PANTHEON_AUTH_API_URL", None)
 
 # integration with new pantheon
 PANTHEON_NEW_API_URL = os.environ.get("PANTHEON_NEW_API_URL", None)
-PANTHEON_ADMIN_COOKIE = os.environ.get("PANTHEON_ADMIN_TOKEN", None)
+PANTHEON_ADMIN_COOKIE = os.environ.get("PANTHEON_ADMIN_COOKIE", None)
 PANTHEON_ADMIN_ID = os.environ.get("PANTHEON_ADMIN_ID", None)
 
 PANTHEON_TOURNAMENT_EVENT_ID = os.environ.get("PANTHEON_TOURNAMENT_EVENT_ID", None)
