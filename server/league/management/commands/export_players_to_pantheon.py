@@ -11,14 +11,7 @@ from utils.general import make_random_letters_and_digit_string
 class Command(BaseCommand):
     def handle(self, *args, **options):
         league = League.objects.get(slug="yoroshiku-league-2")
-        assigned_player_ids = (
-            LeagueGameSlot.objects.filter(team__league=league)
-            .exclude(assigned_player=None)
-            .values("assigned_player_id")
-            .distinct()
-        )
-
-        players_to_export = LeaguePlayer.objects.filter(id__in=assigned_player_ids)
+        players_to_export = LeaguePlayer.objects.filter(team__league=league)
 
         team_names = {}
         for player in players_to_export:
@@ -27,7 +20,7 @@ class Command(BaseCommand):
                 self.add_user_to_pantheon(player.user.new_pantheon_id)
             except Exception:
                 pass
-            sleep(0.1)
+            sleep(0.2)
 
         self.update_users_teams(team_names)
 
