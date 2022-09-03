@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 from account.forms import LoginForm
 from account.models import AttachingPlayerRequest, User
-from league.models import LeaguePlayer, League
+from league.models import League, LeaguePlayer
 from player.models import Player
 
 
