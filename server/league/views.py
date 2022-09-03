@@ -3,7 +3,7 @@ from urllib.parse import unquote
 
 import requests
 from django.conf import settings
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
@@ -88,7 +88,7 @@ def league_confirm_slot(request, slot_id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser)
+@permission_required("league.start_league_game")
 def start_game(request, game_id):
     game = LeagueGame.objects.get(id=game_id)
     slots = game.slots.all()

@@ -4,7 +4,7 @@ import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from league.models import League, LeagueGameSlot, LeaguePlayer
+from league.models import League, LeaguePlayer
 from utils.general import make_random_letters_and_digit_string
 
 

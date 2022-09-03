@@ -32,7 +32,7 @@
                     </td>
                 {% endfor %}
             </tr>
-            {% if user.is_superuser and is_upcoming_games %}
+            {% if perms.league.start_league_game and is_upcoming_games %}
                 <tr>
                     <td colspan="3">
                         {% for slot in game.slots.all %}

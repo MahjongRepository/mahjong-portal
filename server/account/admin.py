@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Permission
 from django.utils.translation import ugettext_lazy as _
 
 from account.models import AttachingPlayerRequest, User
@@ -40,5 +41,12 @@ class AttachingPlayerRequestAdmin(admin.ModelAdmin):
     raw_id_fields = ["player"]
 
 
+class PermissionAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related("content_type")
+
+
+admin.site.register(Permission, PermissionAdmin)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(AttachingPlayerRequest, AttachingPlayerRequestAdmin)
