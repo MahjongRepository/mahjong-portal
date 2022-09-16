@@ -17,13 +17,17 @@
                         {{ slot.team.name|truncatewords:3 }}
                         {% if slot.assigned_player_id %}
                             {% if user.is_superuser or user.is_league_manager or show_assigned_players_for_all %}
-                                ({{ slot.assigned_player_short_name }})
+                                <span title="{{ slot.assigned_player.name }}, {{ slot.assigned_player.tenhou_nickname }}">
+                                    ({{ slot.assigned_player_short_name }})
+                                </span>
                             {% endif %}
                         {% endif %}
                         {% if slot.team_id == user_team_id %}
                             {% if slot.assigned_player_id %}
                                 {% if not show_assigned_players_for_all %}
-                                    ({{ slot.assigned_player_short_name }})
+                                    <span title="{{ slot.assigned_player.name }}, {{ slot.assigned_player.tenhou_nickname }}">
+                                        ({{ slot.assigned_player_short_name }})
+                                    </span>
                                 {% endif %}
                             {% else %}
                                 <a href="{% url 'league_confirm_slot' slot.id %}" class="btn btn-primary btn-sm">{% trans "I'm playing!" %}</a>
