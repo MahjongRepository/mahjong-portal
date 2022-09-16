@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 10:25+0000\n"
+"POT-Creation-Date: 2022-09-16 13:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,15 +20,15 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: account/admin.py:15
+#: account/admin.py:16
 msgid "Personal info"
 msgstr "Информация"
 
-#: account/admin.py:17
+#: account/admin.py:18
 msgid "Permissions"
 msgstr "Права"
 
-#: account/admin.py:31
+#: account/admin.py:32
 msgid "Important dates"
 msgstr "Важные даты"
 
@@ -143,49 +143,41 @@ msgstr "Несколько игр не смогли запуститься. Ад
 msgid "This is not looks like a link to the game log."
 msgstr "Это не похоже на ссылку на лог игры."
 
-#: online/handler.py:248 online/handler.py:368
+#: online/handler.py:248 online/handler.py:362
 msgid "The game has been added. Thank you."
 msgstr "Игра была добавлена. Спасибо."
 
-#: online/handler.py:255
-msgid ""
-"Fail to add this game. Try again in a moment or you havn't copied the entire "
-"link of the game log."
-msgstr ""
-"Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не "
-"весь log id."
-
-#: online/handler.py:270
+#: online/handler.py:264
 #, python-format
 msgid "Fail to add game log. Contact the administrator %(admin_username)s."
 msgstr ""
 "Произошла ошибка при добавлении лога. Обратитесь к администратору "
 "%(admin_username)s."
 
-#: online/handler.py:374
+#: online/handler.py:368
 msgid "The confirmation phase has already ended. Visit our next tournaments."
 msgstr ""
 "Этап подтверждения участия уже завершился. Приходите на следующий турнир."
 
-#: online/handler.py:377
+#: online/handler.py:371
 msgid "The tenhou.net nickname must not be longer than eight characters."
 msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
 
-#: online/handler.py:384
+#: online/handler.py:378
 msgid "You need to register for the tournament on mahjong.click first."
 msgstr "Сначала нужно зарегистрироваться на турнир на портале mahjong.click"
 
-#: online/handler.py:389
+#: online/handler.py:383
 #, python-format
 msgid ""
 "Nickname \"%(tenhou_nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на турнир."
 
-#: online/handler.py:410
+#: online/handler.py:404
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:668
+#: online/handler.py:662
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -204,7 +196,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:688
+#: online/handler.py:682
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -218,7 +210,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/handler.py:697
+#: online/handler.py:691
 #, python-format
 msgid ""
 "New game was added.\n"
@@ -251,7 +243,7 @@ msgstr ""
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:710
+#: online/handler.py:704
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -263,7 +255,7 @@ msgstr ""
 "Пожалуйста, пройдите в лобби %(lobby_link)s и ждите начала игр (игры "
 "начнутся автоматически)."
 
-#: online/handler.py:716
+#: online/handler.py:710
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -287,7 +279,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:725
+#: online/handler.py:719
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -296,7 +288,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:728
+#: online/handler.py:722
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. Missed players "
@@ -312,16 +304,16 @@ msgstr ""
 "Отсутствующие игроки зайдите (или перезайдите) в турнирное лобби: "
 "%(lobby_link)s."
 
-#: online/handler.py:732
+#: online/handler.py:726
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: online/handler.py:733
+#: online/handler.py:727
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: online/handler.py:734
+#: online/handler.py:728
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -330,7 +322,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: online/handler.py:736
+#: online/handler.py:730
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -344,7 +336,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:741
+#: online/handler.py:735
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
@@ -1259,7 +1251,8 @@ msgstr "Ваша заявка была сохранена! Мы свяжемся
 msgid "Main info"
 msgstr "Основная информация"
 
-#: templates/tournament/application.html:36 tournament/models.py:351
+#: templates/tournament/application.html:36 tournament/models.py:277
+#: tournament/models.py:351
 msgid "Additional info"
 msgstr "Дополнительная информация"
 
@@ -1548,7 +1541,7 @@ msgstr "Он будет показан только администратору
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: tournament/models.py:238 tournament/models.py:277
+#: tournament/models.py:238
 msgid "Team name"
 msgstr "Название команды"
 
@@ -1769,6 +1762,13 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
+
+#~ msgid ""
+#~ "Fail to add this game. Try again in a moment or you havn't copied the "
+#~ "entire link of the game log."
+#~ msgstr ""
+#~ "Не получилось. Возможно тенха не успела сохранить игру или вы скопировали "
+#~ "не весь log id."
 
 #~ msgid "Not playing teams for this session:"
 #~ msgstr "Команды пропускающие эту сессию:"
