@@ -45,8 +45,13 @@ class LeagueSessionAdmin(admin.ModelAdmin):
 
 
 class LeagueGameSlotAdmin(admin.ModelAdmin):
-    search_fields = ["assigned_player__name"]
+    search_fields = ["assigned_player__name", "assigned_player__team__name"]
     list_display = ["game", "team", "assigned_player"]
+    ordering = ["game__session__number", "game_id", "position"]
+    list_filter = ["game__session__status", "game__session__league"]
+
+    readonly_fields = ["game"]
+    raw_id_fields = ["assigned_player"]
 
 
 admin.site.register(League, LeagueAdmin)

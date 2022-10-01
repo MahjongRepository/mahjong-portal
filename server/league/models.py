@@ -27,7 +27,7 @@ class LeagueTeam(models.Model):
         ordering = ["number"]
 
     def __str__(self):
-        return self.name
+        return f"{self.name} (#{self.league_id})"
 
 
 class LeaguePlayer(models.Model):
