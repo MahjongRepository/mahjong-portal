@@ -16,7 +16,7 @@
             </ol>
         </nav>
         {% for session in sessions %}
-            <h3>{% trans "Session " %} #{{ session.number|add:1 }}</h3>
+            <h3>{% trans "Session " %} #{{ session.number }}</h3>
             {% timezone 'Europe/Moscow' %}
                 <p class="mb-1">{% trans 'Starting' %} {{ session.start_time|date:'d M. H-i' }} (МСК).</p>
             {% endtimezone %}

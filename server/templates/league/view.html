@@ -32,7 +32,7 @@
         {% endif %}
 
         {% for upcoming_session in upcoming_sessions %}
-            <h3>{% trans "Session " %} #{{ upcoming_session.number|add:1 }}</h3>
+            <h3>{% trans "Session " %} #{{ upcoming_session.number }}</h3>
 
             {% timezone 'Europe/Moscow' %}
                 <p class="mb-1">{% trans 'Starting' %} {{ upcoming_session.start_time|date:'d M. H-i' }} (МСК).</p>
