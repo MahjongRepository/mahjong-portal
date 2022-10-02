@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 assert len(table) == 4
                 assert len(set(table)) == len(table), "Duplicate team in table"
 
-            session_number = created_sessions + i - 1
+            session_number = created_sessions + i
             session_obj = LeagueSession.objects.create(
                 status=LeagueSession.NEW, league=league, number=session_number, start_time=start_time
             )
