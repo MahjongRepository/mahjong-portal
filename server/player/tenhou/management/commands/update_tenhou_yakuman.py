@@ -10,6 +10,8 @@ from django.utils import timezone
 
 from player.tenhou.models import CollectedYakuman, TenhouNickname
 
+headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"}
+
 
 def get_date_string():
     return timezone.now().strftime("%H:%M:%S")
@@ -36,7 +38,7 @@ class Command(BaseCommand):
 
         current_date = datetime.datetime.now().astimezone(pytz.timezone("Asia/Tokyo"))
         current_year = current_date.year
-        data = requests.get(url).content.decode("utf-8")
+        data = requests.get(url, headers=headers).content.decode("utf-8")
         self.parse_and_create_records(player_profiles, data, current_year)
 
     def old_records(self, player_profiles):
@@ -72,7 +74,7 @@ class Command(BaseCommand):
                         data = f.read()
                 else:
                     url = "http://tenhou.net/sc/{}/{}/ykm.js".format(year, month)
-                    response = requests.get(url)
+                    response = requests.get(url, headers=headers)
 
                     if response.status_code == 200:
                         data = response.content.decode("utf-8")

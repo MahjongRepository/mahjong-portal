@@ -17,13 +17,15 @@ lobbies_dict = {
     "鳳": TenhouStatistics.PHOENIX_LOBBY,
 }
 
+headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"}
+
 
 def get_latest_wg_games():
     active_games = cache.get("tenhou_games")
     if active_games:
         return active_games
 
-    text = requests.get(settings.TENHOU_WG_URL).text
+    text = requests.get(settings.TENHOU_WG_URL, headers=headers).text
     text = text.replace("\r\n", "")
     data = json.loads(re.match("sw\\((.*)\\);", text).group(1))
     active_games = []

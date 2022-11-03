@@ -12,6 +12,8 @@ from player.tenhou.models import TenhouGameLog, TenhouNickname
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.helper import parse_log_line, recalculate_tenhou_statistics_for_four_players
 
+headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"}
+
 
 def get_date_string():
     return timezone.now().strftime("%H:%M:%S")
@@ -86,7 +88,7 @@ class Command(BaseCommand):
     def download_archives_with_games(self, logs_folder, items_url):
         download_url = settings.TENHOU_DOWNLOAD_ARCHIVE_URL
 
-        response = requests.get(items_url)
+        response = requests.get(items_url, headers=headers)
         response = response.text.replace("list(", "").replace(");", "")
         response = response.split(",\r\n")
 
@@ -114,7 +116,7 @@ class Command(BaseCommand):
                 print("Downloading... {}".format(archive_name))
 
                 url = "{}{}".format(download_url, archive_name)
-                page = requests.get(url)
+                page = requests.get(url, headers=headers)
                 with open(archive_path, "wb") as f:
                     f.write(page.content)
 
