@@ -6,13 +6,13 @@ from django.core.management.base import BaseCommand
 from league.models import League, LeagueGame, LeagueGameSlot, LeagueSession, LeagueTeam
 
 SEATING = """
-6-11-14-15 10-12-19-22 5-8-13-16 1-2-17-24 7-18-21-23 3-4-9-20
-16-17-19-21 2-3-7-10 8-14-22-24 13-15-20-23 9-11-12-18 1-4-5-6
-5-12-23-24 2-9-15-16 7-13-14-19 6-17-20-22 1-10-11-21 3-4-8-18
-5-7-9-22 2-6-18-19 4-13-21-24 8-10-15-17 3-11-16-23 1-12-14-20
-3-12-13-17 4-15-18-22 6-10-16-24 7-8-11-20 1-9-19-23 2-5-14-21
-5-10-18-20 4-14-17-23 6-8-9-21 3-15-19-24 2-11-13-22 1-7-12-16
-9-10-13-14 5-11-17-19 2-8-12-23 16-18-20-24 1-3-21-22 4-6-7-15
+2-9-10-18 6-8-13-14 1-5-7-19 3-11-15-22 4-16-17-24 12-20-21-23
+8-15-17-23 1-4-9-11 5-13-18-22 14-19-21-24 2-3-16-20 6-7-10-12
+2-7-17-22 3-6-18-24 1-10-14-15 4-12-13-19 5-9-16-23 8-11-20-21
+5-11-12-24 9-13-15-20 10-16-19-22 2-4-6-23 1-17-18-21 3-7-8-14
+2-15-19-24 7-13-16-21 11-14-18-23 1-6-20-22 3-9-12-17 4-5-8-10
+4-7-18-20 1-8-12-16 3-10-13-23 6-11-17-19 2-5-15-21 9-14-22-24
+5-14-17-20 1-2-11-13 12-15-16-18 3-4-21-22 6-8-9-19 7-10-23-24
 """
 
 
@@ -21,13 +21,13 @@ class Command(BaseCommand):
         league = League.objects.get(slug="yoroshiku-league-2")
 
         session_dates = [
-            datetime(2022, 12, 24, 7, 0, tzinfo=pytz.UTC),
-            datetime(2022, 12, 24, 13, 0, tzinfo=pytz.UTC),
-            datetime(2023, 1, 7, 7, 0, tzinfo=pytz.UTC),
-            datetime(2023, 1, 7, 13, 0, tzinfo=pytz.UTC),
-            datetime(2023, 1, 21, 7, 0, tzinfo=pytz.UTC),
-            datetime(2023, 1, 21, 13, 0, tzinfo=pytz.UTC),
-            datetime(2023, 2, 4, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 2, 4, 13, 0, tzinfo=pytz.UTC),
+            datetime(2023, 2, 18, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 2, 18, 13, 0, tzinfo=pytz.UTC),
+            datetime(2023, 3, 4, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 3, 4, 13, 0, tzinfo=pytz.UTC),
+            datetime(2023, 3, 18, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 3, 18, 13, 0, tzinfo=pytz.UTC),
         ]
 
         seating = SEATING.strip().splitlines()

@@ -109,7 +109,7 @@ def start_game(request, game_id):
         "Origin": "http://tenhou.net",
         "Content-Type": "application/x-www-form-urlencoded",
         "Referer": "http://tenhou.net/cs/edit/?{}".format(settings.LEAGUE_PRIVATE_TENHOU_LOBBY),
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
     }
 
     response = requests.post(url, data=data, headers=headers, allow_redirects=False)
