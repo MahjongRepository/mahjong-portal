@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-16 13:52+0000\n"
+"POT-Creation-Date: 2023-02-26 14:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,41 +143,49 @@ msgstr "Несколько игр не смогли запуститься. Ад
 msgid "This is not looks like a link to the game log."
 msgstr "Это не похоже на ссылку на лог игры."
 
-#: online/handler.py:248 online/handler.py:362
+#: online/handler.py:248 online/handler.py:368
 msgid "The game has been added. Thank you."
 msgstr "Игра была добавлена. Спасибо."
 
-#: online/handler.py:264
+#: online/handler.py:255
+msgid ""
+"Fail to add this game. Try again in a moment or you havn't copied the entire "
+"link of the game log."
+msgstr ""
+"Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не "
+"весь log id."
+
+#: online/handler.py:270
 #, python-format
 msgid "Fail to add game log. Contact the administrator %(admin_username)s."
 msgstr ""
 "Произошла ошибка при добавлении лога. Обратитесь к администратору "
 "%(admin_username)s."
 
-#: online/handler.py:368
+#: online/handler.py:374
 msgid "The confirmation phase has already ended. Visit our next tournaments."
 msgstr ""
 "Этап подтверждения участия уже завершился. Приходите на следующий турнир."
 
-#: online/handler.py:371
+#: online/handler.py:377
 msgid "The tenhou.net nickname must not be longer than eight characters."
 msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
 
-#: online/handler.py:378
+#: online/handler.py:384
 msgid "You need to register for the tournament on mahjong.click first."
 msgstr "Сначала нужно зарегистрироваться на турнир на портале mahjong.click"
 
-#: online/handler.py:383
+#: online/handler.py:389
 #, python-format
 msgid ""
 "Nickname \"%(tenhou_nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на турнир."
 
-#: online/handler.py:404
+#: online/handler.py:410
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:662
+#: online/handler.py:668
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -196,7 +204,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:682
+#: online/handler.py:688
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -210,7 +218,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/handler.py:691
+#: online/handler.py:697
 #, python-format
 msgid ""
 "New game was added.\n"
@@ -243,7 +251,7 @@ msgstr ""
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:704
+#: online/handler.py:710
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -255,7 +263,7 @@ msgstr ""
 "Пожалуйста, пройдите в лобби %(lobby_link)s и ждите начала игр (игры "
 "начнутся автоматически)."
 
-#: online/handler.py:710
+#: online/handler.py:716
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -279,7 +287,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:719
+#: online/handler.py:725
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -288,7 +296,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:722
+#: online/handler.py:728
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. Missed players "
@@ -304,16 +312,16 @@ msgstr ""
 "Отсутствующие игроки зайдите (или перезайдите) в турнирное лобби: "
 "%(lobby_link)s."
 
-#: online/handler.py:726
+#: online/handler.py:732
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: online/handler.py:727
+#: online/handler.py:733
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: online/handler.py:728
+#: online/handler.py:734
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -322,7 +330,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: online/handler.py:730
+#: online/handler.py:736
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -336,7 +344,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:735
+#: online/handler.py:741
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
@@ -424,12 +432,12 @@ msgid ""
 msgstr ""
 "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: templates/account/login.html:18 templates/base.html:133
+#: templates/account/login.html:18 templates/base.html:129
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
 
-#: templates/account/settings.html:6 templates/base.html:115
+#: templates/account/settings.html:6 templates/base.html:111
 msgid "User settings"
 msgstr "Настройки аккаунта"
 
@@ -437,26 +445,26 @@ msgstr "Настройки аккаунта"
 msgid "Under development!"
 msgstr "В разработке!"
 
-#: templates/base.html:39 templates/website/home.html:5
+#: templates/base.html:35 templates/website/home.html:5
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
-#: templates/base.html:47 templates/base.html:50
+#: templates/base.html:43 templates/base.html:46
 #: templates/player/details.html:19 templates/rating/list.html:5
 #: templates/rating/list.html:10
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:51 templates/website/about_en.html:5
+#: templates/base.html:47 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтингах"
 
-#: templates/base.html:53
+#: templates/base.html:49
 msgid "WRC 2020"
 msgstr "WRC 2020"
 
-#: templates/base.html:57 templates/club/tournaments.html:5
+#: templates/base.html:53 templates/club/tournaments.html:5
 #: templates/club/tournaments.html:27 templates/club/tournaments.html:34
 #: templates/club/tournaments.html:35 templates/player/rating_details.html:161
 #: templates/player/tournaments.html:5 templates/player/tournaments.html:15
@@ -468,102 +476,102 @@ msgstr "WRC 2020"
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:71 templates/club/list.html:10
+#: templates/base.html:67 templates/club/list.html:10
 #: templates/website/city.html:11
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:78
+#: templates/base.html:74
 msgid "Online"
 msgstr "Онлайн"
 
-#: templates/base.html:81 templates/tenhou/tenhou_games.html:5
+#: templates/base.html:77 templates/tenhou/tenhou_games.html:5
 #: templates/tenhou/tenhou_games.html:15 templates/tenhou/tenhou_games.html:16
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: templates/base.html:82 templates/tenhou/tenhou_accounts.html:5
+#: templates/base.html:78 templates/tenhou/tenhou_accounts.html:5
 #: templates/tenhou/tenhou_accounts.html:10
 #: templates/tenhou/tenhou_accounts.html:77
 #: templates/tenhou/tenhou_accounts.html:78
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
 
-#: templates/base.html:83 templates/ms/ms_accounts.html:5
+#: templates/base.html:79 templates/ms/ms_accounts.html:5
 #: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:80
 #: templates/ms/ms_accounts.html:81
 msgid "Mahjong Soul accounts"
 msgstr "Аккаунты на Mahjong Soul"
 
-#: templates/base.html:84 templates/tenhou/games_history.html:5
+#: templates/base.html:80 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
 #: templates/tenhou/games_history.html:106
 #: templates/tenhou/games_history.html:107
 msgid "Tenhou.net games history"
 msgstr "История игр на tenhou.net"
 
-#: templates/base.html:85 templates/tenhou/latest_yakumans.html:5
+#: templates/base.html:81 templates/tenhou/latest_yakumans.html:5
 #: templates/tenhou/latest_yakumans.html:10
 #: templates/tenhou/latest_yakumans.html:50
 #: templates/tenhou/latest_yakumans.html:51
 msgid "Yakumans from tenhou.net"
 msgstr "Якуманы с tenhou.net"
 
-#: templates/base.html:90 templates/tournament/application.html:85
+#: templates/base.html:86 templates/tournament/application.html:85
 #: tournament/models.py:344
 msgid "Other"
 msgstr "Другое"
 
-#: templates/base.html:93 templates/website/contacts_en.html:5
+#: templates/base.html:89 templates/website/contacts_en.html:5
 #: templates/website/contacts_ru.html:5
 msgid "Contacts"
 msgstr "Развитие"
 
-#: templates/base.html:94 templates/tournament/application.html:5
+#: templates/base.html:90 templates/tournament/application.html:5
 #: templates/tournament/application.html:10
 #: templates/tournament/application.html:103
 #: templates/tournament/application.html:104
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: templates/base.html:95 templates/website/championships.html:10
+#: templates/base.html:91 templates/website/championships.html:10
 msgid "Championships"
 msgstr "Чемпионаты"
 
-#: templates/base.html:99
+#: templates/base.html:95
 msgid "Yoroshiku League 2"
 msgstr ""
 
-#: templates/base.html:110
+#: templates/base.html:106
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:111 templates/system_index.html:10
+#: templates/base.html:107 templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/base.html:117
+#: templates/base.html:113
 msgid "My profile"
 msgstr "Мой профиль"
 
-#: templates/base.html:121
+#: templates/base.html:117
 msgid "My tournaments"
 msgstr "Мои турниры"
 
-#: templates/base.html:125
+#: templates/base.html:121
 msgid "EMA players"
 msgstr "EMA игроки"
 
-#: templates/base.html:128
+#: templates/base.html:124
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:172 templates/base.html:175
+#: templates/base.html:168 templates/base.html:171
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/base.html:185
+#: templates/base.html:181
 msgid "source code"
 msgstr "исходный код"
 
@@ -602,13 +610,12 @@ msgstr "Сортировка:"
 msgid "Name"
 msgstr "Имя"
 
-#: templates/club/details.html:52 templates/league/view.html:48
-#: templates/ms/ms_accounts.html:31 templates/player/details.html:144
-#: templates/player/details.html:154 templates/player/details.html:271
-#: templates/player/ms.html:122 templates/player/ms.html:216
-#: templates/player/tenhou.html:166 templates/player/tenhou.html:176
-#: templates/player/tenhou.html:229 templates/player/tenhou.html:240
-#: templates/tenhou/games_history.html:51
+#: templates/club/details.html:52 templates/ms/ms_accounts.html:31
+#: templates/player/details.html:144 templates/player/details.html:154
+#: templates/player/details.html:271 templates/player/ms.html:122
+#: templates/player/ms.html:216 templates/player/tenhou.html:166
+#: templates/player/tenhou.html:176 templates/player/tenhou.html:229
+#: templates/player/tenhou.html:240 templates/tenhou/games_history.html:51
 #: templates/tenhou/tenhou_accounts.html:23
 #: templates/tournament/_tournament_results.html:11
 msgid "Games"
@@ -752,11 +759,11 @@ msgstr "Всего квот"
 msgid "Admin page"
 msgstr "Админка"
 
-#: templates/league/_schedule_games_table.html:29
+#: templates/league/_schedule_games_table.html:33
 msgid "I'm playing!"
 msgstr "Я играю!"
 
-#: templates/league/_schedule_games_table.html:44
+#: templates/league/_schedule_games_table.html:48
 msgid "Start game"
 msgstr "Запустить игру"
 
@@ -782,7 +789,7 @@ msgstr "Начнётся"
 msgid "Teams"
 msgstr "Команды"
 
-#: templates/league/teams.html:22 templates/tournament/announcement.html:73
+#: templates/league/teams.html:22
 msgid "Team"
 msgstr "Команда"
 
@@ -793,6 +800,11 @@ msgstr "капитан"
 #: templates/league/view.html:42
 msgid "My team games"
 msgstr "Игры моей команды"
+
+#: templates/league/view.html:48
+msgctxt "many games"
+msgid "Games"
+msgstr "Игры"
 
 #: templates/ms/ms_accounts.html:12
 msgid "Statistics updated once an hour."
@@ -1762,13 +1774,6 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
-
-#~ msgid ""
-#~ "Fail to add this game. Try again in a moment or you havn't copied the "
-#~ "entire link of the game log."
-#~ msgstr ""
-#~ "Не получилось. Возможно тенха не успела сохранить игру или вы скопировали "
-#~ "не весь log id."
 
 #~ msgid "Not playing teams for this session:"
 #~ msgstr "Команды пропускающие эту сессию:"

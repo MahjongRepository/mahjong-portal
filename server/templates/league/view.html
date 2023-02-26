@@ -45,7 +45,7 @@
                     {% include 'league/_schedule_games_table.html' %}
                 {% endwith %}
 
-                <h3>{% trans 'Games' %}</h3>
+                <h3>{% trans 'Games' context "many games" %}</h3>
             {% endif %}
 
             {% with games=upcoming_session.all_games is_upcoming_games=True show_assigned_players_for_all=upcoming_session.show_assigned_players_for_all %}
