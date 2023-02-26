@@ -189,9 +189,6 @@ TENHOU_WG_URL = "https://mjv.jp/0/wg/0.js"
 TENHOU_LATEST_GAMES_URL = "https://tenhou.net/sc/raw/list.cgi"
 TENHOU_DOWNLOAD_ARCHIVE_URL = "https://tenhou.net/sc/raw/dat/"
 
-GOOGLE_VERIFICATION_CODE = os.environ.get("GOOGLE_VERIFICATION_CODE", None)
-YANDEX_VERIFICATION_CODE = os.environ.get("YANDEX_VERIFICATION_CODE", None)
-
 # online tournaments
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", None)
 TELEGRAM_ADMIN_USERNAME = os.environ.get("TELEGRAM_ADMIN_USERNAME", None)
@@ -232,6 +229,8 @@ CACHES = {
         "LOCATION": "/django_cache",
     }
 }
+
+PLAUSIBLE_DOMAIN = os.environ.get("PLAUSIBLE_DOMAIN", "")
 
 # support for non docker installations
 try:

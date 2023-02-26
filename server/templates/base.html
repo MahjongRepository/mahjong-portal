@@ -8,12 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% spaceless %}{% block title %}{% endblock %}{% endspaceless %}</title>
 
-    {% if GOOGLE_VERIFICATION_CODE %}
-        <meta name="google-site-verification" content="{{ GOOGLE_VERIFICATION_CODE }}" />
-    {% endif %}
-
-    {% if YANDEX_VERIFICATION_CODE %}
-        <meta name="yandex-verification" content="{{ YANDEX_VERIFICATION_CODE }}" />
+    {% if PLAUSIBLE_DOMAIN %}
+        <script defer data-domain="mahjong.click" src="https://{{ PLAUSIBLE_DOMAIN }}/js/script.js"></script>
     {% endif %}
 
     <meta property="og:url" content="{{ SCHEME }}://{{ request.get_host }}{{ request.get_full_path }}" />
