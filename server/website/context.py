@@ -8,7 +8,8 @@ def context(request):
 
     return {
         "SCHEME": settings.SCHEME,
-        "PLAUSIBLE_DOMAIN": settings.PLAUSIBLE_DOMAIN,
+        "UNAMI_ID": settings.UNAMI_ID,
+        "UNAMI_DOMAIN": settings.UNAMI_DOMAIN,
         "SHORT_DATE_FORMAT": language == "ru" and "d.m.Y" or "Y-m-d",
         "CURRENT_YEAR": timezone.now().year,
     }
