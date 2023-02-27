@@ -230,7 +230,8 @@ CACHES = {
     }
 }
 
-PLAUSIBLE_DOMAIN = os.environ.get("PLAUSIBLE_DOMAIN", "")
+UNAMI_ID = os.environ.get("UNAMI_ID", "")
+UNAMI_DOMAIN = os.environ.get("UNAMI_DOMAIN", "")
 
 # support for non docker installations
 try:
