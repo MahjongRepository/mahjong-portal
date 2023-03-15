@@ -1,8 +1,8 @@
-FROM python:3.9.13-alpine
+FROM python:3.10.10-alpine
 
 ENV PYTHONUNBUFFERED=1
 
-RUN python3 -m pip install pip==22.2.2
+RUN python3 -m pip install pip==23.0.1
 
 COPY ./server/requirements/base.txt /requirements.txt
 COPY ./server/requirements/base.txt /base.txt

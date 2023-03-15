@@ -28,7 +28,7 @@ build-docker:
 initial-data:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py flush --noinput
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py migrate --noinput
-	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py initial-data
+	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py initial_data
 
 test:
 	docker-compose -f $(COMPOSE_FILE) run -u `id -u` --rm web python manage.py test --noinput

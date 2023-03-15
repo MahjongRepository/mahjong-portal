@@ -97,7 +97,7 @@ class TournamentPlayersAdmin(admin.ModelAdmin):
 
     def replacement(self, obj):
         url = reverse("toggle_replacement_flag_in_pantheon", kwargs={"record_id": obj.id})
-        return mark_safe(f'<a href="{url}" class="button">Set: {not obj.is_replacement}</a>')
+        return mark_safe(f'<a href={url!r} class="button">Set: {not obj.is_replacement}</a>')
 
     def sortition(self, obj):
         if obj.enabled_in_pantheon:

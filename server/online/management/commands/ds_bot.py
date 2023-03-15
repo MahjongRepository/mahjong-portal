@@ -82,7 +82,7 @@ class DiscordClient(discord.Client):
         for channel in self.guild.channels:
             self.channels_dict[channel.name] = channel.id
 
-        logger.info(f'"{self.user}" has connected to {self.guild.name} (id: {self.guild.id}) guild')
+        logger.info(f"{self.user!r} has connected to {self.guild.name} (id: {self.guild.id}) guild")
         logger.info(f"found {len(self.guild.channels)} channels")
 
         for required_channel in self.REQUIRED_CHANNELS:
