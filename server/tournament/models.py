@@ -77,6 +77,7 @@ class Tournament(BaseModel):
     display_notes = models.BooleanField(default=False)
 
     old_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
+    new_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
     ema_id = models.CharField(max_length=20, null=True, blank=True)
 
     def __unicode__(self):

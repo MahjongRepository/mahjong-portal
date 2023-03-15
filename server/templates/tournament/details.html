@@ -20,6 +20,14 @@
             </p>
         {% endif %}
 
+        {% if tournament.new_pantheon_id %}
+            {% get_current_language as LANGUAGE_CODE %}
+
+            <p>
+                <a href="https://rating.riichimahjong.org/eid{{ tournament.new_pantheon_id }}/stat?l={{ LANGUAGE_CODE }}" target="_blank">{% trans 'Detailed tournament statistics' %}</a>
+            </p>
+        {% endif %}
+
         {% include 'tournament/_tournament_header.html' %}
 
         {% if tournament.results_description %}
