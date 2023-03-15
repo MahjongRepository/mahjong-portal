@@ -76,7 +76,7 @@ class Tournament(BaseModel):
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
 
-    pantheon_id = models.CharField(max_length=20, null=True, blank=True)
+    old_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
     ema_id = models.CharField(max_length=20, null=True, blank=True)
 
     def __unicode__(self):
