@@ -52,7 +52,7 @@
     {% if titles %}
         <p>
             {% for title in titles %}
-                <span class="badge bg-primary" style="background-color: {{ title.background_color }}; color: {{ title.text_color }}">
+                <span class="badge bg-primary" style="background-color: {{ title.background_color }} !important; color: {{ title.text_color }} !important;">
                     {{ title.text }}
                 </span>
             {% endfor %}
