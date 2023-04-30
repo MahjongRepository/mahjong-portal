@@ -6,13 +6,13 @@ from django.core.management.base import BaseCommand
 from league.models import League, LeagueGame, LeagueGameSlot, LeagueSession, LeagueTeam
 
 SEATING = """
-3-12-17-23 5-6-11-18 4-16-20-22 7-13-15-24 2-14-19-21 1-8-9-10
-2-4-7-11 10-22-23-24 1-12-14-18 6-9-13-19 3-8-16-21 5-15-17-20
-2-6-20-24 10-17-18-19 5-7-12-16 3-9-14-22 11-15-21-23 1-4-8-13
-7-9-20-23 8-15-19-22 4-14-17-24 6-10-12-21 11-13-16-18 1-2-3-5
-10-11-14-20 1-16-19-23 3-4-15-18 5-9-21-24 2-12-13-22 6-7-8-17
-1-17-21-22 8-11-12-24 3-7-19-20 2-9-18-23 4-5-10-13 6-14-15-16
-4-9-12-15 1-6-7-22 2-10-16-17 13-18-20-21 3-11-19-24 5-8-14-23
+7-10-12-20 4-16-17-23 3-18-22-24 5-6-9-19 2-8-13-15 1-11-14-21
+9-11-12-24 2-18-20-21 1-3-7-23 6-8-14-17 13-16-19-22 4-5-10-15
+1-10-17-24 2-5-12-16 6-7-21-22 11-13-20-23 9-14-15-18 3-4-8-19
+5-7-13-14 19-21-23-24 8-11-16-18 4-9-20-22 2-3-6-10 1-12-15-17
+6-12-18-23 2-4-14-24 3-15-16-21 8-10-11-22 7-9-13-17 1-5-19-20
+6-16-20-24 3-5-11-17 14-15-22-23 4-12-13-21 7-10-18-19 1-2-8-9
+3-12-14-20 5-8-21-24 2-17-19-22 6-7-11-15 9-10-16-23 1-4-13-18
 """
 
 
@@ -21,13 +21,13 @@ class Command(BaseCommand):
         league = League.objects.get(slug="yoroshiku-league-2")
 
         session_dates = [
-            datetime(2023, 4, 1, 7, 0, tzinfo=pytz.UTC),
-            datetime(2023, 4, 1, 13, 0, tzinfo=pytz.UTC),
-            datetime(2023, 4, 15, 7, 0, tzinfo=pytz.UTC),
-            datetime(2023, 4, 15, 13, 0, tzinfo=pytz.UTC),
-            datetime(2023, 4, 29, 7, 0, tzinfo=pytz.UTC),
-            datetime(2023, 4, 29, 13, 0, tzinfo=pytz.UTC),
-            datetime(2023, 5, 13, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 5, 13, 13, 0, tzinfo=pytz.UTC),
+            datetime(2023, 5, 27, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 5, 27, 13, 0, tzinfo=pytz.UTC),
+            datetime(2023, 6, 10, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 6, 10, 13, 0, tzinfo=pytz.UTC),
+            datetime(2023, 6, 17, 7, 0, tzinfo=pytz.UTC),
+            datetime(2023, 6, 17, 13, 0, tzinfo=pytz.UTC),
         ]
 
         seating = SEATING.strip().splitlines()
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 assert len(table) == 4
                 assert len(set(table)) == len(table), "Duplicate team in table"
 
-            session_number = created_sessions + i
+            session_number = created_sessions + i + 1
             session_obj = LeagueSession.objects.create(
                 status=LeagueSession.NEW, league=league, number=session_number, start_time=start_time
             )
