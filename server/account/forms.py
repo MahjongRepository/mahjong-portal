@@ -1,11 +1,12 @@
-import requests
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from sentry_sdk import capture_exception
+from twirp.context import Context
 
-from utils.general import make_random_letters_and_digit_string
+from pantheon_api import frey_pb2
+from pantheon_api.frey_twirp import FreyClient
 
 
 class LoginForm(forms.Form):
@@ -33,36 +34,27 @@ class LoginForm(forms.Form):
 
         if email is not None and password:
             email = email.lower().strip()
+            client = FreyClient(settings.PANTHEON_AUTH_API_URL)
             try:
-                data = {
-                    "jsonrpc": "2.0",
-                    "method": "authorize",
-                    "params": {"email": email, "password": password},
-                    "id": make_random_letters_and_digit_string(),
+                response = client.Authorize(
+                    ctx=Context(),
+                    request=frey_pb2.Auth_Authorize_Payload(email=email, password=password),
+                    server_path_prefix="/v2",
+                )
+                pantheon_id = response.personId
+                auth_token = response.authToken
+
+                response = client.Me(
+                    ctx=Context(),
+                    request=frey_pb2.Auth_Me_Payload(personId=pantheon_id, authToken=auth_token),
+                    server_path_prefix="/v2",
+                )
+
+                self.user_data = {
+                    "id": pantheon_id,
+                    "email": response.email,
+                    "title": response.title,
                 }
-
-                headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
-                response = requests.post(settings.PANTHEON_AUTH_API_URL, json=data, headers=headers)
-
-                if response.json().get("error"):
-                    raise self.get_invalid_login_error()
-
-                pantheon_id, auth_token = response.json()["result"]
-
-                data = {
-                    "jsonrpc": "2.0",
-                    "method": "me",
-                    "params": {"id": pantheon_id, "clientSideToken": auth_token},
-                    "id": make_random_letters_and_digit_string(),
-                }
-
-                headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
-                response = requests.post(settings.PANTHEON_AUTH_API_URL, json=data, headers=headers)
-                if response.json().get("error"):
-                    raise self.get_invalid_login_error()
-
-                assert response.json()["result"]["email"]
-                self.user_data = response.json()["result"]
             except Exception as e:
                 capture_exception(e)
                 raise self.get_invalid_login_error() from None

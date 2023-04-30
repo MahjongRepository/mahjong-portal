@@ -8,11 +8,15 @@ psycopg2==2.9.5
 django-bootstrap5==22.2
 dj-database-url==1.2.0
 python-dateutil==2.8.2
-ms-api==0.10.103
+ms-api==0.10.226.post2
 
 # online tournaments
 python-telegram-bot==20.1
 discord.py==2.2.2
+
+# pantheon API
+twirp==0.0.7
+protobuf==4.22.3
 
 # better names declension
 pymorphy2==0.9.1
