@@ -2,7 +2,7 @@
 0 * * * * python /app/manage.py update_ms_statistics
 
 # each 50 minutes update search index
-*/50 * * * * python /app/manage.py update_index --age 1
+# */50 * * * * python /app/manage.py update_index --age 1
 
 # once a day
 10 1 * * * python /app/manage.py rating_calculate rr
