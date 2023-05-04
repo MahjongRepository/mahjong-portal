@@ -41,8 +41,8 @@ class LoginForm(forms.Form):
                     request=frey_pb2.AuthAuthorizePayload(email=email, password=password),
                     server_path_prefix="/v2",
                 )
-                pantheon_id = response.personId
-                auth_token = response.authToken
+                pantheon_id = response.person_id
+                auth_token = response.auth_token
 
                 response = client.Me(
                     ctx=Context(),

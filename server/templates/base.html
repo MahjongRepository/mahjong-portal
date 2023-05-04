@@ -126,7 +126,7 @@
                     </li>
                 </ul>
             {% else %}
-                <a class="btn btn-outline-primary" href="{% url 'do_login' %}">{% trans 'Login' context 'action' %}</a>
+                <a class="btn btn-outline-primary" href="{% url 'do_login' %}?next={{ request.get_full_path }}">{% trans 'Login' context 'action' %}</a>
             {% endif %}
         </div>
     </div>
