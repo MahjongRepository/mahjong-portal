@@ -38,7 +38,7 @@ class LoginForm(forms.Form):
             try:
                 response = client.Authorize(
                     ctx=Context(),
-                    request=frey_pb2.Auth_Authorize_Payload(email=email, password=password),
+                    request=frey_pb2.AuthAuthorizePayload(email=email, password=password),
                     server_path_prefix="/v2",
                 )
                 pantheon_id = response.personId
@@ -46,7 +46,7 @@ class LoginForm(forms.Form):
 
                 response = client.Me(
                     ctx=Context(),
-                    request=frey_pb2.Auth_Me_Payload(personId=pantheon_id, authToken=auth_token),
+                    request=frey_pb2.AuthMePayload(person_id=pantheon_id, auth_token=auth_token),
                     server_path_prefix="/v2",
                 )
 
