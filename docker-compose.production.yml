@@ -23,7 +23,7 @@ services:
         max-file: '5'
     ports:
       - '6101:6101'
-    command: /usr/local/bin/gunicorn mahjong_portal.wsgi --bind=0.0.0.0:6101 --workers=4 --log-level=info --chdir=/app/
+    command: /usr/local/bin/gunicorn mahjong_portal.wsgi --bind=0.0.0.0:6101 --workers=2 --log-level=info --chdir=/app/
 
   cronjobs:
     image: ghcr.io/mahjongrepository/mahjong-portal:latest
