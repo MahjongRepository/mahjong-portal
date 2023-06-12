@@ -20,8 +20,8 @@ twirp==0.0.7
 protobuf==4.23.2
 
 # better names declension
-pymorphy2==0.9.1
-pymorphy2-dicts-ru==2.4.417127.4579844
+pymorphy3==1.2.0
+pymorphy3-dicts-ru==2.4.417150.4580142
 
 # for search
 django-haystack==3.2.1

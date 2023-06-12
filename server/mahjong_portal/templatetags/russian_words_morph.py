@@ -1,4 +1,4 @@
-import pymorphy2
+import pymorphy3
 from django import template
 from django.utils.translation import get_language
 
@@ -10,7 +10,7 @@ def genitive(source_word):
     if get_language() != "ru":
         return source_word
 
-    morph = pymorphy2.MorphAnalyzer()
+    morph = pymorphy3.MorphAnalyzer()
 
     word = morph.parse(source_word)[0]
     word = word.inflect({"gent"})
@@ -26,7 +26,7 @@ def prepositional(source_word):
     if get_language() != "ru":
         return source_word
 
-    morph = pymorphy2.MorphAnalyzer()
+    morph = pymorphy3.MorphAnalyzer()
 
     word = morph.parse(source_word)[0]
     word = word.inflect({"loct"})
