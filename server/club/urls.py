@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path as url
 
 from club.views import club_details, club_list, club_tournaments
 

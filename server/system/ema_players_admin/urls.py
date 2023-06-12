@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path as url
 
 from system.ema_players_admin.views import add_new_player, assign_ema_id, download_players_list_csv, list_of_ema_players
 

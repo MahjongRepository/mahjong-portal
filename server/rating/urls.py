@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path as url
 
 from rating.views import rating_dates, rating_details, rating_list, rating_tournaments
 
