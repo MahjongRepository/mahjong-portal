@@ -38,8 +38,13 @@
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>
-                            {% with stat.account.player as player %}
+                            {% with player=stat.account.player is_ms=True %}
                                 {% include 'common/_player_name.html' %}
+                                {% if four_players %}
+                                    <a class="small text-secondary" href="https://amae-koromo.sapk.ch/player/{{ stat.account.account_id }}" target="_blank">[amae-koromo]</a>
+                                {% else %}
+                                    <a class="small text-secondary" href="https://ikeda.sapk.ch/player/{{ stat.account.account_id }}" target="_blank">[ikeda]</a>
+                                {% endif %}
                             {% endwith %}
                         </td>
                         <td>

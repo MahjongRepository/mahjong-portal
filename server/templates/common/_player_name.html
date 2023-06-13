@@ -1,5 +1,7 @@
 {% if is_tenhou %}
     <a href="{% url 'player_tenhou_details' player.slug %}" class="d-print-none">
+{% elif is_ms %}
+    <a href="{% url 'player_ms_details' player.slug %}" class="d-print-none">
 {% elif is_last or not rating_date %}
     <a href="{% url 'player_details' player.slug %}" class="d-print-none">
 {% else %}
