@@ -44,7 +44,7 @@ services:
     command: ['crond', '-f']
 
   db:
-    image: postgres:14.7-alpine
+    image: postgres:15.3-alpine3.18
     env_file:
       - ./.envs/.production.env
     restart: always

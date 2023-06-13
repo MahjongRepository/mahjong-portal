@@ -21,7 +21,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8060
 
   db:
-    image: postgres:14.7-alpine
+    image: postgres:15.3-alpine3.18
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
