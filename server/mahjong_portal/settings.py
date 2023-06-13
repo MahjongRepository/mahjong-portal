@@ -181,7 +181,7 @@ STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 HAYSTACK_CONNECTIONS = {
     "default": {
         "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
-        "PATH": os.path.join(BASE_DIR, "whoosh_index"),
+        "PATH": os.path.join(BASE_DIR, "whoosh_index", "data"),
     }
 }
 
