@@ -1,4 +1,6 @@
-{% if is_last or not rating_date %}
+{% if is_tenhou %}
+    <a href="{% url 'player_tenhou_details' player.slug %}" class="d-print-none">
+{% elif is_last or not rating_date %}
     <a href="{% url 'player_details' player.slug %}" class="d-print-none">
 {% else %}
     <a href="{% url 'player_details' player.slug rating_date.year rating_date.month rating_date.day %}" class="d-print-none">

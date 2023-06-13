@@ -30,7 +30,7 @@
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>
-                            {% with account.player as player %}
+                            {% with player=account.player is_tenhou=True %}
                                 {% include 'common/_player_name.html' %}
                             {% endwith %}
                         </td>
