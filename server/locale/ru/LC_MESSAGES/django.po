@@ -836,7 +836,7 @@ msgstr "четыре игрока"
 #: templates/ms/ms_accounts.html:19 templates/ms/ms_accounts.html:80
 #: templates/ms/ms_accounts.html:81
 msgid "sanma"
-msgstr "хиросима"
+msgstr "санма"
 
 #: templates/ms/ms_accounts.html:27 templates/tenhou/games_history.html:19
 #: templates/tenhou/games_history.html:57
@@ -1000,7 +1000,7 @@ msgstr "Четыре игрока"
 #: templates/player/details.html:255 templates/player/ms.html:197
 #: templates/tenhou/tenhou_games_async.html:27
 msgid "Sanma"
-msgstr "Хиросима"
+msgstr "Санма"
 
 #: templates/player/ms.html:97 templates/player/rating_changes.html:12
 #: templates/player/rating_details.html:111 templates/player/tenhou.html:119
