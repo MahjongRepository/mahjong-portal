@@ -11,10 +11,10 @@ services:
     depends_on:
       - db
     volumes:
-      - ./server/collected_static:/app/collected_static/
-      - ./server/whoosh_index:/app/whoosh_index/
-      - ./tmp:/tmp
-      - ./server/shared/:/app/shared/
+      - ./files/collected_static:/app/collected_static/
+      - ./files/whoosh_index:/app/whoosh_index/
+      - ./files/tmp:/tmp
+      - ./files/shared/:/app/shared/
     restart: always
     logging:
       driver: json-file
@@ -32,8 +32,8 @@ services:
     env_file:
       - ./.envs/.production.env
     volumes:
-      - ./server/whoosh_index:/app/whoosh_index/
-      - ./tmp:/tmp
+      - ./files/whoosh_index:/app/whoosh_index/
+      - ./files/tmp:/tmp
     restart: always
     logging:
       driver: json-file
