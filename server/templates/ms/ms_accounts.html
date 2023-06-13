@@ -55,7 +55,7 @@
                             {{ stat.played_games }}
                         </td>
                         <td>
-                            {{ stat.last_played_date|date:SHORT_DATE_FORMAT }}
+                            {{ stat.last_account_played_date|date:SHORT_DATE_FORMAT }}
                         </td>
                         <td>
                             {% if stat.account.player.city %}

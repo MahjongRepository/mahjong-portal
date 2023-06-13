@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render
+from django.utils import timezone
 
 from player.mahjong_soul.models import MSAccountStatistic
 
@@ -20,4 +23,12 @@ def ms_accounts(request, stat_type="four"):
     statistics = statistics.filter(Q(tonpusen_games__gt=0) | Q(hanchan_games__gt=0))
     statistics = statistics.select_related("account", "account__player").order_by("-rank", "-points")
 
-    return render(request, "ms/ms_accounts.html", {"statistics": statistics, "four_players": four_players})
+    # hide accounts from the list that didn't play long time
+    filtered_statistics = []
+    for statistic in statistics:
+        if statistic.last_account_played_date <= timezone.now() - timedelta(days=180):
+            continue
+
+        filtered_statistics.append(statistic)
+
+    return render(request, "ms/ms_accounts.html", {"statistics": filtered_statistics, "four_players": four_players})

@@ -68,6 +68,17 @@ class MSAccountStatistic(models.Model):
     def played_games(self):
         return self.tonpusen_games + self.hanchan_games
 
+    @property
+    def last_account_played_date(self):
+        if self.game_type == self.FOUR_PLAYERS:
+            other_stat = self.account.three_players_statistics()
+        else:
+            other_stat = self.account.four_players_statistics()
+        dates = [self.last_played_date()]
+        if other_stat:
+            dates.append(other_stat.last_played_date())
+        return max([date for date in dates if date is not None])
+
     def get_rank_display(self):
         return RANK_LABELS.get(self.rank)
 
