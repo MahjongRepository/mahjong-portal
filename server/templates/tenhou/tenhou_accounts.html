@@ -32,7 +32,6 @@
                         <td>
                             {% with player=account.player is_tenhou=True %}
                                 {% include 'common/_player_name.html' %}
-                                <a class="small text-secondary" href="https://nodocchi.moe/tenhoulog/#!&name={{ account.tenhou_object.tenhou_username }}" target="_blank">[nodochi]</a>
                             {% endwith %}
                         </td>
                         <td>
@@ -44,7 +43,9 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ account.tenhou_object.tenhou_username }}
+                            <a class="small text-secondary" href="https://nodocchi.moe/tenhoulog/#!&name={{ account.tenhou_object.tenhou_username }}" target="_blank">
+                                {{ account.tenhou_object.tenhou_username }}
+                            </a>
                         </td>
                         <td>
                             <nobr>{{ account.pt }} / {{ account.end_pt }}pt</nobr>

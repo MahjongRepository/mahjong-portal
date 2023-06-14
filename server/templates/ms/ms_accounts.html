@@ -40,11 +40,6 @@
                         <td>
                             {% with player=stat.account.player is_ms=True %}
                                 {% include 'common/_player_name.html' %}
-                                {% if four_players %}
-                                    <a class="small text-secondary" href="https://amae-koromo.sapk.ch/player/{{ stat.account.account_id }}" target="_blank">[amae-koromo]</a>
-                                {% else %}
-                                    <a class="small text-secondary" href="https://ikeda.sapk.ch/player/{{ stat.account.account_id }}" target="_blank">[ikeda]</a>
-                                {% endif %}
                             {% endwith %}
                         </td>
                         <td>
@@ -54,7 +49,15 @@
                             <nobr>{{ stat.points }} / {{ stat.max_pt }} </nobr>
                         </td>
                         <td>
-                            {{ stat.account.account_name }}
+                            {% if four_players %}
+                                <a class="small text-secondary" href="https://amae-koromo.sapk.ch/player/{{ stat.account.account_id }}" target="_blank">
+                                    {{ stat.account.account_name }}
+                                </a>
+                            {% else %}
+                                <a class="small text-secondary" href="https://ikeda.sapk.ch/player/{{ stat.account.account_id }}" target="_blank">
+                                    {{ stat.account.account_name }}
+                                </a>
+                            {% endif %}
                         </td>
                         <td>
                             {{ stat.played_games }}
