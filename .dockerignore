@@ -12,6 +12,11 @@ server/.flake8
 server/pyproject.toml
 server/shared
 
+deploy
+.envs
+.github
+.docker
+
 *.log
 *.pot
 *.pyc
