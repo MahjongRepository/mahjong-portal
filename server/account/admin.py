@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Permission
 from django.utils.translation import gettext_lazy as _
 
-from account.models import AttachingPlayerRequest, User
+from account.models import AttachingPlayerRequest, PantheonInfoUpdateLog, User
 
 
 class CustomUserAdmin(UserAdmin):
@@ -47,6 +47,18 @@ class PermissionAdmin(admin.ModelAdmin):
         return qs.select_related("content_type")
 
 
+class PantheonInfoUpdateLogAdmin(admin.ModelAdmin):
+    search_fields = ["user__username", "user__email", "pantheon_id"]
+    list_display = ["created_on", "user", "attached_player", "pantheon_id", "is_applied"]
+    list_filter = ["is_applied"]
+
+    raw_id_fields = ["user"]
+
+    def attached_player(self, obj):
+        return obj.user and obj.user.attached_player or None
+
+
 admin.site.register(Permission, PermissionAdmin)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(PantheonInfoUpdateLog, PantheonInfoUpdateLogAdmin)
 admin.site.register(AttachingPlayerRequest, AttachingPlayerRequestAdmin)

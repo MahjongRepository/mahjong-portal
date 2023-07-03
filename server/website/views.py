@@ -1,6 +1,8 @@
 import csv
 import io
+import json
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -8,8 +10,11 @@ from django.shortcuts import get_object_or_404, render
 from django.utils import translation
 from django.utils.text import slugify
 from django.utils.translation import get_language
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from haystack.forms import ModelSearchForm
 
+from account.models import PantheonInfoUpdateLog, User
 from club.models import Club
 from player.models import Player, PlayerQuotaEvent
 from player.tenhou.models import TenhouAggregatedStatistics
@@ -149,6 +154,36 @@ def players_api(request):
             }
         )
     return JsonResponse(data, safe=False)
+
+
+@require_POST
+@csrf_exempt
+def update_info_from_pantheon_api(request):
+    try:
+        pantheon_data = json.loads(request.body.decode("utf-8"))
+    except ValueError:
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=500)
+
+    if not pantheon_data:
+        return JsonResponse({"status": "error", "message": "No data received"}, status=500)
+
+    if not pantheon_data.get("auth_key") or pantheon_data.get("auth_key") != settings.PANTHEON_RECEIVE_API_KEY:
+        return JsonResponse({"status": "error", "message": "No auth key or it doesn't match"}, status=500)
+
+    if not pantheon_data.get("person_id"):
+        return JsonResponse({"status": "error", "message": "Wrong json format, no person id included"}, status=500)
+
+    try:
+        user = User.objects.get(new_pantheon_id=pantheon_data["person_id"])
+    except User.DoesNotExist:
+        user = None
+
+    del pantheon_data["auth_key"]
+    PantheonInfoUpdateLog.objects.create(
+        user=user, pantheon_id=pantheon_data["person_id"], updated_information=pantheon_data
+    )
+
+    return JsonResponse({"status": "ok"})
 
 
 def online_tournament_rules(request):

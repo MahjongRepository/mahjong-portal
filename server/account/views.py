@@ -6,8 +6,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from account.forms import LoginForm
-from account.models import AttachingPlayerRequest, User
-from league.models import League, LeaguePlayer
+from account.models import AttachingPlayerRequest, PantheonInfoUpdateLog, User
 from player.models import Player
 
 
@@ -16,7 +15,7 @@ def do_login(request):
     if request.POST:
         form = LoginForm(request.POST)
         if form.is_valid():
-            pantheon_id = form.user_data["id"]
+            pantheon_id = form.user_data["person_id"]
             try:
                 user = User.objects.get(new_pantheon_id=pantheon_id)
             except User.DoesNotExist:
@@ -28,16 +27,9 @@ def do_login(request):
                 user.new_pantheon_id = pantheon_id
                 user.save()
 
-            login(request, user)
+            PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=pantheon_id, updated_information=form.user_data)
 
-            try:
-                # TODO don't use hardcoded league
-                league = League.objects.get(slug="yoroshiku-league-2")
-                league_player = LeaguePlayer.objects.get(name=form.user_data["title"], team__league=league)
-                league_player.user = user
-                league_player.save()
-            except LeaguePlayer.DoesNotExist:
-                pass
+            login(request, user)
 
             return redirect(form.cleaned_data["next"])
 

@@ -197,6 +197,9 @@ DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN", None)
 DISCORD_GUILD_NAME = os.environ.get("DISCORD_GUILD_NAME", None)
 DISCORD_ADMIN_ID = os.environ.get("DISCORD_ADMIN_ID", None)
 
+# key that pantheon will send us
+PANTHEON_RECEIVE_API_KEY = os.environ.get("PANTHEON_RECEIVE_API_KEY", None)
+
 PANTHEON_OLD_API_URL = os.environ.get("PANTHEON_OLD_API_URL", None)
 PANTHEON_ADMIN_TOKEN = os.environ.get("PANTHEON_ADMIN_TOKEN", None)
 PANTHEON_AUTH_API_URL = os.environ.get("PANTHEON_AUTH_API_URL", None)

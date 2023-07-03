@@ -41,18 +41,20 @@ class LoginForm(forms.Form):
                     request=frey_pb2.AuthAuthorizePayload(email=email, password=password),
                     server_path_prefix="/v2",
                 )
-                pantheon_id = response.person_id
-                auth_token = response.auth_token
 
                 response = client.Me(
                     ctx=Context(),
-                    request=frey_pb2.AuthMePayload(person_id=pantheon_id, auth_token=auth_token),
+                    request=frey_pb2.AuthMePayload(person_id=response.person_id, auth_token=response.auth_token),
                     server_path_prefix="/v2",
                 )
 
                 self.user_data = {
-                    "id": pantheon_id,
+                    "person_id": response.person_id,
+                    "country": response.country,
+                    "city": response.city,
                     "email": response.email,
+                    "phone": response.phone,
+                    "tenhou_id": response.tenhou_id,
                     "title": response.title,
                 }
             except Exception as e:

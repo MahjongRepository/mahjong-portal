@@ -16,7 +16,7 @@ from mahjong_portal.sitemap import (
     TournamentSitemap,
 )
 from online.views import finish_game_api
-from website.views import players_api
+from website.views import players_api, update_info_from_pantheon_api
 
 sitemaps = {
     "static": StaticSitemap,
@@ -39,6 +39,7 @@ urlpatterns = [
         name="django.contrib.sitemaps.views.sitemap",
     ),
     url("^api/v0/players/$", players_api),
+    url("^api/v0/update_info_from_pantheon/$", update_info_from_pantheon_api),
     url("^api/v0/finish_game_api/$", finish_game_api),
     url(r"^online/", include("online.urls")),
 ]

@@ -24,3 +24,13 @@ class AttachingPlayerRequest(BaseModel):
 
     def __unicode__(self):
         return self.player.__unicode__()
+
+
+class PantheonInfoUpdateLog(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    pantheon_id = models.PositiveIntegerField(null=True, blank=True, help_text="ID from NEW pantheon")
+    updated_information = models.JSONField(default=dict)
+    is_applied = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.user and self.user.__str__() or None
