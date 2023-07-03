@@ -12,11 +12,8 @@
         {% include 'tournament/_tournament_top_header.html' %}
 
         {% if tournament.old_pantheon_id %}
-            {% get_current_language as LANGUAGE_CODE %}
-
-            {# old pantheon doesn't work on mobile devices #}
-            <p class="d-none d-sm-block">
-                <a href="https://old.riichimahjong.org/eid{{ tournament.old_pantheon_id }}/stat?l={{ LANGUAGE_CODE }}" target="_blank">{% trans 'Detailed tournament statistics' %}</a>
+            <p>
+                <a href="https://archive.riichimahjong.org/eid{{ tournament.old_pantheon_id }}/stat.html" target="_blank">{% trans 'Detailed tournament statistics' %}</a>
             </p>
         {% endif %}
 
