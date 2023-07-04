@@ -1,7 +1,7 @@
 {% load static i18n %}
 
 <!doctype html>
-<html lang="en" class="h-100" data-bs-theme="auto">
+<html lang="en" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -29,6 +29,10 @@
     {% endblock %}
 </head>
 <body class="d-flex flex-column h-100">
+<script>
+    const theme = localStorage.getItem('theme') || 'auto';
+    document.documentElement.setAttribute('data-bs-theme', theme);
+</script>
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top d-print-none">
     <div class="container-fluid">
