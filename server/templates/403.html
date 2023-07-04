@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans '403 Forbidden Error' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans '403 Forbidden Error' %}</h1>
+        <p>{% trans 'Please make sure that your cookies are enabled, as they are necessary for submitting the form.' %}</p>
+    </div>
+{% endblock %}

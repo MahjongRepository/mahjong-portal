@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+import logging
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -22,6 +23,8 @@ from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
+
+logger = logging.getLogger()
 
 
 def home(request):
@@ -345,3 +348,8 @@ def export_tournament_results(request, tournament_id):
     response = HttpResponse(content.getvalue(), content_type="text/plain")
     response["Content-Disposition"] = "attachment; filename={}.csv".format(file_name)
     return response
+
+
+def csrf_failure(request, reason=""):
+    logger.warning(f"CSRF failure: {reason}")
+    return render(request, "403.html", {"reason": reason}, status=403)

@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from online.handler import TournamentHandler
@@ -124,7 +123,6 @@ def add_penalty_game(request, game_id):
 
 
 @require_POST
-@csrf_exempt
 def finish_game_api(request):
     api_token = request.POST.get("api_token")
     if api_token != settings.TOURNAMENT_API_TOKEN:

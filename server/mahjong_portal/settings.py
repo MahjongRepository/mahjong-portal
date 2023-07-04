@@ -33,6 +33,8 @@ SITE_ID = 1
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+CSRF_FAILURE_VIEW = "website.views.csrf_failure"
+
 INSTALLED_APPS = [
     # it had to be placed before contrib.admin
     "modeltranslation",
