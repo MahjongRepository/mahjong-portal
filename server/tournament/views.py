@@ -1,13 +1,17 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
+from account.models import PantheonInfoUpdateLog
+from pantheon_api.api_calls.user import get_current_pantheon_user_data
 from player.models import Player
 from settings.models import City
 from tournament.forms import OnlineTournamentRegistrationForm, TournamentApplicationForm, TournamentRegistrationForm
 from tournament.models import OnlineTournamentRegistration, Tournament, TournamentRegistration, TournamentResult
+from utils.general import split_name
 
 
 def tournament_list(request, tournament_type=None, year=None):
@@ -124,11 +128,53 @@ def tournament_announcement(request, slug):
         if tournament.display_notes:
             registration_results = registration_results.order_by("notes", "created_on")
 
+    is_already_registered = False
+    if request.user.is_authenticated:
+        # TODO support not only online tournaments
+        is_already_registered = OnlineTournamentRegistration.objects.filter(
+            tournament=tournament, user=request.user
+        ).exists()
+
     return render(
         request,
         "tournament/announcement.html",
-        {"tournament": tournament, "page": "tournament", "form": form, "registration_results": registration_results},
+        {
+            "tournament": tournament,
+            "page": "tournament",
+            "form": form,
+            "registration_results": registration_results,
+            "is_already_registered": is_already_registered,
+        },
     )
+
+
+@require_POST
+@login_required
+def pantheon_tournament_registration(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    user = request.user
+    if OnlineTournamentRegistration.objects.filter(user=user).exists():
+        return redirect(tournament.get_url())
+
+    data = get_current_pantheon_user_data(user.new_pantheon_id)
+    PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=user.new_pantheon_id, updated_information=data)
+    first_name, last_name = split_name(data["title"])
+
+    player = Player.objects.filter(first_name_ru=first_name, last_name_ru=last_name).first()
+    city_object = City.objects.filter(name_ru=data["city"].title()).first()
+
+    OnlineTournamentRegistration.objects.create(
+        tournament=tournament,
+        user=user,
+        tenhou_nickname=data["tenhou_id"],
+        first_name=first_name,
+        last_name=last_name,
+        city=data["city"],
+        player=player,
+        city_object=city_object,
+    )
+
+    return redirect(tournament.get_url())
 
 
 @require_POST

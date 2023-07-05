@@ -86,3 +86,14 @@ def get_tournament_coefficient(is_ema, tournament_id, player, default_coefficien
         return HARDCODED_COEFFICIENTS.get(tournament_id).get(player.id, 0)
 
     return default_coefficient
+
+
+def split_name(player_title):
+    if " " not in player_title:
+        return player_title, ""
+
+    temp = player_title.split(" ")
+
+    first_name = temp[1].title()
+    last_name = temp[0].title()
+    return first_name, last_name

@@ -65,11 +65,9 @@ class Tournament(BaseModel):
     is_hidden = models.BooleanField(default=False)
     is_event = models.BooleanField(default=False)
     is_majsoul_tournament = models.BooleanField(default=False)
-
+    is_pantheon_registration = models.BooleanField(default=False)
     russian_cup = models.BooleanField(default=False)
-
-    # tournament setting, tournament admin can change them
-    fill_city_in_registration = models.BooleanField(default=True)
+    fill_city_in_registration = models.BooleanField(default=False)
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)
 
@@ -258,9 +256,9 @@ class OnlineTournamentRegistration(BaseModel):
     is_approved = models.BooleanField(default=True)
 
     first_name = models.CharField(max_length=255, verbose_name=_("First name"))
-    last_name = models.CharField(max_length=255, verbose_name=_("Last name"))
+    last_name = models.CharField(max_length=255, verbose_name=_("Last name"), null=True, blank=True)
     city = models.CharField(max_length=255, verbose_name=_("City"))
-    tenhou_nickname = models.CharField(max_length=255, verbose_name=_("Tenhou.net nickname"))
+    tenhou_nickname = models.CharField(max_length=255, verbose_name=_("Tenhou.net nickname"), null=True, blank=True)
     is_highlighted = models.BooleanField(default=False)
     contact = models.CharField(
         max_length=255,
@@ -271,6 +269,7 @@ class OnlineTournamentRegistration(BaseModel):
     player = models.ForeignKey(
         Player, on_delete=models.CASCADE, null=True, blank=True, related_name="online_tournament_registrations"
     )
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True, blank=True)
     city_object = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
 
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))

@@ -1,12 +1,9 @@
 from django import forms
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from sentry_sdk import capture_exception
-from twirp.context import Context
 
-from pantheon_api import frey_pb2
-from pantheon_api.frey_twirp import FreyClient
+from pantheon_api.api_calls.user import get_current_pantheon_user_data, login_through_pantheon
 
 
 class LoginForm(forms.Form):
@@ -28,35 +25,17 @@ class LoginForm(forms.Form):
         "invalid_login": _("Please enter a correct email and password. Note that both fields may be case-sensitive."),
     }
 
+    user_data = None
+
     def clean(self):
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
 
         if email is not None and password:
             email = email.lower().strip()
-            client = FreyClient(settings.PANTHEON_AUTH_API_URL)
             try:
-                response = client.Authorize(
-                    ctx=Context(),
-                    request=frey_pb2.AuthAuthorizePayload(email=email, password=password),
-                    server_path_prefix="/v2",
-                )
-
-                response = client.Me(
-                    ctx=Context(),
-                    request=frey_pb2.AuthMePayload(person_id=response.person_id, auth_token=response.auth_token),
-                    server_path_prefix="/v2",
-                )
-
-                self.user_data = {
-                    "person_id": response.person_id,
-                    "country": response.country,
-                    "city": response.city,
-                    "email": response.email,
-                    "phone": response.phone,
-                    "tenhou_id": response.tenhou_id,
-                    "title": response.title,
-                }
+                response = login_through_pantheon(email, password)
+                self.user_data = get_current_pantheon_user_data(response.person_id)
             except Exception as e:
                 capture_exception(e)
                 raise self.get_invalid_login_error() from None
