@@ -35,7 +35,7 @@ class LoginForm(forms.Form):
             email = email.lower().strip()
             try:
                 response = login_through_pantheon(email, password)
-                self.user_data = get_current_pantheon_user_data(response.person_id)
+                self.user_data = get_current_pantheon_user_data(response.person_id, response.auth_token)
             except Exception as e:
                 capture_exception(e)
                 raise self.get_invalid_login_error() from None

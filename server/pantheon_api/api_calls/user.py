@@ -15,12 +15,12 @@ def login_through_pantheon(email, password):
     )
 
 
-def get_current_pantheon_user_data(person_id):
+def get_current_pantheon_user_data(person_id, auth_token):
     client = FreyClient(settings.PANTHEON_AUTH_API_URL)
 
     response = client.Me(
         ctx=Context(),
-        request=frey_pb2.AuthMePayload(person_id=person_id, auth_token=settings.PANTHEON_ADMIN_COOKIE),
+        request=frey_pb2.AuthMePayload(person_id=person_id, auth_token=auth_token),
         server_path_prefix="/v2",
     )
 
@@ -32,4 +32,23 @@ def get_current_pantheon_user_data(person_id):
         "phone": response.phone,
         "tenhou_id": response.tenhou_id,
         "title": response.title,
+    }
+
+
+def get_pantheon_public_person_information(person_id):
+    client = FreyClient(settings.PANTHEON_AUTH_API_URL)
+
+    response = client.GetPersonalInfo(
+        ctx=Context(),
+        request=frey_pb2.PersonsGetPersonalInfoPayload(ids=[person_id]),
+        server_path_prefix="/v2",
+    )
+    person = response.people[0]
+
+    return {
+        "person_id": person.id,
+        "country": person.country,
+        "city": person.city,
+        "tenhou_id": person.tenhou_id,
+        "title": person.title,
     }

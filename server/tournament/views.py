@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from account.models import PantheonInfoUpdateLog
-from pantheon_api.api_calls.user import get_current_pantheon_user_data
+from pantheon_api.api_calls.user import get_pantheon_public_person_information
 from player.models import Player
 from settings.models import City
 from tournament.forms import OnlineTournamentRegistrationForm, TournamentApplicationForm, TournamentRegistrationForm
@@ -156,7 +156,7 @@ def pantheon_tournament_registration(request, tournament_id):
     if OnlineTournamentRegistration.objects.filter(user=user).exists():
         return redirect(tournament.get_url())
 
-    data = get_current_pantheon_user_data(user.new_pantheon_id)
+    data = get_pantheon_public_person_information(user.new_pantheon_id)
     PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=user.new_pantheon_id, updated_information=data)
     first_name, last_name = split_name(data["title"])
 
