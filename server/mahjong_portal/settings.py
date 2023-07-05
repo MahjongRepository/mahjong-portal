@@ -234,9 +234,6 @@ CACHES = {
     }
 }
 
-UNAMI_ID = os.environ.get("UNAMI_ID", "")
-UNAMI_DOMAIN = os.environ.get("UNAMI_DOMAIN", "")
-
 # support for non docker installations
 try:
     from .settings_local import *

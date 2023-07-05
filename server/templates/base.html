@@ -8,10 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% spaceless %}{% block title %}{% endblock %}{% endspaceless %}</title>
 
-    {% if UNAMI_ID and UNAMI_DOMAIN %}
-        <script async defer data-website-id="{{ UNAMI_ID }}" src="https://{{ UNAMI_DOMAIN }}/u.js"></script>
-    {% endif %}
-
     <meta property="og:url" content="{{ SCHEME }}://{{ request.get_host }}{{ request.get_full_path }}" />
     <meta property="og:type" content="website" />
     <meta property="og:image:width" content="200" />
