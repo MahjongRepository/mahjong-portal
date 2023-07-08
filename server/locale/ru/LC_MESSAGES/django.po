@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 12:50+0000\n"
+"POT-Creation-Date: 2023-07-08 10:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -447,12 +447,12 @@ msgid ""
 msgstr ""
 "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: templates/account/login.html:18 templates/base.html:155
+#: templates/account/login.html:18 templates/base.html:151
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
 
-#: templates/account/settings.html:6 templates/base.html:137
+#: templates/account/settings.html:6 templates/base.html:133
 msgid "User settings"
 msgstr "Настройки аккаунта"
 
@@ -460,42 +460,42 @@ msgstr "Настройки аккаунта"
 msgid "Under development!"
 msgstr "В разработке!"
 
-#: templates/base.html:39 templates/website/home.html:5
+#: templates/base.html:35 templates/website/home.html:5
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
-#: templates/base.html:47
+#: templates/base.html:43
 msgid "Theme"
 msgstr "Тема"
 
-#: templates/base.html:52
+#: templates/base.html:48
 msgid "Light"
 msgstr "Светлая"
 
-#: templates/base.html:57
+#: templates/base.html:53
 msgid "Dark"
 msgstr "Тёмная"
 
-#: templates/base.html:62
+#: templates/base.html:58
 msgid "Auto"
 msgstr "Авто"
 
-#: templates/base.html:69 templates/base.html:72
+#: templates/base.html:65 templates/base.html:68
 #: templates/player/details.html:19 templates/rating/list.html:5
 #: templates/rating/list.html:10
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: templates/base.html:73 templates/website/about_en.html:5
+#: templates/base.html:69 templates/website/about_en.html:5
 #: templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтингах"
 
-#: templates/base.html:75
+#: templates/base.html:71
 msgid "WRC 2020"
 msgstr "WRC 2020"
 
-#: templates/base.html:79 templates/club/tournaments.html:5
+#: templates/base.html:75 templates/club/tournaments.html:5
 #: templates/club/tournaments.html:27 templates/club/tournaments.html:34
 #: templates/club/tournaments.html:35 templates/player/rating_details.html:161
 #: templates/player/tournaments.html:5 templates/player/tournaments.html:15
@@ -507,102 +507,102 @@ msgstr "WRC 2020"
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:93 templates/club/list.html:10
+#: templates/base.html:89 templates/club/list.html:10
 #: templates/website/city.html:11
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:100
+#: templates/base.html:96
 msgid "Online"
 msgstr "Онлайн"
 
-#: templates/base.html:103 templates/tenhou/tenhou_games.html:5
+#: templates/base.html:99 templates/tenhou/tenhou_games.html:5
 #: templates/tenhou/tenhou_games.html:15 templates/tenhou/tenhou_games.html:16
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: templates/base.html:104 templates/tenhou/tenhou_accounts.html:5
+#: templates/base.html:100 templates/tenhou/tenhou_accounts.html:5
 #: templates/tenhou/tenhou_accounts.html:10
 #: templates/tenhou/tenhou_accounts.html:79
 #: templates/tenhou/tenhou_accounts.html:80
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
 
-#: templates/base.html:105 templates/ms/ms_accounts.html:5
+#: templates/base.html:101 templates/ms/ms_accounts.html:5
 #: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:88
 #: templates/ms/ms_accounts.html:89
 msgid "Mahjong Soul accounts"
 msgstr "Аккаунты на Mahjong Soul"
 
-#: templates/base.html:106 templates/tenhou/games_history.html:5
+#: templates/base.html:102 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
 #: templates/tenhou/games_history.html:106
 #: templates/tenhou/games_history.html:107
 msgid "Tenhou.net games history"
 msgstr "История игр на tenhou.net"
 
-#: templates/base.html:107 templates/tenhou/latest_yakumans.html:5
+#: templates/base.html:103 templates/tenhou/latest_yakumans.html:5
 #: templates/tenhou/latest_yakumans.html:10
 #: templates/tenhou/latest_yakumans.html:50
 #: templates/tenhou/latest_yakumans.html:51
 msgid "Yakumans from tenhou.net"
 msgstr "Якуманы с tenhou.net"
 
-#: templates/base.html:112 templates/tournament/application.html:85
+#: templates/base.html:108 templates/tournament/application.html:85
 #: tournament/models.py:344
 msgid "Other"
 msgstr "Другое"
 
-#: templates/base.html:115 templates/website/contacts_en.html:5
+#: templates/base.html:111 templates/website/contacts_en.html:5
 #: templates/website/contacts_ru.html:5
 msgid "Contacts"
 msgstr "Развитие"
 
-#: templates/base.html:116 templates/tournament/application.html:5
+#: templates/base.html:112 templates/tournament/application.html:5
 #: templates/tournament/application.html:10
 #: templates/tournament/application.html:103
 #: templates/tournament/application.html:104
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: templates/base.html:117 templates/website/championships.html:10
+#: templates/base.html:113 templates/website/championships.html:10
 msgid "Championships"
 msgstr "Чемпионаты"
 
-#: templates/base.html:121
+#: templates/base.html:117
 msgid "Yoroshiku League 2"
 msgstr ""
 
-#: templates/base.html:132
+#: templates/base.html:128
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:133 templates/system_index.html:10
+#: templates/base.html:129 templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/base.html:139
+#: templates/base.html:135
 msgid "My profile"
 msgstr "Мой профиль"
 
-#: templates/base.html:143
+#: templates/base.html:139
 msgid "My tournaments"
 msgstr "Мои турниры"
 
-#: templates/base.html:147
+#: templates/base.html:143
 msgid "EMA players"
 msgstr "EMA игроки"
 
-#: templates/base.html:150
+#: templates/base.html:146
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:194 templates/base.html:197
+#: templates/base.html:190 templates/base.html:193
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/base.html:207
+#: templates/base.html:203
 msgid "source code"
 msgstr "исходный код"
 
@@ -632,7 +632,7 @@ msgstr "Сортировка:"
 #: templates/rating/_results_table.html:14
 #: templates/tournament/_tournament_results.html:8
 #: templates/tournament/_tournaments_table.html:8
-#: templates/tournament/announcement.html:76
+#: templates/tournament/announcement.html:80
 #: templates/tournament_admin/managed_tournaments.html:23
 #: templates/tournament_admin/new_tournaments.html:17
 #: templates/tournament_admin/tournament_manage.html:89
@@ -706,7 +706,7 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:20 templates/ms/ms_accounts.html:33
 #: templates/tenhou/tenhou_accounts.html:25
 #: templates/tournament/_tournaments_table.html:14
-#: templates/tournament/announcement.html:77
+#: templates/tournament/announcement.html:81
 #: templates/tournament_admin/tournament_manage.html:90
 #: templates/website/search.html:19 tournament/models.py:223
 #: tournament/models.py:260 tournament/models.py:292
@@ -820,7 +820,7 @@ msgstr "Начнётся"
 msgid "Teams"
 msgstr "Команды"
 
-#: templates/league/teams.html:22 templates/tournament/announcement.html:87
+#: templates/league/teams.html:22 templates/tournament/announcement.html:91
 msgid "Team"
 msgstr "Команда"
 
@@ -1158,7 +1158,7 @@ msgstr ""
 "личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
 
 #: templates/tenhou/tenhou_accounts.html:19
-#: templates/tournament/announcement.html:85 templates/website/city.html:47
+#: templates/tournament/announcement.html:89 templates/website/city.html:47
 #: templates/website/search.html:17
 msgid "Dan"
 msgstr "Дан"
@@ -1257,36 +1257,41 @@ msgid "Description"
 msgstr "Описание"
 
 #: templates/tournament/announcement.html:40
+msgid ""
+"Before applying for the tournament, please set tenhou id on Pantheon first"
+msgstr "Перед записью на турнир, пожалуйста, укажите свой tenhou id в Pantheon"
+
+#: templates/tournament/announcement.html:44
 msgid "You are already registered on the tournament!"
 msgstr "Вы уже зарегистрированы на этот турнир!"
 
-#: templates/tournament/announcement.html:44
+#: templates/tournament/announcement.html:48
 msgid "Login through Pantheon to apply for tournament"
 msgstr "Войти через Pantheon для записи на турнир"
 
-#: templates/tournament/announcement.html:50
+#: templates/tournament/announcement.html:54
 msgid "Apply for tournament through Pantheon account"
 msgstr "Записаться на турнир через Pantheon аккаунт"
 
-#: templates/tournament/announcement.html:54
-#: templates/tournament/announcement.html:65
+#: templates/tournament/announcement.html:58
+#: templates/tournament/announcement.html:69
 msgid "Registration"
 msgstr "Регистрация"
 
-#: templates/tournament/announcement.html:61
+#: templates/tournament/announcement.html:65
 msgid "Submit"
 msgstr "Записаться"
 
-#: templates/tournament/announcement.html:70
+#: templates/tournament/announcement.html:74
 #: templates/tournament_admin/tournament_manage.html:82
 msgid "Participants"
 msgstr "Участники"
 
-#: templates/tournament/announcement.html:80 tournament/forms.py:46
+#: templates/tournament/announcement.html:84 tournament/forms.py:46
 msgid "Majsoul nickname"
 msgstr "Ник на Mahjong Soul"
 
-#: templates/tournament/announcement.html:82 tournament/models.py:261
+#: templates/tournament/announcement.html:86 tournament/models.py:261
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
@@ -1738,11 +1743,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:196
+#: tournament/views.py:202
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: tournament/views.py:220
+#: tournament/views.py:226
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -1750,11 +1755,11 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:224
+#: tournament/views.py:230
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:230
+#: tournament/views.py:236
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 

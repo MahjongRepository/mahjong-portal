@@ -135,6 +135,8 @@ def tournament_announcement(request, slug):
             tournament=tournament, user=request.user
         ).exists()
 
+    missed_tenhou_id_error = request.GET.get("error") == "tenhou_id"
+
     return render(
         request,
         "tournament/announcement.html",
@@ -144,6 +146,7 @@ def tournament_announcement(request, slug):
             "form": form,
             "registration_results": registration_results,
             "is_already_registered": is_already_registered,
+            "missed_tenhou_id_error": missed_tenhou_id_error,
         },
     )
 
@@ -162,6 +165,9 @@ def pantheon_tournament_registration(request, tournament_id):
 
     player = Player.objects.filter(first_name_ru=first_name, last_name_ru=last_name).first()
     city_object = City.objects.filter(name_ru=data["city"].title()).first()
+
+    if not data["tenhou_id"]:
+        return redirect(tournament.get_url() + "?error=tenhou_id")
 
     OnlineTournamentRegistration.objects.create(
         tournament=tournament,

@@ -36,6 +36,10 @@
             <p>{{ tournament.registration_description|linebreaksbr|urlize }}</p>
         {% endif %}
 
+        {% if missed_tenhou_id_error %}
+            <p class="alert alert-danger">{% trans 'Before applying for the tournament, please set tenhou id on Pantheon first' %}</p>
+        {% endif %}
+
         {% if is_already_registered %}
             <p class="alert alert-success">{% trans 'You are already registered on the tournament!' %}</p>
         {% elif tournament.is_pantheon_registration %}
