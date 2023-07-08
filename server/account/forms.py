@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from sentry_sdk import capture_exception
+from twirp.exceptions import TwirpServerException
 
 from pantheon_api.api_calls.user import get_current_pantheon_user_data, login_through_pantheon
 
@@ -36,8 +36,8 @@ class LoginForm(forms.Form):
             try:
                 response = login_through_pantheon(email, password)
                 self.user_data = get_current_pantheon_user_data(response.person_id, response.auth_token)
-            except Exception as e:
-                capture_exception(e)
+            # instead of error with reason, twirp just raises TwirpServerException
+            except TwirpServerException:
                 raise self.get_invalid_login_error() from None
 
         return self.cleaned_data
