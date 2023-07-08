@@ -162,6 +162,10 @@ def players_api(request):
 @require_POST
 @csrf_exempt
 def update_info_from_pantheon_api(request):
+    api_key = request.META.get("HTTP_X_API_KEY")
+    if not api_key or api_key != settings.PANTHEON_RECEIVE_API_KEY:
+        return JsonResponse({"status": "error", "message": "No auth key or it doesn't match"}, status=500)
+
     try:
         pantheon_data = json.loads(request.body.decode("utf-8"))
     except ValueError:
@@ -170,21 +174,16 @@ def update_info_from_pantheon_api(request):
     if not pantheon_data:
         return JsonResponse({"status": "error", "message": "No data received"}, status=500)
 
-    if not pantheon_data.get("auth_key") or pantheon_data.get("auth_key") != settings.PANTHEON_RECEIVE_API_KEY:
-        return JsonResponse({"status": "error", "message": "No auth key or it doesn't match"}, status=500)
-
-    if not pantheon_data.get("person_id"):
+    person_id = pantheon_data.get("person_id")
+    if not person_id:
         return JsonResponse({"status": "error", "message": "Wrong json format, no person id included"}, status=500)
 
     try:
-        user = User.objects.get(new_pantheon_id=pantheon_data["person_id"])
+        user = User.objects.get(new_pantheon_id=person_id)
     except User.DoesNotExist:
         user = None
 
-    del pantheon_data["auth_key"]
-    PantheonInfoUpdateLog.objects.create(
-        user=user, pantheon_id=pantheon_data["person_id"], updated_information=pantheon_data
-    )
+    PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
 
     return JsonResponse({"status": "ok"})
 
