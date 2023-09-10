@@ -839,9 +839,7 @@ msgstr "Игры"
 
 #: templates/ms/ms_accounts.html:12
 msgid "Statistics updated once an hour."
-msgstr ""
-"Статистика обновляется раз в час. Добавить свой аккаунт можно написав в "
-"личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
+msgstr "Статистика обновляется раз в час."
 
 #: templates/ms/ms_accounts.html:16 templates/ms/ms_accounts.html:88
 #: templates/ms/ms_accounts.html:89
@@ -1153,9 +1151,7 @@ msgstr "Дельта"
 
 #: templates/tenhou/tenhou_accounts.html:11
 msgid "Statistics updated every 5 minutes."
-msgstr ""
-"Статистика обновляется раз в 5 минут. Добавить свой аккаунт можно написав в "
-"личку https://vk.com/alexey.lisikhin или https://t.me/Nihisil"
+msgstr "Статистика обновляется раз в 5 минут."
 
 #: templates/tenhou/tenhou_accounts.html:19
 #: templates/tournament/announcement.html:89 templates/website/city.html:47
