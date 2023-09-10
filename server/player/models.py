@@ -79,6 +79,7 @@ class PlayerTitle(BaseModel):
     background_color = models.CharField(max_length=7)
     text_color = models.CharField(max_length=7)
     order = models.PositiveIntegerField(default=0)
+    url = models.URLField(null=True, blank=True)
 
     class Meta:
         ordering = ["order"]

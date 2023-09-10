@@ -53,7 +53,11 @@
         <p>
             {% for title in titles %}
                 <span class="badge bg-primary" style="background-color: {{ title.background_color }} !important; color: {{ title.text_color }} !important;">
-                    {{ title.text }}
+                    {% if title.url %}
+                        <a style="color: {{ title.text_color }} !important;" href="{{ title.url }}">{{ title.text }}</a>
+                    {% else %}
+                        {{ title.text }}
+                    {% endif %}
                 </span>
             {% endfor %}
         </p>
