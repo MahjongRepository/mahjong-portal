@@ -556,7 +556,7 @@ msgstr "Другое"
 #: templates/base.html:111 templates/website/contacts_en.html:5
 #: templates/website/contacts_ru.html:5
 msgid "Contacts"
-msgstr "Развитие"
+msgstr "Контакты"
 
 #: templates/base.html:112 templates/tournament/application.html:5
 #: templates/tournament/application.html:10

@@ -11,7 +11,22 @@ from django.utils.timezone import now
 from league.models import League, LeagueGame, LeagueGameSlot, LeaguePlayer, LeagueSession
 
 
+def league_final_information(request, slug):
+    league = get_object_or_404(League, slug=slug)
+
+    return render(
+        request,
+        "league/final.html",
+        {
+            "league": league,
+        },
+    )
+
+
 def league_details(request, slug):
+    # TODO handle it properly instead of hardcoded results page
+    return league_final_information(request, slug)
+
     league = get_object_or_404(League, slug=slug)
     upcoming_sessions = league.sessions.filter(status=LeagueSession.PLANNED).prefetch_related("games", "games__slots")
 

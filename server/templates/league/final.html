@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% load i18n %}
+
+{% block title %}
+    {{ league.name }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1 class="mb-3">{{ league.name }}</h1>
+
+        <h3>Отборочный этап</h3>
+
+        <p>Отборочный этап лиги проводился с 3 сентября 2022 года по 8 июля 2023 года.</p>
+
+        <p>За это время <a href="https://mahjong.click/ru/league/yoroshiku-league-2/teams/">24 команды</a> (91 игрок) сыграли 504 ханчана и по итогу отборочных 8 команд прошли в финальный этап лиги.</p>
+
+        <p>Результаты отборочных и список участников можно найти тут: <a href="https://rating.riichimahjong.org/event/106/order/team">https://rating.riichimahjong.org/event/106/order/team</a></p>
+
+        <p>Огромное спасибо всем участникам за проявленную выдержку и дисциплину на такой длинной дистанции. Это по-настоящему впечатляет.</p>
+
+        <h3>Финальный этап</h3>
+
+        <p>Отборочный этап лиги проводился с 22 июля 2023 года по 9 сентября 2023 года.</p>
+
+        <p>В финале 8 команд сыграли 32 ханчана, результаты можно найти тут: <a
+            href="https://rating.riichimahjong.org/event/254/order/team">https://rating.riichimahjong.org/event/254/order/team</a></p>
+
+        <h3>Итоги</h3>
+
+        <p>Лига длилась чуть больше года, собрала огромное количество участников и, что самое главное, - успешно смогла завершиться в запланированные сроки.</p>
+
+        <p>Комбинированные результаты двух событий доступны тут: <a href="https://rating.riichimahjong.org/event/106.254/order/team">https://rating.riichimahjong.org/event/106.254/order/team</a></p>
+
+        <p>По регламенту после отборов у команды очки делились пополам, но пантеон не поддерживает такое поведение. Так что ссылку выше можно использовать просто для просмотра статистики игрока за два события.</p>
+
+        <p>А таблица с учётом деления очоков приведена ниже.</p>
+
+        <table class="table mt-2 table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Команда</th>
+                <th>Очки после отборов</th>
+                <th>Очки после деления</th>
+                <th>Очки финала этапа</th>
+                <th class="bg-success-subtle">Финальные очки</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>1</td>
+                <td>Бурундучки</td>
+                <td>980100</td>
+                <td>490050</td>
+                <td>-26000</td>
+                <td class="bg-success-subtle">464050</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Felix culpa</td>
+                <td>409900</td>
+                <td>204950</td>
+                <td>221300</td>
+                <td class="bg-success-subtle">426250</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Reversed chun</td>
+                <td>733000</td>
+                <td>366500</td>
+                <td>-15600</td>
+                <td class="bg-success-subtle">350900</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Enigma</td>
+                <td>332300</td>
+                <td>166150</td>
+                <td>161700</td>
+                <td class="bg-success-subtle">327850</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Огурцы</td>
+                <td>441800</td>
+                <td>220900</td>
+                <td>98300</td>
+                <td class="bg-success-subtle">319200</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Yaranaika</td>
+                <td>269000</td>
+                <td>134500</td>
+                <td>16000</td>
+                <td class="bg-success-subtle">150500</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Shibuya Amebas</td>
+                <td>373600</td>
+                <td>186800</td>
+                <td>-136800</td>
+                <td class="bg-success-subtle">50000</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Чуренпото</td>
+                <td>323900</td>
+                <td>161950</td>
+                <td>-318900</td>
+                <td class="bg-success-subtle">-156950</td>
+            </tr>
+        </table>
+
+        <p>И победитель Yoroshiku League 2 это команда <b>Бурундучки</b>:</p>
+
+        <ul>
+            <li><a href="https://rating.riichimahjong.org/event/106.254/player/28">Ермолаев Алексей</a></li>
+            <li><a href="https://rating.riichimahjong.org/event/106.254/player/35">Ермолаев Андрей</a></li>
+            <li><a href="https://rating.riichimahjong.org/event/106.254/player/82">Новиков Антон</a></li>
+        </ul>
+
+        <p>Поздравления победителям!</p>
+    </div>
+{% endblock %}
