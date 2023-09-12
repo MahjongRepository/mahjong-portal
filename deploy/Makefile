@@ -12,8 +12,8 @@ shell:
 	docker compose run -u `id -u` --rm web sh
 
 db-backup:
-	/usr/local/bin/docker-compose -f $(COMPOSE_FILE) up --detach db
-	/usr/local/bin/docker-compose -f $(COMPOSE_FILE) run \
+	docker compose up --detach db
+	docker compose run \
 		-v /tmp/:/tmp/ \
 		--user=root \
 		--rm db sh -c \
