@@ -1,6 +1,6 @@
 import itertools
 import math
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q
