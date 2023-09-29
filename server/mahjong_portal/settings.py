@@ -1,6 +1,9 @@
 import os
 
 import dj_database_url
+from psycopg2cffi import compat
+
+compat.register()
 
 if os.environ.get("SENTRY_DSN"):
     import sentry_sdk
