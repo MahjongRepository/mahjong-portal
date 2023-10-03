@@ -13,7 +13,7 @@ def ms_accounts(request, stat_type="four"):
         raise Http404
 
     four_players = False
-    statistics = MSAccountStatistic.objects.filter(rank__isnull=False)
+    statistics = MSAccountStatistic.objects.filter(rank__isnull=False).exclude(account__account_name="")
     if stat_type == "four":
         four_players = True
         statistics = statistics.filter(game_type=MSAccountStatistic.FOUR_PLAYERS)

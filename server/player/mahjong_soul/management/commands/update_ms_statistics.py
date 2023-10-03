@@ -14,6 +14,10 @@ class Command(MSBaseCommand):
             request.account_id = ms_account.account_id
             response = await lobby.fetch_account_info(request)
 
+            if not response.account.nickname:
+                print(f"Can't find info for {ms_account.account_id}")
+                continue
+
             ms_account.account_name = response.account.nickname
             ms_account.save()
 
@@ -34,6 +38,10 @@ class Command(MSBaseCommand):
             response = await lobby.fetch_account_statistic_info(request)
             response = MessageToDict(response)
 
+            if response.get("error"):
+                print(f"Error updating data for {ms_account.account_id} ({ms_account.account_name})")
+                continue
+
             self.calculate_and_save_places_statistic(response, four_people_stat, three_people_stat)
 
             four_people_stat.save()
@@ -41,6 +49,8 @@ class Command(MSBaseCommand):
 
             self.calculate_and_save_points_diff(four_people_stat)
             self.calculate_and_save_points_diff(three_people_stat)
+
+            print(f"Updated {ms_account.account_id} ({ms_account.account_name})")
 
     def calculate_and_save_points_diff(self, stat_object):
         latest_history = MSPointsHistory.objects.filter(stat_object=stat_object).order_by("-created_on").first()
