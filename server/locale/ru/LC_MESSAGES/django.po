@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-08 10:41+0000\n"
+"POT-Creation-Date: 2023-11-03 14:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -447,12 +447,12 @@ msgid ""
 msgstr ""
 "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: templates/account/login.html:18 templates/base.html:151
+#: templates/account/login.html:18 templates/base.html:169
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
 
-#: templates/account/settings.html:6 templates/base.html:133
+#: templates/account/settings.html:6 templates/base.html:150
 msgid "User settings"
 msgstr "Настройки аккаунта"
 
@@ -569,42 +569,46 @@ msgstr "Заявка на турнир"
 msgid "Championships"
 msgstr "Чемпионаты"
 
-#: templates/base.html:117
+#: templates/base.html:114
 msgid "Yoroshiku League 2"
 msgstr ""
 
-#: templates/base.html:128
+#: templates/base.html:145
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:129 templates/system_index.html:10
+#: templates/base.html:146 templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/base.html:135
+#: templates/base.html:152
 msgid "My profile"
 msgstr "Мой профиль"
 
-#: templates/base.html:139
+#: templates/base.html:156
 msgid "My tournaments"
 msgstr "Мои турниры"
 
-#: templates/base.html:143
+#: templates/base.html:160
 msgid "EMA players"
 msgstr "EMA игроки"
 
-#: templates/base.html:146
+#: templates/base.html:163
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:190 templates/base.html:193
+#: templates/base.html:208 templates/base.html:211
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/base.html:203
+#: templates/base.html:221
 msgid "source code"
 msgstr "исходный код"
+
+#: templates/base.html:226
+msgid "about server"
+msgstr "о сервере"
 
 #: templates/club/details.html:27
 msgid "Latest 5 tournaments"
@@ -929,7 +933,7 @@ msgstr "Тип"
 msgid "Tournament"
 msgstr "Турнир"
 
-#: templates/player/_player_header.html:64
+#: templates/player/_player_header.html:68
 msgid "From"
 msgstr "Из"
 
@@ -1562,6 +1566,10 @@ msgstr "Результаты поиска"
 #: templates/website/search.html:47
 msgid "nothing found"
 msgstr "ничего не нашлось"
+
+#: templates/website/server_en.html:5 templates/website/server_ru.html:5
+msgid "Server"
+msgstr "О Сервере"
 
 #: templates/website/wrc_2020.html:5 templates/website/wrc_2020.html:18
 msgid "World Riichi Championship 2020 Qualifications"

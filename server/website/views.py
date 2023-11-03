@@ -75,6 +75,14 @@ def about(request):
     return render(request, "website/{}".format(template), {"page": "about"})
 
 
+def server(request):
+    template = "server_en.html"
+    if get_language() == "ru":
+        template = "server_ru.html"
+
+    return render(request, "website/{}".format(template), {"page": "server"})
+
+
 def championships(request):
     championships = Tournament.objects.filter(
         Q(tournament_type=Tournament.CHAMPIONSHIP) | Q(russian_cup=True)

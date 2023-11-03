@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Server' %}
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="Информация о сервере.">
+    <meta property="og:description" content="Информация о сервере.">
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Маджонг портал работает на:</h1>
+        <p>&bull; Django framework 4</p>
+        <p>&bull; PyPy3</p>
+        <p>&bull; PostgreSQL 15</p>
+    </div>
+{% endblock %}

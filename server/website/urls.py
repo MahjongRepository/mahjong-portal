@@ -12,6 +12,7 @@ from website.views import (
     online_tournament_rules,
     rating_faq,
     search,
+    server,
     wrc_qualification_2020,
 )
 
@@ -26,6 +27,7 @@ urlpatterns = [
     url(r"^championships/$", championships, name="championships"),
     url(r"^online/$", online_tournament_rules, name="online"),
     url(r"^search/$", search, name="search"),
+    url(r"^server/$", server, name="server"),
     url(r"^city/(?P<slug>[\w\-]+)/$", city_page, name="city_page"),
     url(
         r"^export_tournament_results/(?P<tournament_id>\d+)/$",
