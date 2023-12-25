@@ -20,7 +20,11 @@
 
             {% if tournament.opened_registration %}
                 {% if tournament.is_online %}
-                    <p>{% trans 'Registered players' %} {{ tournament.online_tournament_registrations.count }}</p>
+                    {% if tournament.is_majsoul_tournament %}
+                        <p>{% trans 'Registered players' %} {{ tournament.ms_online_tournament_registrations.count }}</p>
+                    {% else %}
+                        <p>{% trans 'Registered players' %} {{ tournament.online_tournament_registrations.count }}</p>
+                    {% endif %}
                 {% else %}
                     <p>{% trans 'Registered players' %} {{ tournament.tournament_registrations.count }}</p>
                 {% endif %}
