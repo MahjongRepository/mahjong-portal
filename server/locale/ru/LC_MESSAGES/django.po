@@ -1291,6 +1291,10 @@ msgstr "Участники"
 msgid "Majsoul nickname"
 msgstr "Ник на Mahjong Soul"
 
+#: tournament/forms.py:62
+msgid "Majsoul friend id"
+msgstr "Mahjong Soul friend id"
+
 #: templates/tournament/announcement.html:86 tournament/models.py:261
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
@@ -1826,3 +1830,7 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
+
+#: templates/tournament/announcement.html:44
+msgid "Incorrect form data"
+msgstr "Некорректные данные в форме регистрации"

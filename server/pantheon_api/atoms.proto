@@ -1,3 +1,20 @@
+/*  Pantheon common files
+ *  Copyright (C) 2016  o.klimenko aka ctizen
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // protolint:disable REPEATED_FIELD_NAMES_PLURALIZED
 syntax = "proto3";
 
@@ -24,6 +41,8 @@ message EventAdmin {
   int32 rule_id = 1;
   int32 person_id = 2;
   string person_name = 3;
+  bool has_avatar = 4;
+  string last_update = 5;
 }
 
 message RuleListItem {
@@ -57,6 +76,8 @@ message Person {
   string city = 2;
   string tenhou_id = 3;
   string title = 4;
+  bool has_avatar = 5;
+  string last_update = 6;
 }
 
 message PersonEx {
@@ -68,6 +89,10 @@ message PersonEx {
   string email = 6;
   string phone = 7;
   repeated int32 groups = 8;
+  bool has_avatar = 9;
+  string last_update = 10;
+  string ms_nickname = 11;
+  int32 ms_account_id = 12;
 }
 
 message Group {
@@ -127,6 +152,11 @@ message Event {
   bool tournament_started = 7;
   EventType type = 8;
   bool is_prescripted = 9;
+  bool is_team = 10;
+  bool has_series = 11;
+  bool with_chips = 12;
+  int32 min_games_count = 13;
+  int32 platform_id = 14;
 }
 
 message MyEvent {
@@ -160,6 +190,7 @@ message GameConfig {
   bool is_prescripted = 50;
   bool is_finished = 52;
   RulesetConfig ruleset_config = 53;
+  int32 lobby_id = 54;
 }
 
 message PlayerInRating {
@@ -172,12 +203,17 @@ message PlayerInRating {
   float avg_place = 7;
   float avg_score = 8;
   int32 games_played = 9;
+  optional string team_name = 10;
+  bool has_avatar = 11;
+  string last_update = 12;
 }
 
 message Player {
   int32 id = 1;
   string title = 2;
   string tenhou_id = 3;
+  bool has_avatar = 4;
+  string last_update = 5;
 }
 
 message FinalResultOfSession {
@@ -317,6 +353,8 @@ message SeriesResult {
 message ReplacementPlayer {
   int32 id = 1;
   string title = 2;
+  bool has_avatar = 3;
+  string last_update = 4;
 }
 
 message PlayerInSession {
@@ -325,6 +363,8 @@ message PlayerInSession {
   int32 score = 3;
   optional ReplacementPlayer replaced_by = 4;
   float rating_delta = 5;
+  bool has_avatar = 6;
+  string last_update = 7;
 }
 
 message CurrentSession {
@@ -342,6 +382,8 @@ message RegisteredPlayer {
   string tenhou_id = 5;
   bool ignore_seating = 6;
   optional ReplacementPlayer replaced_by = 7;
+  bool has_avatar = 8;
+  string last_update = 9;
 }
 
 message SessionHistoryResult {
@@ -352,6 +394,8 @@ message SessionHistoryResult {
   float rating_delta = 5;
   int32 place = 6;
   string title = 7;
+  bool has_avatar = 8;
+  string last_update = 9;
 }
 
 message SessionHistoryResultTable {
@@ -448,6 +492,7 @@ message EventData {
   bool is_prescripted = 11;
   int32 autostart = 12; // time until game autostart
   RulesetConfig ruleset_config = 14;
+  bool is_listed = 15;
 }
 
 message TableState {
@@ -484,6 +529,8 @@ message PlayerSeating {
   int32 table_index = 4;
   float rating = 5;
   string player_title = 6;
+  bool has_avatar = 7;
+  string last_update = 8;
 }
 
 message PlayerSeatingSwiss {

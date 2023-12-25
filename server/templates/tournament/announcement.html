@@ -40,6 +40,10 @@
             <p class="alert alert-danger">{% trans 'Before applying for the tournament, please set tenhou id on Pantheon first' %}</p>
         {% endif %}
 
+        {% if form_data_error %}
+            <p class="alert alert-danger">{% trans 'Incorrect form data' %}</p>
+        {% endif %}
+
         {% if is_already_registered %}
             <p class="alert alert-success">{% trans 'You are already registered on the tournament!' %}</p>
         {% elif tournament.is_pantheon_registration %}
@@ -50,6 +54,10 @@
             {% else %}
                 <form class="form" style="max-width: none" action="{% url 'pantheon_tournament_registration' tournament.id %}" method="POST">
                     {% csrf_token %}
+
+                    {% if tournament.is_majsoul_tournament %}
+                        {% bootstrap_form form %}
+                    {% endif %}
 
                     <button type="submit" class="btn btn-primary">{% trans 'Apply for tournament through Pantheon account' %}</button>
                 </form>
@@ -116,7 +124,11 @@
                             </td>
 
                             {% if tournament.is_online %}
-                                <td>{{ registration_item.tenhou_nickname }}</td>
+                                {% if tournament.is_majsoul_tournament %}
+                                    <td>{{ registration_item.ms_nickname }}</td>
+                                {% else %}
+                                    <td>{{ registration_item.tenhou_nickname }}</td>
+                                {% endif %}
                             {% endif %}
 
                             <td>

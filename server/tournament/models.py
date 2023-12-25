@@ -287,6 +287,45 @@ class OnlineTournamentRegistration(BaseModel):
         return "{} {}".format(self.last_name, self.first_name)
 
 
+class MsOnlineTournamentRegistration(BaseModel):
+    tournament = models.ForeignKey(
+        Tournament, related_name="ms_online_tournament_registrations", on_delete=models.PROTECT
+    )
+    is_approved = models.BooleanField(default=True)
+
+    first_name = models.CharField(max_length=255, verbose_name=_("First name"))
+    last_name = models.CharField(max_length=255, verbose_name=_("Last name"), null=True, blank=True)
+    city = models.CharField(max_length=255, verbose_name=_("City"))
+    ms_nickname = models.CharField(max_length=255, verbose_name="Majsoul nickname")
+    ms_friend_id = models.PositiveIntegerField()
+    ms_account_id = models.PositiveIntegerField(null=True)
+    contact = models.CharField(
+        max_length=255,
+        verbose_name=_("Your contact (email, phone, etc.)"),
+        help_text=_("It will be visible only to the administrator"),
+    )
+
+    player = models.ForeignKey(
+        Player, on_delete=models.CASCADE, null=True, blank=True, related_name="ms_online_tournament_registrations"
+    )
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True, blank=True)
+    city_object = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
+
+    allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
+
+    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
+
+    class Meta:
+        unique_together = ["ms_nickname", "ms_friend_id", "tournament"]
+
+    def __unicode__(self):
+        return self.full_name
+
+    @property
+    def full_name(self):
+        return "{} {}".format(self.last_name, self.first_name)
+
+
 class TournamentApplication(BaseModel):
     tournament_name = models.CharField(max_length=255, verbose_name=_("Tournament name"))
     city = models.CharField(max_length=255, verbose_name=_("City"))
