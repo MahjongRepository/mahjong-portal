@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from tournament.models import (
+    MsOnlineTournamentRegistration,
     OnlineTournamentRegistration,
     Tournament,
     TournamentApplication,
@@ -73,6 +74,25 @@ class OnlineTournamentRegistrationAdmin(admin.ModelAdmin):
     raw_id_fields = ["tournament", "player", "city_object"]
 
 
+class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "is_approved",
+        "tournament",
+        "first_name",
+        "last_name",
+        "city",
+        "ms_friend_id",
+        "ms_nickname",
+        "contact",
+        "player",
+        "city_object",
+        "allow_to_save_data",
+    ]
+
+    raw_id_fields = ["tournament", "player", "city_object"]
+
+
 class TournamentApplicationAdmin(admin.ModelAdmin):
     list_display = ["tournament_name", "city", "start_date", "created_on"]
 
@@ -93,5 +113,6 @@ class TournamentResultAdmin(admin.ModelAdmin):
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(TournamentRegistration, TournamentRegistrationAdmin)
 admin.site.register(OnlineTournamentRegistration, OnlineTournamentRegistrationAdmin)
+admin.site.register(MsOnlineTournamentRegistration, MsOnlineTournamentRegistrationAdmin)
 admin.site.register(TournamentApplication, TournamentApplicationAdmin)
 admin.site.register(TournamentResult, TournamentResultAdmin)
