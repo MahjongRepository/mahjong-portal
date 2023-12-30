@@ -1,7 +1,7 @@
 import asyncio
 import hashlib
 import hmac
-import json
+import ujson as json
 import os
 import random
 import uuid

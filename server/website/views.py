@@ -1,6 +1,6 @@
 import csv
 import io
-import json
+import ujson as json
 import logging
 
 from django.conf import settings

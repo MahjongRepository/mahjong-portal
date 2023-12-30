@@ -1,4 +1,4 @@
-import json
+import ujson as json
 from time import sleep
 
 from django.conf import settings

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
+import ujson as json
 import re
 from base64 import b64decode
 from datetime import datetime, timedelta

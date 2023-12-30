@@ -1,4 +1,4 @@
-import json
+import ujson as json
 import random
 
 from django.core.management.base import BaseCommand
