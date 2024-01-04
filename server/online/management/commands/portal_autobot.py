@@ -58,3 +58,9 @@ class PortalAutoBot:
             notification.failed = True
             notification.save()
             logger.error(e, exc_info=e)
+
+    @staticmethod
+    def prepare_next_round():
+        logger.info("Prepare next round")
+
+        tournament_handler.prepare_next_round()

@@ -220,3 +220,22 @@ def process_notification(request):
     bot.init(int(tournament_id), int(lobby_id))
     bot.process_notification(notification_id, tournament_id)
     return JsonResponse({"success": True})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+def prepare_next_round(request):
+    request_data = json.loads(request.body)
+
+    tournament_id = request_data["tournament_id"]
+    if not tournament_id:
+        return HttpResponse(status=400)
+
+    lobby_id = request_data["lobby_id"]
+    if not lobby_id:
+        return HttpResponse(status=400)
+
+    bot.init(int(tournament_id), int(lobby_id))
+    bot.prepare_next_round()
+    return JsonResponse({"success": True})
