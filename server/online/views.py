@@ -11,10 +11,11 @@ from django.views.decorators.http import require_POST
 
 from online.handler import TournamentHandler
 from online.models import TournamentGame, TournamentNotification, TournamentPlayers
-from server.online.management.commands.portal_autobot import PortalAutoBot
 from tournament.models import Tournament
 from utils.general import make_random_letters_and_digit_string
 from utils.pantheon import add_user_to_pantheon
+
+from server.online.management.commands.portal_autobot import PortalAutoBot
 
 # todo: remove global tournament auto bot object for support multiple tournament
 bot = PortalAutoBot()
