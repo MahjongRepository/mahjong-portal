@@ -1,7 +1,7 @@
-import ujson as json
 import os
 import random
 
+import ujson as json
 from django.conf import settings
 
 from online.models import TournamentPlayers

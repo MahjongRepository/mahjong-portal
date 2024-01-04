@@ -1,6 +1,6 @@
-import ujson as json
 import random
 
+import ujson as json
 from django.core.management.base import BaseCommand
 
 from online.team_seating import TeamSeating

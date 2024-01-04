@@ -1,15 +1,23 @@
+from functools import wraps
+
 import requests
+import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from online.handler import TournamentHandler
 from online.models import TournamentGame, TournamentNotification, TournamentPlayers
+from server.online.management.commands.portal_autobot import PortalAutoBot
 from tournament.models import Tournament
 from utils.general import make_random_letters_and_digit_string
 from utils.pantheon import add_user_to_pantheon
+
+# todo: remove global tournament auto bot object for support multiple tournament
+bot = PortalAutoBot()
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -134,4 +142,81 @@ def finish_game_api(request):
     handler.init(tournament=Tournament.objects.get(id=settings.TOURNAMENT_ID), lobby="", game_type="", destination="")
     handler.game_pre_end(message)
 
+    return JsonResponse({"success": True})
+
+
+def autobot_token_require(function):
+    @wraps(function)
+    def wrap(request, *args, **kwargs):
+        request_data = json.loads(request.body)
+        api_token = request_data["api_token"]
+        if not api_token or api_token != settings.AUTO_BOT_TOKEN:
+            return HttpResponse(status=403)
+
+        return function(request, *args, **kwargs)
+
+    return wrap
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+def open_registration(request):
+    request_data = json.loads(request.body)
+
+    tournament_id = request_data["tournament_id"]
+    if not tournament_id:
+        return HttpResponse(status=400)
+
+    lobby_id = request_data["lobby_id"]
+    if not lobby_id:
+        return HttpResponse(status=400)
+
+    bot.init(int(tournament_id), int(lobby_id))
+    bot.open_registration(None)
+
+    return JsonResponse({"success": True})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+def check_new_notifications(request):
+    request_data = json.loads(request.body)
+
+    tournament_id = request_data["tournament_id"]
+    if not tournament_id:
+        return HttpResponse(status=400)
+
+    lobby_id = request_data["lobby_id"]
+    if not lobby_id:
+        return HttpResponse(status=400)
+
+    bot.init(int(tournament_id), int(lobby_id))
+    notification = bot.check_new_notifications(tournament_id)
+    if notification:
+        return JsonResponse({"notifications": [notification]})
+    return JsonResponse({"notifications": []})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+def process_notification(request):
+    request_data = json.loads(request.body)
+
+    notification_id = request_data["notification_id"]
+    if not notification_id:
+        return HttpResponse(status=400)
+
+    tournament_id = request_data["tournament_id"]
+    if not tournament_id:
+        return HttpResponse(status=400)
+
+    lobby_id = request_data["lobby_id"]
+    if not lobby_id:
+        return HttpResponse(status=400)
+
+    bot.init(int(tournament_id), int(lobby_id))
+    bot.process_notification(notification_id, tournament_id)
     return JsonResponse({"success": True})

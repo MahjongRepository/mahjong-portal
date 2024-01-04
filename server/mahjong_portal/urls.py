@@ -15,7 +15,7 @@ from mahjong_portal.sitemap import (
     TournamentListSitemap,
     TournamentSitemap,
 )
-from online.views import finish_game_api
+from online.views import check_new_notifications, finish_game_api, open_registration, process_notification
 from website.views import players_api, update_info_from_pantheon_api
 
 sitemaps = {
@@ -41,6 +41,9 @@ urlpatterns = [
     url("^api/v0/players/$", players_api),
     url("^api/v0/update_info_from_pantheon/$", update_info_from_pantheon_api),
     url("^api/v0/finish_game_api/$", finish_game_api),
+    url("^api/v0/autobot/open_registration$", open_registration),
+    url("^api/v0/autobot/check_notifications$", check_new_notifications),
+    url("^api/v0/autobot/process_notification$", process_notification),
     url(r"^online/", include("online.urls")),
 ]
 

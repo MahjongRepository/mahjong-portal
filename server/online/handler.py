@@ -653,14 +653,24 @@ class TournamentHandler:
 
         if notification.notification_type == TournamentNotification.CONFIRMATION_STARTED:
             if self.destination == self.TELEGRAM_DESTINATION:
-                return (
-                    "Начался этап подтверждения участия! "
-                    'Для подтверждения своего участия отправьте команду "`/me ваш ник на тенхе`" (регистр важен!). '
-                    "Этап завершится в 10-20 (МСК).\n\n"
-                    "Полезные ссылки:\n"
-                    "- турнирное лобби: %(lobby_link)s\n"
-                    "- турнирный рейтинг: %(rating_link)s\n"
-                ) % kwargs
+                if not self.tournament.is_majsoul_tournament:
+                    return (
+                        "Начался этап подтверждения участия! "
+                        'Для подтверждения своего участия отправьте команду "`/me ваш ник на тенхе`" (регистр важен!). '
+                        "Этап завершится в 10-30 (МСК).\n\n"
+                        "Полезная информация:\n"
+                        "- турнирное лобби: %(lobby_link)s\n"
+                        "- турнирный рейтинг: %(rating_link)s\n"
+                    ) % kwargs
+                else:
+                    return (
+                        "Начался этап подтверждения участия! "
+                        'Для подтверждения своего участия отправьте команду "`/me ваш ник на mahjongsoul`" (регистр важен!). '
+                        "Этап завершится в 10-30 (МСК).\n\n"
+                        "Полезная информация:\n"
+                        "- турнирное лобби: %(lobby_link)s\n"
+                        "- турнирный рейтинг: %(rating_link)s\n"
+                    ) % kwargs
 
             if self.destination == self.DISCORD_DESTINATION:
                 return (
@@ -745,10 +755,14 @@ class TournamentHandler:
         return messages.get(notification.notification_type) % kwargs
 
     def get_lobby_link(self):
-        return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
+        if self.tournament:
+            if not self.tournament.is_majsoul_tournament:
+                return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
+            else:
+                return f"{self.lobby}"
 
     def get_rating_link(self):
-        return f"https://gui.mjtop.net/eid{settings.PANTHEON_TOURNAMENT_EVENT_ID}/stat"
+        return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/order/rating"
 
     def get_admin_username(self):
         if self.destination == self.TELEGRAM_DESTINATION:

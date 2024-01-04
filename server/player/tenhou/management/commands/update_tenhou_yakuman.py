@@ -1,9 +1,9 @@
 import datetime
-import ujson as json
 import os
 
 import pytz
 import requests
+import ujson as json
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
