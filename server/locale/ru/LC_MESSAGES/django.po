@@ -178,8 +178,8 @@ msgstr "Сначала нужно зарегистрироваться на ту
 #: online/handler.py:389
 #, python-format
 msgid ""
-"Nickname \"%(tenhou_nickname)s\" was already confirmed for this tournament."
-msgstr "Ник \"%(tenhou_nickname)s\" уже был подтверждён на турнир."
+"Nickname \"%(nickname)s\" was already confirmed for this tournament."
+msgstr "Ник \"%(nickname)s\" уже был подтверждён на турнир."
 
 #: online/handler.py:410
 msgid "Your participation in the tournament has been confirmed!"
@@ -1834,3 +1834,7 @@ msgstr "Казоэ"
 #: templates/tournament/announcement.html:44
 msgid "Incorrect form data"
 msgstr "Некорректные данные в форме регистрации"
+
+#: online/handler.py:394
+msgid "Found multiple majsoul accounts for the tournament on mahjong.click. Ask for administrator."
+msgstr "Зарегистрированно несколько таких аккаунтов на турнир на портале mahjong.click. Обратитесь к администратору."
