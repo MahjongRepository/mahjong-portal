@@ -1838,3 +1838,7 @@ msgstr "Некорректные данные в форме регистраци
 #: online/handler.py:394
 msgid "Found multiple majsoul accounts for the tournament on mahjong.click. Ask for administrator."
 msgstr "Зарегистрированно несколько таких аккаунтов на турнир на портале mahjong.click. Обратитесь к администратору."
+
+#: online/handler.py:431
+msgid "Fatal error. Ask for administrator."
+msgstr "Что-то пошло не так. Обратитесь к администратору."
