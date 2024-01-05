@@ -373,7 +373,7 @@ class TournamentHandler:
         if status.registration_closed:
             return _("The confirmation phase has already ended. Visit our next tournaments.")
 
-        if len(tenhou_nickname) > 8:
+        if not self.tournament.is_majsoul_tournament and len(tenhou_nickname) > 8:
             return _("The tenhou.net nickname must not be longer than eight characters.")
 
         try:

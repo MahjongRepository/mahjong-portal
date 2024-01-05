@@ -17,6 +17,7 @@ from mahjong_portal.sitemap import (
 )
 from online.views import (
     check_new_notifications,
+    confirm_player,
     finish_game_api,
     open_registration,
     prepare_next_round,
@@ -51,6 +52,7 @@ urlpatterns = [
     url("^api/v0/autobot/check_notifications$", check_new_notifications),
     url("^api/v0/autobot/process_notification$", process_notification),
     url("^api/v0/autobot/prepare_next_round$", prepare_next_round),
+    url("^api/v0/autobot/confirm_player$", confirm_player),
     url(r"^online/", include("online.urls")),
 ]
 

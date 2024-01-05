@@ -1,5 +1,7 @@
 import logging
 
+from django.utils.translation import activate
+
 from online.handler import TournamentHandler
 from online.models import TournamentNotification
 from tournament.models import Tournament
@@ -63,4 +65,12 @@ class PortalAutoBot:
     def prepare_next_round():
         logger.info("Prepare next round")
 
+        # todo: return sortition
         tournament_handler.prepare_next_round()
+
+    @staticmethod
+    def confirm_player(nickname, telegram_username):
+        activate("ru")
+
+        # todo create notification from message
+        tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)
