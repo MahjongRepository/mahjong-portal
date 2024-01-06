@@ -21,6 +21,7 @@ class TournamentPlayers(BaseModel):
     telegram_username = models.CharField(max_length=32, null=True, blank=True)
     discord_username = models.CharField(max_length=32, null=True, blank=True)
     tenhou_username = models.CharField(max_length=8)
+    ms_username = models.CharField(max_length=255, null=True, blank=True)
 
     pantheon_id = models.PositiveIntegerField(null=True, blank=True)
     # was user info synced with pantheon or not

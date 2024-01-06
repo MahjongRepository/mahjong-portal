@@ -71,6 +71,5 @@ class PortalAutoBot:
     @staticmethod
     def confirm_player(nickname, telegram_username):
         activate("ru")
-
-        # todo create notification from message
-        tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)
+        
+        return tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)

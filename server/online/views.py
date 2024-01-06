@@ -238,5 +238,5 @@ def confirm_player(request):
     if not telegram_username:
         return HttpResponse(status=400)
 
-    bot.confirm_player(nickname, telegram_username)
-    return JsonResponse({"success": True})
+    confirm_message = bot.confirm_player(nickname, telegram_username)
+    return JsonResponse({"message": confirm_message})

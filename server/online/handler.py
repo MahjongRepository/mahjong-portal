@@ -27,9 +27,10 @@ from online.models import (
 )
 from online.parser import TenhouParser
 from player.models import Player
-from tournament.models import OnlineTournamentRegistration
+from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
-from utils.pantheon import add_tenhou_game_to_pantheon, add_user_to_pantheon, get_pantheon_swiss_sortition
+from utils.new_pantheon import add_user_to_new_pantheon, get_new_pantheon_swiss_sortition
+from utils.pantheon import add_tenhou_game_to_pantheon
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
 
 logger = logging.getLogger("tournament_bot")
@@ -367,31 +368,49 @@ class TournamentHandler:
 
         return _("The game has been added. Thank you."), True
 
-    def confirm_participation_in_tournament(self, tenhou_nickname, telegram_username=None, discord_username=None):
+    def confirm_participation_in_tournament(self, nickname, telegram_username=None, discord_username=None):
         status = self.get_status()
 
         if status.registration_closed:
             return _("The confirmation phase has already ended. Visit our next tournaments.")
 
-        if not self.tournament.is_majsoul_tournament and len(tenhou_nickname) > 8:
+        if not self.tournament.is_majsoul_tournament and len(nickname) > 8:
             return _("The tenhou.net nickname must not be longer than eight characters.")
 
-        try:
-            registration = OnlineTournamentRegistration.objects.get(
-                tenhou_nickname__iexact=tenhou_nickname, tournament=self.tournament
+        if not self.tournament.is_majsoul_tournament:
+            try:
+                registration = OnlineTournamentRegistration.objects.get(
+                    tenhou_nickname__iexact=nickname, tournament=self.tournament
+                )
+            except OnlineTournamentRegistration.DoesNotExist:
+                return _("You need to register for the tournament on mahjong.click first.")
+        else:
+            registration = MsOnlineTournamentRegistration.objects.filter(
+                ms_nickname__iexact=nickname, tournament=self.tournament
             )
-        except OnlineTournamentRegistration.DoesNotExist:
-            return _("You need to register for the tournament on mahjong.click first.")
+            if len(registration) <= 0:
+                return _("You need to register for the tournament on mahjong.click first.")
+            if len(registration) > 1:
+                return _("Found multiple majsoul accounts for the tournament on mahjong.click. Ask for administrator.")
+            registration = registration[0]
 
-        if TournamentPlayers.objects.filter(
-            tenhou_username__iexact=tenhou_nickname, tournament=self.tournament
-        ).exists():
-            return _('Nickname "%(tenhou_nickname)s" was already confirmed for this tournament.') % {
-                "tenhou_nickname": tenhou_nickname
-            }
+        if not self.tournament.is_majsoul_tournament:
+            if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
+                return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
+        else:
+            if TournamentPlayers.objects.filter(ms_username__iexact=nickname, tournament=self.tournament,
+                                                pantheon_id=registration.user.new_pantheon_id).exists():
+                return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
 
-        pantheon_id = registration.player and registration.player.pantheon_id or None
+        pantheon_id = registration.user and registration.user.new_pantheon_id or None
         team_name = registration.notes
+
+        tenhou_nickname = ''
+        ms_nickname = None
+        if not self.tournament.is_majsoul_tournament:
+            tenhou_nickname = nickname
+        else:
+            ms_nickname = nickname
 
         record = TournamentPlayers.objects.create(
             telegram_username=telegram_username,
@@ -400,12 +419,18 @@ class TournamentHandler:
             tournament=self.tournament,
             pantheon_id=pantheon_id,
             team_name=team_name,
+            ms_username=ms_nickname
         )
 
         try:
-            add_user_to_pantheon(record)
+            if self.tournament.is_pantheon_registration:
+                add_user_to_new_pantheon(record, registration, self.tournament.new_pantheon_id,
+                                         settings.PANTHEON_ADMIN_ID,
+                                         self.tournament.is_majsoul_tournament)
         except Exception as e:
             logger.error(e, exc_info=e)
+            if self.tournament.is_pantheon_registration:
+                return _("Fatal error. Ask for administrator.")
 
         return _("Your participation in the tournament has been confirmed!")
 
@@ -487,7 +512,7 @@ class TournamentHandler:
         if current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
-            return get_pantheon_swiss_sortition()
+            return get_new_pantheon_swiss_sortition()
 
     def start_games(self):
         status = self.get_status()
@@ -850,4 +875,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i : i + n]
+            yield items[i: i + n]
