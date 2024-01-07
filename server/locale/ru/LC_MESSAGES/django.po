@@ -247,7 +247,7 @@ msgstr ""
 "```\n"
 "Ссылка на игру: %(pantheon_link)s\n"
 "\n"
-"Ссылка на тенху: %(tenhou_link)s\n"
+"Ссылка на mahjongsoul: %(tenhou_link)s\n"
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 

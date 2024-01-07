@@ -29,7 +29,7 @@ from online.parser import TenhouParser
 from player.models import Player
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
-from utils.new_pantheon import add_user_to_new_pantheon, get_new_pantheon_swiss_sortition
+from utils.new_pantheon import add_user_to_new_pantheon, get_new_pantheon_swiss_sortition, upload_replay_through_pantheon
 from utils.pantheon import add_tenhou_game_to_pantheon
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
 
@@ -368,6 +368,95 @@ class TournamentHandler:
 
         return _("The game has been added. Thank you."), True
 
+    def game_finish(self, log_id, players, log_content, log_time):
+        #upload_replay_through_pantheon(self.tournament.new_pantheon_id, 2, 2, log_id, log_time, log_content)
+
+        status = self.get_status()
+
+        if TournamentGame.objects.filter(log_id=log_id).exists():
+            return _("The game has been added. Thank you."), True
+
+        with transaction.atomic():
+            cursor = get_connection().cursor()
+            cursor.execute(f"LOCK TABLE {TournamentGame._meta.db_table}")
+
+            try:
+                if not self.tournament.is_majsoul_tournament:
+                    games = (
+                        TournamentGame.objects.filter(tournament=self.tournament)
+                        .filter(game_players__player__tenhou_username__in=players)
+                        .filter(tournament_round=status.current_round)
+                        .distinct()
+                    )
+                else:
+                    games = (
+                        TournamentGame.objects.filter(tournament=self.tournament)
+                        .filter(game_players__player__ms_username__in=players)
+                        .filter(tournament_round=status.current_round)
+                        .distinct()
+                    )
+                error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                    "admin_username": self.get_admin_username()
+                }
+                if games.count() >= 2:
+                    logger.error("Log add. Too much games.")
+                    return error_message, False
+
+                game = games.first()
+                game.log_id = log_id
+                game.save()
+            finally:
+                cursor.close()
+
+        game.status = TournamentGame.FINISHED
+        game.save()
+
+        finished_games = (
+            TournamentGame.objects.filter(tournament=self.tournament)
+            .filter(status=TournamentGame.FINISHED)
+            .filter(tournament_round=status.current_round)
+        )
+
+        total_games = (
+            TournamentGame.objects.filter(tournament=self.tournament)
+            .filter(tournament_round=status.current_round)
+            .count()
+        )
+
+        if not self.tournament.is_majsoul_tournament:
+            # todo: tenhou stuff
+            self.create_notification(
+                TournamentNotification.GAME_ENDED,
+                kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": "pantheon_link",
+                    "tenhou_link": f"http://tenhou.net/0/?log={log_id}",
+                    "player_one": players[0],
+                    "player_two": players[1],
+                    "player_three": players[2],
+                    "player_four": players[3],
+                },
+            )
+        else:
+            self.create_notification(
+                TournamentNotification.GAME_ENDED,
+                kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": self.get_rating_link(),
+                    "tenhou_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
+                    "player_one": players[0],
+                    "player_two": players[1],
+                    "player_three": players[2],
+                    "player_four": players[3],
+                },
+            )
+
+        self.check_round_was_finished()
+
+        return _("The game has been added. Thank you."), True
+
     def confirm_participation_in_tournament(self, nickname, telegram_username=None, discord_username=None):
         status = self.get_status()
 
@@ -407,10 +496,12 @@ class TournamentHandler:
 
         tenhou_nickname = ''
         ms_nickname = None
+        ms_account_id = None
         if not self.tournament.is_majsoul_tournament:
             tenhou_nickname = nickname
         else:
             ms_nickname = nickname
+            ms_account_id = registration.ms_account_id
 
         record = TournamentPlayers.objects.create(
             telegram_username=telegram_username,
@@ -419,7 +510,8 @@ class TournamentHandler:
             tournament=self.tournament,
             pantheon_id=pantheon_id,
             team_name=team_name,
-            ms_username=ms_nickname
+            ms_username=ms_nickname,
+            ms_account_id=ms_account_id
         )
 
         try:
@@ -434,27 +526,32 @@ class TournamentHandler:
 
         return _("Your participation in the tournament has been confirmed!")
 
-    def prepare_next_round(self):
+    def prepare_next_round(self, reshuffleInPortal=True):
         status = self.get_status()
 
         if not status.current_round:
             status.current_round = 0
 
         if status.current_round >= self.tournament.number_of_sessions:
-            return "Невозможно запустить новые игры. У турнира закончились туры."
+            message = "Невозможно запустить новые игры. У турнира закончились туры."
+            return {"message": message, "tables": [], "round": -1}
 
         current_games = TournamentGame.objects.filter(tournament=self.tournament).exclude(
             status=TournamentGame.FINISHED
         )
 
         if current_games.exists():
-            return "Невозможно запустить новые игры. Старые игры ещё не завершились."
+            message = "Невозможно запустить новые игры. Старые игры ещё не завершились."
+            return {"message": message, "tables": [], "round": -1}
 
         confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
 
         missed_id = confirmed_players.filter(pantheon_id=None)
         if missed_id.exists():
-            return "Невозможно запустить новые игры. Не у всех игроков стоит pantheon id."
+            message = "Невозможно запустить новые игры. Не у всех игроков стоит pantheon id."
+            return {"message": message, "tables": [], "round": -1}
+
+        is_majsoul_tournament = self.tournament.is_majsoul_tournament
 
         with transaction.atomic():
             status.current_round += 1
@@ -469,11 +566,13 @@ class TournamentHandler:
             # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
+            final_sortition = []
             for game_index, item in enumerate(sortition):
                 logger.info(f"Preparing table with player_ids={item}")
 
                 # shuffle player winds
-                random.shuffle(item)
+                if reshuffleInPortal:
+                    random.shuffle(item)
 
                 try:
                     game = TournamentGame.objects.create(
@@ -483,9 +582,15 @@ class TournamentHandler:
                         game_index=game_index + 1,
                     )
 
+                    table_players = []
                     for wind in range(0, len(item)):
                         player_id = pantheon_ids[item[wind]].id
                         TournamentGamePlayer.objects.create(game=game, player_id=player_id, wind=wind)
+                        if not is_majsoul_tournament:
+                            table_players.append({"tenhou_id": pantheon_ids[item[wind]].tenhou_username})
+                        else:
+                            table_players.append({"ms_account_id": pantheon_ids[item[wind]].ms_account_id})
+                    final_sortition.append({"players": table_players})
 
                     games.append(game)
                 except Exception as e:
@@ -503,16 +608,27 @@ class TournamentHandler:
 
                 # for admin
                 message = "Тур {}. Игры сформированы.".format(status.current_round)
+                return {"message": message, "tables": final_sortition, "round": status.current_round}
             else:
                 message = "Игры не запустились. Требуется вмешательство администратора."
+                return {"message": message, "tables": [], "round": -1}
 
-        return message
+        return {"message": message, "tables": [], "round": -1}
 
     def make_sortition(self, pantheon_ids, current_round):
         if current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
-            return get_new_pantheon_swiss_sortition()
+            pantheon_sortition = get_new_pantheon_swiss_sortition(self.tournament.new_pantheon_id,
+                                                                  settings.PANTHEON_ADMIN_ID)
+            tables = pantheon_sortition.tables
+            sortition = []
+            for table in tables:
+                players = []
+                for player in table.players:
+                    players.append(player.player_id)
+                sortition.append(players)
+            return sortition
 
     def start_games(self):
         status = self.get_status()
@@ -590,6 +706,64 @@ class TournamentHandler:
             )
 
         game.save()
+
+    def create_start_ms_game_notification(self, tour, table_number, notification_type):
+        status = self.get_status()
+        if tour == status.current_round:
+            if notification_type == 1:
+                games = (TournamentGame.objects.filter(tournament=self.tournament)
+                         .filter(tournament_round=status.current_round)
+                         .filter(game_index=table_number))
+                for game in games:
+                    self._create_start_ms_game_notification(game)
+            if notification_type == 2:
+                games = (TournamentGame.objects.filter(tournament=self.tournament)
+                         .filter(tournament_round=status.current_round)
+                         .filter(game_index=table_number))
+                for game in games:
+                    game.status = TournamentGame.FAILED_TO_START
+                    players = game.game_players.all().order_by("wind")
+                    escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+                    self.create_notification(
+                        TournamentNotification.GAME_FAILED,
+                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index}
+                    )
+                    game.save()
+            if notification_type == 3:
+                games = (TournamentGame.objects.filter(tournament=self.tournament)
+                         .filter(tournament_round=status.current_round)
+                         .filter(game_index=table_number))
+                for game in games:
+                    game.status = TournamentGame.FAILED_TO_START
+                    players = game.game_players.all().order_by("wind")
+                    escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+                    self.create_notification(
+                        TournamentNotification.GAME_FAILED_NO_MEMBERS,
+                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index,
+                                "missed_players": [], "lobby_link": settings.TOURNAMENT_PUBLIC_LOBBY}
+                    )
+                    game.save()
+
+    def _create_start_ms_game_notification(self, game):
+        try:
+            players = game.game_players.all().order_by("wind")
+
+            # player_names = [x.player.ms_username for x in players]
+            escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+
+            game.status = TournamentGame.STARTED
+            self.create_notification(
+                TournamentNotification.GAME_STARTED,
+                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+            )
+            game.save()
+        except Exception:
+            game.status = TournamentGame.FAILED_TO_START
+            self.create_notification(
+                TournamentNotification.GAME_FAILED,
+                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index}
+            )
+            game.save()
 
     def check_round_was_finished(self):
         status = self.get_status()
@@ -747,15 +921,17 @@ class TournamentHandler:
                 "Please, follow this link %(lobby_link)s to enter the tournament lobby. "
                 "Games will start automatically."
             ),
-            TournamentNotification.GAMES_PREPARED: _(
-                "Round %(current_round)s of %(total_rounds)s starts. "
-                "Tournament seating is ready.\n\n"
-                "Starting games...\n\n"
-                "After the game please send the game log link to the #game_logs channel. "
-                "The game log should be sent before the new round starts. "
-                "If there is no log when next round start, all players from this game "
-                "will get -30000 scores as a round result (their real scores will not be counted)."
-            ),
+            # todo: localization notification for tenhou
+            # TournamentNotification.GAMES_PREPARED: _(
+            #     "Round %(current_round)s of %(total_rounds)s starts. "
+            #     "Tournament seating is ready.\n\n"
+            #     "Starting games...\n\n"
+            #     "After the game please send the game log link to the #game_logs channel. "
+            #     "The game log should be sent before the new round starts. "
+            #     "If there is no log when next round start, all players from this game "
+            #     "will get -30000 scores as a round result (their real scores will not be counted)."
+            # ),
+            TournamentNotification.GAMES_PREPARED: """Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\nЗапускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. Если этого не произошло обратитесь к администратору.""",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),

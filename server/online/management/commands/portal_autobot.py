@@ -65,11 +65,18 @@ class PortalAutoBot:
     def prepare_next_round():
         logger.info("Prepare next round")
 
-        # todo: return sortition
-        tournament_handler.prepare_next_round()
+        return tournament_handler.prepare_next_round(reshuffleInPortal=False)
 
     @staticmethod
     def confirm_player(nickname, telegram_username):
         activate("ru")
         
         return tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)
+
+    @staticmethod
+    def create_start_ms_game_notification(tour, table_number, notification_type):
+        tournament_handler.create_start_ms_game_notification(int(tour), int(table_number), int(notification_type))
+
+    @staticmethod
+    def game_finish(log_id, players, log_content, log_time):
+        return tournament_handler.game_finish(log_id, players, log_content, log_time)

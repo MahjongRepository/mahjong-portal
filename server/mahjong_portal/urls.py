@@ -22,6 +22,8 @@ from online.views import (
     open_registration,
     prepare_next_round,
     process_notification,
+    create_start_ms_game_notification,
+    game_finish
 )
 from website.views import players_api, update_info_from_pantheon_api
 
@@ -53,6 +55,8 @@ urlpatterns = [
     url("^api/v0/autobot/process_notification$", process_notification),
     url("^api/v0/autobot/prepare_next_round$", prepare_next_round),
     url("^api/v0/autobot/confirm_player$", confirm_player),
+    url("^api/v0/autobot/create_start_ms_game_notification$", create_start_ms_game_notification),
+    url("^api/v0/autobot/game_finish$", game_finish),
     url(r"^online/", include("online.urls")),
 ]
 

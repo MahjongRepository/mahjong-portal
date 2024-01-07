@@ -17,7 +17,6 @@ if os.environ.get("SENTRY_DSN"):
         integrations=[DjangoIntegration()],
     )
 
-
 SCHEME = "https"
 
 AUTH_USER_MODEL = "account.User"
@@ -33,6 +32,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", None)
 DEBUG = os.environ.get("DEBUG", "").lower() == "true"
 
 AUTO_BOT_TOKEN = os.environ.get("AUTO_BOT_TOKEN", None)
+EXTERNAL_QUERY_SECRET = os.environ.get("EXTERNAL_QUERY_SECRET", None)
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

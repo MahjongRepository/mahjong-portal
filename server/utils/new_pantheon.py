@@ -107,3 +107,21 @@ def add_user_to_new_pantheon(record: TournamentPlayers, registration, pantheonEv
 
     update_personal_info(person_info, adminPersonId, pantheonEventId)
     register_player(adminPersonId, pantheonEventId, record.pantheon_id)
+
+
+def upload_replay_through_pantheon(eventId, platformId, contentType, replayHash, logTime, content):
+    client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
+
+    context = Context()
+    context.set_header("HTTP-X-EXTERNAL-QUERY-SECRET", settings.EXTERNAL_QUERY_SECRET)
+
+    return client.AddTypedOnlineReplay(
+        ctx=context,
+        request=pantheon_api.mimir_pb2.TypedGamesAddOnlineReplayPayload(event_id=int(eventId),
+                                                                        platform_id=int(platformId),
+                                                                        content_type=int(contentType),
+                                                                        log_timestamp=int(logTime),
+                                                                        replay_hash=str(replayHash),
+                                                                        content=content),
+        server_path_prefix="/v2",
+    )

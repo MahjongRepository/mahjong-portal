@@ -219,8 +219,8 @@ def process_notification(request):
 @autobot_token_require
 @tournament_data_require
 def prepare_next_round(request):
-    bot.prepare_next_round()
-    return JsonResponse({"success": True})
+    response = bot.prepare_next_round()
+    return JsonResponse(response)
 
 
 @require_POST
@@ -239,4 +239,54 @@ def confirm_player(request):
         return HttpResponse(status=400)
 
     confirm_message = bot.confirm_player(nickname, telegram_username)
+    return JsonResponse({"message": confirm_message})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def create_start_ms_game_notification(request):
+    request_data = json.loads(request.body)
+
+    tour = request_data["tour"]
+    if not tour:
+        return HttpResponse(status=400)
+
+    table_number = request_data["table_number"]
+    if not table_number:
+        return HttpResponse(status=400)
+
+    notification_type = request_data["type"]
+    if not notification_type:
+        return HttpResponse(status=400)
+
+    # todo: handle message?
+    confirm_message = bot.create_start_ms_game_notification(tour, table_number, notification_type)
+    return JsonResponse({"success": True})
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def game_finish(request):
+    request_data = json.loads(request.body)
+
+    log_id = request_data["log_id"]
+    if not log_id:
+        return HttpResponse(status=400)
+
+    players = request_data["players"]
+    if not players:
+        return HttpResponse(status=400)
+
+    log_content = request_data["log_content"]
+    if not log_content:
+        return HttpResponse(status=400)
+
+    log_time = request_data["log_time"]
+    if not log_time:
+        return HttpResponse(status=400)
+
+    confirm_message = bot.game_finish(log_id, players, log_content, log_time)
     return JsonResponse({"message": confirm_message})
