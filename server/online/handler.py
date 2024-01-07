@@ -369,7 +369,7 @@ class TournamentHandler:
         return _("The game has been added. Thank you."), True
 
     def game_finish(self, log_id, players, log_content, log_time):
-        #upload_replay_through_pantheon(self.tournament.new_pantheon_id, 2, 2, log_id, log_time, log_content)
+        upload_replay_through_pantheon(self.tournament.new_pantheon_id, 2, 2, log_id, log_time, log_content)
 
         status = self.get_status()
 
