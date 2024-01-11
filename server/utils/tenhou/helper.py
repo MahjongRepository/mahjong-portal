@@ -5,6 +5,7 @@ from urllib.parse import quote, unquote
 import pytz
 import requests
 from django.db import transaction
+from tenacity import retry, wait_exponential
 
 from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouStatistics
 from utils.general import get_month_first_day, get_month_last_day
@@ -21,7 +22,7 @@ def parse_log_line(line):
     game_time = line[0:5]
     game_length = int(line[8:10])
     game_rules = line[13:16]
-    players = line[22 : len(line)]
+    players = line[22: len(line)]
 
     temp_players = players.split(" ")
     place = 1
@@ -191,9 +192,21 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         return stat
 
 
+@retry(wait=wait_exponential(multiplier=1, min=5, max=30))
 def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
     url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
-    response = requests.get(url).json()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
+        'Accept': 'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'TE': 'trailers'}
+    response = requests.get(url, headers=headers).json()
 
     lobbies_dict = {
         "0": TenhouStatistics.KYU_LOBBY,
