@@ -1,6 +1,7 @@
 import csv
 import io
 import logging
+import platform
 
 import ujson as json
 from django.conf import settings
@@ -79,8 +80,12 @@ def server(request):
     template = "server_en.html"
     if get_language() == "ru":
         template = "server_ru.html"
+    if platform.python_implementation() == "PyPy":
+        platform_name = "PyPy3"
+    else:
+        platform_name = "Python3"
 
-    return render(request, "website/{}".format(template), {"page": "server"})
+    return render(request, "website/{}".format(template), {"page": "server", "platform_name": platform_name})
 
 
 def championships(request):
