@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from time import sleep
 
 import pytz
 from django.test import TestCase
@@ -91,6 +92,7 @@ class TenhouCalculatorTestCase(TestCase):
         data = []
         for place in places:
             data.append({"date": timezone.now(), "place": place, "game_rules": "四般南"})
+            sleep(1)
         return data
 
     def _create_game_record(self, game_records):
