@@ -262,8 +262,9 @@ def create_start_ms_game_notification(request):
         return HttpResponse(status=400)
 
     # todo: handle message?
-    confirm_message = bot.create_start_ms_game_notification(tour, table_number, notification_type)
+    bot.create_start_ms_game_notification(tour, table_number, notification_type)
     return JsonResponse({"success": True})
+
 
 @require_POST
 @csrf_exempt

@@ -29,7 +29,11 @@ from online.parser import TenhouParser
 from player.models import Player
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import make_random_letters_and_digit_string
-from utils.new_pantheon import add_user_to_new_pantheon, get_new_pantheon_swiss_sortition, upload_replay_through_pantheon
+from utils.new_pantheon import (
+    add_user_to_new_pantheon,
+    get_new_pantheon_swiss_sortition,
+    upload_replay_through_pantheon,
+)
 from utils.pantheon import add_tenhou_game_to_pantheon
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
 
@@ -487,14 +491,15 @@ class TournamentHandler:
             if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
         else:
-            if TournamentPlayers.objects.filter(ms_username__iexact=nickname, tournament=self.tournament,
-                                                pantheon_id=registration.user.new_pantheon_id).exists():
+            if TournamentPlayers.objects.filter(
+                ms_username__iexact=nickname, tournament=self.tournament, pantheon_id=registration.user.new_pantheon_id
+            ).exists():
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
 
         pantheon_id = registration.user and registration.user.new_pantheon_id or None
         team_name = registration.notes
 
-        tenhou_nickname = ''
+        tenhou_nickname = ""
         ms_nickname = None
         ms_account_id = None
         if not self.tournament.is_majsoul_tournament:
@@ -511,14 +516,18 @@ class TournamentHandler:
             pantheon_id=pantheon_id,
             team_name=team_name,
             ms_username=ms_nickname,
-            ms_account_id=ms_account_id
+            ms_account_id=ms_account_id,
         )
 
         try:
             if self.tournament.is_pantheon_registration:
-                add_user_to_new_pantheon(record, registration, self.tournament.new_pantheon_id,
-                                         settings.PANTHEON_ADMIN_ID,
-                                         self.tournament.is_majsoul_tournament)
+                add_user_to_new_pantheon(
+                    record,
+                    registration,
+                    self.tournament.new_pantheon_id,
+                    settings.PANTHEON_ADMIN_ID,
+                    self.tournament.is_majsoul_tournament,
+                )
         except Exception as e:
             logger.error(e, exc_info=e)
             if self.tournament.is_pantheon_registration:
@@ -619,8 +628,9 @@ class TournamentHandler:
         if current_round == 1:
             return self._random_sortition(pantheon_ids)
         else:
-            pantheon_sortition = get_new_pantheon_swiss_sortition(self.tournament.new_pantheon_id,
-                                                                  settings.PANTHEON_ADMIN_ID)
+            pantheon_sortition = get_new_pantheon_swiss_sortition(
+                self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID
+            )
             tables = pantheon_sortition.tables
             sortition = []
             for table in tables:
@@ -711,36 +721,46 @@ class TournamentHandler:
         status = self.get_status()
         if tour == status.current_round:
             if notification_type == 1:
-                games = (TournamentGame.objects.filter(tournament=self.tournament)
-                         .filter(tournament_round=status.current_round)
-                         .filter(game_index=table_number))
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(tournament_round=status.current_round)
+                    .filter(game_index=table_number)
+                )
                 for game in games:
                     self._create_start_ms_game_notification(game)
             if notification_type == 2:
-                games = (TournamentGame.objects.filter(tournament=self.tournament)
-                         .filter(tournament_round=status.current_round)
-                         .filter(game_index=table_number))
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(tournament_round=status.current_round)
+                    .filter(game_index=table_number)
+                )
                 for game in games:
                     game.status = TournamentGame.FAILED_TO_START
                     players = game.game_players.all().order_by("wind")
                     escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
                     self.create_notification(
                         TournamentNotification.GAME_FAILED,
-                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index}
+                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                     )
                     game.save()
             if notification_type == 3:
-                games = (TournamentGame.objects.filter(tournament=self.tournament)
-                         .filter(tournament_round=status.current_round)
-                         .filter(game_index=table_number))
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(tournament_round=status.current_round)
+                    .filter(game_index=table_number)
+                )
                 for game in games:
                     game.status = TournamentGame.FAILED_TO_START
                     players = game.game_players.all().order_by("wind")
                     escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
                     self.create_notification(
                         TournamentNotification.GAME_FAILED_NO_MEMBERS,
-                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index,
-                                "missed_players": [], "lobby_link": settings.TOURNAMENT_PUBLIC_LOBBY}
+                        kwargs={
+                            "players": ", ".join(escaped_player_names),
+                            "game_index": game.game_index,
+                            "missed_players": [],
+                            "lobby_link": settings.TOURNAMENT_PUBLIC_LOBBY,
+                        },
                     )
                     game.save()
 
@@ -761,7 +781,7 @@ class TournamentHandler:
             game.status = TournamentGame.FAILED_TO_START
             self.create_notification(
                 TournamentNotification.GAME_FAILED,
-                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index}
+                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
             )
             game.save()
 
@@ -931,7 +951,9 @@ class TournamentHandler:
             #     "If there is no log when next round start, all players from this game "
             #     "will get -30000 scores as a round result (their real scores will not be counted)."
             # ),
-            TournamentNotification.GAMES_PREPARED: """Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\nЗапускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. Если этого не произошло обратитесь к администратору.""",
+            TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
+            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+            "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
@@ -1051,4 +1073,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i: i + n]
+            yield items[i : i + n]

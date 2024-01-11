@@ -39,7 +39,7 @@ class TournamentPlayers(BaseModel):
     def __unicode__(self):
         if self.tenhou_username:
             return self.tenhou_username
-        return ''
+        return ""
 
 
 class TournamentGame(BaseModel):

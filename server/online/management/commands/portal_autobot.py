@@ -70,7 +70,7 @@ class PortalAutoBot:
     @staticmethod
     def confirm_player(nickname, telegram_username):
         activate("ru")
-        
+
         return tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)
 
     @staticmethod
