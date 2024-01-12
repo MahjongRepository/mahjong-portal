@@ -360,11 +360,12 @@ class TournamentHandler:
                 "finished": finished_games.count(),
                 "total": total_games,
                 "pantheon_link": pantheon_url,
-                "tenhou_link": f"http://tenhou.net/0/?log={log_id}",
+                "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
                 "player_one": formatted_players[0],
                 "player_two": formatted_players[1],
                 "player_three": formatted_players[2],
                 "player_four": formatted_players[3],
+                "platform_name": "Tenhou",
             },
         )
 
@@ -435,11 +436,12 @@ class TournamentHandler:
                     "finished": finished_games.count(),
                     "total": total_games,
                     "pantheon_link": "pantheon_link",
-                    "tenhou_link": f"http://tenhou.net/0/?log={log_id}",
+                    "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
                     "player_one": players[0],
                     "player_two": players[1],
                     "player_three": players[2],
                     "player_four": players[3],
+                    "platform_name": "Tenhou",
                 },
             )
         else:
@@ -449,11 +451,12 @@ class TournamentHandler:
                     "finished": finished_games.count(),
                     "total": total_games,
                     "pantheon_link": self.get_rating_link(),
-                    "tenhou_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
+                    "game_replay_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
                     "player_one": players[0],
                     "player_two": players[1],
                     "player_three": players[2],
                     "player_four": players[3],
+                    "platform_name": "mahjongsoul",
                 },
             )
 
@@ -932,7 +935,7 @@ class TournamentHandler:
                 "%(player_four)s\n"
                 "```\n"
                 "Game link: %(pantheon_link)s\n\n"
-                "Tenhou link: %(tenhou_link)s\n\n"
+                "%(platform_name) link: %(game_replay_link)s\n\n"
                 "Finished games: %(finished)s/%(total)s."
             ),
             TournamentNotification.CONFIRMATION_ENDED: _(
