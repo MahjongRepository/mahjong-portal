@@ -490,6 +490,9 @@ class TournamentHandler:
                 return _("Found multiple majsoul accounts for the tournament on mahjong.click. Ask for administrator.")
             registration = registration[0]
 
+        if not registration.is_validated:
+            return _("Majsoul account not validated. Ask for administrator.")
+
         if not self.tournament.is_majsoul_tournament:
             if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
