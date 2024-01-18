@@ -3,12 +3,13 @@ import logging
 import random
 import threading
 from copy import copy
-from datetime import timedelta
+from datetime import datetime, timedelta
 from random import randint
 from time import sleep
 from typing import Dict, List, Optional
 from urllib.parse import parse_qs, unquote, urlparse
 
+import numpy as np
 import pytz
 import requests
 from django.conf import settings
@@ -17,6 +18,7 @@ from django.db.transaction import get_connection
 from django.utils import timezone, translation
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
+from numpy.random import PCG64, SeedSequence
 
 from online.models import (
     TournamentGame,
@@ -632,7 +634,7 @@ class TournamentHandler:
 
     def make_sortition(self, pantheon_ids, current_round):
         if current_round == 1:
-            return self._random_sortition(pantheon_ids)
+            return self._numpy_random_sortition(pantheon_ids)
         else:
             pantheon_sortition = get_new_pantheon_swiss_sortition(
                 self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID
@@ -1065,6 +1067,13 @@ class TournamentHandler:
             if player.discord_username:
                 player_names.append(f"@{player.discord_username} ({TournamentHandler.DISCORD_DESTINATION})")
         return ", ".join(player_names)
+
+    def _numpy_random_sortition(self, pantheon_ids):
+        seed = datetime.now().microsecond
+        rg = np.random.Generator(PCG64(SeedSequence(seed)))
+        # pre shuffle players sequense for legacy sorting
+        rg.shuffle(pantheon_ids)
+        return self._random_sortition(pantheon_ids)
 
     def _random_sortition(self, pantheon_ids):
         # default random.shuffle function doesn't produce good results

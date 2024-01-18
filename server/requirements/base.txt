@@ -14,6 +14,7 @@ ms-api==0.10.275
 pytz==2023.3
 ujson==5.9.0
 tenacity==8.2.3
+numpy==1.26.3
 
 # online tournaments
 python-telegram-bot==20.3
