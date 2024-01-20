@@ -8,7 +8,6 @@ MS_CN_HOST = "https://game.maj-soul.com"
 
 
 class MSChinaLobbyClient:
-
     async def connect(self):
         version_to_force = ""
         async with aiohttp.ClientSession() as session:

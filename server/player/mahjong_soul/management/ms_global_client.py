@@ -8,7 +8,6 @@ MS_EN_HOST = "https://mahjongsoul.game.yo-star.com"
 
 
 class MSGlobalLobbyClient:
-
     async def connect(self):
         version_to_force = ""
         async with aiohttp.ClientSession() as session:

@@ -8,7 +8,6 @@ MS_JP_HOST = "https://game.mahjongsoul.com"
 
 
 class MSJapanLobbyClient:
-
     async def connect(self):
         version_to_force = ""
         async with aiohttp.ClientSession() as session:

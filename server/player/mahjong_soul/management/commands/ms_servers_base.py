@@ -1,9 +1,10 @@
 import asyncio
+
 from django.core.management import BaseCommand
 
+from player.mahjong_soul.management.ms_cn_client import MSChinaLobbyClient
 from player.mahjong_soul.management.ms_global_client import MSGlobalLobbyClient
 from player.mahjong_soul.management.ms_jp_client import MSJapanLobbyClient
-from player.mahjong_soul.management.ms_cn_client import MSChinaLobbyClient
 
 
 class MSServerBaseCommand(BaseCommand):

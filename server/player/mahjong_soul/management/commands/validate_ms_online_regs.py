@@ -1,19 +1,17 @@
-import uuid
 import hashlib
 import hmac
+import uuid
+
 import ms.protocol_pb2 as pb
 from django.conf import settings
-from player.mahjong_soul.management.commands.ms_servers_base import MSServerBaseCommand
 
+from player.mahjong_soul.management.commands.ms_servers_base import MSServerBaseCommand
 from tournament.models import MsOnlineTournamentRegistration
 
 
 class Command(MSServerBaseCommand):
-
     async def process_validate(self, lobby, tournament_id):
-        registrations = MsOnlineTournamentRegistration.objects.filter(
-            tournament_id=tournament_id, is_validated=False
-        )
+        registrations = MsOnlineTournamentRegistration.objects.filter(tournament_id=tournament_id, is_validated=False)
 
         print(f"found {len(registrations)} not validated registrations")
 
@@ -57,11 +55,15 @@ class Command(MSServerBaseCommand):
                     print("found player : %s with account_id=%s, updated" % (registrant.ms_nickname, player.account_id))
                     updated_players = updated_players + 1
                 else:
-                    print("player data not valid : %s with friend_id=%s, actual nickname=%s" % (
-                        registrant.ms_nickname, registrant.ms_friend_id, player.nickname))
+                    print(
+                        "player data not valid : %s with friend_id=%s, actual nickname=%s"
+                        % (registrant.ms_nickname, registrant.ms_friend_id, player.nickname)
+                    )
                     failed_updated_players = failed_updated_players + 1
         print(
-            f"not found on server={not_found_on_server}, updated players={updated_players}, failed updated players={failed_updated_players}")
+            f"not found on server={not_found_on_server}, updated players={updated_players}, "
+            f"failed updated players={failed_updated_players}"
+        )
 
     async def run_code(self, lobby, channel, version_to_force, *args, **options):
         tournament_id = options.get("tournament_id")
