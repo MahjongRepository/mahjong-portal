@@ -52,9 +52,11 @@ class OnlineTournamentRegistrationForm(forms.ModelForm):
 
 
 class MajsoulOnlineTournamentPantheonRegistrationForm(forms.ModelForm):
+    allow_to_save_data = forms.BooleanField(required=False)
+
     class Meta:
         model = MsOnlineTournamentRegistration
-        fields = ["ms_friend_id", "ms_nickname"]
+        fields = ["ms_friend_id", "ms_nickname", "allow_to_save_data"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -64,6 +66,10 @@ class MajsoulOnlineTournamentPantheonRegistrationForm(forms.ModelForm):
         if tournament.is_majsoul_tournament:
             self.fields["ms_friend_id"].label = _("Majsoul friend id")
             self.fields["ms_nickname"].label = _("Majsoul nickname")
+
+        self.fields["allow_to_save_data"].label = _(
+            "I allow to add my majsoul account at mahjong portal for statistics"
+        )
 
 
 class TournamentApplicationForm(forms.ModelForm):

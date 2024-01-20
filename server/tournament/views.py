@@ -192,6 +192,10 @@ def pantheon_tournament_registration(request, tournament_id):
         try:
             ms_friend_id = int(form_data["ms_friend_id"])
             ms_nickname = form_data["ms_nickname"]
+            if form_data.get("allow_to_save_data") is None:
+                allow_to_save_data = False
+            else:
+                allow_to_save_data = bool(form_data["allow_to_save_data"])
             if not bool(ms_nickname.strip()):
                 return redirect(tournament.get_url() + "?error=form_data")
         except Exception:
@@ -227,6 +231,7 @@ def pantheon_tournament_registration(request, tournament_id):
             city=data["city"],
             player=player,
             city_object=city_object,
+            allow_to_save_data=allow_to_save_data,
         )
     else:
         OnlineTournamentRegistration.objects.create(
