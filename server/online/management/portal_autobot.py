@@ -75,8 +75,9 @@ class PortalAutoBot:
 
     @staticmethod
     def create_start_ms_game_notification(tour, table_number, notification_type, missed_players):
-        tournament_handler.create_start_ms_game_notification(int(tour), int(table_number), int(notification_type),
-                                                             missed_players)
+        tournament_handler.create_start_ms_game_notification(
+            int(tour), int(table_number), int(notification_type), missed_players
+        )
 
     @staticmethod
     def game_finish(log_id, players, log_content, log_time):

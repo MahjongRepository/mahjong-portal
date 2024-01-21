@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import ujson as json
 import logging
 import random
 import threading
@@ -13,15 +12,15 @@ from urllib.parse import parse_qs, unquote, urlparse
 import numpy as np
 import pytz
 import requests
+import ujson as json
 from django.conf import settings
 from django.db import transaction
 from django.db.transaction import get_connection
 from django.utils import timezone, translation
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
-from numpy.random import PCG64, SeedSequence
-from utils.general import format_text
 from google.protobuf.json_format import MessageToJson
+from numpy.random import PCG64, SeedSequence
 
 from online.models import (
     TournamentGame,
@@ -33,7 +32,7 @@ from online.models import (
 from online.parser import TenhouParser
 from player.models import Player
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
-from utils.general import make_random_letters_and_digit_string
+from utils.general import format_text, make_random_letters_and_digit_string
 from utils.new_pantheon import (
     add_user_to_new_pantheon,
     get_new_pantheon_swiss_sortition,
@@ -390,18 +389,19 @@ class TournamentHandler:
             return _("The game has been added. Thank you."), True
 
         # todo add flag for disable upload to pantheon
-        pantheon_response = upload_replay_through_pantheon(self.tournament.new_pantheon_id, platform_id, 2, log_id,
-                                                           log_time, log_content)
+        pantheon_response = upload_replay_through_pantheon(
+            self.tournament.new_pantheon_id, platform_id, 2, log_id, log_time, log_content
+        )
         pantheon_response_dict = json.loads(MessageToJson(pantheon_response))
 
         formatted_players_results = {}
-        for player_result in pantheon_response_dict['game']['finalResults']:
-            formatted_players_results[int(player_result['playerId'])] = player_result
+        for player_result in pantheon_response_dict["game"]["finalResults"]:
+            formatted_players_results[int(player_result["playerId"])] = player_result
 
         formatted_players = {}
-        for current_player in pantheon_response_dict['players']:
-            matched_player = formatted_players_results[int(current_player['id'])]
-            formatted_players[matched_player['place']] = f"{current_player['tenhouId']} [{matched_player['score']}]"
+        for current_player in pantheon_response_dict["players"]:
+            matched_player = formatted_players_results[int(current_player["id"])]
+            formatted_players[matched_player["place"]] = f"{current_player['tenhouId']} [{matched_player['score']}]"
 
         with transaction.atomic():
             cursor = get_connection().cursor()
@@ -480,7 +480,7 @@ class TournamentHandler:
                 kwargs={
                     "finished": finished_games.count(),
                     "total": total_games,
-                    "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict['game']['sessionHash']),
+                    "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict["game"]["sessionHash"]),
                     "game_replay_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
                     "player_one": formatted_players[1],
                     "player_two": formatted_players[2],
@@ -755,7 +755,9 @@ class TournamentHandler:
 
         game.save()
 
-    def create_start_ms_game_notification(self, tour, table_number, notification_type, missed_players=[]):
+    def create_start_ms_game_notification(self, tour, table_number, notification_type, missed_players=None):
+        if missed_players is None:
+            missed_players = []
         status = self.get_status()
         if tour == status.current_round:
             if notification_type == 1:
@@ -792,8 +794,11 @@ class TournamentHandler:
                     players = game.game_players.all().order_by("wind")
                     escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
 
-                    missed_round_players = TournamentPlayers.objects.filter(tournament=self.tournament).filter(
-                        ms_account_id__in=missed_players).all()
+                    missed_round_players = (
+                        TournamentPlayers.objects.filter(tournament=self.tournament)
+                        .filter(ms_account_id__in=missed_players)
+                        .all()
+                    )
 
                     current_missed_players = []
                     current_missed_tg_usernames = []
@@ -801,7 +806,7 @@ class TournamentHandler:
                         current_missed_players.append(round_player.ms_username)
                         current_missed_tg_usernames.append(round_player.telegram_username)
 
-                    formatted_missed_players = ', '.join(["@{}".format(x) for x in current_missed_tg_usernames])
+                    formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
 
                     self.create_notification(
                         TournamentNotification.GAME_FAILED_NO_MEMBERS,
@@ -1003,8 +1008,8 @@ class TournamentHandler:
             #     "will get -30000 scores as a round result (their real scores will not be counted)."
             # ),
             TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-                                                   "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-                                                   "Если этого не произошло обратитесь к администратору.",
+            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+            "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
@@ -1134,4 +1139,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i: i + n]
+            yield items[i : i + n]

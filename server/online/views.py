@@ -296,6 +296,4 @@ def game_finish(request):
         return HttpResponse(status=400)
 
     confirm_message = bot.game_finish(log_id, players, log_content, log_time)
-    return JsonResponse({"message": confirm_message[0],
-                         "is_error": confirm_message[1]
-                         })
+    return JsonResponse({"message": confirm_message[0], "is_error": confirm_message[1]})
