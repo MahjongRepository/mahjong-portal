@@ -74,6 +74,14 @@ class PortalAutoBot:
         return tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)
 
     @staticmethod
+    def admin_confirm_player(friend_id, nickname, telegram_username):
+        activate("ru")
+
+        return tournament_handler.confirm_participation_in_tournament(
+            nickname, telegram_username=telegram_username, friend_id=friend_id
+        )
+
+    @staticmethod
     def create_start_ms_game_notification(tour, table_number, notification_type, missed_players):
         tournament_handler.create_start_ms_game_notification(
             int(tour), int(table_number), int(notification_type), missed_players

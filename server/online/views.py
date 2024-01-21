@@ -297,3 +297,26 @@ def game_finish(request):
 
     confirm_message = bot.game_finish(log_id, players, log_content, log_time)
     return JsonResponse({"message": confirm_message[0], "is_error": confirm_message[1]})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def admin_confirm_player(request):
+    request_data = json.loads(request.body)
+
+    nickname = request_data.get("nickname")
+    if not nickname:
+        return HttpResponse(status=400)
+
+    friend_id = request_data.get("friend_id")
+    if not friend_id:
+        return HttpResponse(status=400)
+
+    telegram_username = request_data.get("telegram_username")
+    if not telegram_username:
+        return HttpResponse(status=400)
+
+    confirm_message = bot.admin_confirm_player(friend_id, nickname, telegram_username)
+    return JsonResponse({"message": confirm_message})

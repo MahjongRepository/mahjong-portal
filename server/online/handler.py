@@ -494,7 +494,9 @@ class TournamentHandler:
 
         return _("The game has been added. Thank you."), True
 
-    def confirm_participation_in_tournament(self, nickname, telegram_username=None, discord_username=None):
+    def confirm_participation_in_tournament(
+        self, nickname, telegram_username=None, discord_username=None, friend_id=None
+    ):
         status = self.get_status()
 
         if status.registration_closed:
@@ -511,9 +513,15 @@ class TournamentHandler:
             except OnlineTournamentRegistration.DoesNotExist:
                 return _("You need to register for the tournament on mahjong.click first.")
         else:
-            registration = MsOnlineTournamentRegistration.objects.filter(
-                ms_nickname__iexact=nickname, tournament=self.tournament
-            )
+            if not friend_id:
+                registration = MsOnlineTournamentRegistration.objects.filter(
+                    ms_nickname__iexact=nickname, tournament=self.tournament
+                )
+            else:
+                registration = MsOnlineTournamentRegistration.objects.filter(
+                    ms_nickname__iexact=nickname, tournament=self.tournament, ms_friend_id=friend_id
+                )
+
             if len(registration) <= 0:
                 return _("You need to register for the tournament on mahjong.click first.")
             if len(registration) > 1:
