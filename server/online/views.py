@@ -149,7 +149,7 @@ def autobot_token_require(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
         request_data = json.loads(request.body)
-        api_token = request_data["api_token"]
+        api_token = request_data.get("api_token")
         if not api_token or api_token != settings.AUTO_BOT_TOKEN:
             return HttpResponse(status=403)
 
@@ -162,11 +162,11 @@ def tournament_data_require(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
         request_data = json.loads(request.body)
-        tournament_id = request_data["tournament_id"]
+        tournament_id = request_data.get("tournament_id")
         if not tournament_id:
             return HttpResponse(status=400)
 
-        lobby_id = request_data["lobby_id"]
+        lobby_id = request_data.get("lobby_id")
         if not lobby_id:
             return HttpResponse(status=400)
 
@@ -191,7 +191,9 @@ def open_registration(request):
 @tournament_data_require
 def check_new_notifications(request):
     request_data = json.loads(request.body)
-    tournament_id = request_data["tournament_id"]
+    tournament_id = request_data.get("tournament_id")
+    if not tournament_id:
+        return JsonResponse({"notifications": []})
     notification = bot.check_new_notifications(tournament_id)
     if notification:
         return JsonResponse({"notifications": [notification]})
@@ -205,7 +207,7 @@ def check_new_notifications(request):
 def process_notification(request):
     request_data = json.loads(request.body)
 
-    notification_id = request_data["notification_id"]
+    notification_id = request_data.get("notification_id")
     if not notification_id:
         return HttpResponse(status=400)
 
@@ -230,11 +232,11 @@ def prepare_next_round(request):
 def confirm_player(request):
     request_data = json.loads(request.body)
 
-    nickname = request_data["nickname"]
+    nickname = request_data.get("nickname")
     if not nickname:
         return HttpResponse(status=400)
 
-    telegram_username = request_data["telegram_username"]
+    telegram_username = request_data.get("telegram_username")
     if not telegram_username:
         return HttpResponse(status=400)
 
@@ -249,20 +251,24 @@ def confirm_player(request):
 def create_start_ms_game_notification(request):
     request_data = json.loads(request.body)
 
-    tour = request_data["tour"]
+    tour = request_data.get("tour")
     if not tour:
         return HttpResponse(status=400)
 
-    table_number = request_data["table_number"]
+    table_number = request_data.get("table_number")
     if not table_number:
         return HttpResponse(status=400)
 
-    notification_type = request_data["type"]
+    notification_type = request_data.get("type")
     if not notification_type:
         return HttpResponse(status=400)
 
+    missed_players = request_data.get("missed_players")
+    if not missed_players:
+        missed_players = []
+
     # todo: handle message?
-    bot.create_start_ms_game_notification(tour, table_number, notification_type)
+    bot.create_start_ms_game_notification(tour, table_number, notification_type, missed_players)
     return JsonResponse({"success": True})
 
 
@@ -273,21 +279,23 @@ def create_start_ms_game_notification(request):
 def game_finish(request):
     request_data = json.loads(request.body)
 
-    log_id = request_data["log_id"]
+    log_id = request_data.get("log_id")
     if not log_id:
         return HttpResponse(status=400)
 
-    players = request_data["players"]
+    players = request_data.get("players")
     if not players:
         return HttpResponse(status=400)
 
-    log_content = request_data["log_content"]
+    log_content = request_data.get("log_content")
     if not log_content:
         return HttpResponse(status=400)
 
-    log_time = request_data["log_time"]
+    log_time = request_data.get("log_time")
     if not log_time:
         return HttpResponse(status=400)
 
     confirm_message = bot.game_finish(log_id, players, log_content, log_time)
-    return JsonResponse({"message": confirm_message})
+    return JsonResponse({"message": confirm_message[0],
+                         "is_error": confirm_message[1]
+                         })

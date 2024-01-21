@@ -97,3 +97,8 @@ def split_name(player_title):
     first_name = temp[1].title()
     last_name = temp[0].title()
     return first_name, last_name
+
+def format_text(message, kwargs):
+    for key, value in kwargs.items():
+        message = message.replace('%%(%s)' % key, str(value))
+    return message

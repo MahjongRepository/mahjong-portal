@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ujson as json
 import logging
 import random
 import threading
@@ -19,6 +20,8 @@ from django.utils import timezone, translation
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
 from numpy.random import PCG64, SeedSequence
+from utils.general import format_text
+from google.protobuf.json_format import MessageToJson
 
 from online.models import (
     TournamentGame,
@@ -376,12 +379,29 @@ class TournamentHandler:
         return _("The game has been added. Thank you."), True
 
     def game_finish(self, log_id, players, log_content, log_time):
-        upload_replay_through_pantheon(self.tournament.new_pantheon_id, 2, 2, log_id, log_time, log_content)
+        if not self.tournament.is_majsoul_tournament:
+            platform_id = 1
+        else:
+            platform_id = 2
 
         status = self.get_status()
 
         if TournamentGame.objects.filter(log_id=log_id).exists():
             return _("The game has been added. Thank you."), True
+
+        # todo add flag for disable upload to pantheon
+        pantheon_response = upload_replay_through_pantheon(self.tournament.new_pantheon_id, platform_id, 2, log_id,
+                                                           log_time, log_content)
+        pantheon_response_dict = json.loads(MessageToJson(pantheon_response))
+
+        formatted_players_results = {}
+        for player_result in pantheon_response_dict['game']['finalResults']:
+            formatted_players_results[int(player_result['playerId'])] = player_result
+
+        formatted_players = {}
+        for current_player in pantheon_response_dict['players']:
+            matched_player = formatted_players_results[int(current_player['id'])]
+            formatted_players[matched_player['place']] = f"{current_player['tenhouId']} [{matched_player['score']}]"
 
         with transaction.atomic():
             cursor = get_connection().cursor()
@@ -410,6 +430,14 @@ class TournamentHandler:
                     return error_message, False
 
                 game = games.first()
+
+                if not game:
+                    logger.error("Games not found for this players!")
+                    error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                        "admin_username": self.get_admin_username()
+                    }
+                    return error_message, False
+
                 game.log_id = log_id
                 game.save()
             finally:
@@ -452,12 +480,12 @@ class TournamentHandler:
                 kwargs={
                     "finished": finished_games.count(),
                     "total": total_games,
-                    "pantheon_link": self.get_rating_link(),
+                    "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict['game']['sessionHash']),
                     "game_replay_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
-                    "player_one": players[0],
-                    "player_two": players[1],
-                    "player_three": players[2],
-                    "player_four": players[3],
+                    "player_one": formatted_players[1],
+                    "player_two": formatted_players[2],
+                    "player_three": formatted_players[3],
+                    "player_four": formatted_players[4],
                     "platform_name": "mahjongsoul",
                 },
             )
@@ -708,6 +736,7 @@ class TournamentHandler:
                         "missed_players": missed_players_str,
                         "lobby_link": self.get_lobby_link(),
                         "game_index": game.game_index,
+                        "missed_players_str": "",
                     },
                 )
             else:
@@ -726,7 +755,7 @@ class TournamentHandler:
 
         game.save()
 
-    def create_start_ms_game_notification(self, tour, table_number, notification_type):
+    def create_start_ms_game_notification(self, tour, table_number, notification_type, missed_players=[]):
         status = self.get_status()
         if tour == status.current_round:
             if notification_type == 1:
@@ -762,13 +791,26 @@ class TournamentHandler:
                     game.status = TournamentGame.FAILED_TO_START
                     players = game.game_players.all().order_by("wind")
                     escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+
+                    missed_round_players = TournamentPlayers.objects.filter(tournament=self.tournament).filter(
+                        ms_account_id__in=missed_players).all()
+
+                    current_missed_players = []
+                    current_missed_tg_usernames = []
+                    for round_player in missed_round_players:
+                        current_missed_players.append(round_player.ms_username)
+                        current_missed_tg_usernames.append(round_player.telegram_username)
+
+                    formatted_missed_players = ', '.join(["@{}".format(x) for x in current_missed_tg_usernames])
+
                     self.create_notification(
                         TournamentNotification.GAME_FAILED_NO_MEMBERS,
                         kwargs={
                             "players": ", ".join(escaped_player_names),
                             "game_index": game.game_index,
-                            "missed_players": [],
+                            "missed_players": current_missed_players,
                             "lobby_link": settings.TOURNAMENT_PUBLIC_LOBBY,
+                            "missed_players_str": formatted_missed_players,
                         },
                     )
                     game.save()
@@ -935,13 +977,13 @@ class TournamentHandler:
                 "New game was added.\n\n"
                 "Results:\n"
                 "```\n"
-                "%(player_one)s\n"
-                "%(player_two)s\n"
-                "%(player_three)s\n"
-                "%(player_four)s\n"
+                "%(player_one)\n"
+                "%(player_two)\n"
+                "%(player_three)\n"
+                "%(player_four)\n"
                 "```\n"
-                "Game link: %(pantheon_link)s\n\n"
-                "%(platform_name) link: %(game_replay_link)s\n\n"
+                "Game link: %(pantheon_link)\n\n"
+                "%(platform_name) link: %(game_replay_link)\n\n"
                 "Finished games: %(finished)s/%(total)s."
             ),
             TournamentNotification.CONFIRMATION_ENDED: _(
@@ -961,15 +1003,15 @@ class TournamentHandler:
             #     "will get -30000 scores as a round result (their real scores will not be counted)."
             # ),
             TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-            "Если этого не произошло обратитесь к администратору.",
+                                                   "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+                                                   "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
             TournamentNotification.GAME_FAILED_NO_MEMBERS: _(
                 "Game №%(game_index)s: %(players)s. Is not started. Missed players %(missed_players)s. "
                 "The table was moved to the end of the queue. \n\n"
-                "Missed players please enter the tournament lobby: %(lobby_link)s."
+                "%(missed_players_str) Missed players please enter the tournament lobby: %(lobby_link)."
             ),
             TournamentNotification.GAME_STARTED: _("Game №%(game_index)s: %(players)s. Started."),
             TournamentNotification.TOURNAMENT_FINISHED: _("The tournament is over. Thank you for participating!"),
@@ -984,7 +1026,7 @@ class TournamentHandler:
             ),
         }
 
-        return messages.get(notification.notification_type) % kwargs
+        return format_text(messages.get(notification.notification_type), kwargs)
 
     def get_lobby_link(self):
         if self.tournament:
@@ -995,6 +1037,9 @@ class TournamentHandler:
 
     def get_rating_link(self):
         return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/order/rating"
+
+    def get_pantheon_game_link(self, hash):
+        return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/game/{hash}"
 
     def get_admin_username(self):
         if self.destination == self.TELEGRAM_DESTINATION:
@@ -1089,4 +1134,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i : i + n]
+            yield items[i: i + n]
