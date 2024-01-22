@@ -18,12 +18,12 @@ from mahjong_portal.sitemap import (
 from online.views import (
     admin_confirm_player,
     check_new_notifications,
+    close_registration,
     confirm_player,
     create_start_ms_game_notification,
     finish_game_api,
     game_finish,
     open_registration,
-    close_registration,
     prepare_next_round,
     process_notification,
 )
