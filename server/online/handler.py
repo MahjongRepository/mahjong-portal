@@ -495,11 +495,11 @@ class TournamentHandler:
         return _("The game has been added. Thank you."), True
 
     def confirm_participation_in_tournament(
-        self, nickname, telegram_username=None, discord_username=None, friend_id=None
+        self, nickname, telegram_username=None, discord_username=None, friend_id=None, is_admin=False
     ):
         status = self.get_status()
 
-        if status.registration_closed:
+        if not is_admin and status.registration_closed:
             return _("The confirmation phase has already ended. Visit our next tournaments.")
 
         if not self.tournament.is_majsoul_tournament and len(nickname) > 8:
@@ -1016,8 +1016,8 @@ class TournamentHandler:
             #     "will get -30000 scores as a round result (their real scores will not be counted)."
             # ),
             TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-            "Если этого не произошло обратитесь к администратору.",
+                                                   "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+                                                   "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
@@ -1147,4 +1147,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i : i + n]
+            yield items[i: i + n]

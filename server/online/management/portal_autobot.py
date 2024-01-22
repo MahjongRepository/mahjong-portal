@@ -25,6 +25,12 @@ class PortalAutoBot:
         tournament_handler.open_registration()
 
     @staticmethod
+    def close_registration(chatId):
+        logger.info("Close registration")
+        logger.info(f"Chat ID {chatId}")
+        tournament_handler.close_registration()
+
+    @staticmethod
     def check_new_notifications(tournamentId):
         notification = TournamentNotification.objects.filter(
             is_processed=False, destination=TournamentNotification.TELEGRAM, failed=False, tournament_id=tournamentId
@@ -78,7 +84,7 @@ class PortalAutoBot:
         activate("ru")
 
         return tournament_handler.confirm_participation_in_tournament(
-            nickname, telegram_username=telegram_username, friend_id=friend_id
+            nickname, telegram_username=telegram_username, friend_id=friend_id, is_admin=True
         )
 
     @staticmethod

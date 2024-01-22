@@ -189,6 +189,15 @@ def open_registration(request):
 @csrf_exempt
 @autobot_token_require
 @tournament_data_require
+def close_registration(request):
+    bot.close_registration(None)
+    return JsonResponse({"success": True})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
 def check_new_notifications(request):
     request_data = json.loads(request.body)
     tournament_id = request_data.get("tournament_id")
