@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import os
 import random
 import threading
 from copy import copy
@@ -615,9 +616,9 @@ class TournamentHandler:
 
             pantheon_ids = {}
             for confirmed_player in confirmed_players:
-                pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
+                pantheon_ids[int(confirmed_player.pantheon_id)] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            sortition = self.make_sortition(pantheon_ids, status.current_round)
             # from online.team_seating import TeamSeating
             # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
@@ -669,21 +670,77 @@ class TournamentHandler:
                 message = "Игры не запустились. Требуется вмешательство администратора."
                 return {"message": message, "tables": [], "round": -1}
 
+    # return [[1,2,3,4],[5,6,7,8]...]
     def make_sortition(self, pantheon_ids, current_round):
         if current_round == 1:
-            return self._numpy_random_sortition(pantheon_ids)
+            pantheon_ids_list = list(pantheon_ids.keys())
+            return self._numpy_random_sortition(pantheon_ids_list)
         else:
+            make_failback_sortition = False
             pantheon_sortition = get_new_pantheon_swiss_sortition(
                 self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID
             )
-            tables = pantheon_sortition.tables
-            sortition = []
-            for table in tables:
-                players = []
-                for player in table.players:
-                    players.append(player.player_id)
-                sortition.append(players)
-            return sortition
+            pantheon_sortition = json.loads(MessageToJson(pantheon_sortition))
+            tables = pantheon_sortition["tables"]
+            pantheon_sortition = []
+            if tables:
+                pantheon_players_count = 0
+                for table in tables:
+                    players = []
+                    for player in table["players"]:
+                        player_id = int(player["playerId"])
+                        players.append(player_id)
+                        pantheon_players_count = pantheon_players_count + 1
+                        if player_id not in pantheon_ids:
+                            make_failback_sortition = True
+                            break
+                    if not make_failback_sortition:
+                        pantheon_sortition.append(players)
+                if not make_failback_sortition and pantheon_players_count < len(pantheon_ids):
+                    make_failback_sortition = True
+            else:
+                make_failback_sortition = True
+
+            if not make_failback_sortition:
+                return pantheon_sortition
+            else:
+                marked_pantheon_ids = {}
+                pantheon_ids_list = list(pantheon_ids.keys())
+                pantheon_ids_list.sort()
+                player_index = 1
+                for id in pantheon_ids_list:
+                    marked_pantheon_ids[player_index] = id
+                    player_index = player_index + 1
+                golf_sortition = self.resolve_golf_sortition(
+                    self.tournament.number_of_sessions, len(pantheon_ids), current_round, marked_pantheon_ids
+                )
+                if not golf_sortition:
+                    return self._numpy_random_sortition(pantheon_ids_list)
+
+    # marked_pantheon_ids[index] = pantheon_id
+    def resolve_golf_sortition(self, tours_count, players_count, current_tour, marked_pantheon_ids):
+        golf_sortition = []
+        folder = settings.GOLF_SORTITION_DIR
+        golf_sortition_file = os.path.join(
+            settings.BASE_DIR, folder, f"{tours_count}_tours_{players_count}_players.json"
+        )
+        # check exist file
+        if os.path.isfile(golf_sortition_file):
+            with open(golf_sortition_file) as f:
+                data = json.loads(f.read())
+            for tours in data:
+                if tours["tour_number"] == current_tour:
+                    tables = tours["tables"]
+                    for table in tables:
+                        current_table = []
+                        seating = table["seating"]
+                        for seat in seating:
+                            player_index = int(seat["player_index"])
+                            if player_index in marked_pantheon_ids:
+                                current_table.append(marked_pantheon_ids[player_index])
+                        golf_sortition.append(current_table)
+
+        return golf_sortition
 
     def start_games(self):
         status = self.get_status()

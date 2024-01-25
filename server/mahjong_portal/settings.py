@@ -25,6 +25,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/account/login/"
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GOLF_SORTITION_DIR = "shared_golf"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", None)
