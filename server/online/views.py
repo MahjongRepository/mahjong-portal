@@ -329,3 +329,12 @@ def admin_confirm_player(request):
 
     confirm_message = bot.admin_confirm_player(friend_id, nickname, telegram_username)
     return JsonResponse({"message": confirm_message})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def get_tournament_status(request):
+    message = bot.get_tournament_status()
+    return JsonResponse({"message": message})
