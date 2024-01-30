@@ -202,10 +202,10 @@ def pantheon_tournament_registration(request, tournament_id):
             return redirect(tournament.get_url() + "?error=form_data")
 
     if tournament.is_majsoul_tournament:
-        if MsOnlineTournamentRegistration.objects.filter(user=user).exists():
+        if MsOnlineTournamentRegistration.objects.filter(user=user, tournament=tournament).exists():
             return redirect(tournament.get_url())
     else:
-        if OnlineTournamentRegistration.objects.filter(user=user).exists():
+        if OnlineTournamentRegistration.objects.filter(user=user, tournament=tournament).exists():
             return redirect(tournament.get_url())
 
     # todo get ms_data and store into PantheonInfoUpdateLog
