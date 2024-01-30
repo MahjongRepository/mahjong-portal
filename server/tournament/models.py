@@ -301,8 +301,10 @@ class MsOnlineTournamentRegistration(BaseModel):
     city = models.CharField(max_length=255, verbose_name=_("City"))
     ms_nickname = models.CharField(max_length=255, verbose_name="Majsoul nickname")
     ms_friend_id = models.PositiveIntegerField()
-    ms_account_id = models.PositiveIntegerField(null=True)
+    ms_account_id = models.PositiveIntegerField(null=True, blank=True)
     contact = models.CharField(
+        null=True,
+        blank=True,
         max_length=255,
         verbose_name=_("Your contact (email, phone, etc.)"),
         help_text=_("It will be visible only to the administrator"),
