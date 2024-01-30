@@ -68,7 +68,7 @@ class MajsoulOnlineTournamentPantheonRegistrationForm(forms.ModelForm):
             self.fields["ms_nickname"].label = _("Majsoul nickname")
 
         self.fields["allow_to_save_data"].label = _(
-            "I allow to add my majsoul account at mahjong portal for statistics"
+            "I allow to add my majsoul account at mahjong portal for statistics (optional)"
         )
 
 
