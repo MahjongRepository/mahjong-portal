@@ -75,7 +75,7 @@ class MSBaseCommand(BaseCommand):
         return lobby, channel, version_to_force
 
     async def login(self, lobby, username, password, version_to_force):
-        print("Login with username and password")
+        print(f"Login with username[{username}] and password[{password}]")
         print(f"Version {version_to_force}")
 
         uuid_key = str(uuid.uuid1())
