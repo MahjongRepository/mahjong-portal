@@ -214,6 +214,8 @@ def pantheon_tournament_registration(request, tournament_id):
     first_name, last_name = split_name(data["title"])
 
     player = Player.objects.filter(first_name_ru=first_name, last_name_ru=last_name).first()
+    if not player:
+        player = Player.objects.filter(first_name_ru=last_name, last_name_ru=first_name).first()
     city_object = City.objects.filter(name_ru=data["city"].title()).first()
 
     if not tournament.is_majsoul_tournament and not data["tenhou_id"]:
