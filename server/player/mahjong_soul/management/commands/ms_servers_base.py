@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 
 from django.core.management import BaseCommand
@@ -12,6 +13,7 @@ class MSServerBaseCommand(BaseCommand):
         parser.add_argument("tournament_id", type=int)
         parser.add_argument("server_type", type=str)
         parser.add_argument("access_token", type=str)
+        parser.add_argument("--force", default=False, action=argparse.BooleanOptionalAction)
 
     def handle(self, *args, **options):
         asyncio.run(self.run(*args, **options))

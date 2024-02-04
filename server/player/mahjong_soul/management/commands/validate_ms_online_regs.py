@@ -10,8 +10,13 @@ from tournament.models import MsOnlineTournamentRegistration
 
 
 class Command(MSServerBaseCommand):
-    async def process_validate(self, lobby, tournament_id):
-        registrations = MsOnlineTournamentRegistration.objects.filter(tournament_id=tournament_id, is_validated=False)
+    async def process_validate(self, lobby, tournament_id, force=False):
+        if not force:
+            registrations = MsOnlineTournamentRegistration.objects.filter(
+                tournament_id=tournament_id, is_validated=False
+            )
+        else:
+            registrations = MsOnlineTournamentRegistration.objects.filter(tournament_id=tournament_id)
 
         print(f"found {len(registrations)} not validated registrations")
 
@@ -69,6 +74,7 @@ class Command(MSServerBaseCommand):
         tournament_id = options.get("tournament_id")
         server_type = options.get("server_type")
         access_token = options.get("access_token")
+        force = options.get("force")
 
         if server_type.lower() == "cn":
             result = await self.cn_login(lobby, settings.MS_USERNAME, settings.MS_PASSWORD, version_to_force)
@@ -79,7 +85,7 @@ class Command(MSServerBaseCommand):
             await channel.close()
             return
 
-        await self.process_validate(lobby, tournament_id)
+        await self.process_validate(lobby, tournament_id, force)
 
     async def cn_login(self, lobby, username, password, version_to_force):
         print("Login with username and password")
