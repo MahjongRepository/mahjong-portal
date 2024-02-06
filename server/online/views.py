@@ -338,3 +338,12 @@ def admin_confirm_player(request):
 def get_tournament_status(request):
     message = bot.get_tournament_status()
     return JsonResponse({"message": message})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def get_allowed_players(request):
+    players = bot.get_allowed_players()
+    return JsonResponse({"players": players})

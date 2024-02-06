@@ -104,3 +104,7 @@ class PortalAutoBot:
         logger.info("Get tournament status command")
         activate("ru")
         return tournament_handler.get_tournament_status()
+
+    @staticmethod
+    def get_allowed_players():
+        return tournament_handler.get_allowed_players()

@@ -985,6 +985,21 @@ class TournamentHandler:
                 destination=TournamentNotification.TELEGRAM,
             )
 
+    def get_allowed_players(self):
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
+        allowed_players = []
+        for player in confirmed_players:
+            allowed_players.append(
+                {
+                    "pantheon_id": player.pantheon_id,
+                    "tenhou_id": player.tenhou_username,
+                    "is_replacement": player.is_replacement,
+                    "ms_username": player.ms_username,
+                    "ms_account_id": player.ms_account_id,
+                }
+            )
+        return allowed_players
+
     def get_notification_text(
         self, lang: str, notification: TournamentNotification, extra_kwargs: Optional[dict] = None
     ):

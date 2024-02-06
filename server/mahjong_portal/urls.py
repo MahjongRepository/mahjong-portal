@@ -23,6 +23,7 @@ from online.views import (
     create_start_ms_game_notification,
     finish_game_api,
     game_finish,
+    get_allowed_players,
     get_tournament_status,
     open_registration,
     prepare_next_round,
@@ -63,6 +64,7 @@ urlpatterns = [
     url("^api/v0/autobot/create_start_ms_game_notification$", create_start_ms_game_notification),
     url("^api/v0/autobot/game_finish$", game_finish),
     url("^api/v0/autobot/get_tournament_status$", get_tournament_status),
+    url("^api/v0/autobot/get_tournament_players$", get_allowed_players),
     url(r"^online/", include("online.urls")),
 ]
 
