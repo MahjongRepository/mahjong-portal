@@ -678,7 +678,10 @@ class TournamentHandler:
     def make_sortition(self, pantheon_ids, current_round):
         if current_round == 1:
             pantheon_ids_list = list(pantheon_ids.keys())
-            return self._numpy_random_sortition(pantheon_ids_list)
+            if len(pantheon_ids_list) % 4 == 0:
+                return self._numpy_random_sortition(pantheon_ids_list)
+            else:
+                return []
         else:
             make_failback_sortition = False
             pantheon_sortition = get_new_pantheon_swiss_sortition(
@@ -702,6 +705,8 @@ class TournamentHandler:
                         pantheon_sortition.append(players)
                 if not make_failback_sortition and pantheon_players_count < len(pantheon_ids):
                     make_failback_sortition = True
+                if pantheon_players_count % 4 != 0:
+                    return []
             else:
                 make_failback_sortition = True
 
@@ -710,6 +715,8 @@ class TournamentHandler:
             else:
                 marked_pantheon_ids = {}
                 pantheon_ids_list = list(pantheon_ids.keys())
+                if len(pantheon_ids_list) % 4 != 0:
+                    return []
                 pantheon_ids_list.sort()
                 player_index = 1
                 for id in pantheon_ids_list:
