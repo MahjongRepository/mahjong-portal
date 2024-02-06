@@ -996,6 +996,7 @@ class TournamentHandler:
                     "is_replacement": player.is_replacement,
                     "ms_username": player.ms_username,
                     "ms_account_id": player.ms_account_id,
+                    "telegram_username": player.telegram_username,
                 }
             )
         return allowed_players
@@ -1099,8 +1100,8 @@ class TournamentHandler:
             #     "will get -30000 scores as a round result (their real scores will not be counted)."
             # ),
             TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-            "Если этого не произошло обратитесь к администратору.",
+                                                   "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+                                                   "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
@@ -1230,4 +1231,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i : i + n]
+            yield items[i: i + n]
