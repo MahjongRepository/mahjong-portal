@@ -390,9 +390,13 @@ class TournamentHandler:
             return _("The game has been added. Thank you."), True
 
         # todo add flag for disable upload to pantheon
-        pantheon_response = upload_replay_through_pantheon(
-            self.tournament.new_pantheon_id, platform_id, 2, log_id, log_time, log_content
-        )
+        try:
+            pantheon_response = upload_replay_through_pantheon(
+                self.tournament.new_pantheon_id, platform_id, 2, log_id, log_time, log_content
+            )
+        except Exception:
+            return _("Error adding a game to pantheon."), True
+
         pantheon_response_dict = json.loads(MessageToJson(pantheon_response))
 
         formatted_players_results = {}
