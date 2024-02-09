@@ -696,17 +696,17 @@ class TournamentHandler:
                     players = []
                     for player in table["players"]:
                         player_id = int(player["playerId"])
-                        players.append(player_id)
                         pantheon_players_count = pantheon_players_count + 1
                         if player_id not in pantheon_ids:
                             make_failback_sortition = True
                             break
+                        players.append(player_id)
                     if not make_failback_sortition:
                         pantheon_sortition.append(players)
                 if not make_failback_sortition and pantheon_players_count < len(pantheon_ids):
                     make_failback_sortition = True
                 if pantheon_players_count % 4 != 0:
-                    return []
+                    make_failback_sortition = True
             else:
                 make_failback_sortition = True
 
@@ -1100,8 +1100,8 @@ class TournamentHandler:
             #     "will get -30000 scores as a round result (their real scores will not be counted)."
             # ),
             TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-            "Если этого не произошло обратитесь к администратору.",
+                                                   "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+                                                   "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
@@ -1231,4 +1231,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i : i + n]
+            yield items[i: i + n]
