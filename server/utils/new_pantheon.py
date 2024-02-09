@@ -27,7 +27,9 @@ def get_new_pantheon_swiss_sortition(pantheonEventId, adminPersonId):
 
     return client.GenerateSwissSeating(
         ctx=context,
-        request=pantheon_api.atoms_pb2.GenericEventPayload(event_id=int(pantheonEventId)),
+        request=pantheon_api.atoms_pb2.SeatingGenerateSwissSeatingPayload(
+            event_id=int(pantheonEventId), substitute_replacement_players=True
+        ),
         server_path_prefix="/v2",
     )
 
