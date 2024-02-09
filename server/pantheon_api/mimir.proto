@@ -95,6 +95,8 @@ service Mimir {
     returns (EventsGetAchievementsResponse);
   rpc ToggleHideResults (GenericEventPayload)
     returns (GenericSuccessResponse);
+  rpc ToggleHideAchievements (GenericEventPayload)
+    returns (GenericSuccessResponse);
   rpc UpdatePlayersLocalIds (EventsUpdatePlayersLocalIdsPayload)
     returns (GenericSuccessResponse);
   rpc UpdatePlayerReplacement (EventsUpdatePlayerReplacementPayload)
@@ -127,7 +129,7 @@ service Mimir {
     returns (GenericSuccessResponse);
   rpc ResetSeating (GenericEventPayload)
     returns (GenericSuccessResponse);
-  rpc GenerateSwissSeating (GenericEventPayload)
+  rpc GenerateSwissSeating (SeatingGenerateSwissSeatingPayload)
     returns (SeatingGenerateSwissSeatingResponse);
   rpc MakeIntervalSeating (SeatingMakeIntervalSeatingPayload)
     returns (GenericSuccessResponse);
@@ -144,6 +146,8 @@ service Mimir {
   rpc GetStartingTimer (GenericEventPayload)
     returns (EventsGetStartingTimerResponse);
   rpc ClearStatCache (ClearStatCachePayload)
+    returns (GenericSuccessResponse);
+  rpc ForceFinishGame (ForceFinishGamePayload)
     returns (GenericSuccessResponse);
   rpc AddTypedOnlineReplay (TypedGamesAddOnlineReplayPayload)
     returns (GamesAddOnlineReplayResponse);
@@ -390,6 +394,7 @@ message EventsGetEventForEditPayload {
 message EventsGetEventForEditResponse {
   int32 id = 1;
   EventData event = 2;
+  bool finished = 3;
 }
 
 message EventsUpdateEventPayload {
@@ -502,6 +507,11 @@ message SeatingMakeShuffledSeatingPayload {
   int32 seed = 3; // randomness factor
 }
 
+message SeatingGenerateSwissSeatingPayload {
+  int32 event_id = 1;
+  bool substitute_replacement_players = 2;
+}
+
 message SeatingGenerateSwissSeatingResponse {
   repeated TableItemSwiss tables = 1;
 }
@@ -548,4 +558,8 @@ message TypedGamesAddOnlineReplayPayload {
   int32 log_timestamp = 4;
   string replay_hash = 5;
   string content = 6;
+}
+
+message ForceFinishGamePayload {
+  string session_hash = 1;
 }
