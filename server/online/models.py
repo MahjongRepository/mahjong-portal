@@ -36,6 +36,8 @@ class TournamentPlayers(BaseModel):
     team_name = models.CharField(max_length=1000, null=True, blank=True)
     team_number = models.PositiveIntegerField(null=True, blank=True)
 
+    is_disable = models.BooleanField(default=False, blank=True)
+
     def __unicode__(self):
         if self.tenhou_username:
             return self.tenhou_username

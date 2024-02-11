@@ -602,7 +602,7 @@ class TournamentHandler:
             message = "Невозможно запустить новые игры. Старые игры ещё не завершились."
             return {"message": message, "tables": [], "round": -1}
 
-        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
 
         if len(confirmed_players) == 0:
             logger.error("Not found confirmed player for tournament {}".format(self.tournament.id))
