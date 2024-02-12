@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from dateutil.relativedelta import relativedelta
 from django.template.defaultfilters import floatformat
 from django.utils import timezone

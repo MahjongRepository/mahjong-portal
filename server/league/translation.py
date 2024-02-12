@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from modeltranslation.translator import TranslationOptions, translator
 
 from player.models import Player, PlayerTitle

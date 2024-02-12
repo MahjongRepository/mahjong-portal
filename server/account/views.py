@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.template.defaulttags import register
 
 

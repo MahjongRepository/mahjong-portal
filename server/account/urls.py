@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.urls import re_path as url

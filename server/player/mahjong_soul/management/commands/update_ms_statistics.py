@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import ms.protocol_pb2 as pb
 from google.protobuf.json_format import MessageToDict
 

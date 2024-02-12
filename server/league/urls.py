@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.urls import path
 
 from league.views import league_confirm_slot, league_details, league_schedule, league_teams, start_game

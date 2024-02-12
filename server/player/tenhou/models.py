@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from datetime import timedelta
 
 from django.db import models

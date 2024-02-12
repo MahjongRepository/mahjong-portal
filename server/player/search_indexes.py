@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from haystack import indexes
 
 from player.models import Player

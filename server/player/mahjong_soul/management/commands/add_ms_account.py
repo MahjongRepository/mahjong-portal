@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.core.management import BaseCommand
 
 from player.mahjong_soul.models import MSAccount

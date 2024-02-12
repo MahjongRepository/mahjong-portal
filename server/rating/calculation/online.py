@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from player.models import Player
 from rating.calculation.common import RatingDatesMixin
 from rating.calculation.rr import RatingRRCalculation

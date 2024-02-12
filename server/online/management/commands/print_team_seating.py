@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from time import sleep
 
 import ujson as json
