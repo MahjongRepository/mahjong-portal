@@ -557,30 +557,31 @@ class TournamentHandler:
             ms_nickname = nickname
             ms_account_id = registration.ms_account_id
 
-        record = TournamentPlayers.objects.create(
-            telegram_username=telegram_username,
-            discord_username=discord_username,
-            tenhou_username=tenhou_nickname,
-            tournament=self.tournament,
-            pantheon_id=pantheon_id,
-            team_name=team_name,
-            ms_username=ms_nickname,
-            ms_account_id=ms_account_id,
-        )
+        with transaction.atomic():
+            record = TournamentPlayers.objects.create(
+                telegram_username=telegram_username,
+                discord_username=discord_username,
+                tenhou_username=tenhou_nickname,
+                tournament=self.tournament,
+                pantheon_id=pantheon_id,
+                team_name=team_name,
+                ms_username=ms_nickname,
+                ms_account_id=ms_account_id,
+            )
 
-        try:
-            if self.tournament.is_pantheon_registration:
-                add_user_to_new_pantheon(
-                    record,
-                    registration,
-                    self.tournament.new_pantheon_id,
-                    settings.PANTHEON_ADMIN_ID,
-                    self.tournament.is_majsoul_tournament,
-                )
-        except Exception as e:
-            logger.error(e, exc_info=e)
-            if self.tournament.is_pantheon_registration:
-                return _("Fatal error. Ask for administrator.")
+            try:
+                if self.tournament.is_pantheon_registration:
+                    add_user_to_new_pantheon(
+                        record,
+                        registration,
+                        self.tournament.new_pantheon_id,
+                        settings.PANTHEON_ADMIN_ID,
+                        self.tournament.is_majsoul_tournament,
+                    )
+            except Exception as e:
+                logger.error(e, exc_info=e)
+                if self.tournament.is_pantheon_registration:
+                    return _("Fatal error. Ask for administrator.")
 
         return _("Your participation in the tournament has been confirmed!")
 
