@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
         registrations = MsOnlineTournamentRegistration.objects.filter(
             tournament_id=tournament_id, is_validated=True, allow_to_save_data=True
-        )
+        ).exclude(player_id__isnull=True)
 
         if registrations:
             print(f"found {len(registrations)} validated registrations")
