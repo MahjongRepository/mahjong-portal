@@ -54,7 +54,7 @@ class Player(BaseModel):
         ms_obj = self.ms.all().order_by("statistics__rank").first()
         if not ms_obj:
             return None
-        return ms_obj.statistics.all().order_by("rank").first()
+        return ms_obj
 
     @property
     def latest_ema_id(self):

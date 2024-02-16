@@ -133,7 +133,11 @@
 
                             {% if tournament.is_online %}
                                 {% if tournament.is_majsoul_tournament %}
-                                    <td>{{ registration_item.ms_nickname }}</td>
+                                    {% if registration_item.player.ms_object %}
+                                        <td><a href="{% url 'player_ms_details' registration_item.player.slug %}" class="d-print-none">{{ registration_item.ms_nickname }}</a></td>
+                                    {% else %}
+                                        <td>{{ registration_item.ms_nickname }}</td>
+                                    {% endif %}
                                 {% else %}
                                     <td>{{ registration_item.tenhou_nickname }}</td>
                                 {% endif %}
