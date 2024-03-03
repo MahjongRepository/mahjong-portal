@@ -89,3 +89,19 @@ a {
     height: 20px;
     fill: #28a745;
 }
+
+:root {
+  --borderWidth: 6px;
+  --height: 18px;
+  --width: 12px;
+  --borderColor: #78b13f;
+}
+
+.check {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: var(--height);
+  width: var(--width);
+  border-bottom: var(--borderWidth) solid var(--borderColor);
+  border-right: var(--borderWidth) solid var(--borderColor);
+}

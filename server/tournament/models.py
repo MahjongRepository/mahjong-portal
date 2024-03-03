@@ -72,6 +72,7 @@ class Tournament(BaseModel):
     fill_city_in_registration = models.BooleanField(default=False)
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)
+    is_apply_in_rating = models.BooleanField(default=False)
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
