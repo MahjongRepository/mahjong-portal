@@ -1,58 +1,67 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 import ms.protocol_pb2 as pb
+from django.db import transaction
 from google.protobuf.json_format import MessageToDict
+from tenacity import retry, wait_exponential
 
 from player.mahjong_soul.management.commands.ms_base import MSBaseCommand
 from player.mahjong_soul.models import MSAccount, MSAccountStatistic, MSPointsHistory
 
 
 class Command(MSBaseCommand):
+    @retry(wait=wait_exponential(multiplier=1, min=5, max=30))
     async def run_code(self, lobby, *args, **options):
-        ms_accounts = MSAccount.objects.all()
+        current_datetime = str(datetime.now().strftime("%d%m%Y"))
+        ms_accounts = MSAccount.objects.exclude(last_update=current_datetime).all()
 
         for ms_account in ms_accounts:
-            request = pb.ReqAccountInfo()
-            request.account_id = ms_account.account_id
-            response = await lobby.fetch_account_info(request)
+            with transaction.atomic():
+                request = pb.ReqAccountInfo()
+                request.account_id = ms_account.account_id
+                response = await lobby.fetch_account_info(request)
 
-            if not response.account.nickname:
-                print(f"Can't find info for {ms_account.account_id}")
-                continue
+                if not response.account.nickname:
+                    print(f"Can't find info for {ms_account.account_id}")
+                    continue
 
-            ms_account.account_name = response.account.nickname
-            ms_account.save()
+                current_response_nickname = response.account.nickname
 
-            four_people_stat, _ = MSAccountStatistic.objects.get_or_create(
-                game_type=MSAccountStatistic.FOUR_PLAYERS, account=ms_account
-            )
-            four_people_stat.rank = response.account.level.id
-            four_people_stat.points = response.account.level.score
+                four_people_stat, _ = MSAccountStatistic.objects.get_or_create(
+                    game_type=MSAccountStatistic.FOUR_PLAYERS, account=ms_account
+                )
+                four_people_stat.rank = response.account.level.id
+                four_people_stat.points = response.account.level.score
 
-            three_people_stat, _ = MSAccountStatistic.objects.get_or_create(
-                game_type=MSAccountStatistic.THREE_PLAYERS, account=ms_account
-            )
-            three_people_stat.rank = response.account.level3.id
-            three_people_stat.points = response.account.level3.score
+                three_people_stat, _ = MSAccountStatistic.objects.get_or_create(
+                    game_type=MSAccountStatistic.THREE_PLAYERS, account=ms_account
+                )
+                three_people_stat.rank = response.account.level3.id
+                three_people_stat.points = response.account.level3.score
 
-            request = pb.ReqAccountStatisticInfo()
-            request.account_id = ms_account.account_id
-            response = await lobby.fetch_account_statistic_info(request)
-            response = MessageToDict(response)
+                request = pb.ReqAccountStatisticInfo()
+                request.account_id = ms_account.account_id
+                response = await lobby.fetch_account_statistic_info(request)
+                response = MessageToDict(response)
 
-            if response.get("error"):
-                print(f"Error updating data for {ms_account.account_id} ({ms_account.account_name})")
-                continue
+                if response.get("error"):
+                    print(f"Error updating data for {ms_account.account_id} ({current_response_nickname})")
+                    continue
 
-            self.calculate_and_save_places_statistic(response, four_people_stat, three_people_stat)
+                self.calculate_and_save_places_statistic(response, four_people_stat, three_people_stat)
 
-            four_people_stat.save()
-            three_people_stat.save()
+                four_people_stat.save()
+                three_people_stat.save()
 
-            self.calculate_and_save_points_diff(four_people_stat)
-            self.calculate_and_save_points_diff(three_people_stat)
+                self.calculate_and_save_points_diff(four_people_stat)
+                self.calculate_and_save_points_diff(three_people_stat)
 
-            print(f"Updated {ms_account.account_id} ({ms_account.account_name})")
+                ms_account.account_name = current_response_nickname
+                ms_account.last_update = current_datetime
+                ms_account.save()
+
+                print(f"Updated {ms_account.account_id} ({current_response_nickname})")
 
     def calculate_and_save_points_diff(self, stat_object):
         latest_history = MSPointsHistory.objects.filter(stat_object=stat_object).order_by("-created_on").first()
@@ -89,55 +98,67 @@ class Command(MSBaseCommand):
         four_hanchan_type = 2
         three_tonpusen_type = 11
         three_hanchan_type = 12
-        games_statistics = response["detailData"]["rankStatistic"]["totalStatistic"]["allLevelStatistic"]["gameMode"]
+        all_level_stat = response["detailData"]["rankStatistic"]["totalStatistic"]["allLevelStatistic"]
+        if len(all_level_stat) > 0:
+            games_statistics = all_level_stat["gameMode"]
 
-        four_tonpusen_data = [x for x in games_statistics if x["mode"] == four_tonpusen_type]
-        if four_tonpusen_data:
-            result = self.calculate_places_from_raw_data(four_tonpusen_data)
-            first_place, second_place, third_place, fourth_place, games_count, average_place = result
+            four_tonpusen_data = [x for x in games_statistics if x["mode"] == four_tonpusen_type]
+            if four_tonpusen_data:
+                result = self.calculate_places_from_raw_data(four_tonpusen_data)
+                first_place, second_place, third_place, fourth_place, games_count, average_place = result
 
-            four_people_stat.tonpusen_games = games_count
-            four_people_stat.tonpusen_average_place = average_place
-            four_people_stat.tonpusen_first_place = first_place
-            four_people_stat.tonpusen_second_place = second_place
-            four_people_stat.tonpusen_third_place = third_place
-            four_people_stat.tonpusen_fourth_place = fourth_place
+                four_people_stat.tonpusen_games = games_count
+                four_people_stat.tonpusen_average_place = average_place
+                four_people_stat.tonpusen_first_place = first_place
+                four_people_stat.tonpusen_second_place = second_place
+                four_people_stat.tonpusen_third_place = third_place
+                four_people_stat.tonpusen_fourth_place = fourth_place
 
-        four_hanchan_data = [x for x in games_statistics if x["mode"] == four_hanchan_type]
-        if four_hanchan_data:
-            result = self.calculate_places_from_raw_data(four_hanchan_data)
-            first_place, second_place, third_place, fourth_place, games_count, average_place = result
+            four_hanchan_data = [x for x in games_statistics if x["mode"] == four_hanchan_type]
+            if four_hanchan_data:
+                result = self.calculate_places_from_raw_data(four_hanchan_data)
+                first_place, second_place, third_place, fourth_place, games_count, average_place = result
 
-            four_people_stat.hanchan_games = games_count
-            four_people_stat.hanchan_average_place = average_place
-            four_people_stat.hanchan_first_place = first_place
-            four_people_stat.hanchan_second_place = second_place
-            four_people_stat.hanchan_third_place = third_place
-            four_people_stat.hanchan_fourth_place = fourth_place
+                four_people_stat.hanchan_games = games_count
+                four_people_stat.hanchan_average_place = average_place
+                four_people_stat.hanchan_first_place = first_place
+                four_people_stat.hanchan_second_place = second_place
+                four_people_stat.hanchan_third_place = third_place
+                four_people_stat.hanchan_fourth_place = fourth_place
 
-        three_tonpusen_data = [x for x in games_statistics if x["mode"] == three_tonpusen_type]
-        if three_tonpusen_data:
-            first_place, second_place, third_place, _, games_count, average_place = self.calculate_places_from_raw_data(
-                three_tonpusen_data
-            )
+            three_tonpusen_data = [x for x in games_statistics if x["mode"] == three_tonpusen_type]
+            if three_tonpusen_data:
+                (
+                    first_place,
+                    second_place,
+                    third_place,
+                    _,
+                    games_count,
+                    average_place,
+                ) = self.calculate_places_from_raw_data(three_tonpusen_data)
 
-            three_people_stat.tonpusen_games = games_count
-            three_people_stat.tonpusen_average_place = average_place
-            three_people_stat.tonpusen_first_place = first_place
-            three_people_stat.tonpusen_second_place = second_place
-            three_people_stat.tonpusen_third_place = third_place
+                three_people_stat.tonpusen_games = games_count
+                three_people_stat.tonpusen_average_place = average_place
+                three_people_stat.tonpusen_first_place = first_place
+                three_people_stat.tonpusen_second_place = second_place
+                three_people_stat.tonpusen_third_place = third_place
 
-        three_hanchan_data = [x for x in games_statistics if x["mode"] == three_hanchan_type]
-        if three_hanchan_data:
-            first_place, second_place, third_place, _, games_count, average_place = self.calculate_places_from_raw_data(
-                three_hanchan_data
-            )
+            three_hanchan_data = [x for x in games_statistics if x["mode"] == three_hanchan_type]
+            if three_hanchan_data:
+                (
+                    first_place,
+                    second_place,
+                    third_place,
+                    _,
+                    games_count,
+                    average_place,
+                ) = self.calculate_places_from_raw_data(three_hanchan_data)
 
-            three_people_stat.hanchan_games = games_count
-            three_people_stat.hanchan_average_place = average_place
-            three_people_stat.hanchan_first_place = first_place
-            three_people_stat.hanchan_second_place = second_place
-            three_people_stat.hanchan_third_place = third_place
+                three_people_stat.hanchan_games = games_count
+                three_people_stat.hanchan_average_place = average_place
+                three_people_stat.hanchan_first_place = first_place
+                three_people_stat.hanchan_second_place = second_place
+                three_people_stat.hanchan_third_place = third_place
 
     def calculate_places_from_raw_data(self, data):
         first_place = data[0]["gameFinalPosition"][0]

@@ -11,6 +11,7 @@ class MSAccount(models.Model):
     account_id = models.PositiveIntegerField(unique=True)
 
     account_name = models.CharField(max_length=255, null=True, blank=True)
+    last_update = models.CharField(max_length=8, null=True, blank=True)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="ms")
 
     def __unicode__(self):
