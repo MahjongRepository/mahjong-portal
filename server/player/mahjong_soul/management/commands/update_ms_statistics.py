@@ -13,7 +13,7 @@ from player.mahjong_soul.models import MSAccount, MSAccountStatistic, MSPointsHi
 class Command(MSBaseCommand):
     @retry(wait=wait_exponential(multiplier=1, min=5, max=30))
     async def run_code(self, lobby, *args, **options):
-        current_datetime = str(datetime.now().strftime("%d%m%Y"))
+        current_datetime = str(datetime.now().strftime("%H%d%m%Y"))
         ms_accounts = MSAccount.objects.exclude(last_update=current_datetime).all()
 
         for ms_account in ms_accounts:
