@@ -30,7 +30,7 @@
             {% endfor %}
         </div>
         {% if tournaments %}
-            {% with reverse_counter=True %}
+            {% with reverse_counter=True is_list_context=True %}
                 {% include 'tournament/_tournaments_table.html' %}
             {% endwith %}
         {% else %}
