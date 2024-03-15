@@ -132,6 +132,12 @@ class Tournament(BaseModel):
         return ""
 
     @property
+    def get_applied_in_rating_text(self):
+        return _("Applied in %(rating_type)s rating.") % {
+            "rating_type": self.tournament_type,
+        }
+
+    @property
     def type_display(self):
         if self.tournament_type == self.FOREIGN_EMA:
             return "EMA"
