@@ -134,7 +134,7 @@ class Tournament(BaseModel):
     @property
     def get_applied_in_rating_text(self):
         return _("Applied in %(rating_type)s rating.") % {
-            "rating_type": self.tournament_type,
+            "rating_type": self.type_help_text,
         }
 
     @property
