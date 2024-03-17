@@ -71,11 +71,14 @@ class TenhouNickname(BaseModel):
         return self.game_logs.filter(game_date__gte=last_rank_change_date)
 
     def dan_settings(self):
-        return FourPlayersPointsCalculator.DAN_SETTINGS[self.get_rank_display()]
+        rank = self.get_rank_display()
+        if rank:
+            return FourPlayersPointsCalculator.DAN_SETTINGS[rank]
 
     def get_rank_display(self):
         stat = self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
-        return stat.get_rank_display()
+        if stat:
+            return stat.get_rank_display()
 
 
 class TenhouAggregatedStatistics(models.Model):
