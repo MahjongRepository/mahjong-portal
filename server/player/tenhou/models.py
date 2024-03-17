@@ -72,13 +72,15 @@ class TenhouNickname(BaseModel):
 
     def dan_settings(self):
         rank = self.get_rank_display()
-        if rank:
+        if rank and rank != "":
             return FourPlayersPointsCalculator.DAN_SETTINGS[rank]
 
     def get_rank_display(self):
         stat = self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
         if stat:
             return stat.get_rank_display()
+        else:
+            return ""
 
 
 class TenhouAggregatedStatistics(models.Model):
