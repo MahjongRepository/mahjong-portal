@@ -832,7 +832,7 @@ class TournamentHandler:
 
         game.save()
 
-    def create_start_ms_game_notification(self, tour, table_number, notification_type, missed_players=None):
+    def create_start_game_notification(self, tour, table_number, notification_type, missed_players=None):
         if missed_players is None:
             missed_players = []
         status = self.get_status()
@@ -844,7 +844,7 @@ class TournamentHandler:
                     .filter(game_index=table_number)
                 )
                 for game in games:
-                    self._create_start_ms_game_notification(game)
+                    self._create_start_game_notification(game)
             if notification_type == 2:
                 games = (
                     TournamentGame.objects.filter(tournament=self.tournament)
@@ -854,7 +854,10 @@ class TournamentHandler:
                 for game in games:
                     game.status = TournamentGame.FAILED_TO_START
                     players = game.game_players.all().order_by("wind")
-                    escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+                    if not self.tournament.is_majsoul_tournament:
+                        escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
+                    else:
+                        escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
                     self.create_notification(
                         TournamentNotification.GAME_FAILED,
                         kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
@@ -869,18 +872,31 @@ class TournamentHandler:
                 for game in games:
                     game.status = TournamentGame.FAILED_TO_START
                     players = game.game_players.all().order_by("wind")
-                    escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+                    if not self.tournament.is_majsoul_tournament:
+                        escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
+                    else:
+                        escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
 
-                    missed_round_players = (
-                        TournamentPlayers.objects.filter(tournament=self.tournament)
-                        .filter(ms_account_id__in=missed_players)
-                        .all()
-                    )
+                    if not self.tournament.is_majsoul_tournament:
+                        missed_round_players = (
+                            TournamentPlayers.objects.filter(tournament=self.tournament)
+                            .filter(tenhou_username__in=missed_players)
+                            .all()
+                        )
+                    else:
+                        missed_round_players = (
+                            TournamentPlayers.objects.filter(tournament=self.tournament)
+                            .filter(ms_account_id__in=missed_players)
+                            .all()
+                        )
 
                     current_missed_players = []
                     current_missed_tg_usernames = []
                     for round_player in missed_round_players:
-                        current_missed_players.append(round_player.ms_username)
+                        if not self.tournament.is_majsoul_tournament:
+                            current_missed_players.append(round_player.tenhou_username)
+                        else:
+                            current_missed_players.append(round_player.ms_username)
                         current_missed_tg_usernames.append(round_player.telegram_username)
 
                     formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
@@ -897,12 +913,14 @@ class TournamentHandler:
                     )
                     game.save()
 
-    def _create_start_ms_game_notification(self, game):
+    def _create_start_game_notification(self, game):
         try:
             players = game.game_players.all().order_by("wind")
 
-            # player_names = [x.player.ms_username for x in players]
-            escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+            if not self.tournament.is_majsoul_tournament:
+                escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
+            else:
+                escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
 
             game.status = TournamentGame.STARTED
             self.create_notification(

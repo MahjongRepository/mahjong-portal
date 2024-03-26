@@ -259,7 +259,7 @@ def confirm_player(request):
 @csrf_exempt
 @autobot_token_require
 @tournament_data_require
-def create_start_ms_game_notification(request):
+def create_start_game_notification(request):
     request_data = json.loads(request.body)
 
     tour = request_data.get("tour")
@@ -279,7 +279,7 @@ def create_start_ms_game_notification(request):
         missed_players = []
 
     # todo: handle message?
-    bot.create_start_ms_game_notification(tour, table_number, notification_type, missed_players)
+    bot.create_start_game_notification(tour, table_number, notification_type, missed_players)
     return JsonResponse({"success": True})
 
 
