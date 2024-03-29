@@ -112,6 +112,7 @@ def add_user_to_new_pantheon(
         person_info["ms_friend_id"] = registration.ms_friend_id
     else:
         person_info["tenhou_id"] = registration.tenhou_nickname
+        person_info["ms_friend_id"] = -1
 
     update_personal_info(person_info, adminPersonId, pantheonEventId)
     register_player(adminPersonId, pantheonEventId, record.pantheon_id)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-15 14:38+0000\n"
+"POT-Creation-Date: 2024-03-29 18:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -205,7 +205,7 @@ msgstr "Что-то пошло не так. Обратитесь к админи
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:1046
+#: online/handler.py:1064
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -224,7 +224,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1066
+#: online/handler.py:1084
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -238,7 +238,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/handler.py:1075
+#: online/handler.py:1093
 msgid ""
 "New game was added.\n"
 "\n"
@@ -270,19 +270,18 @@ msgstr ""
 "\n"
 "Всего игр завершено: %(finished)s/%(total)s."
 
-#: online/handler.py:1088
-#, python-format
+#: online/handler.py:1106
+# python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
 "starts in 10 minutes at 7-30 AM UTC. Please, follow this link %(lobby_link)s "
 "to enter the tournament lobby. Games will start automatically."
 msgstr ""
-"Этап подтверждение закончился! Подтвердили своё участие "
-"%(confirmed_players)s игроков. Игры начнутся через 10 минут в 10-30 МСК. "
-"Пожалуйста, пройдите в лобби %(lobby_link)s и ждите начала игр (игры "
-"начнутся автоматически)."
+"Этап подтверждение закончился! Подтвердили своё участие %(confirmed_players) "
+"игроков. Игры начнутся через 10 минут в 10-30 МСК. Пожалуйста, пройдите в "
+"лобби %(lobby_link) и ждите начала игр (игры начнутся автоматически)."
 
-#: online/handler.py:1107
+#: online/handler.py:1125
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -291,7 +290,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:1110
+#: online/handler.py:1128
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. Missed players "
 "%(missed_players)s. The table was moved to the end of the queue. \n"
@@ -307,16 +306,16 @@ msgstr ""
 "%(missed_players_str) Отсутствующие игроки зайдите (или перезайдите) в "
 "турнирное лобби: %(lobby_link)."
 
-#: online/handler.py:1114
+#: online/handler.py:1132
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: online/handler.py:1115
+#: online/handler.py:1133
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: online/handler.py:1116
+#: online/handler.py:1134
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -325,7 +324,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: online/handler.py:1118
+#: online/handler.py:1136
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -339,7 +338,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:1123
+#: online/handler.py:1141
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
@@ -379,19 +378,19 @@ msgstr ""
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: player/tenhou/models.py:139
+#: player/tenhou/models.py:144
 msgid "Ippan"
 msgstr "Кю-лобби"
 
-#: player/tenhou/models.py:140
+#: player/tenhou/models.py:145
 msgid "Joukyuu"
 msgstr "Перводан"
 
-#: player/tenhou/models.py:141
+#: player/tenhou/models.py:146
 msgid "Tokujou"
 msgstr "Втородан"
 
-#: player/tenhou/models.py:142
+#: player/tenhou/models.py:147
 msgid "Houou"
 msgstr "Феникс"
 
