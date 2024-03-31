@@ -110,3 +110,9 @@ class PortalAutoBot:
     @staticmethod
     def get_allowed_players():
         return tournament_handler.get_allowed_players()
+
+    @staticmethod
+    def add_game_log(log_link):
+        activate("ru")
+
+        return tournament_handler.add_game_log(log_link)

@@ -349,3 +349,18 @@ def get_tournament_status(request):
 def get_allowed_players(request):
     players = bot.get_allowed_players()
     return JsonResponse({"players": players})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def add_game_log(request):
+    request_data = json.loads(request.body)
+
+    log_link = request_data.get("log_link")
+    if not log_link:
+        return HttpResponse(status=400)
+
+    confirm_message = bot.add_game_log(log_link)
+    return JsonResponse({"message": confirm_message[0], "is_error": confirm_message[1]})

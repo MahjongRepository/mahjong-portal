@@ -18,6 +18,7 @@ from mahjong_portal.sitemap import (
     TournamentSitemap,
 )
 from online.views import (
+    add_game_log,
     admin_confirm_player,
     check_new_notifications,
     close_registration,
@@ -65,6 +66,7 @@ urlpatterns = [
     url("^api/v0/autobot/admin_confirm_player$", admin_confirm_player),
     url("^api/v0/autobot/create_start_game_notification$", create_start_game_notification),
     url("^api/v0/autobot/game_finish$", game_finish),
+    url("^api/v0/autobot/add_game_log$", add_game_log),
     url("^api/v0/autobot/get_tournament_status$", get_tournament_status),
     url("^api/v0/autobot/get_tournament_players$", get_allowed_players),
     url(r"^online/", include("online.urls")),

@@ -35,11 +35,11 @@ from player.models import Player
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import format_text, make_random_letters_and_digit_string
 from utils.new_pantheon import (
+    add_online_replay_through_pantheon,
     add_user_to_new_pantheon,
     get_new_pantheon_swiss_sortition,
     upload_replay_through_pantheon,
 )
-from utils.pantheon import add_tenhou_game_to_pantheon
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
 
 logger = logging.getLogger("tournament_bot")
@@ -290,36 +290,41 @@ class TournamentHandler:
             finally:
                 cursor.close()
 
-        response = add_tenhou_game_to_pantheon(log_link)
-        if response.status_code == 500:
-            logger.error("Log add. Pantheon 500.")
-            return error_message, False
+        response = add_online_replay_through_pantheon(self.tournament.new_pantheon_id, log_link)
+        # todo handle error
+        # if response.status_code == 500:
+        #     logger.error("Log add. Pantheon 500.")
+        #     return error_message, False
 
-        content = response.json()
-        if content.get("error"):
-            logger.error("Log add. Pantheon error. {}".format(content.get("error")))
-            return error_message, False
+        # todo handle error
+        # content = response.json()
+        # if content.get("error"):
+        #     logger.error("Log add. Pantheon error. {}".format(content.get("error")))
+        #     return error_message, False
 
-        game_info = content["result"]["games"][0]
-        pantheon_url = f"https://gui.mjtop.net/eid{settings.PANTHEON_TOURNAMENT_EVENT_ID}/game/{game_info['hash']}"
+        game_info = response.game
+        pantheon_url = (
+            f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}"
+            f"/game/{game_info.session_hash}"
+        )
 
         pantheon_players = {}
-        for pantheon_player_id in content["result"]["players"].keys():
+        for pantheon_player in response.players:
+            pantheon_player_id = pantheon_player.id
             pantheon_players[pantheon_player_id] = {
                 "id": pantheon_player_id,
-                "tenhou_nickname": content["result"]["players"][pantheon_player_id]["tenhou_id"],
-                "pantheon_name": content["result"]["players"][pantheon_player_id]["display_name"],
+                "tenhou_nickname": pantheon_player.tenhou_id,
+                "pantheon_name": pantheon_player.title,
                 "score": 0,
                 "place": 0,
                 "rating_delta": 0,
             }
 
-        for pantheon_player_id in game_info["final_results"].keys():
-            pantheon_players[pantheon_player_id]["score"] = game_info["final_results"][pantheon_player_id]["score"]
-            pantheon_players[pantheon_player_id]["place"] = game_info["final_results"][pantheon_player_id]["place"]
-            pantheon_players[pantheon_player_id]["rating_delta"] = game_info["final_results"][pantheon_player_id][
-                "rating_delta"
-            ]
+        for pantheon_player_result in game_info.final_results:
+            pantheon_player_id = pantheon_player_result.player_id
+            pantheon_players[pantheon_player_id]["score"] = pantheon_player_result.score
+            pantheon_players[pantheon_player_id]["place"] = pantheon_player_result.place
+            pantheon_players[pantheon_player_id]["rating_delta"] = pantheon_player_result.rating_delta
 
         formatted_players = []
         players_info = sorted(pantheon_players.values(), key=lambda x: x["place"])

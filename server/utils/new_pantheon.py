@@ -136,3 +136,19 @@ def upload_replay_through_pantheon(eventId, platformId, contentType, replayHash,
         ),
         server_path_prefix="/v2",
     )
+
+
+def add_online_replay_through_pantheon(eventId, tenhouGameLink):
+    client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
+
+    context = Context()
+    context.set_header("HTTP-X-EXTERNAL-QUERY-SECRET", settings.EXTERNAL_QUERY_SECRET)
+
+    return client.AddOnlineReplay(
+        ctx=context,
+        request=pantheon_api.mimir_pb2.GamesAddOnlineReplayPayload(
+            event_id=int(eventId),
+            link=str(tenhouGameLink),
+        ),
+        server_path_prefix="/v2",
+    )

@@ -29,7 +29,7 @@ class TenhouParser(object):
 
     def _download_log(self, log_id):
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"}
-        response = requests.get("http://e.mjv.jp/0/log/?{}".format(log_id), headers=headers)
+        response = requests.get("https://tenhou.net/0/log/?{}".format(log_id), headers=headers)
         data = response.text
         return data
 
