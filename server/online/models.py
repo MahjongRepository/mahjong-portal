@@ -40,6 +40,9 @@ class TournamentPlayers(BaseModel):
 
     is_disable = models.BooleanField(default=False, blank=True)
 
+    class Meta:
+        unique_together = ["tournament", "pantheon_id"]
+
     def __unicode__(self):
         if self.tenhou_username:
             return self.tenhou_username
