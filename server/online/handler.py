@@ -31,7 +31,6 @@ from online.models import (
     TournamentStatus,
 )
 from online.parser import TenhouParser
-from player.models import Player
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import format_text, make_random_letters_and_digit_string
 from utils.new_pantheon import (
@@ -333,9 +332,17 @@ class TournamentHandler:
         max_scores_length = max([len(str(x["score"])) for x in players_info])
         for player_info in players_info:
             try:
-                player_record = Player.objects.get(pantheon_id=player_info["id"])
-                display_name = f"{player_record.last_name_ru} ({player_record.last_name_en})"
-            except Player.DoesNotExist:
+                current_tournament_player = TournamentPlayers.objects.get(
+                    tournament=self.tournament, pantheon_id=player_info["id"]
+                )
+                try:
+                    current_registrant = OnlineTournamentRegistration.objects.get(
+                        tournament=self.tournament, tenhou_nickname=current_tournament_player.tenhou_username
+                    )
+                    display_name = f"{current_registrant.first_name} ({current_registrant.last_name})"
+                except OnlineTournamentRegistration.DoesNotExist:
+                    display_name = player_info["pantheon_name"]
+            except TournamentPlayers.DoesNotExist:
                 display_name = player_info["pantheon_name"]
 
             tenhou_nickname = player_info["tenhou_nickname"].ljust(max_nick_length, " ")
