@@ -1,22 +1,27 @@
 # -*- coding: utf-8 -*-
 import logging
+import os
 import random
 import threading
 from copy import copy
-from datetime import timedelta
+from datetime import datetime, timedelta
 from random import randint
 from time import sleep
 from typing import Dict, List, Optional
 from urllib.parse import parse_qs, unquote, urlparse
 
+import numpy as np
 import pytz
 import requests
+import ujson as json
 from django.conf import settings
 from django.db import transaction
 from django.db.transaction import get_connection
 from django.utils import timezone, translation
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
+from google.protobuf.json_format import MessageToJson
+from numpy.random import PCG64, SeedSequence
 
 from online.models import (
     TournamentGame,
@@ -26,10 +31,14 @@ from online.models import (
     TournamentStatus,
 )
 from online.parser import TenhouParser
-from player.models import Player
-from tournament.models import OnlineTournamentRegistration
-from utils.general import make_random_letters_and_digit_string
-from utils.pantheon import add_tenhou_game_to_pantheon, add_user_to_pantheon, get_pantheon_swiss_sortition
+from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
+from utils.general import format_text, make_random_letters_and_digit_string
+from utils.new_pantheon import (
+    add_online_replay_through_pantheon,
+    add_user_to_new_pantheon,
+    get_new_pantheon_swiss_sortition,
+    upload_replay_through_pantheon,
+)
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
 
 logger = logging.getLogger("tournament_bot")
@@ -280,36 +289,41 @@ class TournamentHandler:
             finally:
                 cursor.close()
 
-        response = add_tenhou_game_to_pantheon(log_link)
-        if response.status_code == 500:
-            logger.error("Log add. Pantheon 500.")
-            return error_message, False
+        response = add_online_replay_through_pantheon(self.tournament.new_pantheon_id, log_link)
+        # todo handle error
+        # if response.status_code == 500:
+        #     logger.error("Log add. Pantheon 500.")
+        #     return error_message, False
 
-        content = response.json()
-        if content.get("error"):
-            logger.error("Log add. Pantheon error. {}".format(content.get("error")))
-            return error_message, False
+        # todo handle error
+        # content = response.json()
+        # if content.get("error"):
+        #     logger.error("Log add. Pantheon error. {}".format(content.get("error")))
+        #     return error_message, False
 
-        game_info = content["result"]["games"][0]
-        pantheon_url = f"https://gui.mjtop.net/eid{settings.PANTHEON_TOURNAMENT_EVENT_ID}/game/{game_info['hash']}"
+        game_info = response.game
+        pantheon_url = (
+            f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}"
+            f"/game/{game_info.session_hash}"
+        )
 
         pantheon_players = {}
-        for pantheon_player_id in content["result"]["players"].keys():
+        for pantheon_player in response.players:
+            pantheon_player_id = pantheon_player.id
             pantheon_players[pantheon_player_id] = {
                 "id": pantheon_player_id,
-                "tenhou_nickname": content["result"]["players"][pantheon_player_id]["tenhou_id"],
-                "pantheon_name": content["result"]["players"][pantheon_player_id]["display_name"],
+                "tenhou_nickname": pantheon_player.tenhou_id,
+                "pantheon_name": pantheon_player.title,
                 "score": 0,
                 "place": 0,
                 "rating_delta": 0,
             }
 
-        for pantheon_player_id in game_info["final_results"].keys():
-            pantheon_players[pantheon_player_id]["score"] = game_info["final_results"][pantheon_player_id]["score"]
-            pantheon_players[pantheon_player_id]["place"] = game_info["final_results"][pantheon_player_id]["place"]
-            pantheon_players[pantheon_player_id]["rating_delta"] = game_info["final_results"][pantheon_player_id][
-                "rating_delta"
-            ]
+        for pantheon_player_result in game_info.final_results:
+            pantheon_player_id = pantheon_player_result.player_id
+            pantheon_players[pantheon_player_id]["score"] = pantheon_player_result.score
+            pantheon_players[pantheon_player_id]["place"] = pantheon_player_result.place
+            pantheon_players[pantheon_player_id]["rating_delta"] = pantheon_player_result.rating_delta
 
         formatted_players = []
         players_info = sorted(pantheon_players.values(), key=lambda x: x["place"])
@@ -318,9 +332,17 @@ class TournamentHandler:
         max_scores_length = max([len(str(x["score"])) for x in players_info])
         for player_info in players_info:
             try:
-                player_record = Player.objects.get(pantheon_id=player_info["id"])
-                display_name = f"{player_record.last_name_ru} ({player_record.last_name_en})"
-            except Player.DoesNotExist:
+                current_tournament_player = TournamentPlayers.objects.get(
+                    tournament=self.tournament, pantheon_id=player_info["id"]
+                )
+                try:
+                    current_registrant = OnlineTournamentRegistration.objects.get(
+                        tournament=self.tournament, tenhou_nickname=current_tournament_player.tenhou_username
+                    )
+                    display_name = f"{current_registrant.first_name} ({current_registrant.last_name})"
+                except OnlineTournamentRegistration.DoesNotExist:
+                    display_name = player_info["pantheon_name"]
+            except TournamentPlayers.DoesNotExist:
                 display_name = player_info["pantheon_name"]
 
             tenhou_nickname = player_info["tenhou_nickname"].ljust(max_nick_length, " ")
@@ -355,11 +377,12 @@ class TournamentHandler:
                 "finished": finished_games.count(),
                 "total": total_games,
                 "pantheon_link": pantheon_url,
-                "tenhou_link": f"http://tenhou.net/0/?log={log_id}",
+                "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
                 "player_one": formatted_players[0],
                 "player_two": formatted_players[1],
                 "player_three": formatted_players[2],
                 "player_four": formatted_players[3],
+                "platform_name": "Tenhou",
             },
         )
 
@@ -367,69 +390,242 @@ class TournamentHandler:
 
         return _("The game has been added. Thank you."), True
 
-    def confirm_participation_in_tournament(self, tenhou_nickname, telegram_username=None, discord_username=None):
+    def game_finish(self, log_id, players, log_content, log_time):
+        if not self.tournament.is_majsoul_tournament:
+            platform_id = 1
+        else:
+            platform_id = 2
+
         status = self.get_status()
 
-        if status.registration_closed:
-            return _("The confirmation phase has already ended. Visit our next tournaments.")
+        if TournamentGame.objects.filter(log_id=log_id).exists():
+            return _("The game has been added. Thank you."), True
 
-        if len(tenhou_nickname) > 8:
-            return _("The tenhou.net nickname must not be longer than eight characters.")
-
+        # todo add flag for disable upload to pantheon
         try:
-            registration = OnlineTournamentRegistration.objects.get(
-                tenhou_nickname__iexact=tenhou_nickname, tournament=self.tournament
+            pantheon_response = upload_replay_through_pantheon(
+                self.tournament.new_pantheon_id, platform_id, 2, log_id, log_time, log_content
             )
-        except OnlineTournamentRegistration.DoesNotExist:
-            return _("You need to register for the tournament on mahjong.click first.")
+        except Exception:
+            return _("Error adding a game to pantheon."), True
 
-        if TournamentPlayers.objects.filter(
-            tenhou_username__iexact=tenhou_nickname, tournament=self.tournament
-        ).exists():
-            return _('Nickname "%(tenhou_nickname)s" was already confirmed for this tournament.') % {
-                "tenhou_nickname": tenhou_nickname
-            }
+        pantheon_response_dict = json.loads(MessageToJson(pantheon_response))
 
-        pantheon_id = registration.player and registration.player.pantheon_id or None
-        team_name = registration.notes
+        formatted_players_results = {}
+        for player_result in pantheon_response_dict["game"]["finalResults"]:
+            formatted_players_results[int(player_result["playerId"])] = player_result
 
-        record = TournamentPlayers.objects.create(
-            telegram_username=telegram_username,
-            discord_username=discord_username,
-            tenhou_username=tenhou_nickname,
-            tournament=self.tournament,
-            pantheon_id=pantheon_id,
-            team_name=team_name,
+        formatted_players = {}
+        for current_player in pantheon_response_dict["players"]:
+            matched_player = formatted_players_results[int(current_player["id"])]
+            formatted_players[matched_player["place"]] = f"{current_player['tenhouId']} [{matched_player['score']}]"
+
+        with transaction.atomic():
+            cursor = get_connection().cursor()
+            cursor.execute(f"LOCK TABLE {TournamentGame._meta.db_table}")
+
+            try:
+                if not self.tournament.is_majsoul_tournament:
+                    games = (
+                        TournamentGame.objects.filter(tournament=self.tournament)
+                        .filter(game_players__player__tenhou_username__in=players)
+                        .filter(tournament_round=status.current_round)
+                        .distinct()
+                    )
+                else:
+                    games = (
+                        TournamentGame.objects.filter(tournament=self.tournament)
+                        .filter(game_players__player__ms_username__in=players)
+                        .filter(tournament_round=status.current_round)
+                        .distinct()
+                    )
+                error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                    "admin_username": self.get_admin_username()
+                }
+                if games.count() >= 2:
+                    logger.error("Log add. Too much games.")
+                    return error_message, False
+
+                game = games.first()
+
+                if not game:
+                    logger.error("Games not found for this players!")
+                    error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                        "admin_username": self.get_admin_username()
+                    }
+                    return error_message, False
+
+                game.log_id = log_id
+                game.save()
+            finally:
+                cursor.close()
+
+        game.status = TournamentGame.FINISHED
+        game.save()
+
+        finished_games = (
+            TournamentGame.objects.filter(tournament=self.tournament)
+            .filter(status=TournamentGame.FINISHED)
+            .filter(tournament_round=status.current_round)
         )
 
-        try:
-            add_user_to_pantheon(record)
-        except Exception as e:
-            logger.error(e, exc_info=e)
+        total_games = (
+            TournamentGame.objects.filter(tournament=self.tournament)
+            .filter(tournament_round=status.current_round)
+            .count()
+        )
+
+        if not self.tournament.is_majsoul_tournament:
+            # todo: tenhou stuff
+            self.create_notification(
+                TournamentNotification.GAME_ENDED,
+                kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": "pantheon_link",
+                    "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
+                    "player_one": players[0],
+                    "player_two": players[1],
+                    "player_three": players[2],
+                    "player_four": players[3],
+                    "platform_name": "Tenhou",
+                },
+            )
+        else:
+            self.create_notification(
+                TournamentNotification.GAME_ENDED,
+                kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict["game"]["sessionHash"]),
+                    "game_replay_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
+                    "player_one": formatted_players[1],
+                    "player_two": formatted_players[2],
+                    "player_three": formatted_players[3],
+                    "player_four": formatted_players[4],
+                    "platform_name": "mahjongsoul",
+                },
+            )
+
+        self.check_round_was_finished()
+
+        return _("The game has been added. Thank you."), True
+
+    def confirm_participation_in_tournament(
+        self, nickname, telegram_username=None, discord_username=None, friend_id=None, is_admin=False
+    ):
+        status = self.get_status()
+
+        if not is_admin and status.registration_closed:
+            return _("The confirmation phase has already ended. Visit our next tournaments.")
+
+        if not self.tournament.is_majsoul_tournament and len(nickname) > 8:
+            return _("The tenhou.net nickname must not be longer than eight characters.")
+
+        if not self.tournament.is_majsoul_tournament:
+            try:
+                registration = OnlineTournamentRegistration.objects.get(
+                    tenhou_nickname__iexact=nickname, tournament=self.tournament
+                )
+            except OnlineTournamentRegistration.DoesNotExist:
+                return _("You need to register for the tournament on mahjong.click first.")
+        else:
+            if not friend_id:
+                registration = MsOnlineTournamentRegistration.objects.filter(
+                    ms_nickname__iexact=nickname, tournament=self.tournament
+                )
+            else:
+                registration = MsOnlineTournamentRegistration.objects.filter(
+                    ms_nickname__iexact=nickname, tournament=self.tournament, ms_friend_id=friend_id
+                )
+
+            if len(registration) <= 0:
+                return _("You need to register for the tournament on mahjong.click first.")
+            if len(registration) > 1:
+                return _("Found multiple majsoul accounts for the tournament on mahjong.click. Ask for administrator.")
+            registration = registration[0]
+
+        if self.tournament.is_majsoul_tournament and not registration.is_validated:
+            return _("Majsoul account not validated. Ask for administrator.")
+
+        if not self.tournament.is_majsoul_tournament:
+            if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
+                return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
+        else:
+            if TournamentPlayers.objects.filter(
+                ms_username__iexact=nickname, tournament=self.tournament, pantheon_id=registration.user.new_pantheon_id
+            ).exists():
+                return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
+
+        pantheon_id = registration.user and registration.user.new_pantheon_id or None
+        team_name = registration.notes
+
+        tenhou_nickname = ""
+        ms_nickname = None
+        ms_account_id = None
+        if not self.tournament.is_majsoul_tournament:
+            tenhou_nickname = nickname
+        else:
+            ms_nickname = nickname
+            ms_account_id = registration.ms_account_id
+
+        with transaction.atomic():
+            record = TournamentPlayers.objects.create(
+                telegram_username=telegram_username,
+                discord_username=discord_username,
+                tenhou_username=tenhou_nickname,
+                tournament=self.tournament,
+                pantheon_id=pantheon_id,
+                team_name=team_name,
+                ms_username=ms_nickname,
+                ms_account_id=ms_account_id,
+            )
+
+            try:
+                if self.tournament.is_pantheon_registration:
+                    add_user_to_new_pantheon(
+                        record,
+                        registration,
+                        self.tournament.new_pantheon_id,
+                        settings.PANTHEON_ADMIN_ID,
+                        self.tournament.is_majsoul_tournament,
+                    )
+            except Exception as e:
+                logger.error(e, exc_info=e)
+                if self.tournament.is_pantheon_registration:
+                    return _("Fatal error. Ask for administrator.")
 
         return _("Your participation in the tournament has been confirmed!")
 
-    def prepare_next_round(self):
+    def prepare_next_round(self, reshuffleInPortal=True):
         status = self.get_status()
 
         if not status.current_round:
             status.current_round = 0
 
         if status.current_round >= self.tournament.number_of_sessions:
-            return "Невозможно запустить новые игры. У турнира закончились туры."
+            message = "Невозможно запустить новые игры. У турнира закончились туры."
+            return {"message": message, "tables": [], "round": -1}
 
         current_games = TournamentGame.objects.filter(tournament=self.tournament).exclude(
             status=TournamentGame.FINISHED
         )
 
         if current_games.exists():
-            return "Невозможно запустить новые игры. Старые игры ещё не завершились."
+            message = "Невозможно запустить новые игры. Старые игры ещё не завершились."
+            return {"message": message, "tables": [], "round": -1}
 
-        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
+
+        if len(confirmed_players) == 0:
+            logger.error("Not found confirmed player for tournament {}".format(self.tournament.id))
 
         missed_id = confirmed_players.filter(pantheon_id=None)
         if missed_id.exists():
-            return "Невозможно запустить новые игры. Не у всех игроков стоит pantheon id."
+            message = "Невозможно запустить новые игры. Не у всех игроков стоит pantheon id."
+            return {"message": message, "tables": [], "round": -1}
+
+        is_majsoul_tournament = self.tournament.is_majsoul_tournament
 
         with transaction.atomic():
             status.current_round += 1
@@ -437,18 +633,20 @@ class TournamentHandler:
 
             pantheon_ids = {}
             for confirmed_player in confirmed_players:
-                pantheon_ids[confirmed_player.pantheon_id] = confirmed_player
+                pantheon_ids[int(confirmed_player.pantheon_id)] = confirmed_player
 
-            sortition = self.make_sortition(list(pantheon_ids.keys()), status.current_round)
+            sortition = self.make_sortition(pantheon_ids, status.current_round)
             # from online.team_seating import TeamSeating
             # sortition = TeamSeating.get_seating_for_round(status.current_round)
 
             games = []
+            final_sortition = []
             for game_index, item in enumerate(sortition):
                 logger.info(f"Preparing table with player_ids={item}")
 
                 # shuffle player winds
-                random.shuffle(item)
+                if reshuffleInPortal:
+                    random.shuffle(item)
 
                 try:
                     game = TournamentGame.objects.create(
@@ -458,9 +656,15 @@ class TournamentHandler:
                         game_index=game_index + 1,
                     )
 
+                    table_players = []
                     for wind in range(0, len(item)):
                         player_id = pantheon_ids[item[wind]].id
                         TournamentGamePlayer.objects.create(game=game, player_id=player_id, wind=wind)
+                        if not is_majsoul_tournament:
+                            table_players.append({"tenhou_id": pantheon_ids[item[wind]].tenhou_username})
+                        else:
+                            table_players.append({"ms_account_id": pantheon_ids[item[wind]].ms_account_id})
+                    final_sortition.append({"players": table_players})
 
                     games.append(game)
                 except Exception as e:
@@ -478,16 +682,89 @@ class TournamentHandler:
 
                 # for admin
                 message = "Тур {}. Игры сформированы.".format(status.current_round)
+                return {"message": message, "tables": final_sortition, "round": status.current_round}
             else:
                 message = "Игры не запустились. Требуется вмешательство администратора."
+                return {"message": message, "tables": [], "round": -1}
 
-        return message
-
+    # return [[1,2,3,4],[5,6,7,8]...]
     def make_sortition(self, pantheon_ids, current_round):
         if current_round == 1:
-            return self._random_sortition(pantheon_ids)
+            pantheon_ids_list = list(pantheon_ids.keys())
+            if len(pantheon_ids_list) % 4 == 0:
+                return self._numpy_random_sortition(pantheon_ids_list)
+            else:
+                return []
         else:
-            return get_pantheon_swiss_sortition()
+            make_failback_sortition = False
+            pantheon_sortition = get_new_pantheon_swiss_sortition(
+                self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID
+            )
+            pantheon_sortition = json.loads(MessageToJson(pantheon_sortition))
+            tables = pantheon_sortition["tables"]
+            pantheon_sortition = []
+            if tables:
+                pantheon_players_count = 0
+                for table in tables:
+                    players = []
+                    for player in table["players"]:
+                        player_id = int(player["playerId"])
+                        pantheon_players_count = pantheon_players_count + 1
+                        if player_id not in pantheon_ids:
+                            make_failback_sortition = True
+                            break
+                        players.append(player_id)
+                    if not make_failback_sortition:
+                        pantheon_sortition.append(players)
+                if not make_failback_sortition and pantheon_players_count < len(pantheon_ids):
+                    make_failback_sortition = True
+                if pantheon_players_count % 4 != 0:
+                    make_failback_sortition = True
+            else:
+                make_failback_sortition = True
+
+            if not make_failback_sortition:
+                return pantheon_sortition
+            else:
+                marked_pantheon_ids = {}
+                pantheon_ids_list = list(pantheon_ids.keys())
+                if len(pantheon_ids_list) % 4 != 0:
+                    return []
+                pantheon_ids_list.sort()
+                player_index = 1
+                for id in pantheon_ids_list:
+                    marked_pantheon_ids[player_index] = id
+                    player_index = player_index + 1
+                golf_sortition = self.resolve_golf_sortition(
+                    self.tournament.number_of_sessions, len(pantheon_ids), current_round, marked_pantheon_ids
+                )
+                if not golf_sortition:
+                    return self._numpy_random_sortition(pantheon_ids_list)
+
+    # marked_pantheon_ids[index] = pantheon_id
+    def resolve_golf_sortition(self, tours_count, players_count, current_tour, marked_pantheon_ids):
+        golf_sortition = []
+        folder = settings.GOLF_SORTITION_DIR
+        golf_sortition_file = os.path.join(
+            settings.BASE_DIR, folder, f"{tours_count}_tours_{players_count}_players.json"
+        )
+        # check exist file
+        if os.path.isfile(golf_sortition_file):
+            with open(golf_sortition_file) as f:
+                data = json.loads(f.read())
+            for tours in data:
+                if tours["tour_number"] == current_tour:
+                    tables = tours["tables"]
+                    for table in tables:
+                        current_table = []
+                        seating = table["seating"]
+                        for seat in seating:
+                            player_index = int(seat["player_index"])
+                            if player_index in marked_pantheon_ids:
+                                current_table.append(marked_pantheon_ids[player_index])
+                        golf_sortition.append(current_table)
+
+        return golf_sortition
 
     def start_games(self):
         status = self.get_status()
@@ -548,6 +825,7 @@ class TournamentHandler:
                         "missed_players": missed_players_str,
                         "lobby_link": self.get_lobby_link(),
                         "game_index": game.game_index,
+                        "missed_players_str": "",
                     },
                 )
             else:
@@ -565,6 +843,110 @@ class TournamentHandler:
             )
 
         game.save()
+
+    def create_start_game_notification(self, tour, table_number, notification_type, missed_players=None):
+        if missed_players is None:
+            missed_players = []
+        status = self.get_status()
+        if tour == status.current_round:
+            if notification_type == 1:
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(tournament_round=status.current_round)
+                    .filter(game_index=table_number)
+                )
+                for game in games:
+                    self._create_start_game_notification(game)
+            if notification_type == 2:
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(tournament_round=status.current_round)
+                    .filter(game_index=table_number)
+                )
+                for game in games:
+                    game.status = TournamentGame.FAILED_TO_START
+                    players = game.game_players.all().order_by("wind")
+                    if not self.tournament.is_majsoul_tournament:
+                        escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
+                    else:
+                        escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+                    self.create_notification(
+                        TournamentNotification.GAME_FAILED,
+                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                    )
+                    game.save()
+            if notification_type == 3:
+                games = (
+                    TournamentGame.objects.filter(tournament=self.tournament)
+                    .filter(tournament_round=status.current_round)
+                    .filter(game_index=table_number)
+                )
+                for game in games:
+                    game.status = TournamentGame.FAILED_TO_START
+                    players = game.game_players.all().order_by("wind")
+                    if not self.tournament.is_majsoul_tournament:
+                        escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
+                    else:
+                        escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+
+                    if not self.tournament.is_majsoul_tournament:
+                        missed_round_players = (
+                            TournamentPlayers.objects.filter(tournament=self.tournament)
+                            .filter(tenhou_username__in=missed_players)
+                            .all()
+                        )
+                    else:
+                        missed_round_players = (
+                            TournamentPlayers.objects.filter(tournament=self.tournament)
+                            .filter(ms_account_id__in=missed_players)
+                            .all()
+                        )
+
+                    current_missed_players = []
+                    current_missed_tg_usernames = []
+                    for round_player in missed_round_players:
+                        if not self.tournament.is_majsoul_tournament:
+                            current_missed_players.append(round_player.tenhou_username)
+                        else:
+                            current_missed_players.append(round_player.ms_username)
+                        current_missed_tg_usernames.append(round_player.telegram_username)
+
+                    formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
+
+                    self.create_notification(
+                        TournamentNotification.GAME_FAILED_NO_MEMBERS,
+                        kwargs={
+                            "players": ", ".join(escaped_player_names),
+                            "game_index": game.game_index,
+                            "missed_players": current_missed_players,
+                            "lobby_link": settings.TOURNAMENT_PUBLIC_LOBBY,
+                            "missed_players_str": formatted_missed_players,
+                        },
+                    )
+                    game.save()
+
+    def _create_start_game_notification(self, game):
+        try:
+            players = game.game_players.all().order_by("wind")
+
+            if not self.tournament.is_majsoul_tournament:
+                escaped_player_names = [f"`{x.player.tenhou_username}`" for x in players]
+            else:
+                escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
+
+            game.status = TournamentGame.STARTED
+            self.create_notification(
+                TournamentNotification.GAME_STARTED,
+                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+            )
+            game.save()
+        except Exception:
+            game.status = TournamentGame.FAILED_TO_START
+            self.create_notification(
+                TournamentNotification.GAME_FAILED,
+                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+            )
+            game.save()
 
     def check_round_was_finished(self):
         status = self.get_status()
@@ -634,6 +1016,22 @@ class TournamentHandler:
                 destination=TournamentNotification.TELEGRAM,
             )
 
+    def get_allowed_players(self):
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
+        allowed_players = []
+        for player in confirmed_players:
+            allowed_players.append(
+                {
+                    "pantheon_id": player.pantheon_id,
+                    "tenhou_id": player.tenhou_username,
+                    "is_replacement": player.is_replacement,
+                    "ms_username": player.ms_username,
+                    "ms_account_id": player.ms_account_id,
+                    "telegram_username": player.telegram_username,
+                }
+            )
+        return allowed_players
+
     def get_notification_text(
         self, lang: str, notification: TournamentNotification, extra_kwargs: Optional[dict] = None
     ):
@@ -653,14 +1051,24 @@ class TournamentHandler:
 
         if notification.notification_type == TournamentNotification.CONFIRMATION_STARTED:
             if self.destination == self.TELEGRAM_DESTINATION:
-                return (
-                    "Начался этап подтверждения участия! "
-                    'Для подтверждения своего участия отправьте команду "`/me ваш ник на тенхе`" (регистр важен!). '
-                    "Этап завершится в 10-20 (МСК).\n\n"
-                    "Полезные ссылки:\n"
-                    "- турнирное лобби: %(lobby_link)s\n"
-                    "- турнирный рейтинг: %(rating_link)s\n"
-                ) % kwargs
+                if not self.tournament.is_majsoul_tournament:
+                    return (
+                        "Начался этап подтверждения участия! "
+                        'Для подтверждения своего участия отправьте команду "`/me ваш ник на тенхе`" (регистр важен!). '
+                        "Этап завершится в 10-30 (МСК).\n\n"
+                        "Полезная информация:\n"
+                        "- турнирное лобби: %(lobby_link)s\n"
+                        "- турнирный рейтинг: %(rating_link)s\n"
+                    ) % kwargs
+                else:
+                    return (
+                        "Начался этап подтверждения участия! "
+                        'Для подтверждения своего участия отправьте команду "`/me ваш ник на mahjongsoul`" (регистр важен!). '
+                        "Этап завершится в 10-30 (МСК).\n\n"
+                        "Полезная информация:\n"
+                        "- турнирное лобби: %(lobby_link)s\n"
+                        "- турнирный рейтинг: %(rating_link)s\n"
+                    ) % kwargs
 
             if self.destination == self.DISCORD_DESTINATION:
                 return (
@@ -697,13 +1105,13 @@ class TournamentHandler:
                 "New game was added.\n\n"
                 "Results:\n"
                 "```\n"
-                "%(player_one)s\n"
-                "%(player_two)s\n"
-                "%(player_three)s\n"
-                "%(player_four)s\n"
+                "%(player_one)\n"
+                "%(player_two)\n"
+                "%(player_three)\n"
+                "%(player_four)\n"
                 "```\n"
-                "Game link: %(pantheon_link)s\n\n"
-                "Tenhou link: %(tenhou_link)s\n\n"
+                "Game link: %(pantheon_link)\n\n"
+                "%(platform_name) link: %(game_replay_link)\n\n"
                 "Finished games: %(finished)s/%(total)s."
             ),
             TournamentNotification.CONFIRMATION_ENDED: _(
@@ -712,22 +1120,26 @@ class TournamentHandler:
                 "Please, follow this link %(lobby_link)s to enter the tournament lobby. "
                 "Games will start automatically."
             ),
-            TournamentNotification.GAMES_PREPARED: _(
-                "Round %(current_round)s of %(total_rounds)s starts. "
-                "Tournament seating is ready.\n\n"
-                "Starting games...\n\n"
-                "After the game please send the game log link to the #game_logs channel. "
-                "The game log should be sent before the new round starts. "
-                "If there is no log when next round start, all players from this game "
-                "will get -30000 scores as a round result (their real scores will not be counted)."
-            ),
+            # todo: localization notification for tenhou
+            # TournamentNotification.GAMES_PREPARED: _(
+            #     "Round %(current_round)s of %(total_rounds)s starts. "
+            #     "Tournament seating is ready.\n\n"
+            #     "Starting games...\n\n"
+            #     "After the game please send the game log link to the #game_logs channel. "
+            #     "The game log should be sent before the new round starts. "
+            #     "If there is no log when next round start, all players from this game "
+            #     "will get -30000 scores as a round result (their real scores will not be counted)."
+            # ),
+            TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
+            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
+            "Если этого не произошло обратитесь к администратору.",
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
             TournamentNotification.GAME_FAILED_NO_MEMBERS: _(
                 "Game №%(game_index)s: %(players)s. Is not started. Missed players %(missed_players)s. "
                 "The table was moved to the end of the queue. \n\n"
-                "Missed players please enter the tournament lobby: %(lobby_link)s."
+                "%(missed_players_str) Missed players please enter the tournament lobby: %(lobby_link)."
             ),
             TournamentNotification.GAME_STARTED: _("Game №%(game_index)s: %(players)s. Started."),
             TournamentNotification.TOURNAMENT_FINISHED: _("The tournament is over. Thank you for participating!"),
@@ -742,13 +1154,20 @@ class TournamentHandler:
             ),
         }
 
-        return messages.get(notification.notification_type) % kwargs
+        return format_text(messages.get(notification.notification_type), kwargs)
 
     def get_lobby_link(self):
-        return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
+        if self.tournament:
+            if not self.tournament.is_majsoul_tournament:
+                return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
+            else:
+                return f"{self.lobby}"
 
     def get_rating_link(self):
-        return f"https://gui.mjtop.net/eid{settings.PANTHEON_TOURNAMENT_EVENT_ID}/stat"
+        return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/order/rating"
+
+    def get_pantheon_game_link(self, hash):
+        return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/game/{hash}"
 
     def get_admin_username(self):
         if self.destination == self.TELEGRAM_DESTINATION:
@@ -822,6 +1241,13 @@ class TournamentHandler:
             if player.discord_username:
                 player_names.append(f"@{player.discord_username} ({TournamentHandler.DISCORD_DESTINATION})")
         return ", ".join(player_names)
+
+    def _numpy_random_sortition(self, pantheon_ids):
+        seed = datetime.now().microsecond
+        rg = np.random.Generator(PCG64(SeedSequence(seed)))
+        # pre shuffle players sequense for legacy sorting
+        rg.shuffle(pantheon_ids)
+        return self._random_sortition(pantheon_ids)
 
     def _random_sortition(self, pantheon_ids):
         # default random.shuffle function doesn't produce good results

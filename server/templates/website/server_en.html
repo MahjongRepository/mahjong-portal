@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Server' %}
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="About server information.">
+    <meta property="og:description" content="About server information.">
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>About server</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Mahjong portal work on:</h5>
+              <p class="card-text">&bull; Django framework 4</p>
+              <p class="card-text">&bull; {{ platform_name }}</p>
+              <p class="card-text">&bull; PostgreSQL 15</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

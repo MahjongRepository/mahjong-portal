@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import csv
 import io
-import json
 import logging
+import platform
 
+import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
@@ -73,6 +76,18 @@ def about(request):
         template = "about_ru.html"
 
     return render(request, "website/{}".format(template), {"page": "about"})
+
+
+def server(request):
+    template = "server_en.html"
+    if get_language() == "ru":
+        template = "server_ru.html"
+    if platform.python_implementation() == "PyPy":
+        platform_name = "PyPy3"
+    else:
+        platform_name = "Python3"
+
+    return render(request, "website/{}".format(template), {"page": "server", "platform_name": platform_name})
 
 
 def championships(request):

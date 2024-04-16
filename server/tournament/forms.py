@@ -1,7 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from tournament.models import OnlineTournamentRegistration, TournamentApplication, TournamentRegistration
+from tournament.models import (
+    MsOnlineTournamentRegistration,
+    OnlineTournamentRegistration,
+    TournamentApplication,
+    TournamentRegistration,
+)
 
 
 class TournamentRegistrationForm(forms.ModelForm):
@@ -44,6 +51,27 @@ class OnlineTournamentRegistrationForm(forms.ModelForm):
 
         if tournament.is_majsoul_tournament:
             self.fields["tenhou_nickname"].label = _("Majsoul nickname")
+
+
+class MajsoulOnlineTournamentPantheonRegistrationForm(forms.ModelForm):
+    allow_to_save_data = forms.BooleanField(required=False)
+
+    class Meta:
+        model = MsOnlineTournamentRegistration
+        fields = ["ms_friend_id", "ms_nickname", "allow_to_save_data"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        tournament = kwargs.get("initial", {}).get("tournament")
+
+        if tournament.is_majsoul_tournament:
+            self.fields["ms_friend_id"].label = _("Majsoul friend id")
+            self.fields["ms_nickname"].label = _("Majsoul nickname")
+
+        self.fields["allow_to_save_data"].label = _(
+            "I allow to add my majsoul account at mahjong portal for statistics (optional)"
+        )
 
 
 class TournamentApplicationForm(forms.ModelForm):

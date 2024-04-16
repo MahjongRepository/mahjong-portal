@@ -1,7 +1,9 @@
-import json
+# -*- coding: utf-8 -*-
+
 import os
 import random
 
+import ujson as json
 from django.conf import settings
 
 from online.models import TournamentPlayers

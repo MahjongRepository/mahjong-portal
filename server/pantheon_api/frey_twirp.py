@@ -50,6 +50,13 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.AuthMePayload"),
                 output=_sym_db.GetSymbol("common.AuthMeResponse"),
             ),
+            "DepersonalizeAccount": Endpoint(
+                service_name="Frey",
+                name="DepersonalizeAccount",
+                function=getattr(service, "DepersonalizeAccount"),
+                input=_sym_db.GetSymbol("common.DepersonalizePayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
             "ChangePassword": Endpoint(
                 service_name="Frey",
                 name="ChangePassword",
@@ -104,6 +111,13 @@ class FreyServer(TwirpServer):
                 name="FindByTenhouIds",
                 function=getattr(service, "FindByTenhouIds"),
                 input=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsPayload"),
+                output=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),
+            ),
+            "FindByMajsoulAccountId": Endpoint(
+                service_name="Frey",
+                name="FindByMajsoulAccountId",
+                function=getattr(service, "FindByMajsoulAccountId"),
+                input=_sym_db.GetSymbol("common.PersonsFindByMajsoulIdsPayload"),
                 output=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),
             ),
             "FindByTitle": Endpoint(
@@ -351,6 +365,15 @@ class FreyClient(TwirpClient):
             **kwargs,
         )
 
+    def DepersonalizeAccount(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/DepersonalizeAccount",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
     def ChangePassword(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/ChangePassword",
@@ -417,6 +440,15 @@ class FreyClient(TwirpClient):
     def FindByTenhouIds(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/FindByTenhouIds",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),
+            **kwargs,
+        )
+
+    def FindByMajsoulAccountId(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/FindByMajsoulAccountId",
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),

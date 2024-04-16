@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 

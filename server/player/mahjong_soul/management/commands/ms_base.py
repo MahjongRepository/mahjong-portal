@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
+
 import asyncio
 import hashlib
 import hmac
-import json
 import os
 import random
 import uuid
 
 import aiohttp
 import ms.protocol_pb2 as pb
+import ujson as json
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -75,7 +77,7 @@ class MSBaseCommand(BaseCommand):
         return lobby, channel, version_to_force
 
     async def login(self, lobby, username, password, version_to_force):
-        print("Login with username and password")
+        print(f"Login with username[{username}] and password[{password}]")
         print(f"Version {version_to_force}")
 
         uuid_key = str(uuid.uuid1())

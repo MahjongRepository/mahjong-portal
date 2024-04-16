@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import datetime
 
 from django.core.management.base import BaseCommand
@@ -158,6 +160,8 @@ class Command(BaseCommand):
 
             for tournament in limited_tournaments:
                 calculator.calculate_players_deltas(tournament, rating, rating_date)
+                tournament.is_apply_in_rating = True
+                tournament.save()
 
             calculator.calculate_players_rating_rank(rating, rating_date)
 

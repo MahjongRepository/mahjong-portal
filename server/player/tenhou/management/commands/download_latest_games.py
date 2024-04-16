@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import gzip
 import os
 from datetime import datetime

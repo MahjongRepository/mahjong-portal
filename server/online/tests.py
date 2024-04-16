@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from unittest import TestCase
 
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message

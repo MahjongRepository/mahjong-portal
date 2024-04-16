@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 
 from mahjong_portal.models import BaseModel
@@ -20,7 +22,10 @@ class TournamentPlayers(BaseModel):
 
     telegram_username = models.CharField(max_length=32, null=True, blank=True)
     discord_username = models.CharField(max_length=32, null=True, blank=True)
-    tenhou_username = models.CharField(max_length=8)
+    tenhou_username = models.CharField(max_length=8, null=True, blank=True)
+    ms_username = models.CharField(max_length=255, null=True, blank=True)
+    # require negative integer id for bots
+    ms_account_id = models.IntegerField(null=True, blank=True)
 
     pantheon_id = models.PositiveIntegerField(null=True, blank=True)
     # was user info synced with pantheon or not
@@ -33,8 +38,15 @@ class TournamentPlayers(BaseModel):
     team_name = models.CharField(max_length=1000, null=True, blank=True)
     team_number = models.PositiveIntegerField(null=True, blank=True)
 
+    is_disable = models.BooleanField(default=False, blank=True)
+
+    class Meta:
+        unique_together = ["tournament", "pantheon_id"]
+
     def __unicode__(self):
-        return self.tenhou_username
+        if self.tenhou_username:
+            return self.tenhou_username
+        return ""
 
 
 class TournamentGame(BaseModel):
@@ -47,7 +59,7 @@ class TournamentGame(BaseModel):
 
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     tournament_round = models.PositiveSmallIntegerField(null=True, blank=True)
-    log_id = models.CharField(max_length=32, null=True, blank=True)
+    log_id = models.CharField(max_length=80, null=True, blank=True)
     game_index = models.PositiveSmallIntegerField(default=0)
 
     status = models.PositiveSmallIntegerField(choices=STATUSES, default=NEW)

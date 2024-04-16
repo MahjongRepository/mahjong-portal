@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.conf.urls import include
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
@@ -15,7 +17,21 @@ from mahjong_portal.sitemap import (
     TournamentListSitemap,
     TournamentSitemap,
 )
-from online.views import finish_game_api
+from online.views import (
+    add_game_log,
+    admin_confirm_player,
+    check_new_notifications,
+    close_registration,
+    confirm_player,
+    create_start_game_notification,
+    finish_game_api,
+    game_finish,
+    get_allowed_players,
+    get_tournament_status,
+    open_registration,
+    prepare_next_round,
+    process_notification,
+)
 from website.views import players_api, update_info_from_pantheon_api
 
 sitemaps = {
@@ -41,6 +57,18 @@ urlpatterns = [
     url("^api/v0/players/$", players_api),
     url("^api/v0/update_info_from_pantheon/$", update_info_from_pantheon_api),
     url("^api/v0/finish_game_api/$", finish_game_api),
+    url("^api/v0/autobot/open_registration$", open_registration),
+    url("^api/v0/autobot/close_registration$", close_registration),
+    url("^api/v0/autobot/check_notifications$", check_new_notifications),
+    url("^api/v0/autobot/process_notification$", process_notification),
+    url("^api/v0/autobot/prepare_next_round$", prepare_next_round),
+    url("^api/v0/autobot/confirm_player$", confirm_player),
+    url("^api/v0/autobot/admin_confirm_player$", admin_confirm_player),
+    url("^api/v0/autobot/create_start_game_notification$", create_start_game_notification),
+    url("^api/v0/autobot/game_finish$", game_finish),
+    url("^api/v0/autobot/add_game_log$", add_game_log),
+    url("^api/v0/autobot/get_tournament_status$", get_tournament_status),
+    url("^api/v0/autobot/get_tournament_players$", get_allowed_players),
     url(r"^online/", include("online.urls")),
 ]
 

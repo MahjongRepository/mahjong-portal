@@ -1,3 +1,20 @@
+/*  Pantheon common files
+ *  Copyright (C) 2016  o.klimenko aka ctizen
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // protolint:disable REPEATED_FIELD_NAMES_PLURALIZED
 syntax = "proto3";
 
@@ -7,92 +24,96 @@ import "atoms.proto";
 
 service Frey {
   rpc RequestRegistration(AuthRequestRegistrationPayload)
-      returns (AuthRequestRegistrationResponse);
+    returns (AuthRequestRegistrationResponse);
   rpc ApproveRegistration(AuthApproveRegistrationPayload)
-      returns (AuthApproveRegistrationResponse);
+    returns (AuthApproveRegistrationResponse);
   rpc Authorize(AuthAuthorizePayload)
-      returns (AuthAuthorizeResponse);
+    returns (AuthAuthorizeResponse);
   rpc QuickAuthorize(AuthQuickAuthorizePayload)
-      returns (AuthQuickAuthorizeResponse);
+    returns (AuthQuickAuthorizeResponse);
   rpc Me(AuthMePayload)
-      returns (AuthMeResponse);
+    returns (AuthMeResponse);
+  rpc DepersonalizeAccount(DepersonalizePayload)
+    returns (GenericSuccessResponse);
   rpc ChangePassword(AuthChangePasswordPayload)
-      returns (AuthChangePasswordResponse);
+    returns (AuthChangePasswordResponse);
   rpc RequestResetPassword(AuthRequestResetPasswordPayload)
-      returns (AuthRequestResetPasswordResponse);
+    returns (AuthRequestResetPasswordResponse);
   rpc ApproveResetPassword(AuthApproveResetPasswordPayload)
-      returns (AuthApproveResetPasswordResponse);
+    returns (AuthApproveResetPasswordResponse);
   rpc GetAccessRules(AccessGetAccessRulesPayload)
-      returns (AccessGetAccessRulesResponse);
+    returns (AccessGetAccessRulesResponse);
   rpc GetRuleValue(AccessGetRuleValuePayload)
-      returns (AccessGetRuleValueResponse);
+    returns (AccessGetRuleValueResponse);
   rpc UpdatePersonalInfo(PersonsUpdatePersonalInfoPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc GetPersonalInfo(PersonsGetPersonalInfoPayload)
-      returns (PersonsGetPersonalInfoResponse);
+    returns (PersonsGetPersonalInfoResponse);
   rpc FindByTenhouIds(PersonsFindByTenhouIdsPayload)
-      returns (PersonsFindByTenhouIdsResponse);
+    returns (PersonsFindByTenhouIdsResponse);
+  rpc FindByMajsoulAccountId(PersonsFindByMajsoulIdsPayload)
+    returns (PersonsFindByTenhouIdsResponse);
   rpc FindByTitle(PersonsFindByTitlePayload)
-      returns (PersonsFindByTitleResponse);
+    returns (PersonsFindByTitleResponse);
   rpc GetGroups(PersonsGetGroupsPayload)
-      returns (PersonsGetGroupsResponse);
+    returns (PersonsGetGroupsResponse);
   rpc GetEventAdmins(AccessGetEventAdminsPayload)
-      returns (AccessGetEventAdminsResponse);
+    returns (AccessGetEventAdminsResponse);
 
   // admin
   rpc GetSuperadminFlag(AccessGetSuperadminFlagPayload)
-      returns (AccessGetSuperadminFlagResponse);
+    returns (AccessGetSuperadminFlagResponse);
   rpc GetOwnedEventIds(AccessGetOwnedEventIdsPayload)
-      returns (AccessGetOwnedEventIdsResponse);
+    returns (AccessGetOwnedEventIdsResponse);
   rpc GetRulesList(AccessGetRulesListPayload)
-      returns (AccessGetRulesListResponse);
+    returns (AccessGetRulesListResponse);
   rpc GetAllEventRules(AccessGetAllEventRulesPayload)
-      returns (AccessGetAllEventRulesResponse);
+    returns (AccessGetAllEventRulesResponse);
   rpc GetPersonAccess(AccessGetPersonAccessPayload)
-      returns (AccessGetPersonAccessResponse);
+    returns (AccessGetPersonAccessResponse);
   rpc GetGroupAccess(AccessGetGroupAccessPayload)
-      returns (AccessGetGroupAccessResponse);
+    returns (AccessGetGroupAccessResponse);
   rpc GetAllPersonAccess(AccessGetAllPersonAccessPayload)
-      returns (AccessGetAllPersonAccessResponse);
+    returns (AccessGetAllPersonAccessResponse);
   rpc GetAllGroupAccess(AccessGetAllGroupAccessPayload)
-      returns (AccessGetAllGroupAccessResponse);
+    returns (AccessGetAllGroupAccessResponse);
   rpc AddRuleForPerson(AccessAddRuleForPersonPayload)
-      returns (AccessAddRuleForPersonResponse);
+    returns (AccessAddRuleForPersonResponse);
   rpc AddRuleForGroup(AccessAddRuleForGroupPayload)
-      returns (AccessAddRuleForGroupResponse);
+    returns (AccessAddRuleForGroupResponse);
   rpc UpdateRuleForPerson(AccessUpdateRuleForPersonPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc UpdateRuleForGroup(AccessUpdateRuleForGroupPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc DeleteRuleForPerson(AccessDeleteRuleForPersonPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc DeleteRuleForGroup(AccessDeleteRuleForGroupPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc ClearAccessCache(AccessClearAccessCachePayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc CreateAccount(PersonsCreateAccountPayload)
-      returns (PersonsCreateAccountResponse);
+    returns (PersonsCreateAccountResponse);
   rpc CreateGroup(PersonsCreateGroupPayload)
-      returns (PersonsCreateGroupResponse);
+    returns (PersonsCreateGroupResponse);
   rpc UpdateGroup(PersonsUpdateGroupPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc DeleteGroup(PersonsDeleteGroupPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc AddPersonToGroup(PersonsAddPersonToGroupPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc RemovePersonFromGroup(PersonsRemovePersonFromGroupPayload)
-      returns (GenericSuccessResponse);
+    returns (GenericSuccessResponse);
   rpc GetPersonsOfGroup(PersonsGetPersonsOfGroupPayload)
-      returns (PersonsGetPersonsOfGroupResponse);
+    returns (PersonsGetPersonsOfGroupResponse);
   rpc GetGroupsOfPerson(PersonsGetGroupsOfPersonPayload)
-      returns (PersonsGetGroupsOfPersonResponse);
+    returns (PersonsGetGroupsOfPersonResponse);
 
   // superadmin: this should be covered with some
   // bootstrap authenthication, TODO
   rpc AddSystemWideRuleForPerson(AccessAddSystemWideRuleForPersonPayload)
-      returns (AccessAddSystemWideRuleForPersonResponse);
+    returns (AccessAddSystemWideRuleForPersonResponse);
   rpc AddSystemWideRuleForGroup(AccessAddSystemWideRuleForGroupPayload)
-      returns (AccessAddSystemWideRuleForGroupResponse);
+    returns (AccessAddSystemWideRuleForGroupResponse);
 }
 
 message AuthRequestRegistrationPayload {
@@ -147,6 +168,8 @@ message AuthMeResponse {
   string tenhou_id = 6;
   string title = 7;
   repeated int32 groups = 8;
+  bool has_avatar = 9;
+  string last_update = 10;
 }
 
 message AuthChangePasswordPayload {
@@ -410,6 +433,11 @@ message PersonsUpdatePersonalInfoPayload {
   string email = 5;
   string phone = 6;
   string tenhou_id = 7;
+  bool has_avatar = 8;
+  string avatar_data = 9;
+  string ms_nickname = 10;
+  int32 ms_friend_id  = 11;
+  int32 ms_account_id = 12;
 }
 
 message PersonsGetPersonalInfoPayload {
@@ -422,6 +450,15 @@ message PersonsGetPersonalInfoResponse {
 
 message PersonsFindByTenhouIdsPayload {
   repeated string ids = 1;
+}
+
+message PersonsFindByMajsoulIdsPayload {
+  repeated MajsoulSearchEx ids = 1;
+}
+
+message MajsoulSearchEx {
+  string nickname= 1;
+  int32 account_id = 2;
 }
 
 message PersonsFindByTenhouIdsResponse {
@@ -442,4 +479,7 @@ message PersonsGetGroupsPayload {
 
 message PersonsGetGroupsResponse {
   repeated Group groups = 1;
+}
+
+message DepersonalizePayload {
 }

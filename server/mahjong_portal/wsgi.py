@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 It exposes the WSGI callable as a module-level variable named ``application``.
 

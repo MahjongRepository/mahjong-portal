@@ -1,21 +1,24 @@
 # for production
-gunicorn==20.1.0
+gunicorn==21.2.0
 
 # main deps
-Django==4.2.2
+Django==4.2.11
 django-modeltranslation==0.18.10
-psycopg==3.1.12
-psycopg2==2.9.6
+psycopg==3.1.18
+psycopg2==2.9.9
 psycopg2cffi==2.9.0
 django-bootstrap5==23.3
 dj-database-url==2.0.0
 python-dateutil==2.8.2
 ms-api==0.10.275
 pytz==2023.3
+ujson==5.9.0
+tenacity==8.2.3
+numpy==1.26.3
 
 # online tournaments
 python-telegram-bot==20.3
-discord.py==2.2.3
+discord.py==2.3.2
 
 # pantheon API
 twirp==0.0.7

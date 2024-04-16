@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -70,6 +72,7 @@ class Tournament(BaseModel):
     fill_city_in_registration = models.BooleanField(default=False)
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)
+    is_apply_in_rating = models.BooleanField(default=False)
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
@@ -129,6 +132,12 @@ class Tournament(BaseModel):
         return ""
 
     @property
+    def get_applied_in_rating_text(self):
+        return _("Applied in %(rating_type)s rating.") % {
+            "rating_type": self.type_help_text,
+        }
+
+    @property
     def type_display(self):
         if self.tournament_type == self.FOREIGN_EMA:
             return "EMA"
@@ -169,7 +178,10 @@ class Tournament(BaseModel):
 
     def get_tournament_registrations(self):
         if self.is_online():
-            return self.online_tournament_registrations.filter(is_approved=True)
+            if self.is_majsoul_tournament:
+                return self.ms_online_tournament_registrations.filter(is_approved=True)
+            else:
+                return self.online_tournament_registrations.filter(is_approved=True)
         else:
             return self.tournament_registrations.filter(is_approved=True)
 
@@ -278,6 +290,48 @@ class OnlineTournamentRegistration(BaseModel):
 
     class Meta:
         unique_together = ["tenhou_nickname", "tournament"]
+
+    def __unicode__(self):
+        return self.full_name
+
+    @property
+    def full_name(self):
+        return "{} {}".format(self.last_name, self.first_name)
+
+
+class MsOnlineTournamentRegistration(BaseModel):
+    tournament = models.ForeignKey(
+        Tournament, related_name="ms_online_tournament_registrations", on_delete=models.PROTECT
+    )
+    is_approved = models.BooleanField(default=True)
+
+    first_name = models.CharField(max_length=255, verbose_name=_("First name"))
+    last_name = models.CharField(max_length=255, verbose_name=_("Last name"), null=True, blank=True)
+    city = models.CharField(max_length=255, verbose_name=_("City"))
+    ms_nickname = models.CharField(max_length=255, verbose_name="Majsoul nickname")
+    ms_friend_id = models.PositiveIntegerField()
+    ms_account_id = models.PositiveIntegerField(null=True, blank=True)
+    contact = models.CharField(
+        null=True,
+        blank=True,
+        max_length=255,
+        verbose_name=_("Your contact (email, phone, etc.)"),
+        help_text=_("It will be visible only to the administrator"),
+    )
+
+    player = models.ForeignKey(
+        Player, on_delete=models.CASCADE, null=True, blank=True, related_name="ms_online_tournament_registrations"
+    )
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True, blank=True)
+    city_object = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
+
+    allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
+
+    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
+    is_validated = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ["ms_nickname", "ms_friend_id", "tournament"]
 
     def __unicode__(self):
         return self.full_name

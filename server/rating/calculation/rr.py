@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import itertools
 import math
 from datetime import timedelta

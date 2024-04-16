@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.urls import re_path as url
 
 from ema.views import best_countries, ema_quotas

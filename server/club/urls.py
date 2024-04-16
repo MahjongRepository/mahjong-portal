@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.urls import re_path as url
 
 from club.views import club_details, club_list, club_tournaments

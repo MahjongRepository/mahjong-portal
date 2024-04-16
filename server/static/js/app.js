@@ -4,7 +4,11 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 
-    $('#languageChangeInput').change(function () {
+    $('#languageChangeInputTop').change(function () {
+        $(this).parents('form').submit();
+    });
+
+    $('#languageChangeInputBottom').change(function () {
         $(this).parents('form').submit();
     });
 });

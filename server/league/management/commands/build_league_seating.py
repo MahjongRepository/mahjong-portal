@@ -1,9 +1,11 @@
-import json
+# -*- coding: utf-8 -*-
+
 import os.path
 import random
 import shutil
 from statistics import stdev
 
+import ujson as json
 from django.conf import settings
 from django.core.management.base import BaseCommand
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from time import sleep
 
 from django.core.management.base import BaseCommand
@@ -16,10 +18,17 @@ def get_date_string():
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument("--nickname", default=None, type=str)
+
     def handle(self, *args, **options):
+        tenhou_nickname = options.get("nickname")
         print("{0}: Start".format(get_date_string()))
 
-        tenhou_objects = TenhouNickname.objects.filter(is_active=True)
+        if tenhou_nickname:
+            tenhou_objects = TenhouNickname.objects.filter(is_active=True, tenhou_username=tenhou_nickname)
+        else:
+            tenhou_objects = TenhouNickname.objects.filter(is_active=True)
         for tenhou_object in tenhou_objects:
             print(f"Processing {tenhou_object.tenhou_username}")
 

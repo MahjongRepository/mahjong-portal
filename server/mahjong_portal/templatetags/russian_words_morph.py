@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pymorphy3
 from django import template
 from django.utils.translation import get_language

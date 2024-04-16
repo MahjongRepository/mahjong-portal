@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
 import re
 from base64 import b64decode
 from datetime import datetime, timedelta
 
 import requests
+import ujson as json
 from django.conf import settings
 from django.core.cache import cache
 

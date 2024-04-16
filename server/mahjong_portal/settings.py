@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import platform
 
@@ -17,7 +19,6 @@ if os.environ.get("SENTRY_DSN"):
         integrations=[DjangoIntegration()],
     )
 
-
 SCHEME = "https"
 
 AUTH_USER_MODEL = "account.User"
@@ -26,11 +27,15 @@ LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/account/login/"
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GOLF_SORTITION_DIR = "shared_golf"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", None)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "").lower() == "true"
+
+AUTO_BOT_TOKEN = os.environ.get("AUTO_BOT_TOKEN", None)
+EXTERNAL_QUERY_SECRET = os.environ.get("EXTERNAL_QUERY_SECRET", None)
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

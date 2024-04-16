@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.urls import re_path as url
 
 from system.tournament_admin.views import (

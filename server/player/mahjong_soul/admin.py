@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import admin
 
 from player.mahjong_soul.models import MSAccount, MSAccountStatistic, MSPointsHistory

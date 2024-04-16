@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
@@ -9,8 +11,19 @@ from account.models import PantheonInfoUpdateLog
 from pantheon_api.api_calls.user import get_pantheon_public_person_information
 from player.models import Player
 from settings.models import City
-from tournament.forms import OnlineTournamentRegistrationForm, TournamentApplicationForm, TournamentRegistrationForm
-from tournament.models import OnlineTournamentRegistration, Tournament, TournamentRegistration, TournamentResult
+from tournament.forms import (
+    MajsoulOnlineTournamentPantheonRegistrationForm,
+    OnlineTournamentRegistrationForm,
+    TournamentApplicationForm,
+    TournamentRegistrationForm,
+)
+from tournament.models import (
+    MsOnlineTournamentRegistration,
+    OnlineTournamentRegistration,
+    Tournament,
+    TournamentRegistration,
+    TournamentResult,
+)
 from utils.general import split_name
 
 
@@ -103,18 +116,30 @@ def tournament_announcement(request, slug):
         initial["city"] = tournament.city.name_ru
 
     if tournament.is_online():
-        form = OnlineTournamentRegistrationForm(initial=initial)
+        if tournament.is_majsoul_tournament:
+            form = MajsoulOnlineTournamentPantheonRegistrationForm(initial=initial)
+        else:
+            form = OnlineTournamentRegistrationForm(initial=initial)
     else:
         form = TournamentRegistrationForm(initial=initial)
 
     if tournament.is_online():
-        registration_results = (
-            OnlineTournamentRegistration.objects.filter(tournament=tournament)
-            .filter(is_approved=True)
-            .prefetch_related("player")
-            .prefetch_related("city_object")
-            .order_by("created_on")
-        )
+        if tournament.is_majsoul_tournament:
+            registration_results = (
+                MsOnlineTournamentRegistration.objects.filter(tournament=tournament)
+                .filter(is_approved=True)
+                .prefetch_related("player")
+                .prefetch_related("city_object")
+                .order_by("created_on")
+            )
+        else:
+            registration_results = (
+                OnlineTournamentRegistration.objects.filter(tournament=tournament)
+                .filter(is_approved=True)
+                .prefetch_related("player")
+                .prefetch_related("city_object")
+                .order_by("created_on")
+            )
         if tournament.display_notes:
             registration_results = registration_results.order_by("notes", "created_on")
     else:
@@ -131,11 +156,17 @@ def tournament_announcement(request, slug):
     is_already_registered = False
     if request.user.is_authenticated:
         # TODO support not only online tournaments
-        is_already_registered = OnlineTournamentRegistration.objects.filter(
-            tournament=tournament, user=request.user
-        ).exists()
+        if tournament.is_majsoul_tournament:
+            is_already_registered = MsOnlineTournamentRegistration.objects.filter(
+                tournament=tournament, user=request.user
+            ).exists()
+        else:
+            is_already_registered = OnlineTournamentRegistration.objects.filter(
+                tournament=tournament, user=request.user
+            ).exists()
 
     missed_tenhou_id_error = request.GET.get("error") == "tenhou_id"
+    form_data_error = request.GET.get("error") == "form_data"
 
     return render(
         request,
@@ -147,6 +178,7 @@ def tournament_announcement(request, slug):
             "registration_results": registration_results,
             "is_already_registered": is_already_registered,
             "missed_tenhou_id_error": missed_tenhou_id_error,
+            "form_data_error": form_data_error,
         },
     )
 
@@ -156,29 +188,66 @@ def tournament_announcement(request, slug):
 def pantheon_tournament_registration(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     user = request.user
-    if OnlineTournamentRegistration.objects.filter(user=user).exists():
-        return redirect(tournament.get_url())
+    form_data = request.POST
 
+    if tournament.is_majsoul_tournament:
+        try:
+            ms_friend_id = int(form_data["ms_friend_id"])
+            ms_nickname = form_data["ms_nickname"]
+            if form_data.get("allow_to_save_data") is None:
+                allow_to_save_data = False
+            else:
+                allow_to_save_data = bool(form_data["allow_to_save_data"])
+            if not bool(ms_nickname.strip()):
+                return redirect(tournament.get_url() + "?error=form_data")
+        except Exception:
+            return redirect(tournament.get_url() + "?error=form_data")
+
+    if tournament.is_majsoul_tournament:
+        if MsOnlineTournamentRegistration.objects.filter(user=user, tournament=tournament).exists():
+            return redirect(tournament.get_url())
+    else:
+        if OnlineTournamentRegistration.objects.filter(user=user, tournament=tournament).exists():
+            return redirect(tournament.get_url())
+
+    # todo get ms_data and store into PantheonInfoUpdateLog
     data = get_pantheon_public_person_information(user.new_pantheon_id)
     PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=user.new_pantheon_id, updated_information=data)
     first_name, last_name = split_name(data["title"])
 
     player = Player.objects.filter(first_name_ru=first_name, last_name_ru=last_name).first()
+    if not player:
+        player = Player.objects.filter(first_name_ru=last_name, last_name_ru=first_name).first()
     city_object = City.objects.filter(name_ru=data["city"].title()).first()
 
-    if not data["tenhou_id"]:
+    if not tournament.is_majsoul_tournament and not data["tenhou_id"]:
         return redirect(tournament.get_url() + "?error=tenhou_id")
 
-    OnlineTournamentRegistration.objects.create(
-        tournament=tournament,
-        user=user,
-        tenhou_nickname=data["tenhou_id"],
-        first_name=first_name,
-        last_name=last_name,
-        city=data["city"],
-        player=player,
-        city_object=city_object,
-    )
+    if tournament.is_majsoul_tournament:
+        # todo get ms_data from pantheon
+        MsOnlineTournamentRegistration.objects.create(
+            tournament=tournament,
+            user=user,
+            ms_nickname=ms_nickname,
+            ms_friend_id=ms_friend_id,
+            first_name=first_name,
+            last_name=last_name,
+            city=data["city"],
+            player=player,
+            city_object=city_object,
+            allow_to_save_data=allow_to_save_data,
+        )
+    else:
+        OnlineTournamentRegistration.objects.create(
+            tournament=tournament,
+            user=user,
+            tenhou_nickname=data["tenhou_id"],
+            first_name=first_name,
+            last_name=last_name,
+            city=data["city"],
+            player=player,
+            city_object=city_object,
+        )
 
     return redirect(tournament.get_url())
 
