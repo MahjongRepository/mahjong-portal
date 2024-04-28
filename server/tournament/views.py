@@ -277,16 +277,24 @@ def tournament_registration(request, tournament_id):
         # it supports auto load objects only for Russian tournaments right now
 
         try:
-            instance.player = Player.objects.get(
-                first_name_ru=instance.first_name.title(), last_name_ru=instance.last_name.title()
-            )
-        except (Player.DoesNotExist, Player.MultipleObjectsReturned):
-            # TODO if multiple players are here, let's try to filter by city
+            if instance.city:
+                instance.city_object = City.objects.get(name_ru=instance.city)
+        except City.DoesNotExist:
             pass
 
         try:
-            instance.city_object = City.objects.get(name_ru=instance.city)
-        except City.DoesNotExist:
+            if instance.city_object:
+                instance.player = Player.objects.get(
+                    first_name_ru=instance.first_name.title(),
+                    last_name_ru=instance.last_name.title(),
+                    city=instance.city_object,
+                )
+            else:
+                instance.player = Player.objects.get(
+                    first_name_ru=instance.first_name.title(), last_name_ru=instance.last_name.title()
+                )
+        except (Player.DoesNotExist, Player.MultipleObjectsReturned):
+            # TODO if multiple players are here, let's try to filter by city
             pass
 
         if tournament.registrations_pre_moderation:
