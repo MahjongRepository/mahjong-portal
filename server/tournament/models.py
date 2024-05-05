@@ -345,7 +345,7 @@ class TournamentApplication(BaseModel):
     tournament_name = models.CharField(max_length=255, verbose_name=_("Tournament name"))
     city = models.CharField(max_length=255, verbose_name=_("City"))
     tournament_type = models.PositiveSmallIntegerField(
-        verbose_name=_("Tournament type"), choices=[[0, "CRR"], [1, "RR"], [2, "EMA"]], default=0
+        verbose_name=_("Tournament type"), choices=[[0, "CRR"], [1, "RR"], [2, "EMA"], [3, "OTHER"]], default=0
     )
     start_date = models.CharField(max_length=255, verbose_name=_("Start date"))
     end_date = models.CharField(
