@@ -24,6 +24,7 @@ class Club(BaseModel):
     lng = models.DecimalField(max_digits=21, decimal_places=15, null=True, blank=True)
 
     pantheon_ids = models.CharField(max_length=255, null=True, blank=True)
+    new_pantheon_ids = models.CharField(max_length=255, null=True, blank=True)
     current_club_rating_pantheon_id = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
@@ -35,11 +36,16 @@ class Club(BaseModel):
     def get_link_to_club_rating(self, event_id=None):
         if not event_id:
             event_id = self.current_club_rating_pantheon_id
-        return f"https://gui.mjtop.net/eid{event_id}/stat"
+        return f"https://rating.riichimahjong.org/event/{event_id}/order/rating"
+
+    def get_archive_link_to_club_rating(self, event_id=None):
+        if not event_id:
+            event_id = self.current_club_rating_pantheon_id
+        return f"https://archive.riichimahjong.org/eid{event_id}/stat.html"
 
     def get_links_to_previous_games(self):
         ids = sorted([int(x) for x in self.pantheon_ids.split(",")], reverse=True)
-        return [self.get_link_to_club_rating(x) for x in ids]
+        return [self.get_archive_link_to_club_rating(x) for x in ids]
 
     def get_all_pantheon_ids(self):
         ids = []
