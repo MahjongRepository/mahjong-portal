@@ -205,10 +205,8 @@ def check_new_notifications(request):
     tournament_id = request_data.get("tournament_id")
     if not tournament_id:
         return JsonResponse({"notifications": []})
-    notification = bot.check_new_notifications(tournament_id)
-    if notification:
-        return JsonResponse({"notifications": [notification]})
-    return JsonResponse({"notifications": []})
+    notifications = bot.check_new_notifications(tournament_id)
+    return JsonResponse({"notifications": notifications})
 
 
 @require_POST
