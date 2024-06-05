@@ -1,5 +1,5 @@
 # for production
-gunicorn==21.2.0
+gunicorn==22.0.0
 
 # main deps
 Django==4.2.13
@@ -34,7 +34,7 @@ Whoosh==2.7.4
 
 # for web parsing
 beautifulsoup4==4.12.2
-requests==2.31.0
+requests==2.32.3
 
 # for monitoring
 sentry-sdk==1.25.1
