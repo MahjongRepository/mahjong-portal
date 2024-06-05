@@ -27,7 +27,10 @@ bot = PortalAutoBot()
 def add_user_to_the_pantheon(request, record_id):
     record = TournamentPlayers.objects.get(id=record_id)
     add_user_to_pantheon(record)
-    return redirect(request.META.get("HTTP_REFERER"))
+    referer = request.META.get("HTTP_REFERER")
+    # TODO temporary remove untrusted redirect from user referer
+    referer = "/"
+    return redirect(referer)
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -59,7 +62,10 @@ def disable_user_in_pantheon(request, record_id):
     record.enabled_in_pantheon = False
     record.save()
 
-    return redirect(request.META.get("HTTP_REFERER"))
+    referer = request.META.get("HTTP_REFERER")
+    # TODO temporary remove untrusted redirect from user referer
+    referer = "/"
+    return redirect(referer)
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -96,7 +102,10 @@ def toggle_replacement_flag_in_pantheon(request, record_id):
     record.is_replacement = new_is_replacement
     record.save()
 
-    return redirect(request.META.get("HTTP_REFERER"))
+    referer = request.META.get("HTTP_REFERER")
+    # TODO temporary remove untrusted redirect from user referer
+    referer = "/"
+    return redirect(referer)
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -129,7 +138,10 @@ def add_penalty_game(request, game_id):
     handler.create_notification(TournamentNotification.GAME_PENALTY, {"player_names": player_names})
     handler.check_round_was_finished()
 
-    return redirect(request.META.get("HTTP_REFERER"))
+    referer = request.META.get("HTTP_REFERER")
+    # TODO temporary remove untrusted redirect from user referer
+    referer = "/"
+    return redirect(referer)
 
 
 @require_POST
@@ -205,10 +217,8 @@ def check_new_notifications(request):
     tournament_id = request_data.get("tournament_id")
     if not tournament_id:
         return JsonResponse({"notifications": []})
-    notification = bot.check_new_notifications(tournament_id)
-    if notification:
-        return JsonResponse({"notifications": [notification]})
-    return JsonResponse({"notifications": []})
+    notifications = bot.check_new_notifications(tournament_id)
+    return JsonResponse({"notifications": notifications})
 
 
 @require_POST

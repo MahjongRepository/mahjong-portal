@@ -101,7 +101,10 @@ def league_confirm_slot(request, slot_id):
         raise Http404
     slot.assigned_player = player
     slot.save()
-    return redirect(request.META.get("HTTP_REFERER"))
+    referer = request.META.get("HTTP_REFERER")
+    # TODO temporary remove untrusted redirect from user referer
+    referer = "/"
+    return redirect(referer)
 
 
 @login_required

@@ -34,17 +34,31 @@ class PortalAutoBot:
 
     @staticmethod
     def check_new_notifications(tournamentId):
-        notification = TournamentNotification.objects.filter(
+        tg_notification = TournamentNotification.objects.filter(
             is_processed=False, destination=TournamentNotification.TELEGRAM, failed=False, tournament_id=tournamentId
         ).last()
 
-        if not notification:
-            return None
+        discord_notification = TournamentNotification.objects.filter(
+            is_processed=False, destination=TournamentNotification.DISCORD, failed=False, tournament_id=tournamentId
+        ).last()
 
+        if not tg_notification and not discord_notification:
+            return []
+
+        notifications = []
+        if tg_notification:
+            notifications.append(PortalAutoBot.prepare_notification_message(tg_notification))
+        if discord_notification:
+            notifications.append(PortalAutoBot.prepare_notification_message(discord_notification))
+
+        return notifications
+
+    @staticmethod
+    def prepare_notification_message(notification):
         try:
             logger.info(f"Notification id={notification.id} found")
             message = tournament_handler.get_notification_text("ru", notification)
-            return {"message": message, "notification_id": notification.id}
+            return {"message": message, "notification_id": notification.id, "destination": notification.destination}
         except Exception as e:
             notification.failed = True
             notification.save()
