@@ -114,6 +114,14 @@ class TournamentNotification(BaseModel):
         [GAME_PENALTY, GAME_PENALTY],
     ]
 
+    RU = "RU"
+    EN = "EN"
+
+    NOTIFICATION_LANGS = [
+        [RU, "RU"],
+        [EN, "EN"],
+    ]
+
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     notification_type = models.CharField(choices=NOTIFICATION_TYPES, max_length=300)
     message_kwargs = models.JSONField(blank=True)
@@ -121,6 +129,7 @@ class TournamentNotification(BaseModel):
     destination = models.PositiveSmallIntegerField(choices=DESTINATIONS)
     is_processed = models.BooleanField(default=False)
     failed = models.BooleanField(default=False)
+    lang = models.CharField(max_length=2, choices=NOTIFICATION_LANGS, default=RU)
 
     class Meta:
         ordering = ["-created_on"]

@@ -7,6 +7,7 @@ from django.utils.safestring import mark_safe
 
 from tournament.models import (
     MsOnlineTournamentRegistration,
+    OnlineTournamentConfig,
     OnlineTournamentRegistration,
     Tournament,
     TournamentApplication,
@@ -112,7 +113,16 @@ class TournamentResultAdmin(admin.ModelAdmin):
     raw_id_fields = ["tournament", "player"]
 
 
+class OnlineTournamentConfigAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "token",
+        "online_config",
+    ]
+
+
 admin.site.register(Tournament, TournamentAdmin)
+admin.site.register(OnlineTournamentConfig, OnlineTournamentConfigAdmin)
 admin.site.register(TournamentRegistration, TournamentRegistrationAdmin)
 admin.site.register(OnlineTournamentRegistration, OnlineTournamentRegistrationAdmin)
 admin.site.register(MsOnlineTournamentRegistration, MsOnlineTournamentRegistrationAdmin)
