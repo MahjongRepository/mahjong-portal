@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import ujson as json
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -9,12 +10,43 @@ from mahjong_portal.models import BaseModel
 from player.models import Player
 from rating.calculation.hardcoded_coefficients import AGARI_TOURNAMENT_ID
 from settings.models import City, Country
+from tournament.online_tournament_config import PlainOnlineTournamentConfig
 
 
 class PublicTournamentManager(models.Manager):
     def get_queryset(self):
         queryset = super(PublicTournamentManager, self).get_queryset()
         return queryset.exclude(is_hidden=True)
+
+
+class OnlineTournamentConfig(BaseModel):
+    token = models.CharField(unique=True)
+    online_config = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return self.token
+
+    def get_config(self):
+        try:
+            current_config_dict = json.loads(self.online_config)
+            en_confirmation_end_time = current_config_dict["en_confirmation_end_time"]
+            en_tournament_timezone = current_config_dict["en_tournament_timezone"]
+            ru_confirmation_end_time = current_config_dict["ru_confirmation_end_time"]
+            ru_tournament_timezone = current_config_dict["ru_tournament_timezone"]
+            en_discord_confirmation_channel = current_config_dict["en_discord_confirmation_channel"]
+            ru_discord_confirmation_channel = current_config_dict["ru_discord_confirmation_channel"]
+            current_config = PlainOnlineTournamentConfig(
+                en_confirmation_end_time,
+                en_tournament_timezone,
+                ru_confirmation_end_time,
+                ru_tournament_timezone,
+                en_discord_confirmation_channel,
+                ru_discord_confirmation_channel,
+            )
+            current_config.is_validated = current_config.is_valid()
+            return current_config
+        except Exception:
+            return PlainOnlineTournamentConfig()
 
 
 class Tournament(BaseModel):
@@ -80,6 +112,7 @@ class Tournament(BaseModel):
     old_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
     new_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
     ema_id = models.CharField(max_length=20, null=True, blank=True)
+    online_config = models.ForeignKey(OnlineTournamentConfig, on_delete=models.PROTECT, null=True, blank=True)
 
     def __unicode__(self):
         return self.name

@@ -17,7 +17,6 @@ tournament_handler = TournamentHandler()
 class PortalAutoBot:
     def init(self, tournamentId, lobbyId):
         tournament = Tournament.objects.get(id=tournamentId)
-        # todo for tenhou.net gameType
         tournament_handler.init(tournament, lobbyId, None, TournamentHandler.TELEGRAM_DESTINATION)
 
     @staticmethod
@@ -34,31 +33,68 @@ class PortalAutoBot:
 
     @staticmethod
     def check_new_notifications(tournamentId):
-        tg_notification = TournamentNotification.objects.filter(
-            is_processed=False, destination=TournamentNotification.TELEGRAM, failed=False, tournament_id=tournamentId
+        tg_ru_notification = TournamentNotification.objects.filter(
+            is_processed=False,
+            destination=TournamentNotification.TELEGRAM,
+            failed=False,
+            tournament_id=tournamentId,
+            lang=TournamentNotification.RU,
         ).last()
 
-        discord_notification = TournamentNotification.objects.filter(
-            is_processed=False, destination=TournamentNotification.DISCORD, failed=False, tournament_id=tournamentId
+        discord_en_notification = TournamentNotification.objects.filter(
+            is_processed=False,
+            destination=TournamentNotification.DISCORD,
+            failed=False,
+            tournament_id=tournamentId,
+            lang=TournamentNotification.EN,
         ).last()
 
-        if not tg_notification and not discord_notification:
+        discord_ru_notification = TournamentNotification.objects.filter(
+            is_processed=False,
+            destination=TournamentNotification.DISCORD,
+            failed=False,
+            tournament_id=tournamentId,
+            lang=TournamentNotification.RU,
+        ).last()
+
+        if not tg_ru_notification and not discord_en_notification and not discord_ru_notification:
             return []
 
         notifications = []
-        if tg_notification:
-            notifications.append(PortalAutoBot.prepare_notification_message(tg_notification))
-        if discord_notification:
-            notifications.append(PortalAutoBot.prepare_notification_message(discord_notification))
+        if tg_ru_notification:
+            notifications.append(
+                PortalAutoBot.prepare_notification_message(tg_ru_notification, TournamentNotification.TELEGRAM, "ru")
+            )
+        if discord_en_notification:
+            notifications.append(
+                PortalAutoBot.prepare_notification_message(
+                    discord_en_notification, TournamentNotification.DISCORD, "en"
+                )
+            )
+        if discord_ru_notification:
+            notifications.append(
+                PortalAutoBot.prepare_notification_message(
+                    discord_ru_notification, TournamentNotification.DISCORD, "ru"
+                )
+            )
 
         return notifications
 
     @staticmethod
-    def prepare_notification_message(notification):
+    def prepare_notification_message(notification, destination, lang):
         try:
             logger.info(f"Notification id={notification.id} found")
-            message = tournament_handler.get_notification_text("ru", notification)
-            return {"message": message, "notification_id": notification.id, "destination": notification.destination}
+            current_destination = tournament_handler.TELEGRAM_DESTINATION
+            if destination == TournamentNotification.DISCORD:
+                current_destination = tournament_handler.DISCORD_DESTINATION
+            message = tournament_handler.get_notification_text(lang, notification, current_destination)
+            return {
+                "message": message,
+                "notification_id": notification.id,
+                "destination": notification.destination,
+                "type": notification.notification_type,
+                "lang": notification.lang,
+            }
         except Exception as e:
             notification.failed = True
             notification.save()

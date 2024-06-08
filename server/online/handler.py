@@ -192,9 +192,29 @@ class TournamentHandler:
         status.registration_closed = False
         status.save()
 
+        current_config = self.tournament.online_config.get_config()
         self.create_notification(
             TournamentNotification.CONFIRMATION_STARTED,
-            kwargs={"lobby_link": self.get_lobby_link(), "rating_link": self.get_rating_link()},
+            tg_ru_kwargs={
+                "confirmation_end_time": current_config.ru_confirmation_end_time,
+                "timezone": current_config.ru_tournament_timezone,
+                "lobby_link": self.get_lobby_link(),
+                "rating_link": self.get_rating_link(),
+            },
+            discord_ru_kwargs={
+                "confirmation_channel": current_config.ru_discord_confirmation_channel,
+                "confirmation_end_time": current_config.ru_confirmation_end_time,
+                "timezone": current_config.ru_tournament_timezone,
+                "lobby_link": self.get_lobby_link(),
+                "rating_link": self.get_rating_link(),
+            },
+            discord_en_kwargs={
+                "confirmation_channel": current_config.en_discord_confirmation_channel,
+                "confirmation_end_time": current_config.en_confirmation_end_time,
+                "timezone": current_config.en_tournament_timezone,
+                "lobby_link": self.get_lobby_link(),
+                "rating_link": self.get_rating_link(),
+            },
         )
 
     def close_registration(self):
@@ -373,7 +393,7 @@ class TournamentHandler:
 
         self.create_notification(
             TournamentNotification.GAME_ENDED,
-            kwargs={
+            tg_ru_kwargs={
                 "finished": finished_games.count(),
                 "total": total_games,
                 "pantheon_link": pantheon_url,
@@ -479,7 +499,7 @@ class TournamentHandler:
             # todo: tenhou stuff
             self.create_notification(
                 TournamentNotification.GAME_ENDED,
-                kwargs={
+                tg_ru_kwargs={
                     "finished": finished_games.count(),
                     "total": total_games,
                     "pantheon_link": "pantheon_link",
@@ -494,7 +514,7 @@ class TournamentHandler:
         else:
             self.create_notification(
                 TournamentNotification.GAME_ENDED,
-                kwargs={
+                tg_ru_kwargs={
                     "finished": finished_games.count(),
                     "total": total_games,
                     "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict["game"]["sessionHash"]),
@@ -808,7 +828,7 @@ class TournamentHandler:
                 game.status = TournamentGame.FAILED_TO_START
                 self.create_notification(
                     TournamentNotification.GAME_FAILED,
-                    kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                    tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                 )
             elif result.startswith("MEMBER NOT FOUND"):
                 missed_player_ids = [x for x in result.split("\r\n")[1:] if x]
@@ -820,7 +840,7 @@ class TournamentHandler:
                 game.status = TournamentGame.FAILED_TO_START
                 self.create_notification(
                     TournamentNotification.GAME_FAILED_NO_MEMBERS,
-                    kwargs={
+                    tg_ru_kwargs={
                         "players": ", ".join(escaped_player_names),
                         "missed_players": missed_players_str,
                         "lobby_link": self.get_lobby_link(),
@@ -832,14 +852,14 @@ class TournamentHandler:
                 game.status = TournamentGame.STARTED
                 self.create_notification(
                     TournamentNotification.GAME_STARTED,
-                    kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                    tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                 )
         except Exception as e:
             logger.error(e, exc_info=e)
 
             game.status = TournamentGame.FAILED_TO_START
             self.create_notification(
-                TournamentNotification.GAME_FAILED, kwargs={"players": ", ".join(escaped_player_names)}
+                TournamentNotification.GAME_FAILED, tg_ru_kwargs={"players": ", ".join(escaped_player_names)}
             )
 
         game.save()
@@ -872,7 +892,7 @@ class TournamentHandler:
                         escaped_player_names = [f"`{x.player.ms_username}`" for x in players]
                     self.create_notification(
                         TournamentNotification.GAME_FAILED,
-                        kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                        tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                     )
                     game.save()
             if notification_type == 3:
@@ -915,7 +935,7 @@ class TournamentHandler:
 
                     self.create_notification(
                         TournamentNotification.GAME_FAILED_NO_MEMBERS,
-                        kwargs={
+                        tg_ru_kwargs={
                             "players": ", ".join(escaped_player_names),
                             "game_index": game.game_index,
                             "missed_players": current_missed_players,
@@ -937,14 +957,14 @@ class TournamentHandler:
             game.status = TournamentGame.STARTED
             self.create_notification(
                 TournamentNotification.GAME_STARTED,
-                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
             )
             game.save()
         except Exception:
             game.status = TournamentGame.FAILED_TO_START
             self.create_notification(
                 TournamentNotification.GAME_FAILED,
-                kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
             )
             game.save()
 
@@ -997,23 +1017,43 @@ class TournamentHandler:
             message += "Статистику турнира можно посмотреть вот тут: {} \n".format(self.get_rating_link())
             return message
 
-    def create_notification(self, notification_type: int, kwargs: Optional[Dict] = None):
-        if not kwargs:
-            kwargs = {}
+    def create_notification(
+        self,
+        notification_type: int,
+        tg_ru_kwargs: Optional[Dict] = None,
+        discord_ru_kwargs: Optional[Dict] = None,
+        discord_en_kwargs: Optional[Dict] = None,
+    ):
+        if not tg_ru_kwargs:
+            tg_ru_kwargs = {}
+        if not discord_ru_kwargs:
+            discord_ru_kwargs = {}
+        if not discord_en_kwargs:
+            discord_en_kwargs = {}
 
         with transaction.atomic():
             TournamentNotification.objects.create(
                 tournament=self.tournament,
                 notification_type=notification_type,
-                message_kwargs=kwargs,
+                message_kwargs=discord_ru_kwargs,
                 destination=TournamentNotification.DISCORD,
+                lang=TournamentNotification.RU,
             )
 
             TournamentNotification.objects.create(
                 tournament=self.tournament,
                 notification_type=notification_type,
-                message_kwargs=kwargs,
+                message_kwargs=discord_en_kwargs,
+                destination=TournamentNotification.DISCORD,
+                lang=TournamentNotification.EN,
+            )
+
+            TournamentNotification.objects.create(
+                tournament=self.tournament,
+                notification_type=notification_type,
+                message_kwargs=tg_ru_kwargs,
                 destination=TournamentNotification.TELEGRAM,
+                lang=TournamentNotification.RU,
             )
 
     def get_allowed_players(self):
@@ -1033,7 +1073,7 @@ class TournamentHandler:
         return allowed_players
 
     def get_notification_text(
-        self, lang: str, notification: TournamentNotification, extra_kwargs: Optional[dict] = None
+        self, lang: str, notification: TournamentNotification, destination: str, extra_kwargs: Optional[dict] = None
     ):
         activate(lang)
 
@@ -1043,40 +1083,48 @@ class TournamentHandler:
         if extra_kwargs:
             kwargs.update(extra_kwargs)
 
-        if self.destination == self.DISCORD_DESTINATION:
+        if destination == self.DISCORD_DESTINATION:
             # this will disable links preview for discord messages
             for key, value in kwargs.items():
                 if type(value) == str and value.startswith("http"):
                     kwargs[key] = f"<{value}>"
 
         if notification.notification_type == TournamentNotification.CONFIRMATION_STARTED:
-            if self.destination == self.TELEGRAM_DESTINATION:
+            if destination == self.TELEGRAM_DESTINATION:
                 if not self.tournament.is_majsoul_tournament:
                     return (
-                        "Начался этап подтверждения участия! "
-                        'Для подтверждения своего участия отправьте команду "`/me ваш ник на тенхе`" (регистр важен!). '
-                        "Этап завершится в 10-30 (МСК).\n\n"
-                        "Полезная информация:\n"
-                        "- турнирное лобби: %(lobby_link)s\n"
-                        "- турнирный рейтинг: %(rating_link)s\n"
-                    ) % kwargs
+                        _(
+                            "Confirmation stage has begun! "
+                            'To confirm your tournament participation send command "/me your tenhou nickname" '
+                            "(registry important!). "
+                            "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
+                            "Useful links:\n"
+                            "- tournament lobby: %(lobby_link)s\n"
+                            "- tournament rating table: %(rating_link)s\n"
+                        )
+                        % kwargs
+                    )
                 else:
                     return (
-                        "Начался этап подтверждения участия! "
-                        'Для подтверждения своего участия отправьте команду "`/me ваш ник на mahjongsoul`" (регистр важен!). '
-                        "Этап завершится в 10-30 (МСК).\n\n"
-                        "Полезная информация:\n"
-                        "- турнирное лобби: %(lobby_link)s\n"
-                        "- турнирный рейтинг: %(rating_link)s\n"
-                    ) % kwargs
+                        _(
+                            "Confirmation stage has begun! "
+                            'To confirm your tournament participation send command "/me your mahjongsoul nickname" '
+                            "(registry important!). "
+                            "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
+                            "Useful links:\n"
+                            "- tournament lobby: %(lobby_link)s\n"
+                            "- tournament rating table: %(rating_link)s\n"
+                        )
+                        % kwargs
+                    )
 
-            if self.destination == self.DISCORD_DESTINATION:
+            if destination == self.DISCORD_DESTINATION:
                 return (
                     _(
                         "Confirmation stage has begun! "
-                        "To confirm your tournament participation go to %(confirmation_channel)s "
-                        "and send your tenhou.net nickname. "
-                        "Confirmation stage will be ended at 7-20 UTC time.\n\n"
+                        "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                        "and send your tenhou.net nickname. \n"
+                        "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
                         "Useful links:\n"
                         "- tournament lobby: %(lobby_link)s\n"
                         "- tournament rating table: %(rating_link)s"
@@ -1085,10 +1133,10 @@ class TournamentHandler:
                 )
 
         if notification.notification_type == TournamentNotification.ROUND_FINISHED:
-            if self.destination == TournamentHandler.DISCORD_DESTINATION:
+            if destination == TournamentHandler.DISCORD_DESTINATION:
                 kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.UTC).strftime("%H-%M")
 
-            if self.destination == TournamentHandler.TELEGRAM_DESTINATION:
+            if destination == TournamentHandler.TELEGRAM_DESTINATION:
                 kwargs["break_end"] = status.end_break_time.astimezone(pytz.timezone("Europe/Moscow")).strftime("%H-%M")
 
             return (
@@ -1196,7 +1244,7 @@ class TournamentHandler:
 
         self.create_notification(
             TournamentNotification.GAME_PRE_ENDED,
-            kwargs={"message": unquote(end_game_message)},
+            tg_ru_kwargs={"message": unquote(end_game_message)},
         )
 
         # postpone reminder
@@ -1230,7 +1278,7 @@ class TournamentHandler:
 
         self.create_notification(
             TournamentNotification.GAME_LOG_REMINDER,
-            kwargs={"player_names": self.get_players_message_string(players)},
+            tg_ru_kwargs={"player_names": self.get_players_message_string(players)},
         )
 
     def get_players_message_string(self, players: List[TournamentPlayers]):
