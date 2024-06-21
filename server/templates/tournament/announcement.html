@@ -106,7 +106,9 @@
                         {% if tournament.display_notes and tournament.is_command %}
                             <th scope="col">{% trans 'Team' %}</th>
                         {% else %}
-                            <th scope="col">{% trans 'Notes' %}</th>
+                            {% if tournament.display_notes %}
+                                <th scope="col">{% trans 'Notes' %}</th>
+                            {% endif %}
                         {% endif %}
                     </tr>
                     </thead>
