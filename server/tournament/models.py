@@ -282,7 +282,7 @@ class TournamentRegistration(BaseModel):
     )
 
     is_highlighted = models.BooleanField(default=False)
-    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Team name"))
+    notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
 
     player = models.ForeignKey(
         Player, on_delete=models.CASCADE, null=True, blank=True, related_name="tournament_registrations"

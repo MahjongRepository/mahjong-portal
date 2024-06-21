@@ -26,6 +26,8 @@ class TournamentRegistrationForm(forms.ModelForm):
         self.fields["allow_to_save_data"].label = _("I allow to store my personal data")
         if tournament.display_notes:
             self.fields["notes"].widget = forms.Textarea(attrs={"rows": 2})
+            if tournament.is_command:
+                self.fields["notes"].label = _("Team name")
         else:
             del self.fields["notes"]
 
