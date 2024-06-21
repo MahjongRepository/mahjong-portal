@@ -35,6 +35,7 @@ class OnlineTournamentConfig(BaseModel):
             ru_tournament_timezone = current_config_dict["ru_tournament_timezone"]
             en_discord_confirmation_channel = current_config_dict["en_discord_confirmation_channel"]
             ru_discord_confirmation_channel = current_config_dict["ru_discord_confirmation_channel"]
+            public_lobby = current_config_dict["public_lobby"]
             current_config = PlainOnlineTournamentConfig(
                 en_confirmation_end_time,
                 en_tournament_timezone,
@@ -42,6 +43,7 @@ class OnlineTournamentConfig(BaseModel):
                 ru_tournament_timezone,
                 en_discord_confirmation_channel,
                 ru_discord_confirmation_channel,
+                public_lobby,
             )
             current_config.is_validated = current_config.is_valid()
             return current_config
@@ -105,6 +107,7 @@ class Tournament(BaseModel):
     opened_registration = models.BooleanField(default=False)
     registrations_pre_moderation = models.BooleanField(default=False)
     is_apply_in_rating = models.BooleanField(default=False)
+    is_command = models.BooleanField(default=False)
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)

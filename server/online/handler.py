@@ -198,21 +198,21 @@ class TournamentHandler:
             tg_ru_kwargs={
                 "confirmation_end_time": current_config.ru_confirmation_end_time,
                 "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(),
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
                 "rating_link": self.get_rating_link(),
             },
             discord_ru_kwargs={
                 "confirmation_channel": current_config.ru_discord_confirmation_channel,
                 "confirmation_end_time": current_config.ru_confirmation_end_time,
                 "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(),
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
                 "rating_link": self.get_rating_link(),
             },
             discord_en_kwargs={
                 "confirmation_channel": current_config.en_discord_confirmation_channel,
                 "confirmation_end_time": current_config.en_confirmation_end_time,
                 "timezone": current_config.en_tournament_timezone,
-                "lobby_link": self.get_lobby_link(),
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
                 "rating_link": self.get_rating_link(),
             },
         )
@@ -223,9 +223,10 @@ class TournamentHandler:
         status.save()
 
         confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
+        current_config = self.tournament.online_config.get_config()
         self.create_notification(
             TournamentNotification.CONFIRMATION_ENDED,
-            {"lobby_link": self.get_lobby_link(), "confirmed_players": confirmed_players},
+            {"lobby_link": self.get_lobby_link(current_config.public_lobby), "confirmed_players": confirmed_players},
         )
 
     def send_team_names_to_pantheon(self):
@@ -986,11 +987,14 @@ class TournamentHandler:
                 break_minutes = self.TOURNAMENT_BREAKS_TIME[index]
                 status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
                 status.save()
+
+                current_config = self.tournament.online_config.get_config()
+
                 self.create_notification(
                     TournamentNotification.ROUND_FINISHED,
                     {
                         "break_minutes": break_minutes,
-                        "lobby_link": self.get_lobby_link(),
+                        "lobby_link": self.get_lobby_link(current_config.public_lobby),
                         "current_round": status.current_round + 1,
                         "total_rounds": self.tournament.number_of_sessions,
                     },
@@ -1204,12 +1208,19 @@ class TournamentHandler:
 
         return format_text(messages.get(notification.notification_type), kwargs)
 
-    def get_lobby_link(self):
+    def get_lobby_link(self, lobby=None):
+        current_lobby = lobby
+        if not current_lobby:
+            if not self.tournament.is_majsoul_tournament:
+                current_lobby = settings.TOURNAMENT_PUBLIC_LOBBY
+            else:
+                current_lobby = self.lobby
+
         if self.tournament:
             if not self.tournament.is_majsoul_tournament:
-                return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
+                return f"http://tenhou.net/0/?{current_lobby}"
             else:
-                return f"{self.lobby}"
+                return f"{current_lobby}"
 
     def get_rating_link(self):
         return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/order/rating"
