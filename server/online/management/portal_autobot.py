@@ -126,10 +126,12 @@ class PortalAutoBot:
         return tournament_handler.prepare_next_round(reshuffleInPortal=False)
 
     @staticmethod
-    def confirm_player(nickname, telegram_username, requested_lang):
+    def confirm_player(nickname, telegram_username, discord_username, requested_lang):
         activate(requested_lang)
 
-        return tournament_handler.confirm_participation_in_tournament(nickname, telegram_username=telegram_username)
+        return tournament_handler.confirm_participation_in_tournament(
+            nickname, telegram_username=telegram_username, discord_username=discord_username
+        )
 
     @staticmethod
     def admin_confirm_player(friend_id, nickname, telegram_username):
