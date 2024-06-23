@@ -59,9 +59,7 @@
                 <form class="form" style="max-width: none" action="{% url 'pantheon_tournament_registration' tournament.id %}" method="POST">
                     {% csrf_token %}
 
-                    {% if tournament.is_majsoul_tournament %}
-                        {% bootstrap_form form %}
-                    {% endif %}
+                    {% bootstrap_form form %}
 
                     <button type="submit" class="btn btn-primary">{% trans 'Apply for tournament through Pantheon account' %}</button>
                 </form>
