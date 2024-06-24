@@ -198,21 +198,21 @@ class TournamentHandler:
             tg_ru_kwargs={
                 "confirmation_end_time": current_config.ru_confirmation_end_time,
                 "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(),
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
                 "rating_link": self.get_rating_link(),
             },
             discord_ru_kwargs={
                 "confirmation_channel": current_config.ru_discord_confirmation_channel,
                 "confirmation_end_time": current_config.ru_confirmation_end_time,
                 "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(),
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
                 "rating_link": self.get_rating_link(),
             },
             discord_en_kwargs={
                 "confirmation_channel": current_config.en_discord_confirmation_channel,
                 "confirmation_end_time": current_config.en_confirmation_end_time,
                 "timezone": current_config.en_tournament_timezone,
-                "lobby_link": self.get_lobby_link(),
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
                 "rating_link": self.get_rating_link(),
             },
         )
@@ -223,9 +223,21 @@ class TournamentHandler:
         status.save()
 
         confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
+        current_config = self.tournament.online_config.get_config()
         self.create_notification(
             TournamentNotification.CONFIRMATION_ENDED,
-            {"lobby_link": self.get_lobby_link(), "confirmed_players": confirmed_players},
+            tg_ru_kwargs={
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                "confirmed_players": confirmed_players,
+            },
+            discord_ru_kwargs={
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                "confirmed_players": confirmed_players,
+            },
+            discord_en_kwargs={
+                "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                "confirmed_players": confirmed_players,
+            },
         )
 
     def send_team_names_to_pantheon(self):
@@ -404,6 +416,28 @@ class TournamentHandler:
                 "player_four": formatted_players[3],
                 "platform_name": "Tenhou",
             },
+            discord_ru_kwargs={
+                "finished": finished_games.count(),
+                "total": total_games,
+                "pantheon_link": pantheon_url,
+                "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
+                "player_one": formatted_players[0],
+                "player_two": formatted_players[1],
+                "player_three": formatted_players[2],
+                "player_four": formatted_players[3],
+                "platform_name": "Tenhou",
+            },
+            discord_en_kwargs={
+                "finished": finished_games.count(),
+                "total": total_games,
+                "pantheon_link": pantheon_url,
+                "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
+                "player_one": formatted_players[0],
+                "player_two": formatted_players[1],
+                "player_three": formatted_players[2],
+                "player_four": formatted_players[3],
+                "platform_name": "Tenhou",
+            },
         )
 
         self.check_round_was_finished()
@@ -496,10 +530,31 @@ class TournamentHandler:
         )
 
         if not self.tournament.is_majsoul_tournament:
-            # todo: tenhou stuff
             self.create_notification(
                 TournamentNotification.GAME_ENDED,
                 tg_ru_kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": "pantheon_link",
+                    "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
+                    "player_one": players[0],
+                    "player_two": players[1],
+                    "player_three": players[2],
+                    "player_four": players[3],
+                    "platform_name": "Tenhou",
+                },
+                discord_ru_kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": "pantheon_link",
+                    "game_replay_link": f"http://tenhou.net/0/?log={log_id}",
+                    "player_one": players[0],
+                    "player_two": players[1],
+                    "player_three": players[2],
+                    "player_four": players[3],
+                    "platform_name": "Tenhou",
+                },
+                discord_en_kwargs={
                     "finished": finished_games.count(),
                     "total": total_games,
                     "pantheon_link": "pantheon_link",
@@ -515,6 +570,28 @@ class TournamentHandler:
             self.create_notification(
                 TournamentNotification.GAME_ENDED,
                 tg_ru_kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict["game"]["sessionHash"]),
+                    "game_replay_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
+                    "player_one": formatted_players[1],
+                    "player_two": formatted_players[2],
+                    "player_three": formatted_players[3],
+                    "player_four": formatted_players[4],
+                    "platform_name": "mahjongsoul",
+                },
+                discord_ru_kwargs={
+                    "finished": finished_games.count(),
+                    "total": total_games,
+                    "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict["game"]["sessionHash"]),
+                    "game_replay_link": f"https://mahjongsoul.game.yo-star.com/?paipu={log_id}",
+                    "player_one": formatted_players[1],
+                    "player_two": formatted_players[2],
+                    "player_three": formatted_players[3],
+                    "player_four": formatted_players[4],
+                    "platform_name": "mahjongsoul",
+                },
+                discord_en_kwargs={
                     "finished": finished_games.count(),
                     "total": total_games,
                     "pantheon_link": self.get_pantheon_game_link(pantheon_response_dict["game"]["sessionHash"]),
@@ -697,7 +774,18 @@ class TournamentHandler:
                 # for users
                 self.create_notification(
                     TournamentNotification.GAMES_PREPARED,
-                    {"current_round": status.current_round, "total_rounds": self.tournament.number_of_sessions},
+                    tg_ru_kwargs={
+                        "current_round": status.current_round,
+                        "total_rounds": self.tournament.number_of_sessions,
+                    },
+                    discord_ru_kwargs={
+                        "current_round": status.current_round,
+                        "total_rounds": self.tournament.number_of_sessions,
+                    },
+                    discord_en_kwargs={
+                        "current_round": status.current_round,
+                        "total_rounds": self.tournament.number_of_sessions,
+                    },
                 )
 
                 # for admin
@@ -893,6 +981,8 @@ class TournamentHandler:
                     self.create_notification(
                         TournamentNotification.GAME_FAILED,
                         tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                        discord_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                        discord_en_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
                     )
                     game.save()
             if notification_type == 3:
@@ -924,14 +1014,20 @@ class TournamentHandler:
 
                     current_missed_players = []
                     current_missed_tg_usernames = []
+                    current_missed_discord_usernames = []
                     for round_player in missed_round_players:
                         if not self.tournament.is_majsoul_tournament:
                             current_missed_players.append(round_player.tenhou_username)
                         else:
                             current_missed_players.append(round_player.ms_username)
                         current_missed_tg_usernames.append(round_player.telegram_username)
+                        current_missed_discord_usernames.append(round_player.discord_username)
 
-                    formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
+                    tg_formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
+                    discord_formatted_missed_players = ", ".join(
+                        ["{}".format(x) for x in current_missed_discord_usernames]
+                    )
+                    current_config = self.tournament.online_config.get_config()
 
                     self.create_notification(
                         TournamentNotification.GAME_FAILED_NO_MEMBERS,
@@ -939,8 +1035,22 @@ class TournamentHandler:
                             "players": ", ".join(escaped_player_names),
                             "game_index": game.game_index,
                             "missed_players": current_missed_players,
-                            "lobby_link": settings.TOURNAMENT_PUBLIC_LOBBY,
-                            "missed_players_str": formatted_missed_players,
+                            "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                            "missed_players_str": tg_formatted_missed_players,
+                        },
+                        discord_ru_kwargs={
+                            "players": ", ".join(escaped_player_names),
+                            "game_index": game.game_index,
+                            "missed_players": current_missed_players,
+                            "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                            "missed_players_str": discord_formatted_missed_players,
+                        },
+                        discord_en_kwargs={
+                            "players": ", ".join(escaped_player_names),
+                            "game_index": game.game_index,
+                            "missed_players": current_missed_players,
+                            "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                            "missed_players_str": discord_formatted_missed_players,
                         },
                     )
                     game.save()
@@ -958,6 +1068,8 @@ class TournamentHandler:
             self.create_notification(
                 TournamentNotification.GAME_STARTED,
                 tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                discord_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                discord_en_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
             )
             game.save()
         except Exception:
@@ -965,6 +1077,8 @@ class TournamentHandler:
             self.create_notification(
                 TournamentNotification.GAME_FAILED,
                 tg_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                discord_ru_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
+                discord_en_kwargs={"players": ", ".join(escaped_player_names), "game_index": game.game_index},
             )
             game.save()
 
@@ -986,11 +1100,26 @@ class TournamentHandler:
                 break_minutes = self.TOURNAMENT_BREAKS_TIME[index]
                 status.end_break_time = timezone.now() + timedelta(minutes=break_minutes)
                 status.save()
+
+                current_config = self.tournament.online_config.get_config()
+
                 self.create_notification(
                     TournamentNotification.ROUND_FINISHED,
-                    {
+                    tg_ru_kwargs={
                         "break_minutes": break_minutes,
-                        "lobby_link": self.get_lobby_link(),
+                        "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                        "current_round": status.current_round + 1,
+                        "total_rounds": self.tournament.number_of_sessions,
+                    },
+                    discord_ru_kwargs={
+                        "break_minutes": break_minutes,
+                        "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                        "current_round": status.current_round + 1,
+                        "total_rounds": self.tournament.number_of_sessions,
+                    },
+                    discord_en_kwargs={
+                        "break_minutes": break_minutes,
+                        "lobby_link": self.get_lobby_link(current_config.public_lobby),
                         "current_round": status.current_round + 1,
                         "total_rounds": self.tournament.number_of_sessions,
                     },
@@ -1148,6 +1277,24 @@ class TournamentHandler:
                 % kwargs
             )
 
+        games_prepared_message = _(
+            "Round %(current_round)s of %(total_rounds)s starts. "
+            "Tournament seating is ready.\n\n"
+            "Starting games...\n\n"
+            "After the game please send the game log link to the #game_logs channel. "
+            "The game log should be sent before the new round starts. "
+            "If there is no log when next round start, all players from this game "
+            "will get -30000 scores as a round result (their real scores will not be counted)."
+        )
+        if self.tournament.is_majsoul_tournament:
+            games_prepared_message = _(
+                "Round %(current_round)s of %(total_rounds)s starts. "
+                "Tournament seating is ready.\n\n"
+                "Starting games...\n\n"
+                "After the game the log will be saved automatically.\n"
+                "If this does not happen, please contact the administrator."
+            )
+
         messages = {
             TournamentNotification.GAME_ENDED: _(
                 "New game was added.\n\n"
@@ -1168,19 +1315,7 @@ class TournamentHandler:
                 "Please, follow this link %(lobby_link)s to enter the tournament lobby. "
                 "Games will start automatically."
             ),
-            # todo: localization notification for tenhou
-            # TournamentNotification.GAMES_PREPARED: _(
-            #     "Round %(current_round)s of %(total_rounds)s starts. "
-            #     "Tournament seating is ready.\n\n"
-            #     "Starting games...\n\n"
-            #     "After the game please send the game log link to the #game_logs channel. "
-            #     "The game log should be sent before the new round starts. "
-            #     "If there is no log when next round start, all players from this game "
-            #     "will get -30000 scores as a round result (their real scores will not be counted)."
-            # ),
-            TournamentNotification.GAMES_PREPARED: "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-            "Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-            "Если этого не произошло обратитесь к администратору.",
+            TournamentNotification.GAMES_PREPARED: games_prepared_message,
             TournamentNotification.GAME_FAILED: _(
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
@@ -1204,12 +1339,19 @@ class TournamentHandler:
 
         return format_text(messages.get(notification.notification_type), kwargs)
 
-    def get_lobby_link(self):
+    def get_lobby_link(self, lobby=None):
+        current_lobby = lobby
+        if not current_lobby:
+            if not self.tournament.is_majsoul_tournament:
+                current_lobby = settings.TOURNAMENT_PUBLIC_LOBBY
+            else:
+                current_lobby = self.lobby
+
         if self.tournament:
             if not self.tournament.is_majsoul_tournament:
-                return f"http://tenhou.net/0/?{settings.TOURNAMENT_PUBLIC_LOBBY}"
+                return f"http://tenhou.net/0/?{current_lobby}"
             else:
-                return f"{self.lobby}"
+                return f"{current_lobby}"
 
     def get_rating_link(self):
         return f"https://rating.riichimahjong.org/event/{self.tournament.new_pantheon_id}/order/rating"
@@ -1245,6 +1387,8 @@ class TournamentHandler:
         self.create_notification(
             TournamentNotification.GAME_PRE_ENDED,
             tg_ru_kwargs={"message": unquote(end_game_message)},
+            discord_ru_kwargs={"message": unquote(end_game_message)},
+            discord_en_kwargs={"message": unquote(end_game_message)},
         )
 
         # postpone reminder

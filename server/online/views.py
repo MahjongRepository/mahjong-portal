@@ -258,10 +258,14 @@ def confirm_player(request):
         return HttpResponse(status=400)
 
     telegram_username = request_data.get("telegram_username")
-    if not telegram_username:
-        return HttpResponse(status=400)
+    discord_username = request_data.get("discord_username")
 
-    confirm_message = bot.confirm_player(nickname, telegram_username)
+    requested_lang = request_data.get("lang")
+    # todo: fix default ru locale
+    if not requested_lang:
+        requested_lang = "ru"
+
+    confirm_message = bot.confirm_player(nickname, telegram_username, discord_username, requested_lang)
     return JsonResponse({"message": confirm_message})
 
 
@@ -348,7 +352,13 @@ def admin_confirm_player(request):
 @autobot_token_require
 @tournament_data_require
 def get_tournament_status(request):
-    message = bot.get_tournament_status()
+    request_data = json.loads(request.body)
+    requested_lang = request_data.get("lang")
+    # todo: fix default ru locale
+    if not requested_lang:
+        requested_lang = "ru"
+
+    message = bot.get_tournament_status(requested_lang)
     return JsonResponse({"message": message})
 
 

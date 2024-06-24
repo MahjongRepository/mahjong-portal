@@ -13,6 +13,7 @@ from player.models import Player
 from settings.models import City
 from tournament.forms import (
     MajsoulOnlineTournamentPantheonRegistrationForm,
+    OnlineTournamentPantheonRegistrationForm,
     OnlineTournamentRegistrationForm,
     TournamentApplicationForm,
     TournamentRegistrationForm,
@@ -116,8 +117,10 @@ def tournament_announcement(request, slug):
         initial["city"] = tournament.city.name_ru
 
     if tournament.is_online():
-        if tournament.is_majsoul_tournament:
+        if tournament.is_majsoul_tournament and tournament.is_pantheon_registration:
             form = MajsoulOnlineTournamentPantheonRegistrationForm(initial=initial)
+        elif not tournament.is_majsoul_tournament and tournament.is_pantheon_registration:
+            form = OnlineTournamentPantheonRegistrationForm(initial=initial)
         else:
             form = OnlineTournamentRegistrationForm(initial=initial)
     else:
@@ -189,6 +192,10 @@ def pantheon_tournament_registration(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     user = request.user
     form_data = request.POST
+    notes = None
+
+    if tournament.display_notes:
+        notes = form_data["notes"]
 
     if tournament.is_majsoul_tournament:
         try:
@@ -236,6 +243,7 @@ def pantheon_tournament_registration(request, tournament_id):
             player=player,
             city_object=city_object,
             allow_to_save_data=allow_to_save_data,
+            notes=notes,
         )
     else:
         OnlineTournamentRegistration.objects.create(
@@ -247,6 +255,7 @@ def pantheon_tournament_registration(request, tournament_id):
             city=data["city"],
             player=player,
             city_object=city_object,
+            notes=notes,
         )
 
     return redirect(tournament.get_url())
