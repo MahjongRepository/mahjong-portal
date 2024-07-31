@@ -1,5 +1,7 @@
 -r ./base.txt
 
+setuptools==72.1.0
+
 # to read pyproject.toml configuration
 toml==0.10.2
 
