@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-01 13:20+0000\n"
+"POT-Creation-Date: 2024-08-01 15:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -601,6 +601,7 @@ msgstr "WRC 2020"
 #: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:12
 #: mahjong-portal/server/templates/tournament_admin/tournament_edit.html:12
 #: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:12
+#: mahjong-portal/server/templates/tournament_admin/tournament_registration_notes_edit.html:12
 #: mahjong-portal/server/templates/website/city.html:34
 msgid "Tournaments"
 msgstr "Турниры"
@@ -948,6 +949,7 @@ msgstr "Всего квот"
 #: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:5
 #: mahjong-portal/server/templates/tournament_admin/tournament_edit.html:5
 #: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:5
+#: mahjong-portal/server/templates/tournament_admin/tournament_registration_notes_edit.html:5
 #: mahjong-portal/server/templates/tournament_admin/upload_results.html:5
 #: mahjong-portal/server/templates/transliterate.html:5
 msgid "Admin page"
@@ -1600,7 +1602,7 @@ msgstr "Участников"
 
 #: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:27
 #: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:19
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:113
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:114
 msgid "Action"
 msgstr "Действие"
 
@@ -1709,29 +1711,34 @@ msgstr "Телефон"
 msgid "Additional contact"
 msgstr "Альтернативный контакт"
 
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:112
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:113
 msgid "Approved"
 msgstr "Одобрено"
 
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:170
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:169
+#: mahjong-portal/server/templates/tournament_admin/tournament_registration_notes_edit.html:14
+msgid "Notes edit"
+msgstr "Редактировать примечания"
+
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:174
 #: mahjong-portal/server/tournament/models.py:421
 #: mahjong-portal/server/tournament/models.py:432
 msgid "Yes"
 msgstr "Да"
 
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:173
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:177
 msgid "Approve"
 msgstr "Одобрить"
 
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:179
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:183
 msgid "Delete"
 msgstr "Удалить"
 
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:183
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:187
 msgid "Color"
 msgstr "Цвет"
 
-#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:192
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:196
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
