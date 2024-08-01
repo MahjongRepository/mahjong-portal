@@ -268,3 +268,13 @@ def approve_registration(request, tournament_id, registration_id, **kwargs):
     registration.is_approved = True
     registration.save()
     return redirect(tournament_manage, tournament.id)
+
+
+@login_required
+@tournament_manager_auth_required
+def toggle_share_notes(request, tournament_id, **kwargs):
+    tournament = kwargs["tournament"]
+    if tournament.display_notes:
+        tournament.share_notes = not tournament.share_notes
+        tournament.save()
+    return redirect(tournament_manage, tournament.id)

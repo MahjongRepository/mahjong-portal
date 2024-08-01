@@ -74,6 +74,19 @@
                             <td>{% trans 'Edit tournament information' %}</td>
                             <td><a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">{% trans 'Edit' %}</a></td>
                         </tr>
+                        {% if tournament.display_notes %}
+                            {% if tournament.share_notes %}
+                                <tr>
+                                    <td>{% trans 'Notes opened' %}</td>
+                                    <td><a href="{% url 'toggle_share_notes' tournament.id %}" class="btn btn-danger">{% trans 'Hide notes for all'%}</a></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{% trans 'Notes hidden' %}</td>
+                                    <td><a href="{% url 'toggle_share_notes' tournament.id %}" class="btn btn-success">{% trans 'Open notes for all'%}</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endif %}
                     </table>
                 </div>
             </li>
