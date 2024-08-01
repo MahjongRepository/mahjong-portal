@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-21 13:05+0000\n"
+"POT-Creation-Date: 2024-08-01 13:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,27 +20,27 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: server/account/admin.py:18
+#: mahjong-portal/server/account/admin.py:18
 msgid "Personal info"
 msgstr "Информация"
 
-#: server/account/admin.py:20
+#: mahjong-portal/server/account/admin.py:20
 msgid "Permissions"
 msgstr "Права"
 
-#: server/account/admin.py:34
+#: mahjong-portal/server/account/admin.py:34
 msgid "Important dates"
 msgstr "Важные даты"
 
-#: server/account/forms.py:18
+#: mahjong-portal/server/account/forms.py:18
 msgid "Email"
 msgstr ""
 
-#: server/account/forms.py:20
+#: mahjong-portal/server/account/forms.py:20
 msgid "Password"
 msgstr "Пароль"
 
-#: server/account/forms.py:27
+#: mahjong-portal/server/account/forms.py:27
 msgid ""
 "Please enter a correct email and password. Note that both fields may be case-"
 "sensitive."
@@ -48,107 +48,110 @@ msgstr ""
 "Неверный пароль или email. Учтите что оба поля могут быть чувствительны к "
 "регистру."
 
-#: server/account/views.py:54
+#: mahjong-portal/server/account/views.py:54
 msgid "Request was created."
 msgstr "Запрос был создан."
 
-#: server/club/views.py:38
+#: mahjong-portal/server/club/views.py:38
 msgid "Average place (ascending)"
 msgstr "Среднее место (по возрастанию)"
 
-#: server/club/views.py:39
+#: mahjong-portal/server/club/views.py:39
 msgid "Average place (descending)"
 msgstr "Среднее место (по убыванию)"
 
-#: server/club/views.py:40 server/templates/club/details.html:49
-#: server/templates/rating/_results_table.html:17
-#: server/templates/tournament/_tournament_results.html:15
-#: server/utils/tenhou/yakuman_list.py:18
+#: mahjong-portal/server/club/views.py:40
+#: mahjong-portal/server/templates/club/details.html:49
+#: mahjong-portal/server/templates/rating/_results_table.html:17
+#: mahjong-portal/server/templates/tournament/_tournament_results.html:15
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:18
 msgid "Tenhou"
 msgstr "Тенхо"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:15
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:15
 #, python-format
 msgid "EMA tournaments during %d"
 msgstr "ЕМА турниры за %d"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:17
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:17
 #, python-format
 msgid "Tournaments during %d"
 msgstr "Турниры за %d"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:23
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:23
 #, python-format
 msgid "List of EMA riichi mahjong tournaments during %d"
 msgstr "Список EMA турниров по риичи маджонгу за %d"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:25
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:25
 #, python-format
 msgid "List of riichi mahjong tournaments during %d"
 msgstr "Список турниров по риичи маджонгу за %d"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:35
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:35
 #, python-format
 msgid "Riichi mahjong tournament \"%(name)s\" held %(date)s in %(place)s"
 msgstr "Турнир по риичи маджонгу \"%(name)s\" прошел %(date)s в %(place)s"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:49
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:49
 #, python-format
 msgid "Riichi mahjong club \"%(name)s\" in %(place)s"
 msgstr "Клуб \"%(name)s\" в %(place)s"
 
-#: server/mahjong_portal/templatetags/meta_tags_helper.py:59
+#: mahjong-portal/server/mahjong_portal/templatetags/meta_tags_helper.py:59
 #, python-format
 msgid "Riichi mahjong player %(name)s from %(place)s"
 msgstr "Игрок в риичи маджонг %(name)s из %(place)s"
 
-#: server/online/handler.py:77
+#: mahjong-portal/server/online/handler.py:77
 #, python-format
 msgid ""
 "Games will start at 7-30 AM UTC. Confirmed players: %(confirmed_players)s."
 msgstr ""
 "Игры начнутся в 10-30 МСК. Подтвержденных игроков: %(confirmed_players)s."
 
-#: server/online/handler.py:81
+#: mahjong-portal/server/online/handler.py:81
 #, python-format
 msgid ""
 "Confirmation phase is in progress. Confirmed players: %(confirmed_players)s."
 msgstr ""
 "Идёт этап подтверждения. Подтвержденных игроков: %(confirmed_players)s."
 
-#: server/online/handler.py:92
+#: mahjong-portal/server/online/handler.py:92
 msgid "Games will start soon."
 msgstr "Ждём начала нового тура."
 
-#: server/online/handler.py:151
+#: mahjong-portal/server/online/handler.py:151
 #, python-format
 msgid "Break. The next tour will start in %(date)s."
 msgstr "Перерыв. Следующий тур начнётся через %(date)s."
 
-#: server/online/handler.py:173
+#: mahjong-portal/server/online/handler.py:173
 #, python-format
 msgid "Stage %(current_round)s of %(total_rounds)s."
 msgstr "Тур %(current_round)s из %(total_rounds)s."
 
-#: server/online/handler.py:179
+#: mahjong-portal/server/online/handler.py:179
 #, python-format
 msgid "Finished games: %(finished)s/%(total)s."
 msgstr "Игр завершено: %(finished)s/%(total)s."
 
-#: server/online/handler.py:186
+#: mahjong-portal/server/online/handler.py:186
 msgid "Several games could not start. The administrator will fix this soon."
 msgstr "Несколько игр не смогли запуститься. Администратор скоро это исправит."
 
-#: server/online/handler.py:267
+#: mahjong-portal/server/online/handler.py:273
 msgid "This is not looks like a link to the game log."
 msgstr "Это не похоже на ссылку на лог игры."
 
-#: server/online/handler.py:283 server/online/handler.py:439
-#: server/online/handler.py:450 server/online/handler.py:603
+#: mahjong-portal/server/online/handler.py:289
+#: mahjong-portal/server/online/handler.py:333
+#: mahjong-portal/server/online/handler.py:457
+#: mahjong-portal/server/online/handler.py:532
 msgid "The game has been added. Thank you."
 msgstr "Игра была добавлена. Спасибо."
 
-#: server/online/handler.py:290
+#: mahjong-portal/server/online/handler.py:296
 msgid ""
 "Fail to add this game. Try again in a moment or you havn't copied the entire "
 "link of the game log."
@@ -156,32 +159,34 @@ msgstr ""
 "Не получилось. Возможно тенха не успела сохранить игру или вы скопировали не "
 "весь log id."
 
-#: server/online/handler.py:305 server/online/handler.py:490
-#: server/online/handler.py:501
+#: mahjong-portal/server/online/handler.py:302
+#: mahjong-portal/server/online/handler.py:481
 #, python-format
 msgid "Fail to add game log. Contact the administrator %(admin_username)s."
 msgstr ""
 "Произошла ошибка при добавлении лога. Обратитесь к администратору "
 "%(admin_username)s."
 
-#: server/online/handler.py:458
+#: mahjong-portal/server/online/handler.py:465
+#: mahjong-portal/server/online/handler.py:467
 msgid "Error adding a game to pantheon."
 msgstr "Ошибка добавления реплея в пантеон."
 
-#: server/online/handler.py:611
+#: mahjong-portal/server/online/handler.py:631
 msgid "The confirmation phase has already ended. Visit our next tournaments."
 msgstr ""
 "Этап подтверждения участия уже завершился. Приходите на следующий турнир."
 
-#: server/online/handler.py:614
+#: mahjong-portal/server/online/handler.py:634
 msgid "The tenhou.net nickname must not be longer than eight characters."
 msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
 
-#: server/online/handler.py:622 server/online/handler.py:634
+#: mahjong-portal/server/online/handler.py:642
+#: mahjong-portal/server/online/handler.py:654
 msgid "You need to register for the tournament on mahjong.click first."
 msgstr "Сначала нужно зарегистрироваться на турнир на портале mahjong.click"
 
-#: server/online/handler.py:636
+#: mahjong-portal/server/online/handler.py:656
 msgid ""
 "Found multiple majsoul accounts for the tournament on mahjong.click. Ask for "
 "administrator."
@@ -189,24 +194,25 @@ msgstr ""
 "Зарегистрированно несколько таких аккаунтов на турнир на портале mahjong."
 "click. Обратитесь к администратору."
 
-#: server/online/handler.py:640
+#: mahjong-portal/server/online/handler.py:660
 msgid "Majsoul account not validated. Ask for administrator."
 msgstr "Majsoul аккаунт неверифицирован. Обратитесь к администратору."
 
-#: server/online/handler.py:644 server/online/handler.py:649
+#: mahjong-portal/server/online/handler.py:664
+#: mahjong-portal/server/online/handler.py:669
 #, python-format
 msgid "Nickname \"%(nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(nickname)s\" уже был подтверждён на турнир."
 
-#: server/online/handler.py:687
+#: mahjong-portal/server/online/handler.py:707
 msgid "Fatal error. Ask for administrator."
 msgstr "Что-то пошло не так. Обратитесь к администратору."
 
-#: server/online/handler.py:689
+#: mahjong-portal/server/online/handler.py:709
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: server/online/handler.py:1209
+#: mahjong-portal/server/online/handler.py:1240
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -225,7 +231,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: server/online/handler.py:1222
+#: mahjong-portal/server/online/handler.py:1253
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -245,7 +251,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: server/online/handler.py:1236
+#: mahjong-portal/server/online/handler.py:1267
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -265,7 +271,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: server/online/handler.py:1256
+#: mahjong-portal/server/online/handler.py:1287
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -279,7 +285,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: server/online/handler.py:1264
+#: mahjong-portal/server/online/handler.py:1295
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -303,7 +309,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: server/online/handler.py:1274
+#: mahjong-portal/server/online/handler.py:1305
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -315,10 +321,12 @@ msgid ""
 "If this does not happen, please contact the administrator."
 msgstr ""
 "Тур %(current_round)s из %(total_rounds)s. Игры сформированы.\n"
-"Запускаю игры...\n\nПосле завершения вашей игры лог игры будет сохранен автоматически. "
-"Если этого не произошло обратитесь к администратору."
+"Запускаю игры...\n"
+"\n"
+"После завершения вашей игры лог игры будет сохранен автоматически. Если "
+"этого не произошло обратитесь к администратору."
 
-#: server/online/handler.py:1283
+#: mahjong-portal/server/online/handler.py:1314
 msgid ""
 "New game was added.\n"
 "\n"
@@ -351,7 +359,7 @@ msgstr ""
 "Всего игр завершено: %(finished)s/%(total)s."
 
 # python-format
-#: server/online/handler.py:1296
+#: mahjong-portal/server/online/handler.py:1327
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -362,7 +370,7 @@ msgstr ""
 "игроков. Игры начнутся через 10 минут в 10-30 МСК. Пожалуйста, пройдите в "
 "лобби %(lobby_link) и ждите начала игр (игры начнутся автоматически)."
 
-#: server/online/handler.py:1303
+#: mahjong-portal/server/online/handler.py:1334
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -371,7 +379,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: server/online/handler.py:1306
+#: mahjong-portal/server/online/handler.py:1337
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. Missed players "
 "%(missed_players)s. The table was moved to the end of the queue. \n"
@@ -387,16 +395,16 @@ msgstr ""
 "%(missed_players_str) Отсутствующие игроки зайдите (или перезайдите) в "
 "турнирное лобби: %(lobby_link)."
 
-#: server/online/handler.py:1310
+#: mahjong-portal/server/online/handler.py:1341
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: server/online/handler.py:1311
+#: mahjong-portal/server/online/handler.py:1342
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: server/online/handler.py:1312
+#: mahjong-portal/server/online/handler.py:1343
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -405,7 +413,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: server/online/handler.py:1314
+#: mahjong-portal/server/online/handler.py:1345
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -419,7 +427,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: server/online/handler.py:1319
+#: mahjong-portal/server/online/handler.py:1350
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
@@ -428,7 +436,7 @@ msgstr ""
 "Игроки: %(player_names)s вам назначен штраф -30000 за непредоставление "
 "ссылки на игру."
 
-#: server/online/management/commands/ds_bot.py:120
+#: mahjong-portal/server/online/management/commands/ds_bot.py:120
 #, python-format
 msgid ""
 "1. Tournament lobby:\n"
@@ -437,7 +445,7 @@ msgstr ""
 "1. Турнирное лобби:\n"
 " <%(lobby_link)s> \n"
 
-#: server/online/management/commands/ds_bot.py:121
+#: mahjong-portal/server/online/management/commands/ds_bot.py:121
 #, python-format
 msgid ""
 "2. Tournament statistics:\n"
@@ -446,7 +454,7 @@ msgstr ""
 "2. Турнирная статистика:\n"
 " <%(rating_link)s> \n"
 
-#: server/online/management/commands/ds_bot.py:127
+#: mahjong-portal/server/online/management/commands/ds_bot.py:127
 #, python-format
 msgid ""
 "3. Current games:\n"
@@ -455,31 +463,32 @@ msgstr ""
 "3. Текущие игры:\n"
 " <%(current_games_link)s> \n"
 
-#: server/player/models.py:43
+#: mahjong-portal/server/player/models.py:43
 msgid "Substitution player"
 msgstr "Игрок замены"
 
-#: server/player/tenhou/models.py:144
+#: mahjong-portal/server/player/tenhou/models.py:144
 msgid "Ippan"
 msgstr "Кю-лобби"
 
-#: server/player/tenhou/models.py:145
+#: mahjong-portal/server/player/tenhou/models.py:145
 msgid "Joukyuu"
 msgstr "Перводан"
 
-#: server/player/tenhou/models.py:146
+#: mahjong-portal/server/player/tenhou/models.py:146
 msgid "Tokujou"
 msgstr "Втородан"
 
-#: server/player/tenhou/models.py:147
+#: mahjong-portal/server/player/tenhou/models.py:147
 msgid "Houou"
 msgstr "Феникс"
 
-#: server/templates/403.html:5 server/templates/403.html:10
+#: mahjong-portal/server/templates/403.html:5
+#: mahjong-portal/server/templates/403.html:10
 msgid "403 Forbidden Error"
 msgstr "403 доступ запрещён"
 
-#: server/templates/403.html:11
+#: mahjong-portal/server/templates/403.html:11
 msgid ""
 "Please make sure that your cookies are enabled, as they are necessary for "
 "submitting the form."
@@ -487,27 +496,30 @@ msgstr ""
 "Пожалуйста, убедитесь, что у вас включены cookies, так как они необходимы "
 "для отправки формы."
 
-#: server/templates/404.html:5 server/templates/404.html:10
+#: mahjong-portal/server/templates/404.html:5
+#: mahjong-portal/server/templates/404.html:10
 msgid "404 Page Not Found"
 msgstr "404 страница не найдена"
 
-#: server/templates/404.html:11
+#: mahjong-portal/server/templates/404.html:11
 msgid "The page you requested was not found."
 msgstr "Запрашиваемой страницы не существует."
 
-#: server/templates/500.html:5 server/templates/500.html:10
+#: mahjong-portal/server/templates/500.html:5
+#: mahjong-portal/server/templates/500.html:10
 msgid "500 Internal Server Error"
 msgstr "500 ошибка"
 
-#: server/templates/500.html:11
+#: mahjong-portal/server/templates/500.html:11
 msgid "Unexpected error was caused."
 msgstr "Что-то пошло не так."
 
-#: server/templates/account/login.html:6 server/templates/league/view.html:30
+#: mahjong-portal/server/templates/account/login.html:6
+#: mahjong-portal/server/templates/league/view.html:30
 msgid "Login through Pantheon"
 msgstr "Войти через Pantheon"
 
-#: server/templates/account/login.html:8
+#: mahjong-portal/server/templates/account/login.html:8
 msgid ""
 "Please use your login and password from https://rating.riichimahjong.org/ to "
 "login."
@@ -515,1047 +527,1097 @@ msgstr ""
 "Используйте свой email и пароль от пантеона https://rating.riichimahjong."
 "org/ для входа."
 
-#: server/templates/account/login.html:9
+#: mahjong-portal/server/templates/account/login.html:9
 msgid ""
 "We are not storing these credentials, they are used only during the login "
 "process."
 msgstr ""
 "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: server/templates/account/login.html:18 server/templates/base.html:169
+#: mahjong-portal/server/templates/account/login.html:18
+#: mahjong-portal/server/templates/base.html:169
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
 
-#: server/templates/account/settings.html:6 server/templates/base.html:150
+#: mahjong-portal/server/templates/account/settings.html:6
+#: mahjong-portal/server/templates/base.html:150
 msgid "User settings"
 msgstr "Настройки аккаунта"
 
-#: server/templates/account/settings.html:8
+#: mahjong-portal/server/templates/account/settings.html:8
 msgid "Under development!"
 msgstr "В разработке!"
 
-#: server/templates/base.html:35 server/templates/website/home.html:5
+#: mahjong-portal/server/templates/base.html:35
+#: mahjong-portal/server/templates/website/home.html:5
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
 
-#: server/templates/base.html:43
+#: mahjong-portal/server/templates/base.html:43
 msgid "Theme"
 msgstr "Тема"
 
-#: server/templates/base.html:48
+#: mahjong-portal/server/templates/base.html:48
 msgid "Light"
 msgstr "Светлая"
 
-#: server/templates/base.html:53
+#: mahjong-portal/server/templates/base.html:53
 msgid "Dark"
 msgstr "Тёмная"
 
-#: server/templates/base.html:58
+#: mahjong-portal/server/templates/base.html:58
 msgid "Auto"
 msgstr "Авто"
 
-#: server/templates/base.html:65 server/templates/base.html:68
-#: server/templates/player/details.html:19 server/templates/rating/list.html:5
-#: server/templates/rating/list.html:10
+#: mahjong-portal/server/templates/base.html:65
+#: mahjong-portal/server/templates/base.html:68
+#: mahjong-portal/server/templates/player/details.html:19
+#: mahjong-portal/server/templates/rating/list.html:5
+#: mahjong-portal/server/templates/rating/list.html:10
 msgid "Ratings"
 msgstr "Рейтинги"
 
-#: server/templates/base.html:69 server/templates/website/about_en.html:5
-#: server/templates/website/about_ru.html:5
+#: mahjong-portal/server/templates/base.html:69
+#: mahjong-portal/server/templates/website/about_en.html:5
+#: mahjong-portal/server/templates/website/about_ru.html:5
 msgid "About"
 msgstr "О рейтингах"
 
-#: server/templates/base.html:71
+#: mahjong-portal/server/templates/base.html:71
 msgid "WRC 2020"
 msgstr "WRC 2020"
 
-#: server/templates/base.html:75 server/templates/club/tournaments.html:5
-#: server/templates/club/tournaments.html:27
-#: server/templates/club/tournaments.html:34
-#: server/templates/club/tournaments.html:35
-#: server/templates/player/rating_details.html:161
-#: server/templates/player/tournaments.html:5
-#: server/templates/player/tournaments.html:15
-#: server/templates/player/tournaments.html:62
-#: server/templates/player/tournaments.html:63
-#: server/templates/tournament_admin/managed_tournaments.html:12
-#: server/templates/tournament_admin/tournament_edit.html:12
-#: server/templates/tournament_admin/tournament_manage.html:12
-#: server/templates/website/city.html:34
+#: mahjong-portal/server/templates/base.html:75
+#: mahjong-portal/server/templates/club/tournaments.html:5
+#: mahjong-portal/server/templates/club/tournaments.html:27
+#: mahjong-portal/server/templates/club/tournaments.html:34
+#: mahjong-portal/server/templates/club/tournaments.html:35
+#: mahjong-portal/server/templates/player/rating_details.html:161
+#: mahjong-portal/server/templates/player/tournaments.html:5
+#: mahjong-portal/server/templates/player/tournaments.html:15
+#: mahjong-portal/server/templates/player/tournaments.html:62
+#: mahjong-portal/server/templates/player/tournaments.html:63
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:12
+#: mahjong-portal/server/templates/tournament_admin/tournament_edit.html:12
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:12
+#: mahjong-portal/server/templates/website/city.html:34
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: server/templates/base.html:89 server/templates/club/list.html:10
-#: server/templates/website/city.html:11
+#: mahjong-portal/server/templates/base.html:89
+#: mahjong-portal/server/templates/club/list.html:10
+#: mahjong-portal/server/templates/website/city.html:11
 msgid "Clubs"
 msgstr "Клубы"
 
-#: server/templates/base.html:96
+#: mahjong-portal/server/templates/base.html:96
 msgid "Online"
 msgstr "Онлайн"
 
-#: server/templates/base.html:99 server/templates/tenhou/tenhou_games.html:5
-#: server/templates/tenhou/tenhou_games.html:15
-#: server/templates/tenhou/tenhou_games.html:16
+#: mahjong-portal/server/templates/base.html:99
+#: mahjong-portal/server/templates/tenhou/tenhou_games.html:5
+#: mahjong-portal/server/templates/tenhou/tenhou_games.html:15
+#: mahjong-portal/server/templates/tenhou/tenhou_games.html:16
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: server/templates/base.html:100
-#: server/templates/tenhou/tenhou_accounts.html:5
-#: server/templates/tenhou/tenhou_accounts.html:10
-#: server/templates/tenhou/tenhou_accounts.html:79
-#: server/templates/tenhou/tenhou_accounts.html:80
+#: mahjong-portal/server/templates/base.html:100
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:5
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:10
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:79
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:80
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
 
-#: server/templates/base.html:101 server/templates/ms/ms_accounts.html:5
-#: server/templates/ms/ms_accounts.html:10
-#: server/templates/ms/ms_accounts.html:88
-#: server/templates/ms/ms_accounts.html:89
+#: mahjong-portal/server/templates/base.html:101
+#: mahjong-portal/server/templates/ms/ms_accounts.html:5
+#: mahjong-portal/server/templates/ms/ms_accounts.html:10
+#: mahjong-portal/server/templates/ms/ms_accounts.html:88
+#: mahjong-portal/server/templates/ms/ms_accounts.html:89
 msgid "Mahjong Soul accounts"
 msgstr "Аккаунты на Mahjong Soul"
 
-#: server/templates/base.html:102 server/templates/tenhou/games_history.html:5
-#: server/templates/tenhou/games_history.html:11
-#: server/templates/tenhou/games_history.html:106
-#: server/templates/tenhou/games_history.html:107
+#: mahjong-portal/server/templates/base.html:102
+#: mahjong-portal/server/templates/tenhou/games_history.html:5
+#: mahjong-portal/server/templates/tenhou/games_history.html:11
+#: mahjong-portal/server/templates/tenhou/games_history.html:106
+#: mahjong-portal/server/templates/tenhou/games_history.html:107
 msgid "Tenhou.net games history"
 msgstr "История игр на tenhou.net"
 
-#: server/templates/base.html:103
-#: server/templates/tenhou/latest_yakumans.html:5
-#: server/templates/tenhou/latest_yakumans.html:10
-#: server/templates/tenhou/latest_yakumans.html:50
-#: server/templates/tenhou/latest_yakumans.html:51
+#: mahjong-portal/server/templates/base.html:103
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:5
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:10
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:50
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:51
 msgid "Yakumans from tenhou.net"
 msgstr "Якуманы с tenhou.net"
 
-#: server/templates/base.html:108
-#: server/templates/tournament/application.html:85
-#: server/tournament/models.py:434
+#: mahjong-portal/server/templates/base.html:108
+#: mahjong-portal/server/templates/tournament/application.html:85
+#: mahjong-portal/server/tournament/models.py:436
 msgid "Other"
 msgstr "Другое"
 
-#: server/templates/base.html:111 server/templates/website/contacts_en.html:5
-#: server/templates/website/contacts_ru.html:5
+#: mahjong-portal/server/templates/base.html:111
+#: mahjong-portal/server/templates/website/contacts_en.html:5
+#: mahjong-portal/server/templates/website/contacts_ru.html:5
 msgid "Contacts"
 msgstr "Контакты"
 
-#: server/templates/base.html:112
-#: server/templates/tournament/application.html:5
-#: server/templates/tournament/application.html:10
-#: server/templates/tournament/application.html:103
-#: server/templates/tournament/application.html:104
+#: mahjong-portal/server/templates/base.html:112
+#: mahjong-portal/server/templates/tournament/application.html:5
+#: mahjong-portal/server/templates/tournament/application.html:10
+#: mahjong-portal/server/templates/tournament/application.html:103
+#: mahjong-portal/server/templates/tournament/application.html:104
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: server/templates/base.html:113
-#: server/templates/website/championships.html:10
+#: mahjong-portal/server/templates/base.html:113
+#: mahjong-portal/server/templates/website/championships.html:10
 msgid "Championships"
 msgstr "Чемпионаты"
 
-#: server/templates/base.html:114
+#: mahjong-portal/server/templates/base.html:114
 msgid "Yoroshiku League 2"
 msgstr ""
 
-#: server/templates/base.html:145
+#: mahjong-portal/server/templates/base.html:145
 msgid "Django admin"
 msgstr "Django админка"
 
-#: server/templates/base.html:146 server/templates/system_index.html:10
-#: server/templates/tournament_admin/new_tournaments.html:10
+#: mahjong-portal/server/templates/base.html:146
+#: mahjong-portal/server/templates/system_index.html:10
+#: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: server/templates/base.html:152
+#: mahjong-portal/server/templates/base.html:152
 msgid "My profile"
 msgstr "Мой профиль"
 
-#: server/templates/base.html:156
+#: mahjong-portal/server/templates/base.html:156
 msgid "My tournaments"
 msgstr "Мои турниры"
 
-#: server/templates/base.html:160
+#: mahjong-portal/server/templates/base.html:160
 msgid "EMA players"
 msgstr "EMA игроки"
 
-#: server/templates/base.html:163
+#: mahjong-portal/server/templates/base.html:163
 msgid "Logout"
 msgstr "Выйти"
 
-#: server/templates/base.html:208 server/templates/base.html:211
+#: mahjong-portal/server/templates/base.html:208
+#: mahjong-portal/server/templates/base.html:211
 msgid "Search"
 msgstr "Поиск"
 
-#: server/templates/base.html:221
+#: mahjong-portal/server/templates/base.html:221
 msgid "source code"
 msgstr "исходный код"
 
-#: server/templates/base.html:226
+#: mahjong-portal/server/templates/base.html:226
 msgid "about server"
 msgstr "о сервере"
 
-#: server/templates/club/details.html:27
+#: mahjong-portal/server/templates/club/details.html:27
 msgid "Latest 5 tournaments"
 msgstr "Последние 5 турниров"
 
-#: server/templates/club/details.html:28
+#: mahjong-portal/server/templates/club/details.html:28
 msgid "all tournaments"
 msgstr "все турниры"
 
-#: server/templates/club/details.html:33
-#: server/templates/player/details.html:262
+#: mahjong-portal/server/templates/club/details.html:33
+#: mahjong-portal/server/templates/player/details.html:262
 msgid "Club statistics"
 msgstr "Клубная статистика"
 
-#: server/templates/club/details.html:34
+#: mahjong-portal/server/templates/club/details.html:34
 msgid ""
 "We are displaying here players with 10+ club games from the last 360 days."
 msgstr ""
 "Статистика для игроков сыгравших 10+ клубных игр за последние 360 дней."
 
-#: server/templates/club/details.html:35
+#: mahjong-portal/server/templates/club/details.html:35
 msgid "Sorting:"
 msgstr "Сортировка:"
 
-#: server/templates/club/details.html:47 server/templates/club/list.html:19
-#: server/templates/rating/_results_table.html:14
-#: server/templates/tournament/_tournament_results.html:8
-#: server/templates/tournament/_tournaments_table.html:8
-#: server/templates/tournament/announcement.html:92
-#: server/templates/tournament_admin/managed_tournaments.html:23
-#: server/templates/tournament_admin/new_tournaments.html:17
-#: server/templates/tournament_admin/tournament_manage.html:89
-#: server/templates/website/_qualification_table.html:9
-#: server/templates/website/city.html:16 server/templates/website/city.html:46
+#: mahjong-portal/server/templates/club/details.html:47
+#: mahjong-portal/server/templates/club/list.html:19
+#: mahjong-portal/server/templates/rating/_results_table.html:14
+#: mahjong-portal/server/templates/tournament/_tournament_results.html:8
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:8
+#: mahjong-portal/server/templates/tournament/announcement.html:90
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:23
+#: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:17
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:102
+#: mahjong-portal/server/templates/website/_qualification_table.html:9
+#: mahjong-portal/server/templates/website/city.html:16
+#: mahjong-portal/server/templates/website/city.html:46
 msgid "Name"
 msgstr "Имя"
 
-#: server/templates/club/details.html:52
-#: server/templates/ms/ms_accounts.html:31
-#: server/templates/player/details.html:144
-#: server/templates/player/details.html:154
-#: server/templates/player/details.html:271 server/templates/player/ms.html:122
-#: server/templates/player/ms.html:216 server/templates/player/tenhou.html:166
-#: server/templates/player/tenhou.html:176
-#: server/templates/player/tenhou.html:229
-#: server/templates/player/tenhou.html:240
-#: server/templates/tenhou/games_history.html:51
-#: server/templates/tenhou/tenhou_accounts.html:23
-#: server/templates/tournament/_tournament_results.html:11
+#: mahjong-portal/server/templates/club/details.html:52
+#: mahjong-portal/server/templates/ms/ms_accounts.html:31
+#: mahjong-portal/server/templates/player/details.html:144
+#: mahjong-portal/server/templates/player/details.html:154
+#: mahjong-portal/server/templates/player/details.html:271
+#: mahjong-portal/server/templates/player/ms.html:122
+#: mahjong-portal/server/templates/player/ms.html:216
+#: mahjong-portal/server/templates/player/tenhou.html:166
+#: mahjong-portal/server/templates/player/tenhou.html:176
+#: mahjong-portal/server/templates/player/tenhou.html:229
+#: mahjong-portal/server/templates/player/tenhou.html:240
+#: mahjong-portal/server/templates/tenhou/games_history.html:51
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:23
+#: mahjong-portal/server/templates/tournament/_tournament_results.html:11
 msgid "Games"
 msgstr "Игр"
 
-#: server/templates/club/details.html:55
-#: server/templates/player/details.html:144
-#: server/templates/player/details.html:157
-#: server/templates/player/details.html:274 server/templates/player/ms.html:125
-#: server/templates/player/ms.html:219 server/templates/player/tenhou.html:166
-#: server/templates/player/tenhou.html:179
-#: server/templates/player/tenhou.html:229
-#: server/templates/player/tenhou.html:243
+#: mahjong-portal/server/templates/club/details.html:55
+#: mahjong-portal/server/templates/player/details.html:144
+#: mahjong-portal/server/templates/player/details.html:157
+#: mahjong-portal/server/templates/player/details.html:274
+#: mahjong-portal/server/templates/player/ms.html:125
+#: mahjong-portal/server/templates/player/ms.html:219
+#: mahjong-portal/server/templates/player/tenhou.html:166
+#: mahjong-portal/server/templates/player/tenhou.html:179
+#: mahjong-portal/server/templates/player/tenhou.html:229
+#: mahjong-portal/server/templates/player/tenhou.html:243
 msgid "Avg. place"
 msgstr "Ср. место"
 
-#: server/templates/club/details.html:58
-#: server/templates/player/details.html:160
-#: server/templates/player/details.html:277 server/templates/player/ms.html:128
-#: server/templates/player/ms.html:222 server/templates/player/tenhou.html:182
-#: server/templates/player/tenhou.html:246
+#: mahjong-portal/server/templates/club/details.html:58
+#: mahjong-portal/server/templates/player/details.html:160
+#: mahjong-portal/server/templates/player/details.html:277
+#: mahjong-portal/server/templates/player/ms.html:128
+#: mahjong-portal/server/templates/player/ms.html:222
+#: mahjong-portal/server/templates/player/tenhou.html:182
+#: mahjong-portal/server/templates/player/tenhou.html:246
 msgid "1st"
 msgstr "1-e"
 
-#: server/templates/club/details.html:61
-#: server/templates/player/details.html:163
-#: server/templates/player/details.html:280 server/templates/player/ms.html:131
-#: server/templates/player/ms.html:225 server/templates/player/tenhou.html:185
-#: server/templates/player/tenhou.html:249
+#: mahjong-portal/server/templates/club/details.html:61
+#: mahjong-portal/server/templates/player/details.html:163
+#: mahjong-portal/server/templates/player/details.html:280
+#: mahjong-portal/server/templates/player/ms.html:131
+#: mahjong-portal/server/templates/player/ms.html:225
+#: mahjong-portal/server/templates/player/tenhou.html:185
+#: mahjong-portal/server/templates/player/tenhou.html:249
 msgid "2nd"
 msgstr "2-е"
 
-#: server/templates/club/details.html:64
-#: server/templates/player/details.html:166
-#: server/templates/player/details.html:283 server/templates/player/ms.html:134
-#: server/templates/player/ms.html:228 server/templates/player/tenhou.html:188
-#: server/templates/player/tenhou.html:252
+#: mahjong-portal/server/templates/club/details.html:64
+#: mahjong-portal/server/templates/player/details.html:166
+#: mahjong-portal/server/templates/player/details.html:283
+#: mahjong-portal/server/templates/player/ms.html:134
+#: mahjong-portal/server/templates/player/ms.html:228
+#: mahjong-portal/server/templates/player/tenhou.html:188
+#: mahjong-portal/server/templates/player/tenhou.html:252
 msgid "3rd"
 msgstr "3-е"
 
-#: server/templates/club/details.html:67
-#: server/templates/player/details.html:169
-#: server/templates/player/details.html:286 server/templates/player/ms.html:137
-#: server/templates/player/tenhou.html:191
-#: server/templates/player/tenhou.html:255
+#: mahjong-portal/server/templates/club/details.html:67
+#: mahjong-portal/server/templates/player/details.html:169
+#: mahjong-portal/server/templates/player/details.html:286
+#: mahjong-portal/server/templates/player/ms.html:137
+#: mahjong-portal/server/templates/player/tenhou.html:191
+#: mahjong-portal/server/templates/player/tenhou.html:255
 msgid "4th"
 msgstr "4-е"
 
-#: server/templates/club/details.html:113
+#: mahjong-portal/server/templates/club/details.html:113
 msgid "Club games"
 msgstr "Клубы"
 
-#: server/templates/club/details.html:115
+#: mahjong-portal/server/templates/club/details.html:115
 msgid "Current rating games:"
 msgstr "текущий рейтинг"
 
-#: server/templates/club/details.html:118
+#: mahjong-portal/server/templates/club/details.html:118
 msgid "Previous club rating events:"
 msgstr ""
 
-#: server/templates/club/details.html:128
+#: mahjong-portal/server/templates/club/details.html:128
 msgid "Latest 10 club games"
 msgstr "Последние 10 клубных игр"
 
-#: server/templates/club/details.html:131
+#: mahjong-portal/server/templates/club/details.html:131
 msgid "Total games: "
 msgstr "Всего игр:"
 
-#: server/templates/club/details.html:132
+#: mahjong-portal/server/templates/club/details.html:132
 msgid "Last updated "
 msgstr "Обновлялось"
 
-#: server/templates/club/list.html:5
+#: mahjong-portal/server/templates/club/list.html:5
 msgid "Riichi mahjong russian clubs"
 msgstr "Российские риичи маджонг клубы"
 
-#: server/templates/club/list.html:20 server/templates/ms/ms_accounts.html:33
-#: server/templates/tenhou/tenhou_accounts.html:25
-#: server/templates/tournament/_tournaments_table.html:14
-#: server/templates/tournament/announcement.html:93
-#: server/templates/tournament_admin/tournament_manage.html:90
-#: server/templates/website/search.html:19 server/tournament/models.py:271
-#: server/tournament/models.py:308 server/tournament/models.py:346
-#: server/tournament/models.py:382
+#: mahjong-portal/server/templates/club/list.html:20
+#: mahjong-portal/server/templates/ms/ms_accounts.html:33
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:25
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:14
+#: mahjong-portal/server/templates/tournament/announcement.html:91
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:103
+#: mahjong-portal/server/templates/website/search.html:19
+#: mahjong-portal/server/tournament/models.py:273
+#: mahjong-portal/server/tournament/models.py:310
+#: mahjong-portal/server/tournament/models.py:348
+#: mahjong-portal/server/tournament/models.py:384
 msgid "City"
 msgstr "Город"
 
-#: server/templates/club/list.html:44 server/templates/club/list.html:45
+#: mahjong-portal/server/templates/club/list.html:44
+#: mahjong-portal/server/templates/club/list.html:45
 msgid "List with map of all russian riichi mahjong clubs"
 msgstr "Список и карта всех российских риичи маджонг клубов"
 
-#: server/templates/ema/best_countries.html:5
-#: server/templates/ema/best_countries.html:10
+#: mahjong-portal/server/templates/ema/best_countries.html:5
+#: mahjong-portal/server/templates/ema/best_countries.html:10
 msgid "EMA Countries Ranking"
 msgstr "EMA рейтинг стран"
 
-#: server/templates/ema/best_countries.html:16
-#: server/templates/ema/quotas.html:16
-#: server/templates/tournament/_tournaments_table.html:12
+#: mahjong-portal/server/templates/ema/best_countries.html:16
+#: mahjong-portal/server/templates/ema/quotas.html:16
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:12
 msgid "Country"
 msgstr "Страна"
 
-#: server/templates/ema/best_countries.html:17
+#: mahjong-portal/server/templates/ema/best_countries.html:17
 msgid "# players"
 msgstr "# игроков"
 
-#: server/templates/ema/best_countries.html:18
+#: mahjong-portal/server/templates/ema/best_countries.html:18
 msgid "Avg. rank of best 3"
 msgstr "Ср. трёх лучших игроков"
 
-#: server/templates/ema/best_countries.html:19
+#: mahjong-portal/server/templates/ema/best_countries.html:19
 msgid "Player #1"
 msgstr "Игрок #1"
 
-#: server/templates/ema/best_countries.html:20
+#: mahjong-portal/server/templates/ema/best_countries.html:20
 msgid "Player #2"
 msgstr "Игрок #2"
 
-#: server/templates/ema/best_countries.html:21
+#: mahjong-portal/server/templates/ema/best_countries.html:21
 msgid "Player #3"
 msgstr "Игрок #3"
 
-#: server/templates/ema/quotas.html:5 server/templates/ema/quotas.html:10
+#: mahjong-portal/server/templates/ema/quotas.html:5
+#: mahjong-portal/server/templates/ema/quotas.html:10
 msgid "EMA Quotas for RCR Events"
 msgstr "EMA квоты"
 
-#: server/templates/ema/quotas.html:11
+#: mahjong-portal/server/templates/ema/quotas.html:11
 msgid "Calculated quotas number on the 1st January 2020."
 msgstr "Количество квот для каждой страны на 1 января 2020 года."
 
-#: server/templates/ema/quotas.html:17
+#: mahjong-portal/server/templates/ema/quotas.html:17
 msgid "Country Rank"
 msgstr "Ранг страны"
 
-#: server/templates/ema/quotas.html:18
+#: mahjong-portal/server/templates/ema/quotas.html:18
 msgid "Base"
 msgstr "База"
 
-#: server/templates/ema/quotas.html:19
+#: mahjong-portal/server/templates/ema/quotas.html:19
 msgid "700+ rating"
 msgstr "700+ рейтинга"
 
-#: server/templates/ema/quotas.html:20
+#: mahjong-portal/server/templates/ema/quotas.html:20
 msgid "Top 3"
 msgstr "Топ 3"
 
-#: server/templates/ema/quotas.html:21
+#: mahjong-portal/server/templates/ema/quotas.html:21
 msgid "B part"
 msgstr "Б часть"
 
-#: server/templates/ema/quotas.html:22 server/templates/ema/quotas.html:42
+#: mahjong-portal/server/templates/ema/quotas.html:22
+#: mahjong-portal/server/templates/ema/quotas.html:42
 msgid "Total Quota"
 msgstr "Всего квот"
 
-#: server/templates/ema_players_admin/add_player.html:5
-#: server/templates/ema_players_admin/players_list.html:5
-#: server/templates/system_index.html:5
-#: server/templates/tournament_admin/managed_tournaments.html:5
-#: server/templates/tournament_admin/new_tournaments.html:5
-#: server/templates/tournament_admin/tournament_edit.html:5
-#: server/templates/tournament_admin/tournament_manage.html:5
-#: server/templates/tournament_admin/upload_results.html:5
-#: server/templates/transliterate.html:5
+#: mahjong-portal/server/templates/ema_players_admin/add_player.html:5
+#: mahjong-portal/server/templates/ema_players_admin/players_list.html:5
+#: mahjong-portal/server/templates/system_index.html:5
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:5
+#: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:5
+#: mahjong-portal/server/templates/tournament_admin/tournament_edit.html:5
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:5
+#: mahjong-portal/server/templates/tournament_admin/upload_results.html:5
+#: mahjong-portal/server/templates/transliterate.html:5
 msgid "Admin page"
 msgstr "Админка"
 
-#: server/templates/league/_schedule_games_table.html:33
+#: mahjong-portal/server/templates/league/_schedule_games_table.html:33
 msgid "I'm playing!"
 msgstr "Я играю!"
 
-#: server/templates/league/_schedule_games_table.html:48
+#: mahjong-portal/server/templates/league/_schedule_games_table.html:48
 msgid "Start game"
 msgstr "Запустить игру"
 
-#: server/templates/league/schedule.html:6
-#: server/templates/league/schedule.html:15
-#: server/templates/league/view.html:24
+#: mahjong-portal/server/templates/league/schedule.html:6
+#: mahjong-portal/server/templates/league/schedule.html:15
+#: mahjong-portal/server/templates/league/view.html:24
 msgid "Schedule"
 msgstr "Расписание"
 
-#: server/templates/league/schedule.html:14
-#: server/templates/league/teams.html:13
+#: mahjong-portal/server/templates/league/schedule.html:14
+#: mahjong-portal/server/templates/league/teams.html:13
 msgid "League"
 msgstr "Лига"
 
-#: server/templates/league/schedule.html:19
-#: server/templates/league/view.html:35
+#: mahjong-portal/server/templates/league/schedule.html:19
+#: mahjong-portal/server/templates/league/view.html:35
 msgid "Session "
 msgstr "Сессия"
 
-#: server/templates/league/schedule.html:21
-#: server/templates/league/view.html:38
+#: mahjong-portal/server/templates/league/schedule.html:21
+#: mahjong-portal/server/templates/league/view.html:38
 msgid "Starting"
 msgstr "Начнётся"
 
-#: server/templates/league/teams.html:5 server/templates/league/teams.html:14
-#: server/templates/league/view.html:21
+#: mahjong-portal/server/templates/league/teams.html:5
+#: mahjong-portal/server/templates/league/teams.html:14
+#: mahjong-portal/server/templates/league/view.html:21
 msgid "Teams"
 msgstr "Команды"
 
-#: server/templates/league/teams.html:22
-#: server/templates/tournament/announcement.html:107
+#: mahjong-portal/server/templates/league/teams.html:22
+#: mahjong-portal/server/templates/tournament/announcement.html:105
 msgid "Team"
 msgstr "Команда"
 
-#: server/templates/league/teams.html:45 server/templates/league/teams.html:47
+#: mahjong-portal/server/templates/league/teams.html:45
+#: mahjong-portal/server/templates/league/teams.html:47
 msgid "captain"
 msgstr "капитан"
 
-#: server/templates/league/view.html:42
+#: mahjong-portal/server/templates/league/view.html:42
 msgid "My team games"
 msgstr "Игры моей команды"
 
-#: server/templates/league/view.html:48
+#: mahjong-portal/server/templates/league/view.html:48
 msgctxt "many games"
 msgid "Games"
 msgstr "Игры"
 
-#: server/templates/ms/ms_accounts.html:12
+#: mahjong-portal/server/templates/ms/ms_accounts.html:12
 msgid "Statistics updated once an hour."
 msgstr "Статистика обновляется раз в час."
 
-#: server/templates/ms/ms_accounts.html:16
-#: server/templates/ms/ms_accounts.html:88
-#: server/templates/ms/ms_accounts.html:89
+#: mahjong-portal/server/templates/ms/ms_accounts.html:16
+#: mahjong-portal/server/templates/ms/ms_accounts.html:88
+#: mahjong-portal/server/templates/ms/ms_accounts.html:89
 msgid "four players"
 msgstr "четыре игрока"
 
-#: server/templates/ms/ms_accounts.html:19
-#: server/templates/ms/ms_accounts.html:88
-#: server/templates/ms/ms_accounts.html:89
+#: mahjong-portal/server/templates/ms/ms_accounts.html:19
+#: mahjong-portal/server/templates/ms/ms_accounts.html:88
+#: mahjong-portal/server/templates/ms/ms_accounts.html:89
 msgid "sanma"
 msgstr "санма"
 
-#: server/templates/ms/ms_accounts.html:27
-#: server/templates/tenhou/games_history.html:19
-#: server/templates/tenhou/games_history.html:57
-#: server/templates/tenhou/latest_yakumans.html:17
-#: server/templates/tenhou/tenhou_accounts.html:18
-#: server/templates/website/iormc.html:37
-#: server/templates/website/search.html:16
+#: mahjong-portal/server/templates/ms/ms_accounts.html:27
+#: mahjong-portal/server/templates/tenhou/games_history.html:19
+#: mahjong-portal/server/templates/tenhou/games_history.html:57
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:17
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:18
+#: mahjong-portal/server/templates/website/iormc.html:37
+#: mahjong-portal/server/templates/website/search.html:16
 msgid "Player"
 msgstr "Игрок"
 
-#: server/templates/ms/ms_accounts.html:28
-#: server/templates/player/details.html:112
-#: server/templates/player/tenhou.html:47
-#: server/templates/player/tenhou.html:126
-#: server/templates/tenhou/games_history.html:58
+#: mahjong-portal/server/templates/ms/ms_accounts.html:28
+#: mahjong-portal/server/templates/player/details.html:112
+#: mahjong-portal/server/templates/player/tenhou.html:47
+#: mahjong-portal/server/templates/player/tenhou.html:126
+#: mahjong-portal/server/templates/tenhou/games_history.html:58
 msgid "Rank"
 msgstr "Ранг"
 
-#: server/templates/ms/ms_accounts.html:29
-#: server/templates/player/_changes_table.html:9
-#: server/templates/player/ms.html:27 server/templates/player/ms.html:66
-#: server/templates/player/tenhou.html:89
-#: server/templates/rating/_results_table.html:20
-#: server/templates/website/_qualification_table.html:13
+#: mahjong-portal/server/templates/ms/ms_accounts.html:29
+#: mahjong-portal/server/templates/player/_changes_table.html:9
+#: mahjong-portal/server/templates/player/ms.html:27
+#: mahjong-portal/server/templates/player/ms.html:66
+#: mahjong-portal/server/templates/player/tenhou.html:89
+#: mahjong-portal/server/templates/rating/_results_table.html:20
+#: mahjong-portal/server/templates/website/_qualification_table.html:13
 msgid "Points"
 msgstr "Очки"
 
-#: server/templates/ms/ms_accounts.html:30
+#: mahjong-portal/server/templates/ms/ms_accounts.html:30
 msgid "Account"
 msgstr "Аккаунт"
 
-#: server/templates/ms/ms_accounts.html:32
-#: server/templates/player/details.html:116
-#: server/templates/player/details.html:144 server/templates/player/ms.html:109
-#: server/templates/player/ms.html:202 server/templates/player/tenhou.html:166
-#: server/templates/player/tenhou.html:229
-#: server/templates/tenhou/tenhou_accounts.html:24
+#: mahjong-portal/server/templates/ms/ms_accounts.html:32
+#: mahjong-portal/server/templates/player/details.html:116
+#: mahjong-portal/server/templates/player/details.html:144
+#: mahjong-portal/server/templates/player/ms.html:109
+#: mahjong-portal/server/templates/player/ms.html:202
+#: mahjong-portal/server/templates/player/tenhou.html:166
+#: mahjong-portal/server/templates/player/tenhou.html:229
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:24
 msgid "Last played date"
 msgstr "Дата последней игры"
 
-#: server/templates/player/_changes_table.html:7
-#: server/templates/player/_deltas_table.html:9
-#: server/templates/player/details.html:69
-#: server/templates/player/details.html:212
-#: server/templates/player/tenhou.html:297
-#: server/templates/player/tournaments.html:24
-#: server/templates/rating/dates.html:16
-#: server/templates/tenhou/latest_yakumans.html:18
-#: server/templates/tournament/_tournaments_table.html:9
+#: mahjong-portal/server/templates/player/_changes_table.html:7
+#: mahjong-portal/server/templates/player/_deltas_table.html:9
+#: mahjong-portal/server/templates/player/details.html:69
+#: mahjong-portal/server/templates/player/details.html:212
+#: mahjong-portal/server/templates/player/tenhou.html:297
+#: mahjong-portal/server/templates/player/tournaments.html:24
+#: mahjong-portal/server/templates/rating/dates.html:16
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:18
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:9
 msgid "Date"
 msgstr "Дата"
 
-#: server/templates/player/_changes_table.html:8
-#: server/templates/player/_deltas_table.html:10
-#: server/templates/player/details.html:27
-#: server/templates/player/details.html:68
-#: server/templates/player/rating_details.html:48
-#: server/templates/player/rating_details.html:83
-#: server/templates/player/tournaments.html:23
-#: server/templates/tenhou/games_history.html:59
+#: mahjong-portal/server/templates/player/_changes_table.html:8
+#: mahjong-portal/server/templates/player/_deltas_table.html:10
+#: mahjong-portal/server/templates/player/details.html:27
+#: mahjong-portal/server/templates/player/details.html:68
+#: mahjong-portal/server/templates/player/rating_details.html:48
+#: mahjong-portal/server/templates/player/rating_details.html:83
+#: mahjong-portal/server/templates/player/tournaments.html:23
+#: mahjong-portal/server/templates/tenhou/games_history.html:59
 msgid "Place"
 msgstr "Место"
 
-#: server/templates/player/_changes_table.html:10
+#: mahjong-portal/server/templates/player/_changes_table.html:10
 msgid "Reason"
 msgstr "Причина"
 
-#: server/templates/player/_deltas_table.html:8
-#: server/templates/player/details.html:67
-#: server/templates/player/tournaments.html:22
+#: mahjong-portal/server/templates/player/_deltas_table.html:8
+#: mahjong-portal/server/templates/player/details.html:67
+#: mahjong-portal/server/templates/player/tournaments.html:22
 msgid "Base rank"
 msgstr "Ранг"
 
-#: server/templates/player/_deltas_table.html:11
-#: server/templates/tournament/_tournaments_table.html:32
+#: mahjong-portal/server/templates/player/_deltas_table.html:11
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:32
 msgid "Power"
 msgstr "Влияние"
 
-#: server/templates/player/_deltas_table.html:12
-#: server/templates/tournament/_tournaments_table.html:33
+#: mahjong-portal/server/templates/player/_deltas_table.html:12
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:33
 msgid "Coefficient"
 msgstr "Коэффициент"
 
-#: server/templates/player/_deltas_table.html:13
-#: server/templates/player/details.html:70
-#: server/templates/player/tournaments.html:25
-#: server/templates/tenhou/games_history.html:61
-#: server/templates/tournament/_tournaments_table.html:17
+#: mahjong-portal/server/templates/player/_deltas_table.html:13
+#: mahjong-portal/server/templates/player/details.html:70
+#: mahjong-portal/server/templates/player/tournaments.html:25
+#: mahjong-portal/server/templates/tenhou/games_history.html:61
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:17
 msgid "Type"
 msgstr "Тип"
 
-#: server/templates/player/_deltas_table.html:14
-#: server/templates/player/details.html:71
-#: server/templates/player/tournaments.html:26
+#: mahjong-portal/server/templates/player/_deltas_table.html:14
+#: mahjong-portal/server/templates/player/details.html:71
+#: mahjong-portal/server/templates/player/tournaments.html:26
 msgid "Tournament"
 msgstr "Турнир"
 
-#: server/templates/player/_player_header.html:68
+#: mahjong-portal/server/templates/player/_player_header.html:68
 msgid "From"
 msgstr "Из"
 
-#: server/templates/player/details.html:20
+#: mahjong-portal/server/templates/player/details.html:20
 msgid "Table with all ratings where a player was counted"
 msgstr "Таблица со всеми рейтингами игрока"
 
-#: server/templates/player/details.html:26
-#: server/templates/player/rating_details.html:40
-#: server/templates/player/rating_details.html:69
+#: mahjong-portal/server/templates/player/details.html:26
+#: mahjong-portal/server/templates/player/rating_details.html:40
+#: mahjong-portal/server/templates/player/rating_details.html:69
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: server/templates/player/details.html:28
-#: server/templates/tenhou/tenhou_accounts.html:22
-#: server/templates/tournament/_tournament_results.html:9
+#: mahjong-portal/server/templates/player/details.html:28
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:22
+#: mahjong-portal/server/templates/tournament/_tournament_results.html:9
 msgid "Scores"
 msgstr "Очки"
 
-#: server/templates/player/details.html:59
+#: mahjong-portal/server/templates/player/details.html:59
 msgid "Latest tournaments"
 msgstr "Последние турниры"
 
-#: server/templates/player/details.html:60
+#: mahjong-portal/server/templates/player/details.html:60
 msgid "all player tournaments"
 msgstr "все турниры игрока"
 
-#: server/templates/player/details.html:105
-#: server/templates/player/tenhou.html:5
-#: server/templates/player/tenhou.html:328
-#: server/templates/player/tenhou.html:329
+#: mahjong-portal/server/templates/player/details.html:105
+#: mahjong-portal/server/templates/player/tenhou.html:5
+#: mahjong-portal/server/templates/player/tenhou.html:328
+#: mahjong-portal/server/templates/player/tenhou.html:329
 msgid "Tenhou.net profile"
 msgstr "Tenhou.net профиль"
 
-#: server/templates/player/details.html:106
-#: server/templates/player/details.html:241
+#: mahjong-portal/server/templates/player/details.html:106
+#: mahjong-portal/server/templates/player/details.html:241
 msgid "more information"
 msgstr "больше информации"
 
-#: server/templates/player/details.html:110
-#: server/templates/player/details.html:242 server/templates/player/ms.html:100
-#: server/templates/player/tenhou.html:124
+#: mahjong-portal/server/templates/player/details.html:110
+#: mahjong-portal/server/templates/player/details.html:242
+#: mahjong-portal/server/templates/player/ms.html:100
+#: mahjong-portal/server/templates/player/tenhou.html:124
 msgid "Statistics for"
 msgstr "Статистика аккаунта"
 
-#: server/templates/player/details.html:124
-#: server/templates/player/tenhou.html:132
+#: mahjong-portal/server/templates/player/details.html:124
+#: mahjong-portal/server/templates/player/tenhou.html:132
 msgid "Latest places:"
 msgstr "Последние игры:"
 
-#: server/templates/player/details.html:142
-#: server/templates/player/tenhou.html:164
+#: mahjong-portal/server/templates/player/details.html:142
+#: mahjong-portal/server/templates/player/tenhou.html:164
 msgid "Current month"
 msgstr "За текущий месяц"
 
-#: server/templates/player/details.html:151
-#: server/templates/player/tenhou.html:173
-#: server/templates/player/tenhou.html:237
-#: server/templates/tenhou/games_history.html:62
+#: mahjong-portal/server/templates/player/details.html:151
+#: mahjong-portal/server/templates/player/tenhou.html:173
+#: mahjong-portal/server/templates/player/tenhou.html:237
+#: mahjong-portal/server/templates/tenhou/games_history.html:62
 msgid "Lobby"
 msgstr "Лобби"
 
-#: server/templates/player/details.html:207
-#: server/templates/player/tenhou.html:292
+#: mahjong-portal/server/templates/player/details.html:207
+#: mahjong-portal/server/templates/player/tenhou.html:292
 msgid "Collected yakumans"
 msgstr "Собранные якуманы"
 
-#: server/templates/player/details.html:211
-#: server/templates/player/tenhou.html:296
-#: server/templates/tenhou/latest_yakumans.html:16
+#: mahjong-portal/server/templates/player/details.html:211
+#: mahjong-portal/server/templates/player/tenhou.html:296
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:16
 msgid "Yakuman"
 msgstr "Якуман"
 
-#: server/templates/player/details.html:213
-#: server/templates/player/tenhou.html:298
-#: server/templates/tenhou/latest_yakumans.html:19
+#: mahjong-portal/server/templates/player/details.html:213
+#: mahjong-portal/server/templates/player/tenhou.html:298
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:19
 msgid "Log"
 msgstr "Игра"
 
-#: server/templates/player/details.html:227
-#: server/templates/player/tenhou.html:312
-#: server/templates/tenhou/latest_yakumans.html:38
+#: mahjong-portal/server/templates/player/details.html:227
+#: mahjong-portal/server/templates/player/tenhou.html:312
+#: mahjong-portal/server/templates/tenhou/latest_yakumans.html:38
 msgid "link"
 msgstr "ссылка"
 
-#: server/templates/player/details.html:240 server/templates/player/ms.html:5
-#: server/templates/player/ms.html:284 server/templates/player/ms.html:285
+#: mahjong-portal/server/templates/player/details.html:240
+#: mahjong-portal/server/templates/player/ms.html:5
+#: mahjong-portal/server/templates/player/ms.html:284
+#: mahjong-portal/server/templates/player/ms.html:285
 msgid "Mahjong Soul profile"
 msgstr "Профиль на Mahjong Soul"
 
-#: server/templates/player/details.html:247 server/templates/player/ms.html:104
+#: mahjong-portal/server/templates/player/details.html:247
+#: mahjong-portal/server/templates/player/ms.html:104
 msgid "Four players"
 msgstr "Четыре игрока"
 
-#: server/templates/player/details.html:255 server/templates/player/ms.html:197
-#: server/templates/tenhou/tenhou_games_async.html:27
+#: mahjong-portal/server/templates/player/details.html:255
+#: mahjong-portal/server/templates/player/ms.html:197
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:27
 msgid "Sanma"
 msgstr "Санма"
 
-#: server/templates/player/ms.html:97
-#: server/templates/player/rating_changes.html:12
-#: server/templates/player/rating_details.html:111
-#: server/templates/player/tenhou.html:119
-#: server/templates/player/tournaments.html:12
+#: mahjong-portal/server/templates/player/ms.html:97
+#: mahjong-portal/server/templates/player/rating_changes.html:12
+#: mahjong-portal/server/templates/player/rating_details.html:111
+#: mahjong-portal/server/templates/player/tenhou.html:119
+#: mahjong-portal/server/templates/player/tournaments.html:12
 msgid "Player page"
 msgstr "Страница игрока"
 
-#: server/templates/player/ms.html:112 server/templates/player/ms.html:206
-#: server/templates/player/tenhou.html:157
+#: mahjong-portal/server/templates/player/ms.html:112
+#: mahjong-portal/server/templates/player/ms.html:206
+#: mahjong-portal/server/templates/player/tenhou.html:157
 msgid "Pt chart"
 msgstr "График pt"
 
-#: server/templates/player/ms.html:144 server/templates/player/ms.html:235
+#: mahjong-portal/server/templates/player/ms.html:144
+#: mahjong-portal/server/templates/player/ms.html:235
 msgid "Tonpusen"
 msgstr "Тонпусены"
 
-#: server/templates/player/ms.html:168 server/templates/player/ms.html:256
+#: mahjong-portal/server/templates/player/ms.html:168
+#: mahjong-portal/server/templates/player/ms.html:256
 msgid "Hanchan"
 msgstr "Ханчаны"
 
-#: server/templates/player/rating_changes.html:17
-#: server/templates/player/rating_details.html:116
-#: server/templates/rating/_results_table.html:6
+#: mahjong-portal/server/templates/player/rating_changes.html:17
+#: mahjong-portal/server/templates/player/rating_details.html:116
+#: mahjong-portal/server/templates/rating/_results_table.html:6
 msgid "Rating date"
 msgstr "Рейтинг на"
 
-#: server/templates/player/rating_changes.html:17
-#: server/templates/player/rating_details.html:116
-#: server/templates/rating/_results_table.html:6
+#: mahjong-portal/server/templates/player/rating_changes.html:17
+#: mahjong-portal/server/templates/player/rating_details.html:116
+#: mahjong-portal/server/templates/rating/_results_table.html:6
 msgid "latest changes"
 msgstr "последние изменения"
 
-#: server/templates/player/rating_changes.html:20
-#: server/templates/player/rating_details.html:137
+#: mahjong-portal/server/templates/player/rating_changes.html:20
+#: mahjong-portal/server/templates/player/rating_details.html:137
 msgid "Rating changes"
 msgstr "Изменения рейтинга"
 
-#: server/templates/player/rating_details.html:120
+#: mahjong-portal/server/templates/player/rating_details.html:120
 msgid "place"
 msgstr "место"
 
-#: server/templates/player/rating_details.html:125
+#: mahjong-portal/server/templates/player/rating_details.html:125
 msgid "how we calculated rating score"
 msgstr "как расчитывается рейтинг"
 
-#: server/templates/player/rating_details.html:141
+#: mahjong-portal/server/templates/player/rating_details.html:141
 msgid "Show"
 msgstr "Показать"
 
-#: server/templates/player/rating_details.html:148
-#: server/templates/player/rating_details.html:152
-#: server/templates/rating/list.html:17
-#: server/templates/tournament/announcement.html:33
-#: server/templates/website/home.html:25
+#: mahjong-portal/server/templates/player/rating_details.html:148
+#: mahjong-portal/server/templates/player/rating_details.html:152
+#: mahjong-portal/server/templates/rating/list.html:17
+#: mahjong-portal/server/templates/tournament/announcement.html:33
+#: mahjong-portal/server/templates/website/home.html:25
 msgid "all results"
 msgstr "все результаты"
 
-#: server/templates/player/tenhou.html:152
+#: mahjong-portal/server/templates/player/tenhou.html:152
 msgid "Rank chart"
 msgstr "График ранга"
 
-#: server/templates/player/tenhou.html:227
+#: mahjong-portal/server/templates/player/tenhou.html:227
 msgid "All time"
 msgstr "За всё время"
 
-#: server/templates/rating/_results_table.html:7
+#: mahjong-portal/server/templates/rating/_results_table.html:7
 msgid "All dates"
 msgstr "Все даты"
 
-#: server/templates/rating/_results_table.html:22
+#: mahjong-portal/server/templates/rating/_results_table.html:22
 msgctxt "tournaments number"
 msgid "Tournaments"
 msgstr "Турниров"
 
-#: server/templates/rating/_results_table.html:24
-#: server/templates/tournament/_tournament_results.html:18
-#: server/templates/website/_qualification_table.html:14
+#: mahjong-portal/server/templates/rating/_results_table.html:24
+#: mahjong-portal/server/templates/tournament/_tournament_results.html:18
+#: mahjong-portal/server/templates/website/_qualification_table.html:14
 msgctxt "location"
 msgid "From"
 msgstr "Откуда"
 
-#: server/templates/rating/dates.html:11
+#: mahjong-portal/server/templates/rating/dates.html:11
 msgid "current rating"
 msgstr "текущий рейтинг"
 
-#: server/templates/rating/details.html:20
+#: mahjong-portal/server/templates/rating/details.html:20
 msgid "What tournaments were included in the rating?"
 msgstr "Список турниров влияющих на этот рейтинг"
 
-#: server/templates/rating/list.html:11
+#: mahjong-portal/server/templates/rating/list.html:11
 msgid "ratings description"
 msgstr "описание рейтингов"
 
-#: server/templates/rating/list.html:25 server/templates/rating/list.html:26
+#: mahjong-portal/server/templates/rating/list.html:25
+#: mahjong-portal/server/templates/rating/list.html:26
 msgid "All available ratings"
 msgstr "Все доступные рейтинги"
 
-#: server/templates/rating/rating_tournaments.html:5
+#: mahjong-portal/server/templates/rating/rating_tournaments.html:5
 msgid "List of tournaments"
 msgstr "Список турниров"
 
-#: server/templates/rating/rating_tournaments.html:11
-#: server/templates/tournament/list.html:11
-#: server/templates/website/home.html:11
+#: mahjong-portal/server/templates/rating/rating_tournaments.html:11
+#: mahjong-portal/server/templates/tournament/list.html:11
+#: mahjong-portal/server/templates/website/home.html:11
 msgid "Upcoming tournaments"
 msgstr "Предстоящие турниры"
 
-#: server/templates/rating/rating_tournaments.html:18
-#: server/templates/rating/rating_tournaments.html:25
-#: server/templates/rating/rating_tournaments.html:26
+#: mahjong-portal/server/templates/rating/rating_tournaments.html:18
+#: mahjong-portal/server/templates/rating/rating_tournaments.html:25
+#: mahjong-portal/server/templates/rating/rating_tournaments.html:26
 msgid "List of tournaments that were included in the rating."
 msgstr "Список турниров влияющих на рейтинг"
 
-#: server/templates/tenhou/_tenhou_table.html:9
-#: server/templates/tenhou/_tenhou_table.html:52
+#: mahjong-portal/server/templates/tenhou/_tenhou_table.html:9
+#: mahjong-portal/server/templates/tenhou/_tenhou_table.html:52
 msgid "Start"
 msgstr "Начало"
 
-#: server/templates/tenhou/games_history.html:10
+#: mahjong-portal/server/templates/tenhou/games_history.html:10
 msgid "Previous day"
 msgstr "Прошлый день"
 
-#: server/templates/tenhou/games_history.html:14
-#: server/templates/tenhou/games_history.html:20
+#: mahjong-portal/server/templates/tenhou/games_history.html:14
+#: mahjong-portal/server/templates/tenhou/games_history.html:20
 msgid "Rank changes"
 msgstr "Изменения ранга"
 
-#: server/templates/tenhou/games_history.html:50
+#: mahjong-portal/server/templates/tenhou/games_history.html:50
 msgid "Records"
 msgstr "Записи"
 
-#: server/templates/tenhou/games_history.html:51
+#: mahjong-portal/server/templates/tenhou/games_history.html:51
 msgid "hours spent"
 msgstr "часов потратили"
 
-#: server/templates/tenhou/games_history.html:60
+#: mahjong-portal/server/templates/tenhou/games_history.html:60
 msgid "Delta"
 msgstr "Дельта"
 
-#: server/templates/tenhou/tenhou_accounts.html:11
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:11
 msgid "Statistics updated every 5 minutes."
 msgstr "Статистика обновляется раз в 5 минут."
 
-#: server/templates/tenhou/tenhou_accounts.html:19
-#: server/templates/tournament/announcement.html:103
-#: server/templates/website/city.html:47
-#: server/templates/website/search.html:17
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:19
+#: mahjong-portal/server/templates/tournament/announcement.html:101
+#: mahjong-portal/server/templates/website/city.html:47
+#: mahjong-portal/server/templates/website/search.html:17
 msgid "Dan"
 msgstr "Дан"
 
-#: server/templates/tenhou/tenhou_accounts.html:20
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:20
 msgid "Rate"
 msgstr "Рейт"
 
-#: server/templates/tenhou/tenhou_accounts.html:21
-#: server/templates/website/search.html:18
+#: mahjong-portal/server/templates/tenhou/tenhou_accounts.html:21
+#: mahjong-portal/server/templates/website/search.html:18
 msgid "Tenhou account"
 msgstr "Ник на тенхе"
 
-#: server/templates/tenhou/tenhou_games.html:10
+#: mahjong-portal/server/templates/tenhou/tenhou_games.html:10
 msgid "loading..."
 msgstr "загружаю..."
 
-#: server/templates/tenhou/tenhou_games_async.html:5
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:5
 msgid "update time"
 msgstr "время обновления"
 
-#: server/templates/tenhou/tenhou_games_async.html:9
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:9
 msgid "Current games with our players"
 msgstr "Текущие игры с нашими игроками"
 
-#: server/templates/tenhou/tenhou_games_async.html:10
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:10
 msgid "Games from upperdan and phoenix with portal players."
 msgstr "Игры втородана и феникса с игроками имеющими профиль на портале."
 
-#: server/templates/tenhou/tenhou_games_async.html:17
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:17
 msgid "Current games with high level players"
 msgstr "Текущие игры высоких данов"
 
-#: server/templates/tenhou/tenhou_games_async.html:18
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:18
 msgid "Games with 9 dan, 10 dan and tenhou dan players."
 msgstr "Игры с 9, 10 данами и тенходанами."
 
-#: server/templates/tenhou/tenhou_games_async.html:35
+#: mahjong-portal/server/templates/tenhou/tenhou_games_async.html:35
 msgid "Mahjohg bots"
 msgstr "Кибер разумы"
 
-#: server/templates/tournament/_tournament_results.html:31
+#: mahjong-portal/server/templates/tournament/_tournament_results.html:31
 msgid "Substitution"
 msgstr "Замена"
 
-#: server/templates/tournament/_tournament_top_header.html:4
-#: server/templates/tournament/announcement.html:33
+#: mahjong-portal/server/templates/tournament/_tournament_top_header.html:4
+#: mahjong-portal/server/templates/tournament/announcement.html:33
 msgid "Held"
 msgstr "Прошел"
 
-#: server/templates/tournament/_tournament_top_header.html:5
+#: mahjong-portal/server/templates/tournament/_tournament_top_header.html:5
 msgid "players"
 msgstr "игроков"
 
-#: server/templates/tournament/_tournament_top_header.html:7
+#: mahjong-portal/server/templates/tournament/_tournament_top_header.html:7
 msgid "and"
 msgstr "и"
 
-#: server/templates/tournament/_tournament_top_header.html:7
+#: mahjong-portal/server/templates/tournament/_tournament_top_header.html:7
 msgid "sessions"
 msgstr "игр"
 
-#: server/templates/tournament/_tournaments_table.html:20
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:20
 msgctxt "number of players"
 msgid "Participants"
 msgstr "Участников"
 
-#: server/templates/tournament/_tournaments_table.html:22
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:22
 msgid "Max. players"
 msgstr "Макс. игроков"
 
-#: server/templates/tournament/_tournaments_table.html:25
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:25
 msgctxt "number of players"
 msgid "Players"
 msgstr "Игроков"
 
-#: server/templates/tournament/_tournaments_table.html:29
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:29
 msgid "Sessions"
 msgstr "Игр"
 
-#: server/templates/tournament/_tournaments_table.html:45
+#: mahjong-portal/server/templates/tournament/_tournaments_table.html:45
 msgid "Russia"
 msgstr "Россия"
 
-#: server/templates/tournament/announcement.html:19
+#: mahjong-portal/server/templates/tournament/announcement.html:19
 msgid "Will be held"
 msgstr "Начнётся"
 
-#: server/templates/tournament/announcement.html:24
-#: server/templates/tournament/announcement.html:26
-#: server/templates/tournament/announcement.html:29
-#: server/templates/tournament_admin/tournament_manage.html:41
+#: mahjong-portal/server/templates/tournament/announcement.html:24
+#: mahjong-portal/server/templates/tournament/announcement.html:26
+#: mahjong-portal/server/templates/tournament/announcement.html:29
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:41
 msgid "Registered players"
 msgstr "Зарегистрировано игроков"
 
-#: server/templates/tournament/announcement.html:39
+#: mahjong-portal/server/templates/tournament/announcement.html:39
 msgid "Description"
 msgstr "Описание"
 
-#: server/templates/tournament/announcement.html:44
+#: mahjong-portal/server/templates/tournament/announcement.html:44
 msgid ""
 "Before applying for the tournament, please set tenhou id on Pantheon first"
 msgstr "Перед записью на турнир, пожалуйста, укажите свой tenhou id в Pantheon"
 
-#: server/templates/tournament/announcement.html:48
+#: mahjong-portal/server/templates/tournament/announcement.html:48
 msgid "Incorrect form data"
 msgstr "Некорректные данные в форме регистрации"
 
-#: server/templates/tournament/announcement.html:52
+#: mahjong-portal/server/templates/tournament/announcement.html:52
 msgid "You are already registered on the tournament!"
 msgstr "Вы уже зарегистрированы на этот турнир!"
 
-#: server/templates/tournament/announcement.html:56
+#: mahjong-portal/server/templates/tournament/announcement.html:56
 msgid "Login through Pantheon to apply for tournament"
 msgstr "Войти через Pantheon для записи на турнир"
 
-#: server/templates/tournament/announcement.html:66
+#: mahjong-portal/server/templates/tournament/announcement.html:64
 msgid "Apply for tournament through Pantheon account"
 msgstr "Записаться на турнир через Pantheon аккаунт"
 
-#: server/templates/tournament/announcement.html:70
-#: server/templates/tournament/announcement.html:81
+#: mahjong-portal/server/templates/tournament/announcement.html:68
+#: mahjong-portal/server/templates/tournament/announcement.html:79
 msgid "Registration"
 msgstr "Регистрация"
 
-#: server/templates/tournament/announcement.html:77
+#: mahjong-portal/server/templates/tournament/announcement.html:75
 msgid "Submit"
 msgstr "Записаться"
 
-#: server/templates/tournament/announcement.html:86
-#: server/templates/tournament_admin/tournament_manage.html:82
+#: mahjong-portal/server/templates/tournament/announcement.html:84
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:95
 msgid "Participants"
 msgstr "Участники"
 
-#: server/templates/tournament/announcement.html:96
-#: server/tournament/forms.py:55 server/tournament/forms.py:72
+#: mahjong-portal/server/templates/tournament/announcement.html:94
+#: mahjong-portal/server/tournament/forms.py:55
+#: mahjong-portal/server/tournament/forms.py:94
 msgid "Majsoul nickname"
 msgstr "Ник на Mahjong Soul"
 
-#: server/templates/tournament/announcement.html:98
-#: server/tournament/models.py:309
+#: mahjong-portal/server/templates/tournament/announcement.html:96
+#: mahjong-portal/server/tournament/models.py:311
 msgid "Tenhou.net nickname"
 msgstr "Ник на tenhou.net"
 
-#: server/templates/tournament/announcement.html:110
-#: server/templates/tournament_admin/tournament_manage.html:97
+#: mahjong-portal/server/templates/tournament/announcement.html:108
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:110
 msgid "Notes"
 msgstr "Примечания"
 
-#: server/templates/tournament/application.html:12
+#: mahjong-portal/server/templates/tournament/application.html:12
 msgid ""
 "Please tell us about your tournament. We will contact with you in 3 days "
 "after application."
 msgstr ""
 "Расскажите нам про ваш турнир и мы свяжемся с вами в течение трёх дней."
 
-#: server/templates/tournament/application.html:16
+#: mahjong-portal/server/templates/tournament/application.html:16
 msgid ""
 "Your application was saved! We will contact with you for further details."
 msgstr "Ваша заявка была сохранена! Мы свяжемся с вами в ближайшее время."
 
-#: server/templates/tournament/application.html:24
+#: mahjong-portal/server/templates/tournament/application.html:24
 msgid "Main info"
 msgstr "Основная информация"
 
-#: server/templates/tournament/application.html:36
-#: server/tournament/models.py:285 server/tournament/models.py:325
-#: server/tournament/models.py:366 server/tournament/models.py:441
+#: mahjong-portal/server/templates/tournament/application.html:36
+#: mahjong-portal/server/tournament/models.py:287
+#: mahjong-portal/server/tournament/models.py:327
+#: mahjong-portal/server/tournament/models.py:368
+#: mahjong-portal/server/tournament/models.py:443
 msgid "Additional info"
 msgstr "Дополнительная информация"
 
-#: server/templates/tournament/application.html:52
+#: mahjong-portal/server/templates/tournament/application.html:52
 msgid "Dates"
 msgstr "Даты"
 
-#: server/templates/tournament/application.html:62
+#: mahjong-portal/server/templates/tournament/application.html:62
 msgid "Organizer"
 msgstr "Организатор"
 
-#: server/templates/tournament/application.html:73
+#: mahjong-portal/server/templates/tournament/application.html:73
 msgid "Referee"
 msgstr "Судья"
 
-#: server/templates/tournament/application.html:96
+#: mahjong-portal/server/templates/tournament/application.html:96
 msgctxt "new tournament"
 msgid "Submit"
 msgstr "Отправить"
 
-#: server/templates/tournament/details.html:16
-#: server/templates/tournament/details.html:24
+#: mahjong-portal/server/templates/tournament/details.html:16
+#: mahjong-portal/server/templates/tournament/details.html:24
 msgid "Detailed tournament statistics"
 msgstr "Детальная статистика по турниру"
 
-#: server/templates/tournament/list.html:37
-#: server/templates/tournament_admin/managed_tournaments.html:57
+#: mahjong-portal/server/templates/tournament/list.html:37
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:57
 msgid "Nothing here"
 msgstr "Ничего нет"
 
-#: server/templates/tournament_admin/managed_tournaments.html:16
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:16
 msgid "Managed tournaments"
 msgstr "Турниры"
 
-#: server/templates/tournament_admin/managed_tournaments.html:24
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:24
 msgid "Start Date"
 msgstr "Дата начала"
 
-#: server/templates/tournament_admin/managed_tournaments.html:25
-#: server/templates/tournament_admin/new_tournaments.html:18
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:25
+#: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:18
 msgid "End Date"
 msgstr "Дата окончания"
 
-#: server/templates/tournament_admin/managed_tournaments.html:26
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:26
 msgctxt "Number of players"
 msgid "Participants"
 msgstr "Участников"
 
-#: server/templates/tournament_admin/managed_tournaments.html:27
-#: server/templates/tournament_admin/new_tournaments.html:19
-#: server/templates/tournament_admin/tournament_manage.html:100
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:27
+#: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:19
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:113
 msgid "Action"
 msgstr "Действие"
 
-#: server/templates/tournament_admin/managed_tournaments.html:49
+#: mahjong-portal/server/templates/tournament_admin/managed_tournaments.html:49
 msgid "Manage"
 msgstr "Управление"
 
-#: server/templates/tournament_admin/new_tournaments.html:31
-#: server/templates/tournament_admin/upload_results.html:18
+#: mahjong-portal/server/templates/tournament_admin/new_tournaments.html:31
+#: mahjong-portal/server/templates/tournament_admin/upload_results.html:18
 msgid "Upload results"
 msgstr "Загрузить результаты"
 
-#: server/templates/tournament_admin/tournament_edit.html:14
+#: mahjong-portal/server/templates/tournament_admin/tournament_edit.html:14
 msgid "Edit tournament"
 msgstr "Редактирование турнира"
 
-#: server/templates/tournament_admin/tournament_manage.html:22
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:22
 msgid ""
 "The tournament is excluded from all lists right now, and it is available "
 "only by direct link."
@@ -1563,148 +1625,167 @@ msgstr ""
 "На данный момент турнир скрыт: это означает, что он не отображается на "
 "портале, и только администратор может получить ссылку на него."
 
-#: server/templates/tournament_admin/tournament_manage.html:25
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:25
 msgid ""
 "It will be published automatically when you will open registration first "
 "time."
 msgstr ""
 "Турнир будет опубликован для всех после того, как вы откроете регистрацию."
 
-#: server/templates/tournament_admin/tournament_manage.html:31
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:31
 msgid "Settings"
 msgstr "Настройки"
 
-#: server/templates/tournament_admin/tournament_manage.html:36
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:36
 msgid "Tournament public link"
 msgstr "Публичная ссылка на турнир"
 
-#: server/templates/tournament_admin/tournament_manage.html:53
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:53
 msgid "Registration opened"
 msgstr "Регистрация открыта"
 
-#: server/templates/tournament_admin/tournament_manage.html:54
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:54
 msgid "Close registration"
 msgstr "Закрыть регистрацию"
 
-#: server/templates/tournament_admin/tournament_manage.html:58
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:58
 msgid "Registration closed"
 msgstr "Регистрация закрыта"
 
-#: server/templates/tournament_admin/tournament_manage.html:59
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:59
 msgid "Open registration"
 msgstr "Открыть регистрацию"
 
-#: server/templates/tournament_admin/tournament_manage.html:64
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:64
 msgid "Premoderation of participants"
 msgstr "Премодерация заявок"
 
-#: server/templates/tournament_admin/tournament_manage.html:65
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:65
 msgid "Switch to postmoderation"
 msgstr "Переключиться на постмодерацию"
 
-#: server/templates/tournament_admin/tournament_manage.html:69
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:69
 msgid "Postmoderation of participants"
 msgstr "Постмодерация заявок"
 
-#: server/templates/tournament_admin/tournament_manage.html:70
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:70
 msgid "Switch to premoderation"
 msgstr "Переключиться на премодерацию"
 
-#: server/templates/tournament_admin/tournament_manage.html:74
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:74
 msgid "Edit tournament information"
 msgstr "Редактирование информации о турнире"
 
-#: server/templates/tournament_admin/tournament_manage.html:75
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:75
 msgid "Edit"
 msgstr "Редактировать"
 
-#: server/templates/tournament_admin/tournament_manage.html:91
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:80
+msgid "Notes opened"
+msgstr "Примечания открыты"
+
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:81
+msgid "Hide notes for all"
+msgstr "Скрыть примечания для всех"
+
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:85
+msgid "Notes hidden"
+msgstr "Примечания скрыты"
+
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:86
+msgid "Open notes for all"
+msgstr "Открыть примечания для всех"
+
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:104
 msgid "Registered at"
 msgstr "Дата регистрации"
 
-#: server/templates/tournament_admin/tournament_manage.html:93
-#: server/tournament/models.py:273
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:106
+#: mahjong-portal/server/tournament/models.py:275
 msgid "Phone"
 msgstr "Телефон"
 
-#: server/templates/tournament_admin/tournament_manage.html:95
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:108
 msgid "Additional contact"
 msgstr "Альтернативный контакт"
 
-#: server/templates/tournament_admin/tournament_manage.html:99
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:112
 msgid "Approved"
 msgstr "Одобрено"
 
-#: server/templates/tournament_admin/tournament_manage.html:157
-#: server/tournament/models.py:419 server/tournament/models.py:430
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:170
+#: mahjong-portal/server/tournament/models.py:421
+#: mahjong-portal/server/tournament/models.py:432
 msgid "Yes"
 msgstr "Да"
 
-#: server/templates/tournament_admin/tournament_manage.html:160
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:173
 msgid "Approve"
 msgstr "Одобрить"
 
-#: server/templates/tournament_admin/tournament_manage.html:166
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:179
 msgid "Delete"
 msgstr "Удалить"
 
-#: server/templates/tournament_admin/tournament_manage.html:170
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:183
 msgid "Color"
 msgstr "Цвет"
 
-#: server/templates/tournament_admin/tournament_manage.html:179
+#: mahjong-portal/server/templates/tournament_admin/tournament_manage.html:192
 msgid "There is no registrations yet."
 msgstr "Пока нет регистраций"
 
-#: server/templates/tournament_admin/upload_results.html:22
+#: mahjong-portal/server/templates/tournament_admin/upload_results.html:22
 msgid "Success!"
 msgstr "Успех!"
 
-#: server/templates/website/_qualification_table.html:8
-#: server/templates/website/_qualification_table.html:21
+#: mahjong-portal/server/templates/website/_qualification_table.html:8
+#: mahjong-portal/server/templates/website/_qualification_table.html:21
 msgid "is going to participate"
 msgstr "собирается участвовать"
 
-#: server/templates/website/_qualification_table.html:11
+#: mahjong-portal/server/templates/website/_qualification_table.html:11
 msgid "MF"
 msgstr "Состоит в ФМ"
 
-#: server/templates/website/championships.html:5
-#: server/templates/website/championships.html:11
+#: mahjong-portal/server/templates/website/championships.html:5
+#: mahjong-portal/server/templates/website/championships.html:11
 msgid "Hall of Fame."
 msgstr "Зал славы. Чемпионаты России, Европы и Мира."
 
-#: server/templates/website/city.html:39
+#: mahjong-portal/server/templates/website/city.html:39
 msgctxt "list of players"
 msgid "Players"
 msgstr "Игроки"
 
-#: server/templates/website/city.html:68 server/templates/website/city.html:69
+#: mahjong-portal/server/templates/website/city.html:68
+#: mahjong-portal/server/templates/website/city.html:69
 msgid "Riichi mahjong players and tournaments from "
 msgstr "Турниры и игроки в риичи маджонг из"
 
-#: server/templates/website/erc_2019.html:5
-#: server/templates/website/erc_2019.html:18
+#: mahjong-portal/server/templates/website/erc_2019.html:5
+#: mahjong-portal/server/templates/website/erc_2019.html:18
 msgid "European Riichi Championship 2019 Qualifications"
 msgstr "Отбор на Чемпионат Европы 2019 года"
 
-#: server/templates/website/erc_2019.html:78
-#: server/templates/website/erc_2019.html:87
-#: server/templates/website/erc_2019.html:88
+#: mahjong-portal/server/templates/website/erc_2019.html:78
+#: mahjong-portal/server/templates/website/erc_2019.html:87
+#: mahjong-portal/server/templates/website/erc_2019.html:88
 msgid "List of players sorted by RR rating (on 1st January 2019)"
 msgstr ""
 "Рейтинг RR на 1 января 2019 года с учетом устаревания турниров, но без учета "
 "еще не завершившихся турниров 2018 года."
 
-#: server/templates/website/home.html:18
+#: mahjong-portal/server/templates/website/home.html:18
 msgid "Events"
 msgstr "События"
 
-#: server/templates/website/home.html:24
+#: mahjong-portal/server/templates/website/home.html:24
 msgid "Top 16 players"
 msgstr "Лучшие 16 игроков"
 
-#: server/templates/website/home.html:31 server/templates/website/home.html:32
+#: mahjong-portal/server/templates/website/home.html:31
+#: mahjong-portal/server/templates/website/home.html:32
 msgid ""
 "Website for russian mahjong community. Upcoming tournaments, players ratings "
 "and etc."
@@ -1712,233 +1793,245 @@ msgstr ""
 "Портал для российского маджонг сообщества. Предстоящие турниры, рейтинги "
 "игроков и т.п."
 
-#: server/templates/website/iormc.html:29
+#: mahjong-portal/server/templates/website/iormc.html:29
 msgid "Qualification results"
 msgstr "Результаты отборочных"
 
-#: server/templates/website/iormc.html:40
+#: mahjong-portal/server/templates/website/iormc.html:40
 msgid "Spring"
 msgstr "Весна"
 
-#: server/templates/website/iormc.html:45
+#: mahjong-portal/server/templates/website/iormc.html:45
 msgid "Summer"
 msgstr "Лето"
 
-#: server/templates/website/iormc.html:48
+#: mahjong-portal/server/templates/website/iormc.html:48
 msgid "Autumn"
 msgstr "Осень"
 
-#: server/templates/website/iormc.html:49
+#: mahjong-portal/server/templates/website/iormc.html:49
 msgid "Total"
 msgstr "Сумма 2х лучших"
 
-#: server/templates/website/search.html:5
-#: server/templates/website/search.html:9
-#: server/templates/website/search.html:52
-#: server/templates/website/search.html:53
+#: mahjong-portal/server/templates/website/search.html:5
+#: mahjong-portal/server/templates/website/search.html:9
+#: mahjong-portal/server/templates/website/search.html:52
+#: mahjong-portal/server/templates/website/search.html:53
 msgid "Search results for"
 msgstr "Результаты поиска"
 
-#: server/templates/website/search.html:47
+#: mahjong-portal/server/templates/website/search.html:47
 msgid "nothing found"
 msgstr "ничего не нашлось"
 
-#: server/templates/website/server_en.html:5
-#: server/templates/website/server_ru.html:5
+#: mahjong-portal/server/templates/website/server_en.html:5
+#: mahjong-portal/server/templates/website/server_ru.html:5
 msgid "Server"
 msgstr "О Сервере"
 
-#: server/templates/website/wrc_2020.html:5
-#: server/templates/website/wrc_2020.html:18
+#: mahjong-portal/server/templates/website/wrc_2020.html:5
+#: mahjong-portal/server/templates/website/wrc_2020.html:18
 msgid "World Riichi Championship 2020 Qualifications"
 msgstr "Отбор на Чемпионат Мира 2020 года"
 
-#: server/templates/website/wrc_2020.html:75
-#: server/templates/website/wrc_2020.html:84
-#: server/templates/website/wrc_2020.html:85
+#: mahjong-portal/server/templates/website/wrc_2020.html:75
+#: mahjong-portal/server/templates/website/wrc_2020.html:84
+#: mahjong-portal/server/templates/website/wrc_2020.html:85
 msgid "List of players sorted by RR rating (on 1st February 2020)"
 msgstr "Рейтинг RR на 1 февраля 2020 года."
 
-#: server/templates/wiki/home.html:5
+#: mahjong-portal/server/templates/wiki/home.html:5
 msgid "Wiki"
 msgstr ""
 
-#: server/tournament/forms.py:26 server/tournament/forms.py:47
-#: server/tournament/forms.py:89 server/tournament/models.py:292
-#: server/tournament/models.py:323 server/tournament/models.py:364
-#: server/tournament/models.py:443
+#: mahjong-portal/server/tournament/forms.py:26
+#: mahjong-portal/server/tournament/forms.py:47
+#: mahjong-portal/server/tournament/forms.py:118
+#: mahjong-portal/server/tournament/models.py:294
+#: mahjong-portal/server/tournament/models.py:325
+#: mahjong-portal/server/tournament/models.py:366
+#: mahjong-portal/server/tournament/models.py:445
 msgid "I allow to store my personal data"
 msgstr "Я разрешаю сбор моих персональных данных, их хранение и обработку"
 
-#: server/tournament/forms.py:30
+#: mahjong-portal/server/tournament/forms.py:30
+#: mahjong-portal/server/tournament/forms.py:73
+#: mahjong-portal/server/tournament/forms.py:99
 msgid "Team name"
 msgstr "Название команды"
 
-#: server/tournament/forms.py:71
+#: mahjong-portal/server/tournament/forms.py:93
 msgid "Majsoul friend id"
 msgstr "Mahjong Soul friend id"
 
-#: server/tournament/forms.py:75
+#: mahjong-portal/server/tournament/forms.py:104
 msgid ""
 "I allow to add my majsoul account at mahjong portal for statistics (optional)"
 msgstr ""
 "Я разрешаю добавить мой majsoul аккаунт на портал в общую статистику  "
 "(опционально)"
 
-#: server/tournament/models.py:172
+#: mahjong-portal/server/tournament/models.py:174
 #, python-format
 msgid "Applied in %(rating_type)s rating."
 msgstr "Учтен в %(rating_type)s рейтинге."
 
-#: server/tournament/models.py:269 server/tournament/models.py:306
-#: server/tournament/models.py:344
+#: mahjong-portal/server/tournament/models.py:271
+#: mahjong-portal/server/tournament/models.py:308
+#: mahjong-portal/server/tournament/models.py:346
 msgid "First name"
 msgstr "Имя"
 
-#: server/tournament/models.py:270 server/tournament/models.py:307
-#: server/tournament/models.py:345
+#: mahjong-portal/server/tournament/models.py:272
+#: mahjong-portal/server/tournament/models.py:309
+#: mahjong-portal/server/tournament/models.py:347
 msgid "Last name"
 msgstr "Фамилия"
 
-#: server/tournament/models.py:273 server/tournament/models.py:278
-#: server/tournament/models.py:314 server/tournament/models.py:355
+#: mahjong-portal/server/tournament/models.py:275
+#: mahjong-portal/server/tournament/models.py:280
+#: mahjong-portal/server/tournament/models.py:316
+#: mahjong-portal/server/tournament/models.py:357
 msgid "It will be visible only to the administrator"
 msgstr "Он будет показан только администратору"
 
-#: server/tournament/models.py:277
+#: mahjong-portal/server/tournament/models.py:279
 msgid "Additional contact. Optional"
 msgstr "Альтернативный способ связи. Опционально"
 
-#: server/tournament/models.py:313 server/tournament/models.py:354
+#: mahjong-portal/server/tournament/models.py:315
+#: mahjong-portal/server/tournament/models.py:356
 msgid "Your contact (email, phone, etc.)"
 msgstr "Контактные данные (почта, телефон, т.п.)"
 
-#: server/tournament/models.py:381
+#: mahjong-portal/server/tournament/models.py:383
 msgid "Tournament name"
 msgstr "Название турнира"
 
-#: server/tournament/models.py:384
+#: mahjong-portal/server/tournament/models.py:386
 msgid "Tournament type"
 msgstr "Желаемый тип турнира"
 
-#: server/tournament/models.py:386
+#: mahjong-portal/server/tournament/models.py:388
 msgid "Start date"
 msgstr "Дата начала"
 
-#: server/tournament/models.py:389
+#: mahjong-portal/server/tournament/models.py:391
 msgid "End date"
 msgstr "Дата окончания"
 
-#: server/tournament/models.py:392
+#: mahjong-portal/server/tournament/models.py:394
 msgid "Leave empty if tournament has one day"
 msgstr "Оставьте пустым если турнир однодневный"
 
-#: server/tournament/models.py:394
+#: mahjong-portal/server/tournament/models.py:396
 msgid "Address"
 msgstr "Адрес"
 
-#: server/tournament/models.py:394
+#: mahjong-portal/server/tournament/models.py:396
 msgid "How to reach your tournament venue"
 msgstr ""
 "Расскажите как добрать до места проведения турнира на общественном транспорте"
 
-#: server/tournament/models.py:396
+#: mahjong-portal/server/tournament/models.py:398
 msgid "Link to additional tournament information"
 msgstr "Ссылка на дополнительную информацию (например группа в контакте)"
 
-#: server/tournament/models.py:399
+#: mahjong-portal/server/tournament/models.py:401
 msgid "Organizer name"
 msgstr "ФИО организатора"
 
-#: server/tournament/models.py:400
+#: mahjong-portal/server/tournament/models.py:402
 msgid "Organizer phone"
 msgstr "Телефон организатора"
 
-#: server/tournament/models.py:403
+#: mahjong-portal/server/tournament/models.py:405
 msgid "Organizer additional contact"
 msgstr "Дополнительный способ связи"
 
-#: server/tournament/models.py:406 server/tournament/models.py:416
+#: mahjong-portal/server/tournament/models.py:408
+#: mahjong-portal/server/tournament/models.py:418
 msgid "Email, link to vk or something else"
 msgstr "Почта, страница в vk или что-то другое"
 
-#: server/tournament/models.py:409
+#: mahjong-portal/server/tournament/models.py:411
 msgid "Referee name"
 msgstr "ФИО судьи"
 
-#: server/tournament/models.py:410
+#: mahjong-portal/server/tournament/models.py:412
 msgid "Referee phone"
 msgstr "Телефон судьи"
 
-#: server/tournament/models.py:413
+#: mahjong-portal/server/tournament/models.py:415
 msgid "Referee additional contact"
 msgstr "Дополнительный способ связи"
 
-#: server/tournament/models.py:419 server/tournament/models.py:430
+#: mahjong-portal/server/tournament/models.py:421
+#: mahjong-portal/server/tournament/models.py:432
 msgid "No"
 msgstr "Нет"
 
-#: server/tournament/models.py:419
+#: mahjong-portal/server/tournament/models.py:421
 msgid "Referee english"
 msgstr "Владение английским языком у главного судьи"
 
-#: server/tournament/models.py:423
+#: mahjong-portal/server/tournament/models.py:425
 msgid "Max number of participants"
 msgstr "Предполагаемое максимальное  количество участников"
 
-#: server/tournament/models.py:425
+#: mahjong-portal/server/tournament/models.py:427
 msgid "Number of hanchans"
 msgstr "Количество ханчанов"
 
-#: server/tournament/models.py:427
+#: mahjong-portal/server/tournament/models.py:429
 msgid "Entry fee"
 msgstr "Стоимость взноса"
 
-#: server/tournament/models.py:427
+#: mahjong-portal/server/tournament/models.py:429
 msgid "Leave empty if it is free tournament"
 msgstr "Оставьте пустым если турнир бесплатный"
 
-#: server/tournament/models.py:430
+#: mahjong-portal/server/tournament/models.py:432
 msgid "Pantheon needed"
 msgstr "Потребуется ли система “Пантеон” на турнире"
 
-#: server/tournament/models.py:433
+#: mahjong-portal/server/tournament/models.py:435
 msgid "Tournament rules"
 msgstr "Турнирные правила"
 
-#: server/tournament/models.py:434
+#: mahjong-portal/server/tournament/models.py:436
 msgid "EMA"
 msgstr "EMA"
 
-#: server/tournament/models.py:434
+#: mahjong-portal/server/tournament/models.py:436
 msgid "WRC"
 msgstr "WRC"
 
-#: server/tournament/models.py:434
+#: mahjong-portal/server/tournament/models.py:436
 msgid "JPML-A"
 msgstr "JPML-A"
 
-#: server/tournament/models.py:434
+#: mahjong-portal/server/tournament/models.py:436
 msgid "JPML-B"
 msgstr "JPML-B"
 
-#: server/tournament/models.py:438
+#: mahjong-portal/server/tournament/models.py:440
 msgid "Open"
 msgstr "Открытая"
 
-#: server/tournament/models.py:438
+#: mahjong-portal/server/tournament/models.py:440
 msgid "Closed"
 msgstr "Закрытая"
 
-#: server/tournament/models.py:438
+#: mahjong-portal/server/tournament/models.py:440
 msgid "Limited"
 msgstr "Ограниченая"
 
-#: server/tournament/models.py:438
+#: mahjong-portal/server/tournament/models.py:440
 msgid "Registration type"
 msgstr "Тип регистрации"
 
-#: server/tournament/models.py:441
+#: mahjong-portal/server/tournament/models.py:443
 msgid "More information about tournament"
 msgstr ""
 "Указывается наличие опциональных изменений под выбранные правила. Если тип "
@@ -1947,11 +2040,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: server/tournament/views.py:271
+#: mahjong-portal/server/tournament/views.py:280
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: server/tournament/views.py:303
+#: mahjong-portal/server/tournament/views.py:312
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -1959,70 +2052,70 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: server/tournament/views.py:307
+#: mahjong-portal/server/tournament/views.py:316
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: server/tournament/views.py:313
+#: mahjong-portal/server/tournament/views.py:322
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 
-#: server/utils/tenhou/yakuman_list.py:5
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:5
 msgid "Chiihou"
 msgstr "Чихо"
 
-#: server/utils/tenhou/yakuman_list.py:6
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:6
 msgid "Chinroutou"
 msgstr "Чинрото"
 
-#: server/utils/tenhou/yakuman_list.py:7
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:7
 msgid "Chuuren Poutou"
 msgstr "Чуренпото"
 
-#: server/utils/tenhou/yakuman_list.py:8
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:8
 msgid "Daburu Chuuren Poutou"
 msgstr "Чуренпото (9 сторон)"
 
-#: server/utils/tenhou/yakuman_list.py:9
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:9
 msgid "Daburu Kokushi Musou"
 msgstr "Кокуши мусо (13 сторон)"
 
-#: server/utils/tenhou/yakuman_list.py:10
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:10
 msgid "Daisangen"
 msgstr "Дайсанген"
 
-#: server/utils/tenhou/yakuman_list.py:11
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:11
 msgid "Dai Suushii"
 msgstr "Дайсуши"
 
-#: server/utils/tenhou/yakuman_list.py:12
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:12
 msgid "Kokushi Musou"
 msgstr "Кокуши мусо"
 
-#: server/utils/tenhou/yakuman_list.py:13
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:13
 msgid "Ryuuiisou"
 msgstr "Рюисо"
 
-#: server/utils/tenhou/yakuman_list.py:14
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:14
 msgid "Shousuushii"
 msgstr "Шосуши"
 
-#: server/utils/tenhou/yakuman_list.py:15
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:15
 msgid "Suu ankou"
 msgstr "Суанко"
 
-#: server/utils/tenhou/yakuman_list.py:16
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:16
 msgid "Suu ankou tanki"
 msgstr "Суанко танки"
 
-#: server/utils/tenhou/yakuman_list.py:17
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:17
 msgid "Suu kantsu"
 msgstr "Суканцу"
 
-#: server/utils/tenhou/yakuman_list.py:19
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:19
 msgid "Tsuu iisou"
 msgstr "Цуисо"
 
-#: server/utils/tenhou/yakuman_list.py:20
+#: mahjong-portal/server/utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
