@@ -9,8 +9,20 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from player.models import Player
 from system.decorators import tournament_manager_auth_required
-from system.tournament_admin.forms import TournamentForm, UploadResultsForm
-from tournament.models import OnlineTournamentRegistration, Tournament, TournamentRegistration, TournamentResult
+from system.tournament_admin.forms import (
+    MsOnlineTournamentRegistrationNotesForm,
+    OnlineTournamentRegistrationNotesForm,
+    TournamentForm,
+    TournamentRegistrationNotesForm,
+    UploadResultsForm,
+)
+from tournament.models import (
+    MsOnlineTournamentRegistration,
+    OnlineTournamentRegistration,
+    Tournament,
+    TournamentRegistration,
+    TournamentResult,
+)
 from utils.general import transliterate_name
 
 
@@ -268,3 +280,51 @@ def approve_registration(request, tournament_id, registration_id, **kwargs):
     registration.is_approved = True
     registration.save()
     return redirect(tournament_manage, tournament.id)
+
+
+@login_required
+@tournament_manager_auth_required
+def toggle_share_notes(request, tournament_id, **kwargs):
+    tournament = kwargs["tournament"]
+    if tournament.display_notes:
+        tournament.share_notes = not tournament.share_notes
+        tournament.save()
+    return redirect(tournament_manage, tournament.id)
+
+
+@login_required
+@tournament_manager_auth_required
+def notes_edit(request, tournament_id, registration_id, **kwargs):
+    tournament = kwargs["tournament"]
+
+    item_class = TournamentRegistration
+    if tournament.is_online():
+        if not tournament.is_majsoul_tournament:
+            item_class = OnlineTournamentRegistration
+        else:
+            item_class = MsOnlineTournamentRegistration
+
+    registration = get_object_or_404(item_class, tournament=tournament, id=registration_id)
+
+    form = TournamentRegistrationNotesForm(instance=registration)
+    if tournament.is_online():
+        if not tournament.is_majsoul_tournament:
+            form = OnlineTournamentRegistrationNotesForm(instance=registration)
+        else:
+            form = MsOnlineTournamentRegistrationNotesForm(instance=registration)
+
+    if request.POST:
+        form = TournamentRegistrationNotesForm(request.POST, instance=registration)
+        if tournament.is_online():
+            if not tournament.is_majsoul_tournament:
+                form = OnlineTournamentRegistrationNotesForm(request.POST, instance=registration)
+            else:
+                form = MsOnlineTournamentRegistrationNotesForm(request.POST, instance=registration)
+        if form.is_valid():
+            form.save()
+            return redirect(tournament_manage, tournament.id)
+    return render(
+        request,
+        "tournament_admin/tournament_registration_notes_edit.html",
+        {"tournament": tournament, "registration": registration, "form": form},
+    )

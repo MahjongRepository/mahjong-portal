@@ -298,6 +298,11 @@ class TournamentHandler:
             )
 
         with transaction.atomic():
+            # todo: extract admin name from online config
+            error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                "admin_username": self.get_admin_username()
+            }
+
             cursor = get_connection().cursor()
             cursor.execute(f"LOCK TABLE {TournamentGame._meta.db_table}")
 
@@ -308,9 +313,7 @@ class TournamentHandler:
                     .filter(tournament_round=status.current_round)
                     .distinct()
                 )
-                error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
-                    "admin_username": self.get_admin_username()
-                }
+
                 if games.count() >= 2:
                     logger.error("Log add. Too much games.")
                     return error_message, False
@@ -318,20 +321,22 @@ class TournamentHandler:
                 game = games.first()
                 game.log_id = log_id
                 game.save()
+
+                self.process_add_game_log(status=status, log_link=log_link, log_id=log_id, game=game)
+                self.check_round_was_finished()
+            except Exception as err:
+                logger.error(err)
+                return error_message, False
             finally:
                 cursor.close()
 
-        response = add_online_replay_through_pantheon(self.tournament.new_pantheon_id, log_link)
-        # todo handle error
-        # if response.status_code == 500:
-        #     logger.error("Log add. Pantheon 500.")
-        #     return error_message, False
+        return _("The game has been added. Thank you."), True
 
-        # todo handle error
-        # content = response.json()
-        # if content.get("error"):
-        #     logger.error("Log add. Pantheon error. {}".format(content.get("error")))
-        #     return error_message, False
+    def process_add_game_log(self, status, log_link, log_id, game):
+        response = add_online_replay_through_pantheon(self.tournament.new_pantheon_id, log_link)
+
+        if not response.game or not response.game.session_hash:
+            raise Exception(f"Log {log_link} not successfully added to pantheon")
 
         game_info = response.game
         pantheon_url = (
@@ -440,10 +445,6 @@ class TournamentHandler:
             },
         )
 
-        self.check_round_was_finished()
-
-        return _("The game has been added. Thank you."), True
-
     def game_finish(self, log_id, players, log_content, log_time):
         if not self.tournament.is_majsoul_tournament:
             platform_id = 1
@@ -460,6 +461,8 @@ class TournamentHandler:
             pantheon_response = upload_replay_through_pantheon(
                 self.tournament.new_pantheon_id, platform_id, 2, log_id, log_time, log_content
             )
+            if not pantheon_response.game or not pantheon_response.game.session_hash:
+                return _("Error adding a game to pantheon."), True
         except Exception:
             return _("Error adding a game to pantheon."), True
 
@@ -475,6 +478,10 @@ class TournamentHandler:
             formatted_players[matched_player["place"]] = f"{current_player['tenhouId']} [{matched_player['score']}]"
 
         with transaction.atomic():
+            error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
+                "admin_username": self.get_admin_username()
+            }
+
             cursor = get_connection().cursor()
             cursor.execute(f"LOCK TABLE {TournamentGame._meta.db_table}")
 
@@ -493,9 +500,7 @@ class TournamentHandler:
                         .filter(tournament_round=status.current_round)
                         .distinct()
                     )
-                error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
-                    "admin_username": self.get_admin_username()
-                }
+
                 if games.count() >= 2:
                     logger.error("Log add. Too much games.")
                     return error_message, False
@@ -504,16 +509,29 @@ class TournamentHandler:
 
                 if not game:
                     logger.error("Games not found for this players!")
-                    error_message = _("Fail to add game log. Contact the administrator %(admin_username)s.") % {
-                        "admin_username": self.get_admin_username()
-                    }
                     return error_message, False
 
                 game.log_id = log_id
                 game.save()
+
+                self.process_game_finish(
+                    status=status,
+                    game=game,
+                    players=players,
+                    log_id=log_id,
+                    pantheon_response_dict=pantheon_response_dict,
+                    formatted_players=formatted_players,
+                )
+                self.check_round_was_finished()
+            except Exception as err:
+                logger.error(err)
+                return error_message, False
             finally:
                 cursor.close()
 
+        return _("The game has been added. Thank you."), True
+
+    def process_game_finish(self, status, game, players, log_id, pantheon_response_dict, formatted_players):
         game.status = TournamentGame.FINISHED
         game.save()
 
@@ -603,10 +621,6 @@ class TournamentHandler:
                     "platform_name": "mahjongsoul",
                 },
             )
-
-        self.check_round_was_finished()
-
-        return _("The game has been added. Thank you."), True
 
     def confirm_participation_in_tournament(
         self, nickname, telegram_username=None, discord_username=None, friend_id=None, is_admin=False

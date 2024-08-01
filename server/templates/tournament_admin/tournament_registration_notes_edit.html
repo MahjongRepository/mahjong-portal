@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}
+    {% trans 'Admin page' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'managed_tournaments' %}">{% trans 'Tournaments' %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'tournament_manage' tournament.id %}">{{ tournament.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans 'Notes edit' %}</li>
+            </ol>
+        </nav>
+
+        <h1><a href="{% url 'player_details' registration.player.slug %}">{{ registration.full_name }}</a></h1>
+        <form action="{% url 'notes_edit' tournament.id registration.id %}" method="POST" class="form edit-tournament-form">
+            {% csrf_token %}
+
+            {% bootstrap_form form %}
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

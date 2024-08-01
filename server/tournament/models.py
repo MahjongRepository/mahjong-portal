@@ -111,6 +111,8 @@ class Tournament(BaseModel):
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
+    # display filled notes in registration table for all in public
+    share_notes = models.BooleanField(default=False)
 
     old_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
     new_pantheon_id = models.CharField(max_length=20, null=True, blank=True)

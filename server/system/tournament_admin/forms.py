@@ -2,7 +2,12 @@
 
 from django import forms
 
-from tournament.models import Tournament
+from tournament.models import (
+    MsOnlineTournamentRegistration,
+    OnlineTournamentRegistration,
+    Tournament,
+    TournamentRegistration,
+)
 
 
 class UploadResultsForm(forms.Form):
@@ -23,4 +28,28 @@ class TournamentForm(forms.ModelForm):
             "end_date",
             "registration_description_ru",
             "registration_description_en",
+        ]
+
+
+class TournamentRegistrationNotesForm(forms.ModelForm):
+    class Meta:
+        model = TournamentRegistration
+        fields = [
+            "notes",
+        ]
+
+
+class OnlineTournamentRegistrationNotesForm(forms.ModelForm):
+    class Meta:
+        model = OnlineTournamentRegistration
+        fields = [
+            "notes",
+        ]
+
+
+class MsOnlineTournamentRegistrationNotesForm(forms.ModelForm):
+    class Meta:
+        model = MsOnlineTournamentRegistration
+        fields = [
+            "notes",
         ]

@@ -74,6 +74,19 @@
                             <td>{% trans 'Edit tournament information' %}</td>
                             <td><a href="{% url 'tournament_edit' tournament.id %}" class="btn btn-primary">{% trans 'Edit' %}</a></td>
                         </tr>
+                        {% if tournament.display_notes %}
+                            {% if tournament.share_notes %}
+                                <tr>
+                                    <td>{% trans 'Notes opened' %}</td>
+                                    <td><a href="{% url 'toggle_share_notes' tournament.id %}" class="btn btn-danger">{% trans 'Hide notes for all'%}</a></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{% trans 'Notes hidden' %}</td>
+                                    <td><a href="{% url 'toggle_share_notes' tournament.id %}" class="btn btn-success">{% trans 'Open notes for all'%}</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endif %}
                     </table>
                 </div>
             </li>
@@ -95,6 +108,7 @@
                         <th scope="col">{% trans 'Additional contact' %}</th>
                         {% if tournament.display_notes %}
                             <th scope="col">{% trans 'Notes' %}</th>
+                            <th scope="col"></th>
                         {% endif %}
                         <th scope="col">{% trans 'Approved' %}</th>
                         <th scope="col">{% trans 'Action' %}</th>
@@ -150,6 +164,9 @@
                             {% if tournament.display_notes %}
                                 <td>
                                     {{ registration_item.notes }}
+                                </td>
+                                <td>
+                                    <a href="{% url 'notes_edit' tournament.id registration_item.id %}" class="btn btn-primary">{% trans 'Notes edit' %}</a>
                                 </td>
                             {% endif %}
                             <td>

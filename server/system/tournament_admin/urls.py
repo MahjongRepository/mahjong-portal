@@ -6,10 +6,12 @@ from system.tournament_admin.views import (
     approve_registration,
     managed_tournaments,
     new_tournaments,
+    notes_edit,
     remove_registration,
     toggle_highlight,
     toggle_premoderation,
     toggle_registration,
+    toggle_share_notes,
     tournament_edit,
     tournament_manage,
     upload_results,
@@ -38,4 +40,10 @@ urlpatterns = [
     url(r"^managed/(?P<tournament_id>\d+)/registration/toggle$", toggle_registration, name="toggle_registration"),
     url(r"^managed/(?P<tournament_id>\d+)/premoderation/toggle$", toggle_premoderation, name="toggle_premoderation"),
     url(r"^(?P<tournament_id>\d+)/upload/$", upload_results, name="upload_results"),
+    url(r"^managed/(?P<tournament_id>\d+)/share_notes/toggle$", toggle_share_notes, name="toggle_share_notes"),
+    url(
+        r"^managed/(?P<tournament_id>\d+)/registration/(?P<registration_id>\d+)/notes/edit$",
+        notes_edit,
+        name="notes_edit",
+    ),
 ]
