@@ -15,22 +15,28 @@ def ms_accounts(request, stat_type="four"):
         raise Http404
 
     four_players = False
-    statistics = MSAccountStatistic.objects.filter(rank__isnull=False).exclude(account__account_name="")
+    current_game_type = MSAccountStatistic.FOUR_PLAYERS
     if stat_type == "four":
         four_players = True
-        statistics = statistics.filter(game_type=MSAccountStatistic.FOUR_PLAYERS)
     else:
-        statistics = statistics.filter(game_type=MSAccountStatistic.THREE_PLAYERS)
+        current_game_type = MSAccountStatistic.THREE_PLAYERS
 
-    statistics = statistics.filter(Q(tonpusen_games__gt=0) | Q(hanchan_games__gt=0))
-    statistics = statistics.select_related("account", "account__player").order_by("-rank", "-points")
+    statistics = (
+        MSAccountStatistic.objects.filter(rank__isnull=False, game_type=current_game_type)
+        .exclude(account__account_name="")
+        .filter(Q(tonpusen_games__gt=0) | Q(hanchan_games__gt=0))
+        .order_by("-rank", "-points")
+        .prefetch_related("account", "account__player")
+    )
 
     # hide accounts from the list that didn't play long time
     filtered_statistics = []
+    current_time = timezone.now() - timedelta(days=180)
     for statistic in statistics:
-        if statistic.last_account_played_date <= timezone.now() - timedelta(days=180):
+        last_played_date = statistic.last_account_played_date
+        if last_played_date <= current_time:
             continue
 
-        filtered_statistics.append(statistic)
+        filtered_statistics.append({"stat": statistic, "last_played_date": last_played_date})
 
     return render(request, "ms/ms_accounts.html", {"statistics": filtered_statistics, "four_players": four_players})

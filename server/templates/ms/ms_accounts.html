@@ -34,7 +34,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for stat in statistics %}
+                {% for current_stat in statistics %}
+                    {% with stat=current_stat.stat %}
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>
@@ -63,7 +64,7 @@
                             {{ stat.played_games }}
                         </td>
                         <td>
-                            {{ stat.last_account_played_date|date:SHORT_DATE_FORMAT }}
+                            {{ current_stat.last_played_date|date:SHORT_DATE_FORMAT }}
                         </td>
                         <td>
                             {% if stat.account.player.city %}
@@ -77,6 +78,7 @@
                             {% endif %}
                         </td>
                     </tr>
+                    {% endwith %}
                 {% endfor %}
                 </tbody>
             </table>
