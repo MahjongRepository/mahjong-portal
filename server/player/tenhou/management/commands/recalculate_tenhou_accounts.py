@@ -29,8 +29,10 @@ class Command(BaseCommand):
             tenhou_objects = TenhouNickname.objects.filter(is_active=True, tenhou_username=tenhou_nickname)
         else:
             tenhou_objects = TenhouNickname.objects.filter(is_active=True)
+        tenhou_players_count = len(tenhou_objects)
+        current_player_index = 1
         for tenhou_object in tenhou_objects:
-            print(f"Processing {tenhou_object.tenhou_username}")
+            print(f"[{current_player_index}/{tenhou_players_count}] Processing {tenhou_object.tenhou_username}")
 
             TenhouGameLog.objects.filter(tenhou_object=tenhou_object).delete()
 
@@ -43,6 +45,7 @@ class Command(BaseCommand):
             save_played_games(tenhou_object, player_games)
 
             recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate)
+            current_player_index = current_player_index + 1
 
             # let's be gentle and don't ddos nodochi
             sleep(10)

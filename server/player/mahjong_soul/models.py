@@ -103,8 +103,8 @@ class MSAccountStatistic(models.Model):
         return history.filter(rank_index=rank_index).order_by("created_on")
 
     def last_played_date(self):
-        data = MSPointsHistory.objects.filter(stat_object=self).order_by("-created_on")
-        return data and data.first().created_on or None
+        data = MSPointsHistory.objects.filter(stat_object=self).order_by("-created_on").values("created_on")[:1]
+        return data and data.first()["created_on"] or None
 
 
 class MSPointsHistory(models.Model):
