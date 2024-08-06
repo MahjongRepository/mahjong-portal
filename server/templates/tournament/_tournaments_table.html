@@ -17,6 +17,10 @@
             <th scope="col">{% trans 'Type' %}</th>
 
             {% if is_upcoming %}
+                <th scope="col">{% trans 'Status' %}</th>
+            {% endif %}
+
+            {% if is_upcoming %}
                 <th scope="col">{% trans 'Participants' context 'number of players' %}</th>
                 {% if not is_event %}
                     <th scope="col">{% trans 'Max. players' %}</th>
@@ -90,6 +94,12 @@
                 <td>
                     <nobr>{% include 'tournament/_tournament_type.html' %}</nobr>
                 </td>
+
+                {% if is_upcoming %}
+                    <td>
+                        <nobr>{% include 'tournament/_tournament_status.html' %}</nobr>
+                    </td>
+                {% endif %}
 
                 {% if is_upcoming %}
                     <td>
