@@ -161,6 +161,9 @@ class Tournament(BaseModel):
         if self.opened_registration:
             return "primary"
 
+        if not self.opened_registration:
+            return "danger"
+
         return "primary"
 
     @property
@@ -173,6 +176,9 @@ class Tournament(BaseModel):
 
         if self.is_pantheon_registration:
             return _("open")
+
+        if not self.opened_registration:
+            return _("close")
 
         return ""
 
