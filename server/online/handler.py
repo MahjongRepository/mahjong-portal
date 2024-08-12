@@ -193,29 +193,31 @@ class TournamentHandler:
         status.save()
 
         current_config = self.tournament.online_config.get_config()
-        self.create_notification(
-            TournamentNotification.CONFIRMATION_STARTED,
-            tg_ru_kwargs={
-                "confirmation_end_time": current_config.ru_confirmation_end_time,
-                "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(current_config.public_lobby),
-                "rating_link": self.get_rating_link(),
-            },
-            discord_ru_kwargs={
-                "confirmation_channel": current_config.ru_discord_confirmation_channel,
-                "confirmation_end_time": current_config.ru_confirmation_end_time,
-                "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(current_config.public_lobby),
-                "rating_link": self.get_rating_link(),
-            },
-            discord_en_kwargs={
-                "confirmation_channel": current_config.en_discord_confirmation_channel,
-                "confirmation_end_time": current_config.en_confirmation_end_time,
-                "timezone": current_config.en_tournament_timezone,
-                "lobby_link": self.get_lobby_link(current_config.public_lobby),
-                "rating_link": self.get_rating_link(),
-            },
-        )
+        # todo: handle is_validated
+        if current_config.is_validated:
+            self.create_notification(
+                TournamentNotification.CONFIRMATION_STARTED,
+                tg_ru_kwargs={
+                    "confirmation_end_time": current_config.ru_confirmation_end_time,
+                    "timezone": current_config.ru_tournament_timezone,
+                    "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                    "rating_link": self.get_rating_link(),
+                },
+                discord_ru_kwargs={
+                    "confirmation_channel": current_config.ru_discord_confirmation_channel,
+                    "confirmation_end_time": current_config.ru_confirmation_end_time,
+                    "timezone": current_config.ru_tournament_timezone,
+                    "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                    "rating_link": self.get_rating_link(),
+                },
+                discord_en_kwargs={
+                    "confirmation_channel": current_config.en_discord_confirmation_channel,
+                    "confirmation_end_time": current_config.en_confirmation_end_time,
+                    "timezone": current_config.en_tournament_timezone,
+                    "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                    "rating_link": self.get_rating_link(),
+                },
+            )
 
     def close_registration(self):
         status = self.get_status()

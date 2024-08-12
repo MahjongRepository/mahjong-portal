@@ -45,7 +45,7 @@ class OnlineTournamentConfig(BaseModel):
                 ru_discord_confirmation_channel,
                 public_lobby,
             )
-            current_config.is_validated = current_config.is_valid()
+            current_config.validate()
             return current_config
         except Exception:
             return PlainOnlineTournamentConfig()

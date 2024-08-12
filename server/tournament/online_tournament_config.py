@@ -26,19 +26,20 @@ class PlainOnlineTournamentConfig:
         self.ru_discord_confirmation_channel = ru_discord_confirmation_channel
         self.public_lobby = public_lobby
 
-    def is_valid(self):
+    def validate(self):
+        is_validated = True
         if self.en_confirmation_end_time is None:
-            return False
+            is_validated = False
         if self.en_tournament_timezone is None:
-            return False
+            is_validated = False
         if self.ru_confirmation_end_time is None:
-            return False
+            is_validated = False
         if self.en_tournament_timezone is None:
-            return False
+            is_validated = False
         if self.en_discord_confirmation_channel is None:
-            return False
+            is_validated = False
         if self.en_discord_confirmation_channel is None:
-            return False
+            is_validated = False
         if self.public_lobby is None:
-            return False
-        return True
+            is_validated = False
+        self.is_validated = is_validated
