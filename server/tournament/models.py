@@ -161,6 +161,9 @@ class Tournament(BaseModel):
         if self.opened_registration:
             return "primary"
 
+        if self.is_pantheon_registration:
+            return "primary"
+
         if not self.opened_registration:
             return "danger"
 
