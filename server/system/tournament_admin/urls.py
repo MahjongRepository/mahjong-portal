@@ -8,6 +8,7 @@ from system.tournament_admin.views import (
     new_tournaments,
     notes_edit,
     remove_registration,
+    toggle_hidden,
     toggle_highlight,
     toggle_premoderation,
     toggle_registration,
@@ -46,4 +47,5 @@ urlpatterns = [
         notes_edit,
         name="notes_edit",
     ),
+    url(r"^managed/(?P<tournament_id>\d+)/hidden/toggle$", toggle_hidden, name="toggle_hidden"),
 ]

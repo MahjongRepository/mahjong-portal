@@ -87,6 +87,12 @@
                                 </tr>
                             {% endif %}
                         {% endif %}
+                        {% if not tournament.is_hidden %}
+                                <tr>
+                                    <td></td>
+                                    <td><a href="{% url 'toggle_hidden' tournament.id %}" class="btn btn-danger">{% trans 'Hide tournament'%}</a></td>
+                                </tr>
+                        {% endif %}
                     </table>
                 </div>
             </li>

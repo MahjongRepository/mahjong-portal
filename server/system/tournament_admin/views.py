@@ -328,3 +328,15 @@ def notes_edit(request, tournament_id, registration_id, **kwargs):
         "tournament_admin/tournament_registration_notes_edit.html",
         {"tournament": tournament, "registration": registration, "form": form},
     )
+
+
+@login_required
+@tournament_manager_auth_required
+def toggle_hidden(request, tournament_id, **kwargs):
+    tournament = kwargs["tournament"]
+    if not tournament.is_hidden:
+        tournament.opened_registration = False
+    tournament.is_hidden = not tournament.is_hidden
+    tournament.save()
+
+    return redirect(tournament_manage, tournament.id)
