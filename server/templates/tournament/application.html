@@ -65,6 +65,9 @@
                         {% bootstrap_field form.organizer_name %}
                         {% bootstrap_field form.organizer_phone %}
                         {% bootstrap_field form.organizer_additional_contact %}
+                        {% if user.is_authenticated %}
+                            {% bootstrap_field form.is_admin_myself %}
+                        {% endif %}
                     </div>
                 </li>
             </ul>

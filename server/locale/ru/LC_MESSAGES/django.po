@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 09:54+0000\n"
+"POT-Creation-Date: 2024-08-14 15:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -625,7 +625,7 @@ msgstr "История игр на tenhou.net"
 msgid "Yakumans from tenhou.net"
 msgstr "Якуманы с tenhou.net"
 
-#: templates/base.html:108 templates/tournament/application.html:85
+#: templates/base.html:108 templates/tournament/application.html:88
 #: tournament/models.py:468
 msgid "Other"
 msgstr "Другое"
@@ -637,8 +637,8 @@ msgstr "Контакты"
 
 #: templates/base.html:112 templates/tournament/application.html:5
 #: templates/tournament/application.html:10
-#: templates/tournament/application.html:103
-#: templates/tournament/application.html:104
+#: templates/tournament/application.html:106
+#: templates/tournament/application.html:107
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
@@ -1434,11 +1434,11 @@ msgstr "Даты"
 msgid "Organizer"
 msgstr "Организатор"
 
-#: templates/tournament/application.html:73
+#: templates/tournament/application.html:76
 msgid "Referee"
 msgstr "Судья"
 
-#: templates/tournament/application.html:96
+#: templates/tournament/application.html:99
 msgctxt "new tournament"
 msgid "Submit"
 msgstr "Отправить"
@@ -1715,7 +1715,7 @@ msgstr "Рейтинг RR на 1 февраля 2020 года."
 msgid "Wiki"
 msgstr ""
 
-#: tournament/forms.py:26 tournament/forms.py:47 tournament/forms.py:118
+#: tournament/forms.py:26 tournament/forms.py:47 tournament/forms.py:119
 #: tournament/models.py:326 tournament/models.py:357 tournament/models.py:398
 #: tournament/models.py:477
 msgid "I allow to store my personal data"
@@ -1735,6 +1735,10 @@ msgid ""
 msgstr ""
 "Я разрешаю добавить мой majsoul аккаунт на портал в общую статистику  "
 "(опционально)"
+
+#: tournament/forms.py:120
+msgid "I am the organiser, I need to grant access to manage the tournament on portal"
+msgstr "Я являюсь организатором, нужно выдать доступ на управление турниром на портале"
 
 #: tournament/models.py:175
 msgid "premoderation"
@@ -1908,11 +1912,11 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: tournament/views.py:280
+#: tournament/views.py:281
 msgid "You already registered to the tournament!"
 msgstr "Вы ранее уже зарегистрировались на этот турнир!"
 
-#: tournament/views.py:312
+#: tournament/views.py:313
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -1920,11 +1924,11 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: tournament/views.py:316
+#: tournament/views.py:317
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: tournament/views.py:322
+#: tournament/views.py:323
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 

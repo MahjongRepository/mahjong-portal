@@ -2,6 +2,7 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -331,7 +332,12 @@ def tournament_application(request):
     if request.POST:
         form = TournamentApplicationForm(request.POST)
         if form.is_valid():
-            form.save()
-            success = True
+            with transaction.atomic():
+                tournament_application = form.save(commit=False)
+                if tournament_application is not None:
+                    if "is_admin_myself" in request.POST and request.user is not None:
+                        tournament_application.tournament_admin_user = request.user
+                    tournament_application.save()
+                success = True
 
     return render(request, "tournament/application.html", {"form": form, "success": success})

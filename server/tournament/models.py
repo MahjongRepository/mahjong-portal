@@ -475,6 +475,7 @@ class TournamentApplication(BaseModel):
         verbose_name=_("Additional info"), help_text=_("More information about tournament")
     )
     allow_to_save_data = models.BooleanField(help_text=_("I allow to store my personal data"))
+    tournament_admin_user = models.ForeignKey("account.User", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __unicode__(self):
         return ""

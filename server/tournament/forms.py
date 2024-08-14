@@ -107,6 +107,7 @@ class MajsoulOnlineTournamentPantheonRegistrationForm(forms.ModelForm):
 
 class TournamentApplicationForm(forms.ModelForm):
     allow_to_save_data = forms.BooleanField(required=True)
+    is_admin_myself = forms.BooleanField(required=False)
 
     class Meta:
         model = TournamentApplication
@@ -116,3 +117,6 @@ class TournamentApplicationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["allow_to_save_data"].label = _("I allow to store my personal data")
+        self.fields["is_admin_myself"].label = _(
+            "I am the organiser, I need to grant access to manage the tournament on portal"
+        )
