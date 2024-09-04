@@ -1295,8 +1295,8 @@ msgstr "Замена"
 
 #: templates/tournament/_tournament_status.html:9
 #: templates/tournament/_tournament_status.html:10
-msgid "Teams tournament"
-msgstr "Командный"
+msgid "teams"
+msgstr "командная"
 
 #: templates/tournament/_tournament_top_header.html:4
 #: templates/tournament/announcement.html:33
@@ -1316,8 +1316,8 @@ msgid "sessions"
 msgstr "игр"
 
 #: templates/tournament/_tournaments_table.html:20
-msgid "Status"
-msgstr "Статус"
+msgid "Registration status"
+msgstr "Статус регистрации"
 
 #: templates/tournament/_tournaments_table.html:24
 msgctxt "number of players"
@@ -1745,12 +1745,12 @@ msgid "premoderation"
 msgstr "премодерация"
 
 #: tournament/models.py:178 tournament/models.py:181
-msgid "open"
-msgstr "открытый"
+msgid "open registration"
+msgstr "открытая регистрация"
 
 #: tournament/models.py:184
-msgid "close"
-msgstr "Закрытый"
+msgid "registration close"
+msgstr "регистрация закрыта"
 
 #: tournament/models.py:206
 #, python-format

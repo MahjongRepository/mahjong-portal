@@ -154,7 +154,7 @@ class Tournament(BaseModel):
         return ""
 
     @property
-    def status_badge_class(self):
+    def registration_status_badge_class(self):
         if self.registrations_pre_moderation:
             return "success"
 
@@ -170,18 +170,18 @@ class Tournament(BaseModel):
         return "primary"
 
     @property
-    def status_help_text(self):
+    def registration_status_help_text(self):
         if self.registrations_pre_moderation:
             return _("premoderation")
 
         if self.opened_registration:
-            return _("open")
+            return _("open registration")
 
         if self.is_pantheon_registration:
-            return _("open")
+            return _("open registration")
 
         if not self.opened_registration:
-            return _("close")
+            return _("registration close")
 
         return ""
 
