@@ -25,6 +25,7 @@ class RatingEMACalculation(RatingRRCalculation, RatingDatesMixin):
             .exclude(ema_id=None)
             .exclude(is_replacement=True)
             .exclude(is_hide=True)
+            .exclude(is_exclude_from_rating=True)
             .order_by("-last_name")
         )
 

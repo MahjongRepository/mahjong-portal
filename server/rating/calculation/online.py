@@ -14,7 +14,12 @@ class RatingOnlineCalculation(RatingRRCalculation, RatingDatesMixin):
         player_ids = TournamentResult.objects.filter(tournament__tournament_type=Tournament.ONLINE).values_list(
             "player_id", flat=True
         )
-        return Player.objects.filter(id__in=player_ids).exclude(is_replacement=True).exclude(is_hide=True)
+        return (
+            Player.objects.filter(id__in=player_ids)
+            .exclude(is_replacement=True)
+            .exclude(is_hide=True)
+            .exclude(is_exclude_from_rating=True)
+        )
 
     def get_date(self, rating_date):
         return RatingDatesMixin.get_date(self, rating_date)
