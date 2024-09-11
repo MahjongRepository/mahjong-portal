@@ -231,6 +231,13 @@ def pantheon_tournament_registration(request, tournament_id):
     if not tournament.is_majsoul_tournament and not data["tenhou_id"]:
         return redirect(tournament.get_url() + "?error=tenhou_id")
 
+    player_is_approved = True
+    if tournament.registrations_pre_moderation:
+        player_is_approved = False
+        message = _("Your registration was accepted! It will be visible on the page after administrator approvement.")
+
+        messages.success(request, message)
+
     if tournament.is_majsoul_tournament:
         # todo get ms_data from pantheon
         MsOnlineTournamentRegistration.objects.create(
@@ -245,6 +252,7 @@ def pantheon_tournament_registration(request, tournament_id):
             city_object=city_object,
             allow_to_save_data=allow_to_save_data,
             notes=notes,
+            is_approved=player_is_approved,
         )
     else:
         OnlineTournamentRegistration.objects.create(
@@ -257,6 +265,7 @@ def pantheon_tournament_registration(request, tournament_id):
             player=player,
             city_object=city_object,
             notes=notes,
+            is_approved=player_is_approved,
         )
 
     return redirect(tournament.get_url())
