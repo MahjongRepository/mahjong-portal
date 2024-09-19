@@ -662,7 +662,7 @@ class TournamentHandler:
             return _("Majsoul account not validated. Ask for administrator.")
 
         if not registration.is_approved:
-            return _("You not approve for this tournament by administrator.")
+            return _("You are not approved for this tournament by administrator.")
 
         if not self.tournament.is_majsoul_tournament:
             if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
