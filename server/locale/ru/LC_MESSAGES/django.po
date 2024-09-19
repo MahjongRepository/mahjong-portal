@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-04 15:05+0000\n"
+"POT-Creation-Date: 2024-09-19 12:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,21 +198,25 @@ msgstr ""
 msgid "Majsoul account not validated. Ask for administrator."
 msgstr "Majsoul аккаунт неверифицирован. Обратитесь к администратору."
 
-#: mahjong-portal/server/online/handler.py:666
-#: mahjong-portal/server/online/handler.py:671
+#: mahjong-portal/server/online/handler.py:665
+msgid "You are not approved for this tournament by administrator."
+msgstr "Вы не допущены к участию в этом турнире администратором."
+
+#: mahjong-portal/server/online/handler.py:669
+#: mahjong-portal/server/online/handler.py:674
 #, python-format
 msgid "Nickname \"%(nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(nickname)s\" уже был подтверждён на турнир."
 
-#: mahjong-portal/server/online/handler.py:709
+#: mahjong-portal/server/online/handler.py:716
 msgid "Fatal error. Ask for administrator."
 msgstr "Что-то пошло не так. Обратитесь к администратору."
 
-#: mahjong-portal/server/online/handler.py:711
+#: mahjong-portal/server/online/handler.py:718
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: mahjong-portal/server/online/handler.py:1242
+#: mahjong-portal/server/online/handler.py:1249
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -231,7 +235,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: mahjong-portal/server/online/handler.py:1255
+#: mahjong-portal/server/online/handler.py:1262
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -251,7 +255,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: mahjong-portal/server/online/handler.py:1269
+#: mahjong-portal/server/online/handler.py:1276
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -271,7 +275,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: mahjong-portal/server/online/handler.py:1289
+#: mahjong-portal/server/online/handler.py:1296
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -285,7 +289,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: mahjong-portal/server/online/handler.py:1297
+#: mahjong-portal/server/online/handler.py:1304
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -309,7 +313,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: mahjong-portal/server/online/handler.py:1307
+#: mahjong-portal/server/online/handler.py:1314
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -326,7 +330,7 @@ msgstr ""
 "После завершения вашей игры лог игры будет сохранен автоматически. Если "
 "этого не произошло обратитесь к администратору."
 
-#: mahjong-portal/server/online/handler.py:1316
+#: mahjong-portal/server/online/handler.py:1323
 msgid ""
 "New game was added.\n"
 "\n"
@@ -359,7 +363,7 @@ msgstr ""
 "Всего игр завершено: %(finished)s/%(total)s."
 
 # python-format
-#: mahjong-portal/server/online/handler.py:1329
+#: mahjong-portal/server/online/handler.py:1336
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -370,7 +374,7 @@ msgstr ""
 "игроков. Игры начнутся через 10 минут в 10-30 МСК. Пожалуйста, пройдите в "
 "лобби %(lobby_link) и ждите начала игр (игры начнутся автоматически)."
 
-#: mahjong-portal/server/online/handler.py:1336
+#: mahjong-portal/server/online/handler.py:1343
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -379,7 +383,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: mahjong-portal/server/online/handler.py:1339
+#: mahjong-portal/server/online/handler.py:1346
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. Missed players "
 "%(missed_players)s. The table was moved to the end of the queue. \n"
@@ -395,16 +399,16 @@ msgstr ""
 "%(missed_players_str) Отсутствующие игроки зайдите (или перезайдите) в "
 "турнирное лобби: %(lobby_link)."
 
-#: mahjong-portal/server/online/handler.py:1343
+#: mahjong-portal/server/online/handler.py:1350
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: mahjong-portal/server/online/handler.py:1344
+#: mahjong-portal/server/online/handler.py:1351
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: mahjong-portal/server/online/handler.py:1345
+#: mahjong-portal/server/online/handler.py:1352
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -413,7 +417,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: mahjong-portal/server/online/handler.py:1347
+#: mahjong-portal/server/online/handler.py:1354
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -427,7 +431,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: mahjong-portal/server/online/handler.py:1352
+#: mahjong-portal/server/online/handler.py:1359
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
@@ -463,7 +467,7 @@ msgstr ""
 "3. Текущие игры:\n"
 " <%(current_games_link)s> \n"
 
-#: mahjong-portal/server/player/models.py:43
+#: mahjong-portal/server/player/models.py:44
 msgid "Substitution player"
 msgstr "Игрок замены"
 
@@ -2085,11 +2089,8 @@ msgstr ""
 "ли привозить другие. А также все пожелания или потребности для проведения "
 "данного турнира."
 
-#: mahjong-portal/server/tournament/views.py:281
-msgid "You already registered to the tournament!"
-msgstr "Вы ранее уже зарегистрировались на этот турнир!"
-
-#: mahjong-portal/server/tournament/views.py:313
+#: mahjong-portal/server/tournament/views.py:237
+#: mahjong-portal/server/tournament/views.py:322
 msgid ""
 "Your registration was accepted! It will be visible on the page after "
 "administrator approvement."
@@ -2097,11 +2098,15 @@ msgstr ""
 "Регистрация принята! Она появится на странице после одобрения "
 "администратором."
 
-#: mahjong-portal/server/tournament/views.py:317
+#: mahjong-portal/server/tournament/views.py:290
+msgid "You already registered to the tournament!"
+msgstr "Вы ранее уже зарегистрировались на этот турнир!"
+
+#: mahjong-portal/server/tournament/views.py:326
 msgid "Your registration was accepted!"
 msgstr "Регистрация принята!"
 
-#: mahjong-portal/server/tournament/views.py:323
+#: mahjong-portal/server/tournament/views.py:332
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 
