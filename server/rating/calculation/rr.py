@@ -36,7 +36,12 @@ class RatingRRCalculation:
         Determine what players should be participated in the rating
         :return:
         """
-        return list(Player.objects.filter(country__code="RU").exclude(is_replacement=True).exclude(is_hide=True))
+        return list(
+            Player.objects.filter(country__code="RU")
+            .exclude(is_replacement=True)
+            .exclude(is_hide=True)
+            .exclude(is_exclude_from_rating=True)
+        )
 
     def get_base_query(self, rating, start_date, rating_date):
         base_query = (
