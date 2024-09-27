@@ -15,7 +15,11 @@
             </ol>
         </nav>
 
-        <h1><a href="{% url 'player_details' registration.player.slug %}">{{ registration.full_name }}</a></h1>
+        {% if registration.player %}
+            <h1><a href="{% url 'player_details' registration.player.slug %}">{{ registration.full_name }}</a></h1>
+        {% else %}
+            <h1>{{ registration.full_name }}</h1>
+        {% endif %}
         <form action="{% url 'notes_edit' tournament.id registration.id %}" method="POST" class="form edit-tournament-form">
             {% csrf_token %}
 

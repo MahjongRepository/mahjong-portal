@@ -2,6 +2,7 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -230,6 +231,13 @@ def pantheon_tournament_registration(request, tournament_id):
     if not tournament.is_majsoul_tournament and not data["tenhou_id"]:
         return redirect(tournament.get_url() + "?error=tenhou_id")
 
+    player_is_approved = True
+    if tournament.registrations_pre_moderation:
+        player_is_approved = False
+        message = _("Your registration was accepted! It will be visible on the page after administrator approvement.")
+
+        messages.success(request, message)
+
     if tournament.is_majsoul_tournament:
         # todo get ms_data from pantheon
         MsOnlineTournamentRegistration.objects.create(
@@ -244,6 +252,7 @@ def pantheon_tournament_registration(request, tournament_id):
             city_object=city_object,
             allow_to_save_data=allow_to_save_data,
             notes=notes,
+            is_approved=player_is_approved,
         )
     else:
         OnlineTournamentRegistration.objects.create(
@@ -256,6 +265,7 @@ def pantheon_tournament_registration(request, tournament_id):
             player=player,
             city_object=city_object,
             notes=notes,
+            is_approved=player_is_approved,
         )
 
     return redirect(tournament.get_url())
@@ -331,7 +341,12 @@ def tournament_application(request):
     if request.POST:
         form = TournamentApplicationForm(request.POST)
         if form.is_valid():
-            form.save()
-            success = True
+            with transaction.atomic():
+                tournament_application = form.save(commit=False)
+                if tournament_application is not None:
+                    if "is_admin_myself" in request.POST and request.user is not None:
+                        tournament_application.tournament_admin_user = request.user
+                    tournament_application.save()
+                success = True
 
     return render(request, "tournament/application.html", {"form": form, "success": success})

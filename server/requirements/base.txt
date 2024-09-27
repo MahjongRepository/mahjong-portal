@@ -1,10 +1,10 @@
 # for production
-gunicorn==22.0.0
+gunicorn==23.0.0
 
 # main deps
-Django==4.2.14
+Django==4.2.16
 django-modeltranslation==0.18.10
-psycopg==3.1.18
+psycopg==3.2.1
 psycopg2==2.9.9
 psycopg2cffi==2.9.0
 django-bootstrap5==23.3
@@ -12,8 +12,8 @@ dj-database-url==2.0.0
 python-dateutil==2.8.2
 ms-api==0.10.275
 pytz==2023.3
-ujson==5.9.0
-tenacity==8.2.3
+ujson==5.10.0
+tenacity==9.0.0
 numpy==1.26.3
 
 # online tournaments
@@ -29,7 +29,7 @@ pymorphy3==1.2.0
 pymorphy3-dicts-ru==2.4.417150.4580142
 
 # for search
-django-haystack==3.2.1
+django-haystack==3.3.0
 Whoosh==2.7.4
 
 # for web parsing

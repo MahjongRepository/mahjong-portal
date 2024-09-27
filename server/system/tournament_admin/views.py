@@ -187,9 +187,14 @@ def tournament_manage(request, tournament_id, **kwargs):
     tournament = kwargs["tournament"]
 
     if tournament.is_online():
-        tournament_registrations = OnlineTournamentRegistration.objects.filter(tournament=tournament).order_by(
-            "-created_on"
-        )
+        if tournament.is_majsoul_tournament:
+            tournament_registrations = MsOnlineTournamentRegistration.objects.filter(tournament=tournament).order_by(
+                "-created_on"
+            )
+        else:
+            tournament_registrations = OnlineTournamentRegistration.objects.filter(tournament=tournament).order_by(
+                "-created_on"
+            )
     else:
         tournament_registrations = TournamentRegistration.objects.filter(tournament=tournament).order_by("-created_on")
 
@@ -274,7 +279,10 @@ def approve_registration(request, tournament_id, registration_id, **kwargs):
 
     item_class = TournamentRegistration
     if tournament.is_online():
-        item_class = OnlineTournamentRegistration
+        if tournament.is_majsoul_tournament:
+            item_class = MsOnlineTournamentRegistration
+        else:
+            item_class = OnlineTournamentRegistration
 
     registration = get_object_or_404(item_class, tournament=tournament, id=registration_id)
     registration.is_approved = True
@@ -328,3 +336,15 @@ def notes_edit(request, tournament_id, registration_id, **kwargs):
         "tournament_admin/tournament_registration_notes_edit.html",
         {"tournament": tournament, "registration": registration, "form": form},
     )
+
+
+@login_required
+@tournament_manager_auth_required
+def toggle_hidden(request, tournament_id, **kwargs):
+    tournament = kwargs["tournament"]
+    if not tournament.is_hidden:
+        tournament.opened_registration = False
+    tournament.is_hidden = not tournament.is_hidden
+    tournament.save()
+
+    return redirect(tournament_manage, tournament.id)

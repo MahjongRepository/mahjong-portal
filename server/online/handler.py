@@ -193,29 +193,31 @@ class TournamentHandler:
         status.save()
 
         current_config = self.tournament.online_config.get_config()
-        self.create_notification(
-            TournamentNotification.CONFIRMATION_STARTED,
-            tg_ru_kwargs={
-                "confirmation_end_time": current_config.ru_confirmation_end_time,
-                "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(current_config.public_lobby),
-                "rating_link": self.get_rating_link(),
-            },
-            discord_ru_kwargs={
-                "confirmation_channel": current_config.ru_discord_confirmation_channel,
-                "confirmation_end_time": current_config.ru_confirmation_end_time,
-                "timezone": current_config.ru_tournament_timezone,
-                "lobby_link": self.get_lobby_link(current_config.public_lobby),
-                "rating_link": self.get_rating_link(),
-            },
-            discord_en_kwargs={
-                "confirmation_channel": current_config.en_discord_confirmation_channel,
-                "confirmation_end_time": current_config.en_confirmation_end_time,
-                "timezone": current_config.en_tournament_timezone,
-                "lobby_link": self.get_lobby_link(current_config.public_lobby),
-                "rating_link": self.get_rating_link(),
-            },
-        )
+        # todo: handle is_validated
+        if current_config.is_validated:
+            self.create_notification(
+                TournamentNotification.CONFIRMATION_STARTED,
+                tg_ru_kwargs={
+                    "confirmation_end_time": current_config.ru_confirmation_end_time,
+                    "timezone": current_config.ru_tournament_timezone,
+                    "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                    "rating_link": self.get_rating_link(),
+                },
+                discord_ru_kwargs={
+                    "confirmation_channel": current_config.ru_discord_confirmation_channel,
+                    "confirmation_end_time": current_config.ru_confirmation_end_time,
+                    "timezone": current_config.ru_tournament_timezone,
+                    "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                    "rating_link": self.get_rating_link(),
+                },
+                discord_en_kwargs={
+                    "confirmation_channel": current_config.en_discord_confirmation_channel,
+                    "confirmation_end_time": current_config.en_confirmation_end_time,
+                    "timezone": current_config.en_tournament_timezone,
+                    "lobby_link": self.get_lobby_link(current_config.public_lobby),
+                    "rating_link": self.get_rating_link(),
+                },
+            )
 
     def close_registration(self):
         status = self.get_status()
@@ -659,6 +661,9 @@ class TournamentHandler:
         if self.tournament.is_majsoul_tournament and not registration.is_validated:
             return _("Majsoul account not validated. Ask for administrator.")
 
+        if not registration.is_approved:
+            return _("You are not approved for this tournament by administrator.")
+
         if not self.tournament.is_majsoul_tournament:
             if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
@@ -669,6 +674,9 @@ class TournamentHandler:
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
 
         pantheon_id = registration.user and registration.user.new_pantheon_id or None
+        # todo: deprecate non pantheon_registration for online tournament
+        if not pantheon_id:
+            pantheon_id = registration.player and registration.player.pantheon_id or None
         team_name = registration.notes
 
         tenhou_nickname = ""
@@ -693,7 +701,8 @@ class TournamentHandler:
             )
 
             try:
-                if self.tournament.is_pantheon_registration:
+                # todo: deprecate non pantheon_registration for online tournament
+                if self.tournament.is_online():
                     add_user_to_new_pantheon(
                         record,
                         registration,
@@ -703,8 +712,8 @@ class TournamentHandler:
                     )
             except Exception as e:
                 logger.error(e, exc_info=e)
-                if self.tournament.is_pantheon_registration:
-                    return _("Fatal error. Ask for administrator.")
+                transaction.set_rollback(True)
+                return _("Fatal error. Ask for administrator.")
 
         return _("Your participation in the tournament has been confirmed!")
 

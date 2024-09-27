@@ -45,7 +45,7 @@ class OnlineTournamentConfig(BaseModel):
                 ru_discord_confirmation_channel,
                 public_lobby,
             )
-            current_config.is_validated = current_config.is_valid()
+            current_config.validate()
             return current_config
         except Exception:
             return PlainOnlineTournamentConfig()
@@ -154,25 +154,34 @@ class Tournament(BaseModel):
         return ""
 
     @property
-    def status_badge_class(self):
+    def registration_status_badge_class(self):
         if self.registrations_pre_moderation:
             return "success"
 
         if self.opened_registration:
             return "primary"
 
+        if self.is_pantheon_registration:
+            return "primary"
+
+        if not self.opened_registration:
+            return "danger"
+
         return "primary"
 
     @property
-    def status_help_text(self):
+    def registration_status_help_text(self):
         if self.registrations_pre_moderation:
             return _("premoderation")
 
         if self.opened_registration:
-            return _("open")
+            return _("open registration")
 
         if self.is_pantheon_registration:
-            return _("open")
+            return _("open registration")
+
+        if not self.opened_registration:
+            return _("registration close")
 
         return ""
 
@@ -466,6 +475,7 @@ class TournamentApplication(BaseModel):
         verbose_name=_("Additional info"), help_text=_("More information about tournament")
     )
     allow_to_save_data = models.BooleanField(help_text=_("I allow to store my personal data"))
+    tournament_admin_user = models.ForeignKey("account.User", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __unicode__(self):
         return ""

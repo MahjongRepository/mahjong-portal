@@ -17,7 +17,7 @@
             <th scope="col">{% trans 'Type' %}</th>
 
             {% if is_upcoming %}
-                <th scope="col">{% trans 'Status' %}</th>
+                <th scope="col">{% trans 'Registration status' %}</th>
             {% endif %}
 
             {% if is_upcoming %}
@@ -97,7 +97,7 @@
 
                 {% if is_upcoming %}
                     <td>
-                        <nobr>{% include 'tournament/_tournament_status.html' %}</nobr>
+                        <nobr>{% include 'tournament/_tournament_registration_status.html' %}</nobr>
                     </td>
                 {% endif %}
 

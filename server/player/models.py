@@ -24,6 +24,7 @@ class Player(BaseModel):
     gender = models.PositiveSmallIntegerField(choices=GENDERS, default=NONE)
     is_replacement = models.BooleanField(default=False)
     is_hide = models.BooleanField(default=False)
+    is_exclude_from_rating = models.BooleanField(default=False)
 
     ema_id = models.CharField(max_length=30, null=True, blank=True, default="")
     pantheon_id = models.PositiveIntegerField(null=True, blank=True, unique=True)
