@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST
 
 from online.handler import TournamentHandler
 from online.management.portal_autobot import PortalAutoBot
-from online.models import TournamentGame, TournamentNotification, TournamentPlayers
+from online.models import TournamentPlayers
 from tournament.models import Tournament
 from utils.general import make_random_letters_and_digit_string
 from utils.pantheon import add_user_to_pantheon
@@ -101,42 +101,6 @@ def toggle_replacement_flag_in_pantheon(request, record_id):
 
     record.is_replacement = new_is_replacement
     record.save()
-
-    referer = request.META.get("HTTP_REFERER")
-    # TODO temporary remove untrusted redirect from user referer
-    referer = "/"
-    return redirect(referer)
-
-
-@user_passes_test(lambda u: u.is_superuser)
-@login_required
-def add_penalty_game(request, game_id):
-    game = TournamentGame.objects.get(id=game_id)
-
-    headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
-    data = {
-        "jsonrpc": "2.0",
-        "method": "addPenaltyGame",
-        "params": {
-            "eventId": settings.PANTHEON_TOURNAMENT_EVENT_ID,
-            "players": [x.player.pantheon_id for x in game.game_players.all()],
-        },
-        "id": make_random_letters_and_digit_string(),
-    }
-
-    response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
-    if response.status_code == 500:
-        return HttpResponse("addPenaltyGame. 500 response")
-
-    content = response.json()
-    if content.get("error"):
-        return HttpResponse("addPenaltyGame. Pantheon error: {}".format(content.get("error")))
-
-    handler = TournamentHandler()
-    handler.init(tournament=Tournament.objects.get(id=settings.TOURNAMENT_ID), lobby="", game_type="", destination="")
-    player_names = handler.get_players_message_string([x.player for x in game.game_players.all()])
-    handler.create_notification(TournamentNotification.GAME_PENALTY, {"player_names": player_names})
-    handler.check_round_was_finished()
 
     referer = request.META.get("HTTP_REFERER")
     # TODO temporary remove untrusted redirect from user referer
@@ -384,3 +348,18 @@ def add_game_log(request):
 
     confirm_message = bot.add_game_log(log_link)
     return JsonResponse({"message": confirm_message[0], "is_error": confirm_message[1]})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def add_penalty_game(request):
+    request_data = json.loads(request.body)
+
+    game_id = request_data.get("game_id")
+    if not game_id:
+        return HttpResponse(status=400)
+
+    message = bot.add_penalty_game(game_id)
+    return JsonResponse({"message": message})

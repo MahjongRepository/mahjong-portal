@@ -154,3 +154,19 @@ def add_online_replay_through_pantheon(eventId, tenhouGameLink):
         ),
         server_path_prefix="/v2",
     )
+
+
+def add_penalty_game(pantheonEventId, adminPersonId, playerIds):
+    client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
+
+    context = Context()
+    # todo pass pantheon event's owner token
+    context.set_header("X-Auth-Token", settings.PANTHEON_ADMIN_COOKIE)
+    context.set_header("X-Current-Event-Id", str(pantheonEventId))
+    context.set_header("X-Current-Person-Id", str(adminPersonId))
+
+    return client.AddPenaltyGame(
+        ctx=context,
+        request=pantheon_api.mimir_pb2.GamesAddPenaltyGamePayload(event_id=int(pantheonEventId), players=playerIds),
+        server_path_prefix="/v2",
+    )

@@ -168,3 +168,7 @@ class PortalAutoBot:
         activate("ru")
 
         return tournament_handler.add_game_log(log_link)
+
+    @staticmethod
+    def add_penalty_game(game_id):
+        return tournament_handler.add_penalty_game(game_id)

@@ -35,6 +35,7 @@ from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRe
 from utils.general import format_text, make_random_letters_and_digit_string
 from utils.new_pantheon import (
     add_online_replay_through_pantheon,
+    add_penalty_game,
     add_user_to_new_pantheon,
     get_new_pantheon_swiss_sortition,
     upload_replay_through_pantheon,
@@ -716,6 +717,32 @@ class TournamentHandler:
                 return _("Fatal error. Ask for administrator.")
 
         return _("Your participation in the tournament has been confirmed!")
+
+    def add_penalty_game(self, game_id):
+        try:
+            game = TournamentGame.objects.get(id=game_id, tournament_id=self.tournament.id)
+            if not game:
+                return _("Game does not exist.")
+
+            player_ids = [x.player.pantheon_id for x in game.game_players.all()]
+            pantheon_response = add_penalty_game(
+                self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID, player_ids
+            )
+            if not pantheon_response.hash:
+                return _("Error adding penalty to pantheon.")
+
+            player_names = self.get_players_message_string([x.player for x in game.game_players.all()])
+            self.create_notification(
+                TournamentNotification.GAME_PENALTY,
+                tg_ru_kwargs={"player_names": player_names},
+                discord_ru_kwargs={"player_names": player_names},
+                discord_en_kwargs={"player_names": player_names},
+            )
+            self.check_round_was_finished()
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
+        return _("Game penalty added successfully.")
 
     def prepare_next_round(self, reshuffleInPortal=True):
         status = self.get_status()
