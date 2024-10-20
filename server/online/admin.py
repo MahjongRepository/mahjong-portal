@@ -145,6 +145,7 @@ class TournamentGameAdmin(admin.ModelAdmin):
     list_display = ["tournament", "tournament_round", "status", "log_id", "created_on", "updated_on", "admin_actions"]
     list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "status", "tournament_round"]
 
+    # todo fix with new add_penalty_game
     def admin_actions(self, obj):
         if not obj.status == TournamentGame.FINISHED:
             return ""

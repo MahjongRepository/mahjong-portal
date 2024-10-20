@@ -170,3 +170,27 @@ def add_penalty_game(pantheonEventId, adminPersonId, playerIds):
         request=pantheon_api.mimir_pb2.GamesAddPenaltyGamePayload(event_id=int(pantheonEventId), players=playerIds),
         server_path_prefix="/v2",
     )
+
+
+def send_team_names_to_pantheon(pantheonEventId, adminPersonId, teamMapping):
+    client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
+
+    context = Context()
+    # todo pass pantheon event's owner token
+    context.set_header("X-Auth-Token", settings.PANTHEON_ADMIN_COOKIE)
+    context.set_header("X-Current-Event-Id", str(pantheonEventId))
+    context.set_header("X-Current-Person-Id", str(adminPersonId))
+
+    teams = []
+    for team in teamMapping:
+        teams.append(
+            pantheon_api.atoms_pb2.TeamMapping(player_id=int(team["player_id"]), team_name=str(team["team_name"]))
+        )
+
+    return client.UpdatePlayersTeams(
+        ctx=context,
+        request=pantheon_api.mimir_pb2.EventsUpdatePlayersTeamsPayload(
+            event_id=int(pantheonEventId), ids_to_team_names=teams
+        ),
+        server_path_prefix="/v2",
+    )

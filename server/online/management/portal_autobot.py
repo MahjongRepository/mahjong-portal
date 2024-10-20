@@ -172,3 +172,7 @@ class PortalAutoBot:
     @staticmethod
     def add_penalty_game(game_id):
         return tournament_handler.add_penalty_game(game_id)
+
+    @staticmethod
+    def send_team_names_to_pantheon():
+        return tournament_handler.send_team_names_to_pantheon()

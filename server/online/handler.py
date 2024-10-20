@@ -32,12 +32,13 @@ from online.models import (
 )
 from online.parser import TenhouParser
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
-from utils.general import format_text, make_random_letters_and_digit_string
+from utils.general import format_text
 from utils.new_pantheon import (
     add_online_replay_through_pantheon,
     add_penalty_game,
     add_user_to_new_pantheon,
     get_new_pantheon_swiss_sortition,
+    send_team_names_to_pantheon,
     upload_replay_through_pantheon,
 )
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
@@ -244,32 +245,24 @@ class TournamentHandler:
         )
 
     def send_team_names_to_pantheon(self):
-        registrations = TournamentPlayers.objects.filter(tournament=self.tournament)
+        try:
+            registrations = TournamentPlayers.objects.filter(tournament=self.tournament)
 
-        team_names = {}
-        for registration in registrations:
-            team_names[registration.pantheon_id] = registration.team_name
+            team_names = []
+            for registration in registrations:
+                team_names.append({"player_id": registration.pantheon_id, "team_name": registration.team_name})
 
-        data = {
-            "jsonrpc": "2.0",
-            "method": "updatePlayersTeams",
-            "params": {"eventId": settings.PANTHEON_TOURNAMENT_EVENT_ID, "teamNameMap": team_names},
-            "id": make_random_letters_and_digit_string(),
-        }
+            pantheon_response = send_team_names_to_pantheon(
+                self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID, team_names
+            )
 
-        headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
+            if not pantheon_response.success:
+                return _("Error adding teams names to pantheon.")
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
 
-        response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
-        if response.status_code == 500:
-            logger.error("Log add. Pantheon 500.")
-            return "Pantheon 500 error"
-
-        content = response.json()
-        if content.get("error"):
-            logger.error("Log add. Pantheon error. {}".format(content.get("error")))
-            return "Pantheon {} error".format(content.get("error"))
-
-        return "Готово"
+        return _("Teams names successfully added to pantheon.")
 
     def add_game_log(self, log_link):
         status = self.get_status()

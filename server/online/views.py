@@ -363,3 +363,12 @@ def add_penalty_game(request):
 
     message = bot.add_penalty_game(game_id)
     return JsonResponse({"message": message})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+@tournament_data_require
+def send_team_names_to_pantheon(request):
+    message = bot.send_team_names_to_pantheon()
+    return JsonResponse({"message": message})

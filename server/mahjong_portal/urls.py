@@ -32,6 +32,7 @@ from online.views import (
     open_registration,
     prepare_next_round,
     process_notification,
+    send_team_names_to_pantheon,
 )
 from website.views import players_api, update_info_from_pantheon_api
 
@@ -71,6 +72,7 @@ urlpatterns = [
     url("^api/v0/autobot/get_tournament_status$", get_tournament_status),
     url("^api/v0/autobot/get_tournament_players$", get_allowed_players),
     url("^api/v0/autobot/add_penalty_game$", add_penalty_game),
+    url("^api/v0/autobot/send_team_names_to_pantheon$", send_team_names_to_pantheon),
     url(r"^online/", include("online.urls")),
 ]
 
