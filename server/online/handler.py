@@ -246,8 +246,21 @@ class TournamentHandler:
 
     def send_team_names_to_pantheon(self):
         try:
-            registrations = TournamentPlayers.objects.filter(tournament=self.tournament)
+            registrations = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
+            self._send_team_names_to_pantheon(registrations=registrations)
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
 
+    def send_player_team_names_to_pantheon(self, player):
+        try:
+            self._send_team_names_to_pantheon(registrations=[player])
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
+
+    def _send_team_names_to_pantheon(self, registrations):
+        try:
             team_names = []
             for registration in registrations:
                 team_names.append({"player_id": registration.pantheon_id, "team_name": registration.team_name})
@@ -704,6 +717,8 @@ class TournamentHandler:
                         settings.PANTHEON_ADMIN_ID,
                         self.tournament.is_majsoul_tournament,
                     )
+                    if self.tournament.is_command:
+                        self.send_player_team_names_to_pantheon(record)
             except Exception as e:
                 logger.error(e, exc_info=e)
                 transaction.set_rollback(True)
