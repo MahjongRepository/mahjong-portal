@@ -45,6 +45,14 @@ message EventAdmin {
   string last_update = 5;
 }
 
+message EventReferee {
+  int32 rule_id = 1;
+  int32 person_id = 2;
+  string person_name = 3;
+  bool has_avatar = 4;
+  string last_update = 5;
+}
+
 message RuleListItem {
   string default = 1;
   string type = 2;
@@ -93,6 +101,8 @@ message PersonEx {
   string last_update = 10;
   string ms_nickname = 11;
   int32 ms_account_id = 12;
+  string telegram_id = 13;
+  string notifications = 14;
 }
 
 message Group {
@@ -156,7 +166,9 @@ message Event {
   bool has_series = 11;
   bool with_chips = 12;
   int32 min_games_count = 13;
-  int32 platform_id = 14;
+  bool achievements_shown = 15;
+  bool with_yakitori = 16;
+  PlatformType platform_id = 17;
 }
 
 message MyEvent {
@@ -191,6 +203,7 @@ message GameConfig {
   bool is_finished = 52;
   RulesetConfig ruleset_config = 53;
   int32 lobby_id = 54;
+  bool allow_view_other_tables = 55;
 }
 
 message PlayerInRating {
@@ -206,6 +219,8 @@ message PlayerInRating {
   optional string team_name = 10;
   bool has_avatar = 11;
   string last_update = 12;
+  float penalties_amount = 13;
+  int32 penalties_count = 14;
 }
 
 message Player {
@@ -227,6 +242,11 @@ message Penalty {
   int32 who = 1;
   int32 amount = 2;
   optional string reason = 3;
+  int32 assigned_by = 4;
+  string created_at = 5;
+  bool is_cancelled = 6;
+  optional string cancellation_reason = 7;
+  int32 id = 8;
 }
 
 message RonResult {
@@ -329,7 +349,6 @@ message GameResult {
   string replay_link = 3;
   repeated int32 players = 4;
   repeated FinalResultOfSession final_results = 5;
-  repeated Penalty penalty_logs = 6;
   repeated Round rounds = 7;
 }
 
@@ -365,6 +384,7 @@ message PlayerInSession {
   float rating_delta = 5;
   bool has_avatar = 6;
   string last_update = 7;
+  bool yakitori = 8;
 }
 
 message CurrentSession {
@@ -450,7 +470,7 @@ message DoraSummary {
 message IntermediateResultOfSession {
   int32 player_id = 1;
   int32 score = 2;
-  optional int32 penalty_score = 3;
+  int32 chombo_count = 4;
 }
 
 message PaymentLogItem {
@@ -493,13 +513,16 @@ message EventData {
   int32 autostart = 12; // time until game autostart
   RulesetConfig ruleset_config = 14;
   bool is_listed = 15;
+  bool is_rating_shown = 16;
+  bool achievements_shown = 17;
+  bool allow_view_other_tables = 18;
+  PlatformType platform_id = 19;
 }
 
 message TableState {
   SessionStatus status = 1;
   bool may_definalize = 2;
   string session_hash = 3;
-  repeated Penalty penalty_logs = 4;
   optional int32 table_index = 5;
   optional Round last_round = 6;
   int32 current_round_index = 7;
@@ -546,6 +569,11 @@ message PrescriptedTable {
   repeated RegisteredPlayer players = 1; // should be 4 elements
 }
 
+message Chombo {
+  int32 player_id = 1;
+  float amount = 2;
+}
+
 message SessionState {
   int32 dealer = 1;
   int32 round_index = 2;
@@ -553,8 +581,8 @@ message SessionState {
   int32 honba_count = 4;
   repeated IntermediateResultOfSession scores = 5;
   bool finished = 6;
-  repeated Penalty penalties = 7;
   bool last_hand_started = 8;
+  repeated Chombo chombo = 9;
 }
 
 message Uma {
@@ -582,6 +610,12 @@ enum EndingPolicy {
   ENDING_POLICY_EP_END_AFTER_HAND = 2;
 }
 
+enum PlatformType {
+  PLATFORM_TYPE_UNSPECIFIED = 0;
+  PLATFORM_TYPE_TENHOUNET = 1;
+  PLATFORM_TYPE_MAHJONGSOUL = 2;
+}
+
 message RulesetConfig {
   ComplexUma complex_uma = 1;
   EndingPolicy ending_policy = 2;
@@ -605,7 +639,7 @@ message RulesetConfig {
   bool with_nagashi_mangan = 20;
   bool with_winning_dealer_honba_skipped = 21;
   int32 chips_value = 22;
-  int32 chombo_penalty = 23;
+  int32 chombo_amount = 23;
   int32 game_expiration_time = 24;
   int32 goal_points = 25;
   int32 max_penalty = 26;
@@ -618,6 +652,8 @@ message RulesetConfig {
   int32 start_rating = 33;
   repeated int32 allowed_yaku = 34;
   repeated int32 yaku_with_pao = 35;
+  bool with_yakitori = 36;
+  int32 yakitori_penalty = 37;
 }
 
 // Generics

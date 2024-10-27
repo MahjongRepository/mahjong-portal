@@ -222,7 +222,7 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="GetTablesState",
                 function=getattr(service, "GetTablesState"),
-                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                input=_sym_db.GetSymbol("common.EventsGetTablesStatePayload"),
                 output=_sym_db.GetSymbol("common.EventsGetTablesStateResponse"),
             ),
             "StartTimer": Endpoint(
@@ -462,6 +462,55 @@ class MimirServer(TwirpServer):
                 function=getattr(service, "AddTypedOnlineReplay"),
                 input=_sym_db.GetSymbol("common.TypedGamesAddOnlineReplayPayload"),
                 output=_sym_db.GetSymbol("common.GamesAddOnlineReplayResponse"),
+            ),
+            "NotifyPlayersSessionStartsSoon": Endpoint(
+                service_name="Mimir",
+                name="NotifyPlayersSessionStartsSoon",
+                function=getattr(service, "NotifyPlayersSessionStartsSoon"),
+                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "CallReferee": Endpoint(
+                service_name="Mimir",
+                name="CallReferee",
+                function=getattr(service, "CallReferee"),
+                input=_sym_db.GetSymbol("common.CallRefereePayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "RecalcAchievements": Endpoint(
+                service_name="Mimir",
+                name="RecalcAchievements",
+                function=getattr(service, "RecalcAchievements"),
+                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "RecalcPlayerStats": Endpoint(
+                service_name="Mimir",
+                name="RecalcPlayerStats",
+                function=getattr(service, "RecalcPlayerStats"),
+                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "ListPenalties": Endpoint(
+                service_name="Mimir",
+                name="ListPenalties",
+                function=getattr(service, "ListPenalties"),
+                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                output=_sym_db.GetSymbol("common.PenaltiesResponse"),
+            ),
+            "CancelPenalty": Endpoint(
+                service_name="Mimir",
+                name="CancelPenalty",
+                function=getattr(service, "CancelPenalty"),
+                input=_sym_db.GetSymbol("common.CancelPenaltyPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "ListMyPenalties": Endpoint(
+                service_name="Mimir",
+                name="ListMyPenalties",
+                function=getattr(service, "ListMyPenalties"),
+                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                output=_sym_db.GetSymbol("common.PenaltiesResponse"),
             ),
         }
 
@@ -1040,5 +1089,68 @@ class MimirClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.GamesAddOnlineReplayResponse"),
+            **kwargs,
+        )
+
+    def NotifyPlayersSessionStartsSoon(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/NotifyPlayersSessionStartsSoon",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def CallReferee(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/CallReferee",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def RecalcAchievements(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/RecalcAchievements",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def RecalcPlayerStats(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/RecalcPlayerStats",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def ListPenalties(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/ListPenalties",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.PenaltiesResponse"),
+            **kwargs,
+        )
+
+    def CancelPenalty(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/CancelPenalty",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def ListMyPenalties(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/ListMyPenalties",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.PenaltiesResponse"),
             **kwargs,
         )

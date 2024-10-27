@@ -32,11 +32,13 @@ from online.models import (
 )
 from online.parser import TenhouParser
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
-from utils.general import format_text, make_random_letters_and_digit_string
+from utils.general import format_text
 from utils.new_pantheon import (
     add_online_replay_through_pantheon,
+    add_penalty_game,
     add_user_to_new_pantheon,
     get_new_pantheon_swiss_sortition,
+    send_team_names_to_pantheon,
     upload_replay_through_pantheon,
 )
 from utils.tenhou.helper import parse_names_from_tenhou_chat_message
@@ -243,32 +245,37 @@ class TournamentHandler:
         )
 
     def send_team_names_to_pantheon(self):
-        registrations = TournamentPlayers.objects.filter(tournament=self.tournament)
+        try:
+            registrations = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
+            self._send_team_names_to_pantheon(registrations=registrations)
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
 
-        team_names = {}
-        for registration in registrations:
-            team_names[registration.pantheon_id] = registration.team_name
+    def send_player_team_names_to_pantheon(self, player):
+        try:
+            self._send_team_names_to_pantheon(registrations=[player])
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
 
-        data = {
-            "jsonrpc": "2.0",
-            "method": "updatePlayersTeams",
-            "params": {"eventId": settings.PANTHEON_TOURNAMENT_EVENT_ID, "teamNameMap": team_names},
-            "id": make_random_letters_and_digit_string(),
-        }
+    def _send_team_names_to_pantheon(self, registrations):
+        try:
+            team_names = []
+            for registration in registrations:
+                team_names.append({"player_id": registration.pantheon_id, "team_name": registration.team_name})
 
-        headers = {"X-Auth-Token": settings.PANTHEON_ADMIN_TOKEN}
+            pantheon_response = send_team_names_to_pantheon(
+                self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID, team_names
+            )
 
-        response = requests.post(settings.PANTHEON_OLD_API_URL, json=data, headers=headers)
-        if response.status_code == 500:
-            logger.error("Log add. Pantheon 500.")
-            return "Pantheon 500 error"
+            if not pantheon_response.success:
+                return _("Error adding teams names to pantheon.")
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
 
-        content = response.json()
-        if content.get("error"):
-            logger.error("Log add. Pantheon error. {}".format(content.get("error")))
-            return "Pantheon {} error".format(content.get("error"))
-
-        return "Готово"
+        return _("Teams names successfully added to pantheon.")
 
     def add_game_log(self, log_link):
         status = self.get_status()
@@ -710,12 +717,40 @@ class TournamentHandler:
                         settings.PANTHEON_ADMIN_ID,
                         self.tournament.is_majsoul_tournament,
                     )
+                    if self.tournament.is_command:
+                        self.send_player_team_names_to_pantheon(record)
             except Exception as e:
                 logger.error(e, exc_info=e)
                 transaction.set_rollback(True)
                 return _("Fatal error. Ask for administrator.")
 
         return _("Your participation in the tournament has been confirmed!")
+
+    def add_penalty_game(self, game_id):
+        try:
+            game = TournamentGame.objects.get(id=game_id, tournament_id=self.tournament.id)
+            if not game:
+                return _("Game does not exist.")
+
+            player_ids = [x.player.pantheon_id for x in game.game_players.all()]
+            pantheon_response = add_penalty_game(
+                self.tournament.new_pantheon_id, settings.PANTHEON_ADMIN_ID, player_ids
+            )
+            if not pantheon_response.hash:
+                return _("Error adding penalty to pantheon.")
+
+            player_names = self.get_players_message_string([x.player for x in game.game_players.all()])
+            self.create_notification(
+                TournamentNotification.GAME_PENALTY,
+                tg_ru_kwargs={"player_names": player_names},
+                discord_ru_kwargs={"player_names": player_names},
+                discord_en_kwargs={"player_names": player_names},
+            )
+            self.check_round_was_finished()
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return _("Fatal error. Ask for administrator.")
+        return _("Game penalty added successfully.")
 
     def prepare_next_round(self, reshuffleInPortal=True):
         status = self.get_status()

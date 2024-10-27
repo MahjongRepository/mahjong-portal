@@ -115,7 +115,8 @@ def add_user_to_new_pantheon(
         person_info["ms_friend_id"] = -1
 
     # todo: check update person errors
-    update_personal_info(person_info, adminPersonId, pantheonEventId)
+    # todo: temporary disable, because required person's email
+    # update_personal_info(person_info, adminPersonId, pantheonEventId)
     # todo: check register player error
     register_player(adminPersonId, pantheonEventId, record.pantheon_id)
 
@@ -151,6 +152,46 @@ def add_online_replay_through_pantheon(eventId, tenhouGameLink):
         request=pantheon_api.mimir_pb2.GamesAddOnlineReplayPayload(
             event_id=int(eventId),
             link=str(tenhouGameLink),
+        ),
+        server_path_prefix="/v2",
+    )
+
+
+def add_penalty_game(pantheonEventId, adminPersonId, playerIds):
+    client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
+
+    context = Context()
+    # todo pass pantheon event's owner token
+    context.set_header("X-Auth-Token", settings.PANTHEON_ADMIN_COOKIE)
+    context.set_header("X-Current-Event-Id", str(pantheonEventId))
+    context.set_header("X-Current-Person-Id", str(adminPersonId))
+
+    return client.AddPenaltyGame(
+        ctx=context,
+        request=pantheon_api.mimir_pb2.GamesAddPenaltyGamePayload(event_id=int(pantheonEventId), players=playerIds),
+        server_path_prefix="/v2",
+    )
+
+
+def send_team_names_to_pantheon(pantheonEventId, adminPersonId, teamMapping):
+    client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
+
+    context = Context()
+    # todo pass pantheon event's owner token
+    context.set_header("X-Auth-Token", settings.PANTHEON_ADMIN_COOKIE)
+    context.set_header("X-Current-Event-Id", str(pantheonEventId))
+    context.set_header("X-Current-Person-Id", str(adminPersonId))
+
+    teams = []
+    for team in teamMapping:
+        teams.append(
+            pantheon_api.atoms_pb2.TeamMapping(player_id=int(team["player_id"]), team_name=str(team["team_name"]))
+        )
+
+    return client.UpdatePlayersTeams(
+        ctx=context,
+        request=pantheon_api.mimir_pb2.EventsUpdatePlayersTeamsPayload(
+            event_id=int(pantheonEventId), ids_to_team_names=teams
         ),
         server_path_prefix="/v2",
     )

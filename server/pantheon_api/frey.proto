@@ -59,6 +59,10 @@ service Frey {
     returns (PersonsGetGroupsResponse);
   rpc GetEventAdmins(AccessGetEventAdminsPayload)
     returns (AccessGetEventAdminsResponse);
+  rpc GetEventReferees(AccessGetEventRefereesPayload)
+    returns (AccessGetEventRefereesResponse);
+  rpc GetMajsoulNicknames(PersonsGetMajsoulNicknamesPayload)
+    returns (PersonsGetMajsoulNicknamesResponse);
 
   // admin
   rpc GetSuperadminFlag(AccessGetSuperadminFlagPayload)
@@ -107,6 +111,10 @@ service Frey {
     returns (PersonsGetPersonsOfGroupResponse);
   rpc GetGroupsOfPerson(PersonsGetGroupsOfPersonPayload)
     returns (PersonsGetGroupsOfPersonResponse);
+  rpc GetNotificationsSettings(PersonsGetNotificationsSettingsPayload)
+    returns (PersonsGetNotificationsSettingsResponse);
+  rpc SetNotificationsSettings(PersonsSetNotificationsSettingsPayload)
+    returns (GenericSuccessResponse);
 
   // superadmin: this should be covered with some
   // bootstrap authenthication, TODO
@@ -225,6 +233,14 @@ message AccessGetEventAdminsPayload {
 
 message AccessGetEventAdminsResponse {
   repeated EventAdmin admins = 1;
+}
+
+message AccessGetEventRefereesPayload {
+  int32 event_id = 1;
+}
+
+message AccessGetEventRefereesResponse {
+  repeated EventReferee referees = 1;
 }
 
 message AccessGetSuperadminFlagPayload {
@@ -482,4 +498,32 @@ message PersonsGetGroupsResponse {
 }
 
 message DepersonalizePayload {
+}
+
+message PersonsGetMajsoulNicknamesPayload {
+  repeated int32 ids = 1;
+}
+
+message PersonsGetMajsoulNicknamesResponse {
+  repeated MajsoulPersonMapping mapping = 1;
+}
+
+message MajsoulPersonMapping {
+  int32 person_id = 1;
+  string nickname = 2;
+}
+
+message PersonsGetNotificationsSettingsPayload {
+  int32 person_id = 1;
+}
+
+message PersonsGetNotificationsSettingsResponse {
+  string telegram_id = 1;
+  string notifications = 2;
+}
+
+message PersonsSetNotificationsSettingsPayload {
+  int32 person_id = 1;
+  string telegram_id = 2;
+  string notifications = 3;
 }

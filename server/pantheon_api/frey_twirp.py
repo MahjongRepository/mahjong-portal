@@ -141,6 +141,20 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.AccessGetEventAdminsPayload"),
                 output=_sym_db.GetSymbol("common.AccessGetEventAdminsResponse"),
             ),
+            "GetEventReferees": Endpoint(
+                service_name="Frey",
+                name="GetEventReferees",
+                function=getattr(service, "GetEventReferees"),
+                input=_sym_db.GetSymbol("common.AccessGetEventRefereesPayload"),
+                output=_sym_db.GetSymbol("common.AccessGetEventRefereesResponse"),
+            ),
+            "GetMajsoulNicknames": Endpoint(
+                service_name="Frey",
+                name="GetMajsoulNicknames",
+                function=getattr(service, "GetMajsoulNicknames"),
+                input=_sym_db.GetSymbol("common.PersonsGetMajsoulNicknamesPayload"),
+                output=_sym_db.GetSymbol("common.PersonsGetMajsoulNicknamesResponse"),
+            ),
             "GetSuperadminFlag": Endpoint(
                 service_name="Frey",
                 name="GetSuperadminFlag",
@@ -301,6 +315,20 @@ class FreyServer(TwirpServer):
                 function=getattr(service, "GetGroupsOfPerson"),
                 input=_sym_db.GetSymbol("common.PersonsGetGroupsOfPersonPayload"),
                 output=_sym_db.GetSymbol("common.PersonsGetGroupsOfPersonResponse"),
+            ),
+            "GetNotificationsSettings": Endpoint(
+                service_name="Frey",
+                name="GetNotificationsSettings",
+                function=getattr(service, "GetNotificationsSettings"),
+                input=_sym_db.GetSymbol("common.PersonsGetNotificationsSettingsPayload"),
+                output=_sym_db.GetSymbol("common.PersonsGetNotificationsSettingsResponse"),
+            ),
+            "SetNotificationsSettings": Endpoint(
+                service_name="Frey",
+                name="SetNotificationsSettings",
+                function=getattr(service, "SetNotificationsSettings"),
+                input=_sym_db.GetSymbol("common.PersonsSetNotificationsSettingsPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "AddSystemWideRuleForPerson": Endpoint(
                 service_name="Frey",
@@ -479,6 +507,24 @@ class FreyClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.AccessGetEventAdminsResponse"),
+            **kwargs,
+        )
+
+    def GetEventReferees(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/GetEventReferees",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.AccessGetEventRefereesResponse"),
+            **kwargs,
+        )
+
+    def GetMajsoulNicknames(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/GetMajsoulNicknames",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.PersonsGetMajsoulNicknamesResponse"),
             **kwargs,
         )
 
@@ -686,6 +732,24 @@ class FreyClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.PersonsGetGroupsOfPersonResponse"),
+            **kwargs,
+        )
+
+    def GetNotificationsSettings(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/GetNotificationsSettings",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.PersonsGetNotificationsSettingsResponse"),
+            **kwargs,
+        )
+
+    def SetNotificationsSettings(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/SetNotificationsSettings",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             **kwargs,
         )
 

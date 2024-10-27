@@ -34,7 +34,9 @@ class TeamSeating:
     @staticmethod
     def prepare_team_sortition():
         confirm_players = TournamentPlayers.objects.filter(
-            tournament_id=settings.TOURNAMENT_ID, pantheon_id__isnull=False
+            tournament_id=settings.TOURNAMENT_ID,
+            pantheon_id__isnull=False,
+            is_disable=False,
         )
         confirm_players.update(team_number=None)
 
