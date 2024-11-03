@@ -247,14 +247,14 @@ class TournamentHandler:
     def send_team_names_to_pantheon(self):
         try:
             registrations = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
-            self._send_team_names_to_pantheon(registrations=registrations)
+            return self._send_team_names_to_pantheon(registrations=registrations)
         except Exception as e:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
 
     def send_player_team_names_to_pantheon(self, player):
         try:
-            self._send_team_names_to_pantheon(registrations=[player])
+            return self._send_team_names_to_pantheon(registrations=[player])
         except Exception as e:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
