@@ -170,9 +170,11 @@ class PortalAutoBot:
         return tournament_handler.add_game_log(log_link)
 
     @staticmethod
-    def add_penalty_game(game_id):
+    def add_penalty_game(requested_lang, game_id):
+        activate(requested_lang)
         return tournament_handler.add_penalty_game(game_id)
 
     @staticmethod
-    def send_team_names_to_pantheon():
+    def send_team_names_to_pantheon(requested_lang):
+        activate(requested_lang)
         return tournament_handler.send_team_names_to_pantheon()
