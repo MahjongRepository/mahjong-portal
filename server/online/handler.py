@@ -31,6 +31,7 @@ from online.models import (
     TournamentStatus,
 )
 from online.parser import TenhouParser
+from online.team_seating import TeamSeating
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import format_text
 from utils.new_pantheon import (
@@ -790,9 +791,11 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[int(confirmed_player.pantheon_id)] = confirmed_player
 
-            sortition = self.make_sortition(pantheon_ids, status.current_round)
-            # from online.team_seating import TeamSeating
-            # sortition = TeamSeating.get_seating_for_round(status.current_round)
+            sortition = (
+                self.tournament.is_command
+                if TeamSeating.get_seating_for_round(status.current_round)
+                else self.make_sortition(pantheon_ids, status.current_round)
+            )
 
             games = []
             final_sortition = []
