@@ -792,8 +792,8 @@ class TournamentHandler:
                 pantheon_ids[int(confirmed_player.pantheon_id)] = confirmed_player
 
             sortition = (
-                self.tournament.is_command
-                if TeamSeating.get_seating_for_round(status.current_round)
+                TeamSeating.get_seating_for_round(status.current_round)
+                if self.tournament.is_command
                 else self.make_sortition(pantheon_ids, status.current_round)
             )
 
