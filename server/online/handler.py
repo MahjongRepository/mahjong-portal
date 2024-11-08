@@ -31,6 +31,7 @@ from online.models import (
     TournamentStatus,
 )
 from online.parser import TenhouParser
+from online.team_seating import TeamSeating
 from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration
 from utils.general import format_text
 from utils.new_pantheon import (
@@ -247,14 +248,14 @@ class TournamentHandler:
     def send_team_names_to_pantheon(self):
         try:
             registrations = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
-            self._send_team_names_to_pantheon(registrations=registrations)
+            return self._send_team_names_to_pantheon(registrations=registrations)
         except Exception as e:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
 
     def send_player_team_names_to_pantheon(self, player):
         try:
-            self._send_team_names_to_pantheon(registrations=[player])
+            return self._send_team_names_to_pantheon(registrations=[player])
         except Exception as e:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
@@ -790,9 +791,11 @@ class TournamentHandler:
             for confirmed_player in confirmed_players:
                 pantheon_ids[int(confirmed_player.pantheon_id)] = confirmed_player
 
-            sortition = self.make_sortition(pantheon_ids, status.current_round)
-            # from online.team_seating import TeamSeating
-            # sortition = TeamSeating.get_seating_for_round(status.current_round)
+            sortition = (
+                TeamSeating.get_seating_for_round(status.current_round)
+                if self.tournament.is_command
+                else self.make_sortition(pantheon_ids, status.current_round)
+            )
 
             games = []
             final_sortition = []

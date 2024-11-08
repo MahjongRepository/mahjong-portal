@@ -361,7 +361,11 @@ def add_penalty_game(request):
     if not game_id:
         return HttpResponse(status=400)
 
-    message = bot.add_penalty_game(game_id)
+    requested_lang = request_data.get("lang")
+    if not requested_lang:
+        requested_lang = "ru"
+
+    message = bot.add_penalty_game(requested_lang, game_id)
     return JsonResponse({"message": message})
 
 
@@ -370,5 +374,9 @@ def add_penalty_game(request):
 @autobot_token_require
 @tournament_data_require
 def send_team_names_to_pantheon(request):
-    message = bot.send_team_names_to_pantheon()
+    request_data = json.loads(request.body)
+    requested_lang = request_data.get("lang")
+    if not requested_lang:
+        requested_lang = "ru"
+    message = bot.send_team_names_to_pantheon(requested_lang)
     return JsonResponse({"message": message})

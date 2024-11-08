@@ -45,6 +45,8 @@ class TeamSeating:
 
         teams = {}
         for x in confirm_players:
+            if not x.pantheon_id:
+                raise ValueError(f"Pantheon id missed for player ID[{x.id}]")
             if x.team_name not in teams:
                 teams[x.team_name] = []
 
