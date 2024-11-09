@@ -318,7 +318,6 @@ def admin_confirm_player(request):
 def get_tournament_status(request):
     request_data = json.loads(request.body)
     requested_lang = request_data.get("lang")
-    # todo: fix default ru locale
     if not requested_lang:
         requested_lang = "ru"
 

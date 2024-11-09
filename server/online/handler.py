@@ -75,7 +75,7 @@ class TournamentHandler:
         status = self.get_status()
 
         if not status.current_round:
-            confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
+            confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False).count()
             if status.registration_closed:
                 return _("Games will start at 7-30 AM UTC. Confirmed players: %(confirmed_players)s.") % {
                     "confirmed_players": confirmed_players
@@ -1515,4 +1515,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i : i + n]
+            yield items[i: i + n]
