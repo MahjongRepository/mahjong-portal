@@ -1083,8 +1083,14 @@ class TournamentHandler:
                         else:
                             current_player_username = round_player.ms_username
                         current_missed_players.append(current_player_username)
-                        current_missed_tg_usernames.append(round_player.telegram_username if round_player.telegram_username else current_player_username)
-                        current_missed_discord_usernames.append(round_player.discord_username if round_player.discord_username else current_player_username)
+                        current_missed_tg_usernames.append(
+                            round_player.telegram_username
+                            if round_player.telegram_username
+                            else current_player_username
+                        )
+                        current_missed_discord_usernames.append(
+                            round_player.discord_username if round_player.discord_username else current_player_username
+                        )
 
                     tg_formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
                     discord_formatted_missed_players = ", ".join(
@@ -1517,4 +1523,4 @@ class TournamentHandler:
     def _split_to_chunks(self, items):
         n = 4
         for i in range(0, len(items), n):
-            yield items[i: i + n]
+            yield items[i : i + n]
