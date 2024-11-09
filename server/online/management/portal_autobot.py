@@ -148,8 +148,8 @@ class PortalAutoBot:
         )
 
     @staticmethod
-    def game_finish(log_id, players, log_content, log_time):
-        activate("ru")
+    def game_finish(log_id, players, log_content, log_time, requested_lang):
+        activate(requested_lang)
 
         return tournament_handler.game_finish(log_id, players, log_content, log_time)
 
@@ -164,8 +164,8 @@ class PortalAutoBot:
         return tournament_handler.get_allowed_players()
 
     @staticmethod
-    def add_game_log(log_link):
-        activate("ru")
+    def add_game_log(log_link, requested_lang):
+        activate(requested_lang)
 
         return tournament_handler.add_game_log(log_link)
 

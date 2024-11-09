@@ -1082,7 +1082,7 @@ class TournamentHandler:
                             current_player_username = round_player.tenhou_username
                         else:
                             current_player_username = round_player.ms_username
-                        current_missed_players.append(current_player_username)
+                        current_missed_players.append(f"`{current_player_username}`")
                         current_missed_tg_usernames.append(
                             round_player.telegram_username
                             if round_player.telegram_username
@@ -1403,7 +1403,7 @@ class TournamentHandler:
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
             TournamentNotification.GAME_FAILED_NO_MEMBERS: _(
-                "Game №%(game_index)s: %(players)s. Is not started. Missed players %(missed_players)s. "
+                "Game №%(game_index): %(players). Is not started. Missed players %(missed_players). "
                 "The table was moved to the end of the queue. \n\n"
                 "%(missed_players_str) Missed players please enter the tournament lobby: %(lobby_link)."
             ),
