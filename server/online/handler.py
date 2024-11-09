@@ -227,7 +227,7 @@ class TournamentHandler:
         status.registration_closed = True
         status.save()
 
-        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False).count()
         current_config = self.tournament.online_config.get_config()
         self.create_notification(
             TournamentNotification.CONFIRMATION_ENDED,
@@ -1077,12 +1077,14 @@ class TournamentHandler:
                     current_missed_tg_usernames = []
                     current_missed_discord_usernames = []
                     for round_player in missed_round_players:
+                        current_player_username = None
                         if not self.tournament.is_majsoul_tournament:
-                            current_missed_players.append(round_player.tenhou_username)
+                            current_player_username = round_player.tenhou_username
                         else:
-                            current_missed_players.append(round_player.ms_username)
-                        current_missed_tg_usernames.append(round_player.telegram_username)
-                        current_missed_discord_usernames.append(round_player.discord_username)
+                            current_player_username = round_player.ms_username
+                        current_missed_players.append(current_player_username)
+                        current_missed_tg_usernames.append(round_player.telegram_username if round_player.telegram_username else current_player_username)
+                        current_missed_discord_usernames.append(round_player.discord_username if round_player.discord_username else current_player_username)
 
                     tg_formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
                     discord_formatted_missed_players = ", ".join(
