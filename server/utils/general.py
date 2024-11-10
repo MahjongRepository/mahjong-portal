@@ -103,5 +103,9 @@ def split_name(player_title):
 
 def format_text(message, kwargs):
     for key, value in kwargs.items():
-        message = message.replace("%%(%s)" % key, str(value))
+        formatted_template_key = "%%(%s)s" % key
+        if formatted_template_key in message:
+            message = message.replace(formatted_template_key, str(value))
+        else:
+            message = message.replace("%%(%s)" % key, str(value))
     return message
