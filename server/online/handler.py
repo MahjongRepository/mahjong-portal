@@ -75,7 +75,7 @@ class TournamentHandler:
         status = self.get_status()
 
         if not status.current_round:
-            confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
+            confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False).count()
             if status.registration_closed:
                 return _("Games will start at 7-30 AM UTC. Confirmed players: %(confirmed_players)s.") % {
                     "confirmed_players": confirmed_players
@@ -227,7 +227,7 @@ class TournamentHandler:
         status.registration_closed = True
         status.save()
 
-        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament).count()
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False).count()
         current_config = self.tournament.online_config.get_config()
         self.create_notification(
             TournamentNotification.CONFIRMATION_ENDED,
@@ -1077,12 +1077,20 @@ class TournamentHandler:
                     current_missed_tg_usernames = []
                     current_missed_discord_usernames = []
                     for round_player in missed_round_players:
+                        current_player_username = None
                         if not self.tournament.is_majsoul_tournament:
-                            current_missed_players.append(round_player.tenhou_username)
+                            current_player_username = round_player.tenhou_username
                         else:
-                            current_missed_players.append(round_player.ms_username)
-                        current_missed_tg_usernames.append(round_player.telegram_username)
-                        current_missed_discord_usernames.append(round_player.discord_username)
+                            current_player_username = round_player.ms_username
+                        current_missed_players.append(f"`{current_player_username}`")
+                        current_missed_tg_usernames.append(
+                            round_player.telegram_username
+                            if round_player.telegram_username
+                            else current_player_username
+                        )
+                        current_missed_discord_usernames.append(
+                            round_player.discord_username if round_player.discord_username else current_player_username
+                        )
 
                     tg_formatted_missed_players = ", ".join(["@{}".format(x) for x in current_missed_tg_usernames])
                     discord_formatted_missed_players = ", ".join(
@@ -1285,7 +1293,7 @@ class TournamentHandler:
                     return (
                         _(
                             "Confirmation stage has begun! "
-                            'To confirm your tournament participation send command "/me your tenhou nickname" '
+                            'To confirm your tournament participation send command "/me <your tenhou nickname>" '
                             "(registry important!). "
                             "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
                             "Useful links:\n"
@@ -1298,7 +1306,7 @@ class TournamentHandler:
                     return (
                         _(
                             "Confirmation stage has begun! "
-                            'To confirm your tournament participation send command "/me your mahjongsoul nickname" '
+                            'To confirm your tournament participation send command "/me <your mahjongsoul nickname>" '
                             "(registry important!). "
                             "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
                             "Useful links:\n"
@@ -1309,23 +1317,41 @@ class TournamentHandler:
                     )
 
             if destination == self.DISCORD_DESTINATION:
-                return (
-                    _(
-                        "Confirmation stage has begun! "
-                        "To confirm your tournament participation go to channel %(confirmation_channel)s "
-                        "and send your tenhou.net nickname. \n"
-                        "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
-                        "Useful links:\n"
-                        "- tournament lobby: %(lobby_link)s\n"
-                        "- tournament rating table: %(rating_link)s"
+                if not self.tournament.is_majsoul_tournament:
+                    return (
+                        _(
+                            "Confirmation stage has begun! "
+                            "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                            'and send command "/me <your tenhou nickname>" (registry important!). \n'
+                            "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
+                            "Useful links:\n"
+                            "- tournament lobby: %(lobby_link)s\n"
+                            "- tournament rating table: %(rating_link)s"
+                        )
+                        % kwargs
                     )
-                    % kwargs
-                )
+                else:
+                    return (
+                        _(
+                            "Confirmation stage has begun! "
+                            "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                            'and send command "/me <your mahjongsoul nickname>" (registry important!). \n'
+                            "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
+                            "Useful links:\n"
+                            "- tournament lobby: %(lobby_link)s\n"
+                            "- tournament rating table: %(rating_link)s"
+                        )
+                        % kwargs
+                    )
 
         if notification.notification_type == TournamentNotification.ROUND_FINISHED:
             if destination == TournamentHandler.DISCORD_DESTINATION:
-                kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.UTC).strftime("%H-%M")
-
+                if lang == "en":
+                    kwargs["break_end"] = status.end_break_time.replace(tzinfo=pytz.UTC).strftime("%H-%M")
+                else:
+                    kwargs["break_end"] = status.end_break_time.astimezone(pytz.timezone("Europe/Moscow")).strftime(
+                        "%H-%M"
+                    )
             if destination == TournamentHandler.TELEGRAM_DESTINATION:
                 kwargs["break_end"] = status.end_break_time.astimezone(pytz.timezone("Europe/Moscow")).strftime("%H-%M")
 
@@ -1381,7 +1407,7 @@ class TournamentHandler:
                 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to the end of the queue."
             ),
             TournamentNotification.GAME_FAILED_NO_MEMBERS: _(
-                "Game №%(game_index)s: %(players)s. Is not started. Missed players %(missed_players)s. "
+                "Game №%(game_index): %(players). Is not started. Missed players %(missed_players). "
                 "The table was moved to the end of the queue. \n\n"
                 "%(missed_players_str) Missed players please enter the tournament lobby: %(lobby_link)."
             ),

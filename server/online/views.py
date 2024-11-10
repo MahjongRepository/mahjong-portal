@@ -284,7 +284,11 @@ def game_finish(request):
     if not log_time:
         return HttpResponse(status=400)
 
-    confirm_message = bot.game_finish(log_id, players, log_content, log_time)
+    requested_lang = request_data.get("lang")
+    if not requested_lang:
+        requested_lang = "ru"
+
+    confirm_message = bot.game_finish(log_id, players, log_content, log_time, requested_lang)
     return JsonResponse({"message": confirm_message[0], "is_error": confirm_message[1]})
 
 
@@ -318,7 +322,6 @@ def admin_confirm_player(request):
 def get_tournament_status(request):
     request_data = json.loads(request.body)
     requested_lang = request_data.get("lang")
-    # todo: fix default ru locale
     if not requested_lang:
         requested_lang = "ru"
 
@@ -346,7 +349,11 @@ def add_game_log(request):
     if not log_link:
         return HttpResponse(status=400)
 
-    confirm_message = bot.add_game_log(log_link)
+    requested_lang = request_data.get("lang")
+    if not requested_lang:
+        requested_lang = "ru"
+
+    confirm_message = bot.add_game_log(log_link, requested_lang)
     return JsonResponse({"message": confirm_message[0], "is_error": confirm_message[1]})
 
 
