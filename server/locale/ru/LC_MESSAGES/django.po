@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-09 19:21+0000\n"
+"POT-Creation-Date: 2024-11-10 09:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -312,7 +312,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1356
+#: online/handler.py:1358
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -326,7 +326,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/handler.py:1364
+#: online/handler.py:1366
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -350,7 +350,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:1374
+#: online/handler.py:1376
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -367,7 +367,7 @@ msgstr ""
 "После завершения вашей игры лог игры будет сохранен автоматически. Если "
 "этого не произошло обратитесь к администратору."
 
-#: online/handler.py:1383
+#: online/handler.py:1385
 msgid ""
 "New game was added.\n"
 "\n"
@@ -400,7 +400,7 @@ msgstr ""
 "Всего игр завершено: %(finished)s/%(total)s."
 
 # python-format
-#: online/handler.py:1396
+#: online/handler.py:1398
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -411,7 +411,7 @@ msgstr ""
 "игроков. Игры начнутся через 10 минут в 10-30 МСК. Пожалуйста, пройдите в "
 "лобби %(lobby_link) и ждите начала игр (игры начнутся автоматически)."
 
-#: online/handler.py:1403
+#: online/handler.py:1405
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -420,7 +420,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:1406
+#: online/handler.py:1408
 msgid ""
 "Game №%(game_index): %(players). Is not started. Missed players "
 "%(missed_players). The table was moved to the end of the queue. \n"
@@ -436,16 +436,16 @@ msgstr ""
 "%(missed_players_str) Отсутствующие игроки зайдите (или перезайдите) в "
 "турнирное лобби: %(lobby_link)."
 
-#: online/handler.py:1410
+#: online/handler.py:1412
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: online/handler.py:1411
+#: online/handler.py:1413
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: online/handler.py:1412
+#: online/handler.py:1414
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -454,7 +454,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: online/handler.py:1414
+#: online/handler.py:1416
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -468,7 +468,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:1419
+#: online/handler.py:1421
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
