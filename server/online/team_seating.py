@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-import random
+from datetime import datetime
 
+import numpy as np
 import ujson as json
 from django.conf import settings
+from numpy.random import PCG64, SeedSequence
 
 from online.models import TournamentPlayers
 
@@ -30,6 +32,12 @@ class TeamSeating:
                 table[x] = data["team_players_map"][str(table[x])]
 
         return seating
+
+    @staticmethod
+    def _numpy_random_sortition(ids):
+        seed = datetime.now().microsecond
+        rg = np.random.Generator(PCG64(SeedSequence(seed)))
+        rg.shuffle(ids)
 
     @staticmethod
     def prepare_team_sortition():
@@ -86,7 +94,7 @@ class TeamSeating:
                 assert len(players_ids) == 4
 
                 # shuffle player winds
-                random.shuffle(players_ids)
+                TeamSeating._numpy_random_sortition(players_ids)
 
                 tables.append(players_ids)
 
