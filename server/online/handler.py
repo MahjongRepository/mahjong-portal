@@ -676,6 +676,7 @@ class TournamentHandler:
             if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
         else:
+            # у majsoul на разных серверах могут быть одинаковые никнеймы
             if TournamentPlayers.objects.filter(
                 ms_username__iexact=nickname, tournament=self.tournament, pantheon_id=registration.user.new_pantheon_id
             ).exists():
