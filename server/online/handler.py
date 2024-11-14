@@ -748,6 +748,8 @@ class TournamentHandler:
                 discord_en_kwargs={"player_names": player_names},
             )
             self.check_round_was_finished()
+        except TournamentGame.DoesNotExist:
+            return _("Game does not exist.")
         except Exception as e:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
