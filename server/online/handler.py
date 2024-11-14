@@ -1255,7 +1255,7 @@ class TournamentHandler:
             )
 
     def get_allowed_players(self):
-        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
         allowed_players = []
         for player in confirmed_players:
             allowed_players.append(
@@ -1266,6 +1266,7 @@ class TournamentHandler:
                     "ms_username": player.ms_username,
                     "ms_account_id": player.ms_account_id,
                     "telegram_username": player.telegram_username,
+                    "discord_username": player.discord_username,
                 }
             )
         return allowed_players
