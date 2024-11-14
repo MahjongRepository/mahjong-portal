@@ -40,7 +40,11 @@
                             </td>
                             <td>
                                 {% if tournament.is_online %}
-                                    {{ tournament.online_tournament_registrations.all.count }}
+                                    {% if tournament.is_majsoul_tournament %}
+                                        {{ tournament.ms_online_tournament_registrations.all.count }}
+                                    {% else %}
+                                        {{ tournament.online_tournament_registrations.all.count }}
+                                    {% endif %}
                                 {% else %}
                                     {{ tournament.tournament_registrations.all.count }}
                                 {% endif %}

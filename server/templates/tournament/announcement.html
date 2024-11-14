@@ -51,18 +51,20 @@
         {% if is_already_registered %}
             <p class="alert alert-success">{% trans 'You are already registered on the tournament!' %}</p>
         {% elif tournament.is_pantheon_registration %}
-            {% if not user.is_authenticated %}
-                <p>
-                    <a href="{% url 'do_login' %}?next={% url 'tournament_announcement' tournament.slug %}" class="btn btn-primary">{% trans 'Login through Pantheon to apply for tournament' %}</a>
-                </p>
-            {% else %}
-                <form class="form" style="max-width: none" action="{% url 'pantheon_tournament_registration' tournament.id %}" method="POST">
-                    {% csrf_token %}
+            {% if tournament.opened_registration %}
+                {% if not user.is_authenticated %}
+                    <p>
+                        <a href="{% url 'do_login' %}?next={% url 'tournament_announcement' tournament.slug %}" class="btn btn-primary">{% trans 'Login through Pantheon to apply for tournament' %}</a>
+                    </p>
+                {% else %}
+                    <form class="form" style="max-width: none" action="{% url 'pantheon_tournament_registration' tournament.id %}" method="POST">
+                        {% csrf_token %}
 
-                    {% bootstrap_form form %}
+                        {% bootstrap_form form %}
 
-                    <button type="submit" class="btn btn-primary">{% trans 'Apply for tournament through Pantheon account' %}</button>
-                </form>
+                        <button type="submit" class="btn btn-primary">{% trans 'Apply for tournament through Pantheon account' %}</button>
+                    </form>
+                {% endif %}
             {% endif %}
         {% elif tournament.opened_registration %}
             <h3 id="registration">{% trans 'Registration' %}</h3>
