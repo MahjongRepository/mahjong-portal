@@ -330,7 +330,10 @@ class TournamentRegistration(BaseModel):
 
     @property
     def full_name(self):
-        return "{} {}".format(self.last_name, self.first_name)
+        return "{} {}".format(self.get_safe_name(self.last_name), self.get_safe_name(self.first_name))
+
+    def get_safe_name(self, name):
+        return name if name else ""
 
 
 class OnlineTournamentRegistration(BaseModel):
@@ -366,7 +369,10 @@ class OnlineTournamentRegistration(BaseModel):
 
     @property
     def full_name(self):
-        return "{} {}".format(self.last_name, self.first_name)
+        return "{} {}".format(self.get_safe_name(self.last_name), self.get_safe_name(self.first_name))
+
+    def get_safe_name(self, name):
+        return name if name else ""
 
 
 class MsOnlineTournamentRegistration(BaseModel):
@@ -408,7 +414,10 @@ class MsOnlineTournamentRegistration(BaseModel):
 
     @property
     def full_name(self):
-        return "{} {}".format(self.last_name, self.first_name)
+        return "{} {}".format(self.get_safe_name(self.last_name), self.get_safe_name(self.first_name))
+
+    def get_safe_name(self, name):
+        return name if name else ""
 
 
 class TournamentApplication(BaseModel):
