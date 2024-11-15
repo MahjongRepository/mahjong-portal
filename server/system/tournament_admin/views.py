@@ -249,7 +249,10 @@ def remove_registration(request, tournament_id, registration_id, **kwargs):
 
     item_class = TournamentRegistration
     if tournament.is_online():
-        item_class = OnlineTournamentRegistration
+        if tournament.is_majsoul_tournament:
+            item_class = MsOnlineTournamentRegistration
+        else:
+            item_class = OnlineTournamentRegistration
 
     registration = get_object_or_404(item_class, tournament=tournament, id=registration_id)
     registration.delete()

@@ -676,6 +676,7 @@ class TournamentHandler:
             if TournamentPlayers.objects.filter(tenhou_username__iexact=nickname, tournament=self.tournament).exists():
                 return _('Nickname "%(nickname)s" was already confirmed for this tournament.') % {"nickname": nickname}
         else:
+            # у majsoul на разных серверах могут быть одинаковые никнеймы
             if TournamentPlayers.objects.filter(
                 ms_username__iexact=nickname, tournament=self.tournament, pantheon_id=registration.user.new_pantheon_id
             ).exists():
@@ -748,6 +749,8 @@ class TournamentHandler:
                 discord_en_kwargs={"player_names": player_names},
             )
             self.check_round_was_finished()
+        except TournamentGame.DoesNotExist:
+            return _("Game does not exist.")
         except Exception as e:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
@@ -1255,7 +1258,7 @@ class TournamentHandler:
             )
 
     def get_allowed_players(self):
-        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament)
+        confirmed_players = TournamentPlayers.objects.filter(tournament=self.tournament, is_disable=False)
         allowed_players = []
         for player in confirmed_players:
             allowed_players.append(
@@ -1266,6 +1269,7 @@ class TournamentHandler:
                     "ms_username": player.ms_username,
                     "ms_account_id": player.ms_account_id,
                     "telegram_username": player.telegram_username,
+                    "discord_username": player.discord_username,
                 }
             )
         return allowed_players
