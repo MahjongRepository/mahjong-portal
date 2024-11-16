@@ -687,6 +687,8 @@ class TournamentHandler:
         if not pantheon_id:
             pantheon_id = registration.player and registration.player.pantheon_id or None
         team_name = registration.notes
+        if team_name:
+            team_name = team_name.strip()
 
         tenhou_nickname = ""
         ms_nickname = None
