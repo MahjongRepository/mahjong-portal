@@ -2055,6 +2055,3 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
-
-#~ msgid "Announcement link"
-#~ msgstr "Ссылка на анонс турнира"
