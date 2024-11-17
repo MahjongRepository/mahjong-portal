@@ -3,6 +3,7 @@
 import logging
 
 from django.conf import settings
+from django.utils.translation import gettext as _
 from twirp.context import Context
 
 import pantheon_api.atoms_pb2
@@ -11,7 +12,6 @@ import pantheon_api.mimir_pb2
 from online.models import TournamentPlayers
 from pantheon_api.frey_twirp import FreyClient
 from pantheon_api.mimir_twirp import MimirClient
-from django.utils.translation import gettext as _
 
 logger = logging.getLogger()
 # todo move to settings
@@ -56,7 +56,7 @@ def get_pantheon_public_person_information(personId, email):
         "has_avatar": person.has_avatar,
         "ms_nickname": person.ms_nickname,
         "ms_account_id": person.ms_account_id,
-        "email": email
+        "email": email,
     }
 
 
@@ -79,8 +79,7 @@ def update_personal_info(person_info, adminPersonId, pantheonEventId):
             title=str(person_info["title"]),
             city=str(person_info["city"]),
             country=str(person_info["country"]),
-            has_avatar=bool(person_info["has_avatar"],
-            email=str(person_info["email"])),
+            has_avatar=bool(person_info["has_avatar"], email=str(person_info["email"])),
         ),
         server_path_prefix="/v2",
     )
@@ -107,7 +106,6 @@ def register_player(adminPersonId, pantheonEventId, pantheonId):
 def add_user_to_new_pantheon(
     record: TournamentPlayers, registration, pantheonEventId, adminPersonId, isMajsoulTournament
 ):
-
     if not registration.user or not registration.user.email:
         return _("There is no user email in the registration."), False
 
@@ -126,6 +124,7 @@ def add_user_to_new_pantheon(
     # todo: check register player error
     register_player(adminPersonId, pantheonEventId, record.pantheon_id)
     return "Success", True
+
 
 def upload_replay_through_pantheon(eventId, platformId, contentType, replayHash, logTime, content):
     client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
