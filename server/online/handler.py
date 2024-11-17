@@ -712,15 +712,18 @@ class TournamentHandler:
             )
 
             try:
-                # todo: deprecate non pantheon_registration for online tournament
-                if self.tournament.is_online():
-                    add_user_to_new_pantheon(
+                if self.tournament.is_online() and self.tournament.is_pantheon_registration:
+                    result = add_user_to_new_pantheon(
                         record,
                         registration,
                         self.tournament.new_pantheon_id,
                         settings.PANTHEON_ADMIN_ID,
                         self.tournament.is_majsoul_tournament,
                     )
+                    if not result[1]:
+                        transaction.set_rollback(True)
+                        return result[0]
+
                     if self.tournament.is_command:
                         self.send_player_team_names_to_pantheon(record)
             except Exception as e:
