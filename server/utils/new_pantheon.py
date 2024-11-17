@@ -3,6 +3,7 @@
 import logging
 
 from django.conf import settings
+from django.utils.translation import gettext as _
 from twirp.context import Context
 
 import pantheon_api.atoms_pb2
@@ -36,7 +37,7 @@ def get_new_pantheon_swiss_sortition(pantheonEventId, adminPersonId):
     )
 
 
-def get_pantheon_public_person_information(personId):
+def get_pantheon_public_person_information(personId, email):
     client = FreyClient(PRODUCTION_PANTHEON_USER_MANAGMENT_API)
 
     response = client.GetPersonalInfo(
@@ -55,6 +56,7 @@ def get_pantheon_public_person_information(personId):
         "has_avatar": person.has_avatar,
         "ms_nickname": person.ms_nickname,
         "ms_account_id": person.ms_account_id,
+        "email": email,
     }
 
 
@@ -77,7 +79,7 @@ def update_personal_info(person_info, adminPersonId, pantheonEventId):
             title=str(person_info["title"]),
             city=str(person_info["city"]),
             country=str(person_info["country"]),
-            has_avatar=bool(person_info["has_avatar"]),
+            has_avatar=bool(person_info["has_avatar"], email=str(person_info["email"])),
         ),
         server_path_prefix="/v2",
     )
@@ -104,7 +106,10 @@ def register_player(adminPersonId, pantheonEventId, pantheonId):
 def add_user_to_new_pantheon(
     record: TournamentPlayers, registration, pantheonEventId, adminPersonId, isMajsoulTournament
 ):
-    person_info = get_pantheon_public_person_information(record.pantheon_id)
+    if not registration.user or not registration.user.email:
+        return _("There is no user email in the registration."), False
+
+    person_info = get_pantheon_public_person_information(record.pantheon_id, registration.user.email)
 
     if isMajsoulTournament:
         person_info["ms_nickname"] = registration.ms_nickname
@@ -115,10 +120,10 @@ def add_user_to_new_pantheon(
         person_info["ms_friend_id"] = -1
 
     # todo: check update person errors
-    # todo: temporary disable, because required person's email
-    # update_personal_info(person_info, adminPersonId, pantheonEventId)
+    update_personal_info(person_info, adminPersonId, pantheonEventId)
     # todo: check register player error
     register_player(adminPersonId, pantheonEventId, record.pantheon_id)
+    return "Success", True
 
 
 def upload_replay_through_pantheon(eventId, platformId, contentType, replayHash, logTime, content):
