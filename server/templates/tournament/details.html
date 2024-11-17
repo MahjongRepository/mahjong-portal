@@ -11,6 +11,10 @@
 
         {% include 'tournament/_tournament_top_header.html' %}
 
+        <p>
+            <a href="{% url 'tournament_announcement' tournament.slug %}">{% trans 'Tournament announcement link' %}</a>
+        </p>
+
         {% if tournament.old_pantheon_id %}
             <p>
                 <a href="https://archive.riichimahjong.org/eid{{ tournament.old_pantheon_id }}/stat.html" target="_blank">{% trans 'Detailed tournament statistics' %}</a>

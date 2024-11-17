@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 07:23+0000\n"
+"POT-Creation-Date: 2024-11-17 07:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1496,7 +1496,11 @@ msgctxt "new tournament"
 msgid "Submit"
 msgstr "Отправить"
 
-#: templates/tournament/details.html:16 templates/tournament/details.html:24
+#: templates/tournament/details.html:14
+msgid "Tournament announcement link"
+msgstr "Ссылка на анонс турнира"
+
+#: templates/tournament/details.html:18 templates/tournament/details.html:26
 msgid "Detailed tournament statistics"
 msgstr "Детальная статистика по турниру"
 
@@ -2051,3 +2055,6 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
+
+#~ msgid "Announcement link"
+#~ msgstr "Ссылка на анонс турнира"
