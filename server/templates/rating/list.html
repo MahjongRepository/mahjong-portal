@@ -18,6 +18,15 @@
                 </div>
             </div>
         {% endfor %}
+        {% for rating in external_ratings %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ rating.name }}</h5>
+                    <p class="card-text">{{ rating.description }}</p>
+                    <a href="{% url 'rating' rating.slug %}" class="card-link">{% trans 'all results' %}</a>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.http import Http404, JsonResponse
+from django.http.response import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
@@ -8,7 +9,17 @@ from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 from rating.calculation.online import RatingOnlineCalculation
 from rating.calculation.rr import RatingRRCalculation
-from rating.models import Rating, RatingDate, RatingDelta, RatingResult, TournamentCoefficients
+from rating.models import (
+    ExternalRating,
+    ExternalRatingDate,
+    ExternalRatingDelta,
+    ExternalRatingTournament,
+    Rating,
+    RatingDate,
+    RatingDelta,
+    RatingResult,
+    TournamentCoefficients,
+)
 from rating.utils import get_latest_rating_date, parse_rating_date
 from settings.models import Country
 from tournament.models import Tournament
@@ -16,11 +27,55 @@ from tournament.models import Tournament
 
 def rating_list(request):
     ratings = Rating.objects.all().order_by("order")
+    external_ratings = ExternalRating.objects.filter(is_hidden=False).all().order_by("order")
 
-    return render(request, "rating/list.html", {"ratings": ratings, "page": "rating"})
+    return render(
+        request, "rating/list.html", {"ratings": ratings, "external_ratings": external_ratings, "page": "rating"}
+    )
+
+
+def is_default_raing(slug):
+    return slug.upper() in [x[1] for x in Rating.TYPES]
 
 
 def rating_details(request, slug, year=None, month=None, day=None, country_code=None):
+    is_default_rating = is_default_raing(slug)
+    if is_default_rating:
+        return get_rating_details(request, slug, year=year, month=month, day=day, country_code=country_code)
+    else:
+        rating = ExternalRating.objects.filter(slug=slug).first()
+        if rating:
+            return get_external_rating_details(
+                rating, request, slug, year=year, month=month, day=day, country_code=country_code
+            )
+    return HttpResponseNotFound()
+
+
+def get_external_rating_details(rating, request, slug, year=None, month=None, day=None, country_code=None):
+    today, rating_date, is_last = parse_rating_date(year, month, day)
+    if not rating_date:
+        today, rating_date = get_latest_rating_date(rating, is_external=True)
+    rating_results = ExternalRatingDelta.objects.filter(rating=rating, date=rating_date).order_by("-base_rank")
+    return render(
+        request,
+        "rating/external_details.html",
+        {
+            "rating": rating,
+            "rating_results": rating_results,
+            "rating_date": rating_date,
+            "is_last": is_last,
+            "page": "rating",
+            "countries_data": None,
+            "closest_date": None,
+            "country_code": country_code,
+            "today": today,
+            "is_ema": None,
+            "show_tournaments_numbers": False,
+        },
+    )
+
+
+def get_rating_details(request, slug, year=None, month=None, day=None, country_code=None):
     rating = get_object_or_404(Rating, slug=slug)
 
     today, rating_date, is_last = parse_rating_date(year, month, day)
@@ -101,12 +156,44 @@ def rating_details(request, slug, year=None, month=None, day=None, country_code=
 
 
 def rating_dates(request, slug):
-    rating = get_object_or_404(Rating, slug=slug)
-    rating_dates = RatingDate.objects.filter(rating=rating).order_by("-date")
+    is_default_rating = is_default_raing(slug)
+    if is_default_rating:
+        rating = get_object_or_404(Rating, slug=slug)
+        rating_dates = RatingDate.objects.filter(rating=rating).order_by("-date")
+    else:
+        rating = get_object_or_404(ExternalRating, slug=slug)
+        rating_dates = ExternalRatingDate.objects.filter(rating=rating).order_by("-date")
     return render(request, "rating/dates.html", {"rating": rating, "rating_dates": rating_dates})
 
 
+def get_external_rating_tournaments(request, rating):
+    tournament_ids = ExternalRatingTournament.objects.filter(rating=rating).values_list("tournament_id", flat=True)
+    tournaments = (
+        Tournament.public.filter(id__in=tournament_ids)
+        .prefetch_related("city")
+        .prefetch_related("country")
+        .order_by("-end_date")
+    )
+
+    return render(
+        request,
+        "rating/rating_tournaments.html",
+        {
+            "rating": rating,
+            "tournaments": tournaments,
+            "page": "rating",
+            "coefficients": None,
+            "top_tournament_ids": None,
+        },
+    )
+
+
 def rating_tournaments(request, slug):
+    is_default_rating = is_default_raing(slug)
+    if not is_default_rating:
+        rating = get_object_or_404(ExternalRating, slug=slug)
+        return get_external_rating_tournaments(request, rating)
+
     rating = get_object_or_404(Rating, slug=slug)
     today, rating_date = get_latest_rating_date(rating)
     tournament_ids = (

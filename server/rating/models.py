@@ -8,6 +8,51 @@ from tournament.models import Tournament
 from utils.general import get_tournament_coefficient
 
 
+class ExternalRating(BaseModel):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(null=True, blank=True, default="")
+    order = models.PositiveIntegerField(default=0)
+    is_hidden = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["id"]
+
+    def __unicode__(self):
+        return self.name
+
+
+class ExternalRatingTournament(BaseModel):
+    rating = models.ForeignKey(ExternalRating, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name="external_rating_delta")
+
+    def __unicode__(self):
+        return self.tournament.name
+
+
+class ExternalRatingDelta(BaseModel):
+    rating = models.ForeignKey(ExternalRating, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name="external_rating_delta")
+    is_active = models.BooleanField(default=False)
+    date = models.DateField(default=None, null=True, blank=True, db_index=True)
+    base_rank = models.FloatField(default=0.0)
+    place = models.PositiveIntegerField(default=None, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.player.full_name
+
+
+class ExternalRatingDate(BaseModel):
+    rating = models.ForeignKey(ExternalRating, on_delete=models.CASCADE)
+    date = models.DateField(db_index=True)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __unicode__(self):
+        return self.rating.__unicode__()
+
+
 class Rating(BaseModel):
     RR = 0
     EMA = 1

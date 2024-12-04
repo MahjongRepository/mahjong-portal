@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+    {{ rating.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="rating-details">
+        <h1>{{ rating.name }}</h1>
+
+        {% if rating.description %}
+            <p class="d-print-none">{{ rating.description }}</p>
+        {% endif %}
+
+        {% if rating_results %}
+            {% if is_last %}
+                <p class="d-print-none">
+                    <a href="{% url 'rating_tournaments' rating.slug %}">
+                        {% trans 'What tournaments were included in the rating?' %}
+                    </a>
+                </p>
+            {% endif %}
+
+            {% for country_data in countries_data %}
+                {% if is_last or not rating_date %}
+                    <a href="{% url 'rating' 'ema' country_data.country.code %}">
+                {% else %}
+                    <a href="{% url 'rating' 'ema' country_data.country.code rating_date.year rating_date.month rating_date.day %}">
+                {% endif %}
+                    <span class="badge bg-{% if country_data.country.code == country_code %}success{% else %}primary{% endif %}">
+                        {{ country_data.country }} ({{ country_data.players }})
+                    </span>
+                </a>
+            {% endfor %}
+
+            {% include 'rating/_external_results_table.html' %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{{ rating.description }}">
+    <meta property="og:description" content="{{ rating.description }}">
+{% endblock %}
