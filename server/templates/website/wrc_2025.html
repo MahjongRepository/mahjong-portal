@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load i18n humanize player_helper %}
+
+{% block title %}
+    {% trans 'World Riichi Championship 2025 Qualifications' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>{% trans 'World Riichi Championship 2025 Qualifications' %}</h2>
+        {% if LANGUAGE_CODE == 'ru' %}
+            <p>
+                С 1 по 6 июля 2025 года в Токио пройдёт Чемпионат Мира - 2025 World Riichi Championship
+                (<a href="https://wrc2025tokyo.com/en/" target="_blank">https://wrc2025tokyo.com/en/</a>)
+            </p>
+            <p>
+                Участники от России будут отбираться по российскому риичи-рейтингу RR.
+            </p>
+            <p>
+                Всем игрокам в топе рейтинга на 3 февраля* 2025 года
+                (в соответствии с количеством выделенных для России мест) будет предложено участие в ЧМ.
+                Если кто-то откажется от участия в ЧМ,
+                возможность поехать на турнир получит следующий по зафиксированному на 3 февраля рейтингу игрок.
+            </p>
+            <p>
+                Пожалуйста, пройдите опрос о возможности вашего участия:
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfLH6gEzHqNDeG4JaU4q0pfZANluIl6eMivRe5piC5pK74fzA/viewform?usp=dialog" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSfLH6gEzHqNDeG4JaU4q0pfZANluIl6eMivRe5piC5pK74fzA/viewform</a>
+            </p>
+            <p>
+                (* примечание: указан первый понедельник месяца.
+                1 и 2 февраля - выходные. В случае, если на 1 или 2 февраля будет поставлен RR-турнир,
+                его результаты будут учтены.)
+            </p>
+            <p>
+                В Чемпионате Мира смогут принять участие только те игроки,
+                которые в 2025 году будут являться действующими членами Федерации маджонга,
+                поэтому игрокам, которые планируют принять участие в Чемпионате Мира,
+                нужно вступить в Федерацию маджонга и оплатить членский взнос за 2025 год.
+            </p>
+            <p>
+                Информация о вступлении в Федерацию и оплате взноса: <a href="https://mahjong.click/ru/contacts/" target="_blank">https://mahjong.click/ru/contacts/</a>
+            </p>
+            <p>
+                Если вы уже являетесь членом Федерации маджонга, не забудьте оплатить взнос за 2025 год.
+            </p>
+            <p>
+                Пожалуйста, имейте в виду, что из-за политической ситуации в мире
+                и решений международного олимпийского комитета представители от РФ
+                могут выступать только под нейтральным флагом как независимые игроки.
+            </p>
+        {% else %}
+            <p>{% trans 'List of players sorted by RR rating (on 3st February 2025)' %}</p>
+        {% endif %}
+
+       <!-- {% include 'website/_qualification_2025_table.html' %}  -->
+
+    </div>
+{% endblock %}
+
+{% block meta_tags %}
+    <meta name="description" content="{% trans 'List of players sorted by RR rating (on 1st February 2020)' %}">
+    <meta property="og:description" content="{% trans 'List of players sorted by RR rating (on 1st February 2020)' %}">
+{% endblock %}

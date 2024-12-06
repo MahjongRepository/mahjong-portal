@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 07:41+0000\n"
+"POT-Creation-Date: 2024-12-06 16:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -571,12 +571,12 @@ msgid ""
 msgstr ""
 "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: templates/account/login.html:18 templates/base.html:169
+#: templates/account/login.html:18 templates/base.html:170
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
 
-#: templates/account/settings.html:6 templates/base.html:150
+#: templates/account/settings.html:6 templates/base.html:151
 msgid "User settings"
 msgstr "Настройки аккаунта"
 
@@ -619,7 +619,11 @@ msgstr "О рейтингах"
 msgid "WRC 2020"
 msgstr "WRC 2020"
 
-#: templates/base.html:75 templates/club/tournaments.html:5
+#: templates/base.html:72
+msgid "WRC 2025"
+msgstr "WRC 2025"
+
+#: templates/base.html:76 templates/club/tournaments.html:5
 #: templates/club/tournaments.html:27 templates/club/tournaments.html:34
 #: templates/club/tournaments.html:35 templates/player/rating_details.html:161
 #: templates/player/tournaments.html:5 templates/player/tournaments.html:15
@@ -632,106 +636,106 @@ msgstr "WRC 2020"
 msgid "Tournaments"
 msgstr "Турниры"
 
-#: templates/base.html:89 templates/club/list.html:10
+#: templates/base.html:90 templates/club/list.html:10
 #: templates/website/city.html:11
 msgid "Clubs"
 msgstr "Клубы"
 
-#: templates/base.html:96
+#: templates/base.html:97
 msgid "Online"
 msgstr "Онлайн"
 
-#: templates/base.html:99 templates/tenhou/tenhou_games.html:5
+#: templates/base.html:100 templates/tenhou/tenhou_games.html:5
 #: templates/tenhou/tenhou_games.html:15 templates/tenhou/tenhou_games.html:16
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: templates/base.html:100 templates/tenhou/tenhou_accounts.html:5
+#: templates/base.html:101 templates/tenhou/tenhou_accounts.html:5
 #: templates/tenhou/tenhou_accounts.html:10
 #: templates/tenhou/tenhou_accounts.html:79
 #: templates/tenhou/tenhou_accounts.html:80
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
 
-#: templates/base.html:101 templates/ms/ms_accounts.html:5
+#: templates/base.html:102 templates/ms/ms_accounts.html:5
 #: templates/ms/ms_accounts.html:10 templates/ms/ms_accounts.html:90
 #: templates/ms/ms_accounts.html:91
 msgid "Mahjong Soul accounts"
 msgstr "Аккаунты на Mahjong Soul"
 
-#: templates/base.html:102 templates/tenhou/games_history.html:5
+#: templates/base.html:103 templates/tenhou/games_history.html:5
 #: templates/tenhou/games_history.html:11
 #: templates/tenhou/games_history.html:106
 #: templates/tenhou/games_history.html:107
 msgid "Tenhou.net games history"
 msgstr "История игр на tenhou.net"
 
-#: templates/base.html:103 templates/tenhou/latest_yakumans.html:5
+#: templates/base.html:104 templates/tenhou/latest_yakumans.html:5
 #: templates/tenhou/latest_yakumans.html:10
 #: templates/tenhou/latest_yakumans.html:50
 #: templates/tenhou/latest_yakumans.html:51
 msgid "Yakumans from tenhou.net"
 msgstr "Якуманы с tenhou.net"
 
-#: templates/base.html:108 templates/tournament/application.html:88
+#: templates/base.html:109 templates/tournament/application.html:88
 #: tournament/models.py:477
 msgid "Other"
 msgstr "Другое"
 
-#: templates/base.html:111 templates/website/contacts_en.html:5
+#: templates/base.html:112 templates/website/contacts_en.html:5
 #: templates/website/contacts_ru.html:5
 msgid "Contacts"
 msgstr "Контакты"
 
-#: templates/base.html:112 templates/tournament/application.html:5
+#: templates/base.html:113 templates/tournament/application.html:5
 #: templates/tournament/application.html:10
 #: templates/tournament/application.html:106
 #: templates/tournament/application.html:107
 msgid "Tournament application"
 msgstr "Заявка на турнир"
 
-#: templates/base.html:113 templates/website/championships.html:10
+#: templates/base.html:114 templates/website/championships.html:10
 msgid "Championships"
 msgstr "Чемпионаты"
 
-#: templates/base.html:114
+#: templates/base.html:115
 msgid "Yoroshiku League 2"
 msgstr ""
 
-#: templates/base.html:145
+#: templates/base.html:146
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:146 templates/system_index.html:10
+#: templates/base.html:147 templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/base.html:152
+#: templates/base.html:153
 msgid "My profile"
 msgstr "Мой профиль"
 
-#: templates/base.html:156
+#: templates/base.html:157
 msgid "My tournaments"
 msgstr "Мои турниры"
 
-#: templates/base.html:160
+#: templates/base.html:161
 msgid "EMA players"
 msgstr "EMA игроки"
 
-#: templates/base.html:163
+#: templates/base.html:164
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:208 templates/base.html:211
+#: templates/base.html:209 templates/base.html:212
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/base.html:221
+#: templates/base.html:222
 msgid "source code"
 msgstr "исходный код"
 
-#: templates/base.html:226
+#: templates/base.html:227
 msgid "about server"
 msgstr "о сервере"
 
@@ -765,6 +769,7 @@ msgstr "Сортировка:"
 #: templates/tournament_admin/managed_tournaments.html:23
 #: templates/tournament_admin/new_tournaments.html:17
 #: templates/tournament_admin/tournament_manage.html:112
+#: templates/website/_qualification_2025_table.html:9
 #: templates/website/_qualification_table.html:9 templates/website/city.html:16
 #: templates/website/city.html:46
 msgid "Name"
@@ -1010,6 +1015,7 @@ msgstr "Ранг"
 #: templates/ms/ms_accounts.html:29 templates/player/_changes_table.html:9
 #: templates/player/ms.html:27 templates/player/ms.html:66
 #: templates/player/tenhou.html:89 templates/rating/_results_table.html:20
+#: templates/website/_qualification_2025_table.html:13
 #: templates/website/_qualification_table.html:13
 msgid "Points"
 msgstr "Очки"
@@ -1230,6 +1236,7 @@ msgstr "Турниров"
 
 #: templates/rating/_results_table.html:24
 #: templates/tournament/_tournament_results.html:18
+#: templates/website/_qualification_2025_table.html:14
 #: templates/website/_qualification_table.html:14
 msgctxt "location"
 msgid "From"
@@ -1496,11 +1503,11 @@ msgctxt "new tournament"
 msgid "Submit"
 msgstr "Отправить"
 
-#: templates/tournament/details.html:14
+#: templates/tournament/details.html:15
 msgid "Tournament announcement link"
 msgstr "Ссылка на анонс турнира"
 
-#: templates/tournament/details.html:18 templates/tournament/details.html:26
+#: templates/tournament/details.html:20 templates/tournament/details.html:28
 msgid "Detailed tournament statistics"
 msgstr "Детальная статистика по турниру"
 
@@ -1676,11 +1683,14 @@ msgstr "Пока нет регистраций"
 msgid "Success!"
 msgstr "Успех!"
 
+#: templates/website/_qualification_2025_table.html:8
+#: templates/website/_qualification_2025_table.html:21
 #: templates/website/_qualification_table.html:8
 #: templates/website/_qualification_table.html:21
 msgid "is going to participate"
 msgstr "собирается участвовать"
 
+#: templates/website/_qualification_2025_table.html:11
 #: templates/website/_qualification_table.html:11
 msgid "MF"
 msgstr "Состоит в ФМ"
@@ -1764,9 +1774,18 @@ msgid "World Riichi Championship 2020 Qualifications"
 msgstr "Отбор на Чемпионат Мира 2020 года"
 
 #: templates/website/wrc_2020.html:67 templates/website/wrc_2020.html:76
-#: templates/website/wrc_2020.html:77
+#: templates/website/wrc_2020.html:77 templates/website/wrc_2025.html:61
+#: templates/website/wrc_2025.html:62
 msgid "List of players sorted by RR rating (on 1st February 2020)"
 msgstr "Рейтинг RR на 1 февраля 2020 года."
+
+#: templates/website/wrc_2025.html:5 templates/website/wrc_2025.html:10
+msgid "World Riichi Championship 2025 Qualifications"
+msgstr "Отбор на Чемпионат Мира 2025 года"
+
+#: templates/website/wrc_2025.html:52
+msgid "List of players sorted by RR rating (on 3st February 2025)"
+msgstr "Рейтинг RR на 3 февраля 2025 года."
 
 #: templates/wiki/home.html:5
 msgid "Wiki"
@@ -1992,7 +2011,7 @@ msgstr "Регистрация принята!"
 msgid "Please, allow to store personal data"
 msgstr "Пожалуйста, разрешите сохранять персональные данные"
 
-#: utils/new_pantheon.py:112
+#: utils/new_pantheon.py:111
 msgid "There is no user email in the registration."
 msgstr "В регистрации не найдена почта пользователя."
 

@@ -16,6 +16,7 @@ from website.views import (
     search,
     server,
     wrc_qualification_2020,
+    wrc_qualification_2025,
 )
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     url(r"^iormc/2018/$", iormc_2018, name="iormc_2018"),
     url(r"^ermc/2019/$", ermc_qualification_2019, name="ermc_qualification_2019"),
     url(r"^wrc/2020/$", wrc_qualification_2020, name="wrc_qualification_2020"),
+    url(r"^wrc/2025/$", wrc_qualification_2025, name="wrc_qualification_2025"),
     url(r"^rating/faq/$", rating_faq, name="rating_faq"),
     url(r"^contacts/$", contacts, name="contacts"),
     url(r"^championships/$", championships, name="championships"),
