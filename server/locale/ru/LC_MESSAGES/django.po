@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-06 16:48+0000\n"
+"POT-Creation-Date: 2024-12-08 19:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,6 +61,7 @@ msgid "Average place (descending)"
 msgstr "Среднее место (по убыванию)"
 
 #: club/views.py:40 templates/club/details.html:49
+#: templates/rating/_external_results_table.html:17
 #: templates/rating/_results_table.html:17
 #: templates/tournament/_tournament_results.html:15
 #: utils/tenhou/yakuman_list.py:18
@@ -762,6 +763,7 @@ msgid "Sorting:"
 msgstr "Сортировка:"
 
 #: templates/club/details.html:47 templates/club/list.html:19
+#: templates/rating/_external_results_table.html:14
 #: templates/rating/_results_table.html:14
 #: templates/tournament/_tournament_results.html:8
 #: templates/tournament/_tournaments_table.html:8
@@ -1014,7 +1016,9 @@ msgstr "Ранг"
 
 #: templates/ms/ms_accounts.html:29 templates/player/_changes_table.html:9
 #: templates/player/ms.html:27 templates/player/ms.html:66
-#: templates/player/tenhou.html:89 templates/rating/_results_table.html:20
+#: templates/player/tenhou.html:89
+#: templates/rating/_external_results_table.html:20
+#: templates/rating/_results_table.html:20
 #: templates/website/_qualification_2025_table.html:13
 #: templates/website/_qualification_table.html:13
 msgid "Points"
@@ -1184,12 +1188,14 @@ msgstr "Ханчаны"
 
 #: templates/player/rating_changes.html:17
 #: templates/player/rating_details.html:116
+#: templates/rating/_external_results_table.html:6
 #: templates/rating/_results_table.html:6
 msgid "Rating date"
 msgstr "Рейтинг на"
 
 #: templates/player/rating_changes.html:17
 #: templates/player/rating_details.html:116
+#: templates/rating/_external_results_table.html:6
 #: templates/rating/_results_table.html:6
 msgid "latest changes"
 msgstr "последние изменения"
@@ -1213,7 +1219,8 @@ msgstr "Показать"
 
 #: templates/player/rating_details.html:148
 #: templates/player/rating_details.html:152 templates/rating/list.html:17
-#: templates/tournament/announcement.html:33 templates/website/home.html:25
+#: templates/rating/list.html:26 templates/tournament/announcement.html:33
+#: templates/website/home.html:25
 msgid "all results"
 msgstr "все результаты"
 
@@ -1225,15 +1232,18 @@ msgstr "График ранга"
 msgid "All time"
 msgstr "За всё время"
 
+#: templates/rating/_external_results_table.html:7
 #: templates/rating/_results_table.html:7
 msgid "All dates"
 msgstr "Все даты"
 
+#: templates/rating/_external_results_table.html:22
 #: templates/rating/_results_table.html:22
 msgctxt "tournaments number"
 msgid "Tournaments"
 msgstr "Турниров"
 
+#: templates/rating/_external_results_table.html:24
 #: templates/rating/_results_table.html:24
 #: templates/tournament/_tournament_results.html:18
 #: templates/website/_qualification_2025_table.html:14
@@ -1246,7 +1256,7 @@ msgstr "Откуда"
 msgid "current rating"
 msgstr "текущий рейтинг"
 
-#: templates/rating/details.html:20
+#: templates/rating/details.html:20 templates/rating/external_details.html:20
 msgid "What tournaments were included in the rating?"
 msgstr "Список турниров влияющих на этот рейтинг"
 
@@ -1254,7 +1264,7 @@ msgstr "Список турниров влияющих на этот рейти�
 msgid "ratings description"
 msgstr "описание рейтингов"
 
-#: templates/rating/list.html:25 templates/rating/list.html:26
+#: templates/rating/list.html:34 templates/rating/list.html:35
 msgid "All available ratings"
 msgstr "Все доступные рейтинги"
 
