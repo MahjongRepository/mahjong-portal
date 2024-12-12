@@ -206,7 +206,7 @@ def aggregate_tournaments(tournaments, pantheon_type, result):
     for tournament in tournaments:
         result.append(
             {
-                "type": pantheon_type,
+                "pantheon_type": pantheon_type,
                 "pantheon_id": extract_pantheon_id(tournament, pantheon_type),
                 "name": tournament.name,
             }
