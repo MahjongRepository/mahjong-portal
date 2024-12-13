@@ -183,7 +183,7 @@ def finished_tournaments_api(request):
     new_pantheon_tournaments = []
     old_pantheon_tournaments = []
     for tournament in tournaments:
-        tournament_results_count = TournamentResult.objects.filter(tournament=tournament.id).count()
+        tournament_results_count = TournamentResult.objects.filter(tournament=tournament).count()
         if tournament_results_count > 0:
             if tournament.new_pantheon_id is not None and tournament.old_pantheon_id is not None:
                 raise RuntimeError(f"Found not valid tournament with id {tournament.id}")

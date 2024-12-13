@@ -70,7 +70,7 @@ def get_external_rating_details(rating, request, slug, year=None, month=None, da
             "country_code": country_code,
             "today": today,
             "is_ema": None,
-            "show_tournaments_numbers": False,
+            "show_tournaments_numbers": True,
         },
     )
 

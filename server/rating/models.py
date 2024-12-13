@@ -37,6 +37,8 @@ class ExternalRatingDelta(BaseModel):
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
     base_rank = models.FloatField(default=0.0)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
+    tournament_numbers = models.PositiveIntegerField(null=True, blank=True)
+    last_game_date = models.DateField(default=None, null=True, blank=True, db_index=True)
 
     def __unicode__(self):
         return self.player.full_name

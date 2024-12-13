@@ -2,7 +2,6 @@
 import ujson
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.db.models import Q
 from django.utils import timezone
 
 from player.models import Player
@@ -62,6 +61,8 @@ class Command(BaseCommand):
                                     base_rank=ts_player["rating"],
                                     is_active=True,
                                     place=place,
+                                    tournament_numbers=ts_player["game_count"],
+                                    last_game_date=ts_player["last_game_date"],
                                 )
                             )
                             place = place + 1
@@ -73,15 +74,16 @@ class Command(BaseCommand):
                 print("Trueskill players updated!")
 
                 tournaments = []
-                for tournament_id in trueskill_map["tournament_ids"]:
+                for tournament_id_map in trueskill_map["tournament_ids"]:
                     try:
-                        tournament = Tournament.objects.get(
-                            Q(old_pantheon_id=tournament_id) | Q(new_pantheon_id=tournament_id)
-                        )
+                        tournament_id = tournament_id_map["pantheon_id"]
+                        try:
+                            tournament = Tournament.objects.get(new_pantheon_id=str(tournament_id))
+                        except Tournament.DoesNotExist:
+                            tournament = Tournament.objects.get(old_pantheon_id=str(tournament_id))
                         tournaments.append(ExternalRatingTournament(rating=rating, tournament=tournament))
-
-                    except (Tournament.DoesNotExist, Tournament.MultipleObjectsReturned):
-                        pass
+                    except (Tournament.DoesNotExist, Tournament.MultipleObjectsReturned) as e:
+                        raise e
                 if tournaments:
                     ExternalRatingTournament.objects.bulk_create(tournaments)
                 print("Trueskill tournaments updated!")
