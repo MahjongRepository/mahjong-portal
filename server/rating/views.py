@@ -169,7 +169,7 @@ def rating_dates(request, slug):
 def get_external_rating_tournaments(request, rating):
     tournament_ids = ExternalRatingTournament.objects.filter(rating=rating).values_list("tournament_id", flat=True)
     tournaments = (
-        Tournament.public.filter(id__in=tournament_ids)
+        Tournament.objects.filter(id__in=tournament_ids)
         .prefetch_related("city")
         .prefetch_related("country")
         .order_by("-end_date")

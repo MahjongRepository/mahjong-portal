@@ -7,10 +7,18 @@ from django.utils import timezone
 from player.models import Player
 from rating.models import ExternalRating, ExternalRatingDate, ExternalRatingDelta, ExternalRatingTournament
 from tournament.models import Tournament
+from website.views import NEW_PANTHEON_TYPE, OLD_PANTHEON_TYPE
 
 
 def get_date_string():
     return timezone.now().strftime("%H:%M:%S")
+
+
+def get_tournament(pantheon_type, tournament_id):
+    if NEW_PANTHEON_TYPE == pantheon_type:
+        return Tournament.objects.get(new_pantheon_id=str(tournament_id))
+    if OLD_PANTHEON_TYPE == pantheon_type:
+        return Tournament.objects.get(old_pantheon_id=str(tournament_id))
 
 
 class Command(BaseCommand):
@@ -74,16 +82,21 @@ class Command(BaseCommand):
                 print("Trueskill players updated!")
 
                 tournaments = []
+                ts_tournaments_count = len(trueskill_map["tournament_ids"])
+                tournaments_count = 0
                 for tournament_id_map in trueskill_map["tournament_ids"]:
                     try:
                         tournament_id = tournament_id_map["pantheon_id"]
-                        try:
-                            tournament = Tournament.objects.get(new_pantheon_id=str(tournament_id))
-                        except Tournament.DoesNotExist:
-                            tournament = Tournament.objects.get(old_pantheon_id=str(tournament_id))
+                        tournament_pantheon_type = tournament_id_map["pantheon_type"]
+                        tournament = get_tournament(tournament_pantheon_type, tournament_id)
                         tournaments.append(ExternalRatingTournament(rating=rating, tournament=tournament))
+                        tournaments_count += 1
                     except (Tournament.DoesNotExist, Tournament.MultipleObjectsReturned) as e:
                         raise e
+
+                if tournaments_count != ts_tournaments_count:
+                    raise AssertionError("Not all tournaments found!")
+
                 if tournaments:
                     ExternalRatingTournament.objects.bulk_create(tournaments)
                 print("Trueskill tournaments updated!")
@@ -92,5 +105,6 @@ class Command(BaseCommand):
 
         except Exception as e:
             print(e)
+            raise e
 
         print("{0}: End trueskill rating update".format(get_date_string()))
