@@ -21,31 +21,53 @@ def get_tournament(pantheon_type, tournament_id):
         return Tournament.objects.get(old_pantheon_id=str(tournament_id))
 
 
+def get_rating_by_type(type):
+    if ExternalRating.TYPES[ExternalRating.TRUESKILL][1] == type.upper():
+        return ExternalRating.objects.get_or_create(
+            name="Trueskill",
+            name_en="Trueskill rating (beta version)",
+            name_ru="Trueskill рейтинг (бета версия)",
+            slug="trueskill",
+            description="Trueskill rating",
+            description_en="Trueskill rating system for players developed by "
+            "Microsoft Research. Link for more information https://trueskill.org/",
+            description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
+            "Ссылка на подробное описание https://trueskill.org/",
+            type=ExternalRating.TRUESKILL,
+        )[0]
+    if ExternalRating.TYPES[ExternalRating.ONLINE_TRUESKILL][1] == type.upper():
+        return ExternalRating.objects.get_or_create(
+            name="Online Trueskill",
+            name_en="Online Trueskill rating (beta version)",
+            name_ru="Online Trueskill рейтинг (бета версия)",
+            slug="online-trueskill",
+            description="Online Trueskill rating",
+            description_en="Trueskill rating system for players developed by "
+            "Microsoft Research. Link for more information https://trueskill.org/",
+            description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
+            "Ссылка на подробное описание https://trueskill.org/",
+            type=ExternalRating.ONLINE_TRUESKILL,
+        )[0]
+    raise AssertionError("Passed type not allowed!")
+
+
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("trueskill_file", type=str)
+        parser.add_argument("type", type=str)
 
     def handle(self, *args, **options):
         print("{0}: Start trueskill rating update".format(get_date_string()))
 
         trueskill_file = options["trueskill_file"]
+        trueskill_type = options["type"]
         with open(trueskill_file, "r") as f:
             trueskill_map = ujson.loads(f.read())
 
         try:
             with transaction.atomic():
                 now = timezone.now().date()
-                rating = ExternalRating.objects.get_or_create(
-                    name="Trueskill",
-                    name_en="Trueskill rating (beta version)",
-                    name_ru="Trueskill рейтинг (бета версия)",
-                    slug="trueskill",
-                    description="Trueskill rating",
-                    description_en="Trueskill rating system for players developed by "
-                    "Microsoft Research. Link for more information https://trueskill.org/",
-                    description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
-                    "Ссылка на подробное описание https://trueskill.org/",
-                )[0]
+                rating = get_rating_by_type(trueskill_type)
                 print("Erasing dates...")
                 ExternalRatingDelta.objects.filter(rating=rating, date=now).delete()
                 ExternalRatingDate.objects.filter(rating=rating, date=now).delete()

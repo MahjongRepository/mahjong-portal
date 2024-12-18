@@ -9,11 +9,17 @@ from utils.general import get_tournament_coefficient
 
 
 class ExternalRating(BaseModel):
+    TRUESKILL = 0
+    ONLINE_TRUESKILL = 1
+
+    TYPES = [[TRUESKILL, "TRUESKILL"], [ONLINE_TRUESKILL, "ONLINE_TRUESKILL"]]
+
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     description = models.TextField(null=True, blank=True, default="")
     order = models.PositiveIntegerField(default=0)
     is_hidden = models.BooleanField(default=True)
+    type = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
 
     class Meta:
         ordering = ["id"]
