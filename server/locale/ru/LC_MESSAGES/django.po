@@ -1245,15 +1245,15 @@ msgstr "Больше 50 игр"
 
 #: templates/rating/_external_results_table.html:33
 msgid "last game 1y. ago."
-msgstr "последняя игра 1 год назад"
+msgstr "последняя игра больше года назад"
 
 #: templates/rating/_external_results_table.html:41
 msgid "last game 2y. ago."
-msgstr "последняя игра 2 года назад"
+msgstr "последняя игра больше 2 лет назад"
 
 #: templates/rating/_external_results_table.html:49
 msgid "last game 3y. ago."
-msgstr "последняя игра 3 года назад"
+msgstr "последняя игра больше 3 лет назад"
 
 #: templates/rating/_external_results_table.html:57
 #: templates/rating/_results_table.html:7
