@@ -89,7 +89,7 @@ def get_external_rating_details(rating, request, year=None, month=None, day=None
             last_game_date_filter = rating_date - relativedelta(years=3)
         rating_results = (
             ExternalRatingDelta.objects.filter(
-                rating=rating, date=rating_date, last_game_date__lte=last_game_date_filter
+                rating=rating, date=rating_date, last_game_date__gte=last_game_date_filter
             )
             .prefetch_related("player")
             .order_by("-base_rank")
