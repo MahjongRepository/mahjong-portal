@@ -15,11 +15,17 @@ def get_date_string():
 
 
 def get_tournament(pantheon_type, tournament_id):
-    if NEW_PANTHEON_TYPE == pantheon_type:
-        return Tournament.objects.get(new_pantheon_id=str(tournament_id))
-    if OLD_PANTHEON_TYPE == pantheon_type:
-        return Tournament.objects.get(old_pantheon_id=str(tournament_id))
-
+    try:
+        if NEW_PANTHEON_TYPE == pantheon_type:
+            return Tournament.objects.get(new_pantheon_id=str(tournament_id))
+        if OLD_PANTHEON_TYPE == pantheon_type:
+            return Tournament.objects.get(old_pantheon_id=str(tournament_id))
+    except Tournament.DoesNotExist as e:
+        print(f"Tournament [type={pantheon_type} id={tournament_id}] not found")
+        raise e
+    except Tournament.MultipleObjectsReturned as e:
+        print(f"found not unique Tournament [type={pantheon_type} id={tournament_id}]")
+        raise e
 
 def get_rating_by_type(type):
     if ExternalRating.TYPES[ExternalRating.TRUESKILL][1] == type.upper():
