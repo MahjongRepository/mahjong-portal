@@ -27,6 +27,7 @@ def get_tournament(pantheon_type, tournament_id):
         print(f"found not unique Tournament [type={pantheon_type} id={tournament_id}]")
         raise e
 
+
 def get_rating_by_type(type):
     if ExternalRating.TYPES[ExternalRating.TRUESKILL][1] == type.upper():
         return ExternalRating.objects.get_or_create(
