@@ -21,21 +21,8 @@
                     </a>
                 </p>
             {% endif %}
-
-            {% for country_data in countries_data %}
-                {% if is_last or not rating_date %}
-                    <a href="{% url 'rating' 'ema' country_data.country.code %}">
-                {% else %}
-                    <a href="{% url 'rating' 'ema' country_data.country.code rating_date.year rating_date.month rating_date.day %}">
-                {% endif %}
-                    <span class="badge bg-{% if country_data.country.code == country_code %}success{% else %}primary{% endif %}">
-                        {{ country_data.country }} ({{ country_data.players }})
-                    </span>
-                </a>
-            {% endfor %}
-
-            {% include 'rating/_external_results_table.html' %}
         {% endif %}
+            {% include 'rating/_external_results_table.html' %}
     </div>
 {% endblock %}
 

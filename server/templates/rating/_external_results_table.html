@@ -1,5 +1,55 @@
 {% load i18n %}
 
+<div class="filters">
+    {% if is_last == True %}
+        <a href="{% url 'rating' rating.slug %}">
+    {% else %}
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.all_results %}">
+    {% endif %}
+        <span class="badge bg-{% if all_results %}primary{% else %}success{% endif %}">{% trans 'all results' %}</span>
+    </a>
+
+    {% if is_last == True %}
+        <a href="{% url 'rating_filter' rating.slug ext_filters.more_20_games %}">
+    {% else %}
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_20_games %}">
+    {% endif %}
+            <span class="badge bg-{% if not more_20_games %}success{% else %}primary{% endif %}">{% trans '>20 games' %}</span>
+        </a>
+
+    {% if is_last == True %}
+        <a href="{% url 'rating_filter' rating.slug ext_filters.more_50_games %}">
+    {% else %}
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_50_games %}">
+    {% endif %}
+            <span class="badge bg-{% if not more_50_games %}success{% else %}primary{% endif %}">{% trans '>50 games' %}</span>
+        </a>
+
+    {% if is_last == True %}
+        <a href="{% url 'rating_filter' rating.slug ext_filters.last_game_year %}">
+    {% else %}
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_year %}">
+    {% endif %}
+            <span class="badge bg-{% if not last_game_year %}success{% else %}primary{% endif %}">{% trans 'last game 1y. ago.' %}</span>
+        </a>
+
+    {% if is_last == True %}
+        <a href="{% url 'rating_filter' rating.slug ext_filters.last_game_two_years %}">
+    {% else %}
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_two_years %}">
+    {% endif %}
+            <span class="badge bg-{% if not last_game_two_years %}success{% else %}primary{% endif %}">{% trans 'last game 2y. ago.' %}</span>
+        </a>
+
+    {% if is_last == True %}
+        <a href="{% url 'rating_filter' rating.slug ext_filters.last_game_three_years %}">
+    {% else %}
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_three_years %}">
+    {% endif %}
+            <span class="badge bg-{% if not last_game_three_years %}success{% else %}primary{% endif %}">{% trans 'last game 3y. ago.' %}</span>
+        </a>
+</div>
+
 <div class="table-responsive-sm">
     <div class="text-end mb-0 {% if countries_data %}mt-3{% endif %}">
         <p class="small mb-0">
@@ -18,16 +68,21 @@
                 </th>
             {% endif %}
             <th scope="col">{% trans 'Points' %}</th>
-            {% if show_tournaments_numbers %}
-                <th scope="col">{% trans 'Tournaments' context 'tournaments number' %}</th>
+            {% if show_games_numbers %}
+                <th scope="col">{% trans 'Games' %}</th>
             {% endif %}
             <th scope="col">{% trans 'From' context 'location' %}</th>
+            <th scope="col">{% trans 'Last game date' %}</th>
         </tr>
         </thead>
         <tbody>
         {% for rating_result in rating_results %}
             <tr id="{{ rating_result.player.slug }}">
-                <th scope="row">{{ rating_result.place }}</th>
+                {% with player_places_map|get_item:rating_result.player.id as player_place %}
+                    {% if player_place %}
+                        <th scope="row">{{ player_place }}</th>
+                    {% endif %}
+                {% endwith %}
                 <td>
                     {% with rating_result.player as player %}
                         {% include 'common/_player_name.html' %}
@@ -41,8 +96,8 @@
                     </td>
                 {% endif %}
                 <td>{{ rating_result.base_rank }}</td>
-                {% if show_tournaments_numbers %}
-                    <td>{{ rating_result.tournament_numbers|default:'' }}</td>
+                {% if show_games_numbers %}
+                    <td>{{ rating_result.game_numbers|default:'' }}</td>
                 {% endif %}
                 <td>
                     {% if is_ema or not rating_result.player.city %}
@@ -57,6 +112,7 @@
                         </span>
                     {% endif %}
                 </td>
+                <td>{{ rating_result.last_game_date|default:'' }}</td>
             </tr>
         {% endfor %}
         </tbody>

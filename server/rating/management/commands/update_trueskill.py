@@ -34,6 +34,7 @@ def get_rating_by_type(type):
             description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
             "Ссылка на подробное описание https://trueskill.org/",
             type=ExternalRating.TRUESKILL,
+            order=0,
         )[0]
     if ExternalRating.TYPES[ExternalRating.ONLINE_TRUESKILL][1] == type.upper():
         return ExternalRating.objects.get_or_create(
@@ -47,6 +48,7 @@ def get_rating_by_type(type):
             description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
             "Ссылка на подробное описание https://trueskill.org/",
             type=ExternalRating.ONLINE_TRUESKILL,
+            order=1,
         )[0]
     raise AssertionError("Passed type not allowed!")
 
@@ -91,7 +93,7 @@ class Command(BaseCommand):
                                     base_rank=ts_player["rating"],
                                     is_active=True,
                                     place=place,
-                                    tournament_numbers=ts_player["game_count"],
+                                    game_numbers=ts_player["game_count"],
                                     last_game_date=ts_player["last_game_date"],
                                 )
                             )

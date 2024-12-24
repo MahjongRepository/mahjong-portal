@@ -9,6 +9,13 @@ from utils.general import get_tournament_coefficient
 
 
 class ExternalRating(BaseModel):
+    EXT_FILTER_ALL_RESULTS = "all_results"
+    EXT_FILTER_MORE_20_GAMES = "more_20_games"
+    EXT_FILTER_MORE_50_GAMES = "more_50_games"
+    EXT_FILTER_LAST_GAME_YEAR = "last_game_year"
+    EXT_FILTER_LAST_GAME_TWO_YEARS = "last_game_two_years"
+    EXT_FILTER_LAST_GAME_THREE_YEARS = "last_game_three_years"
+
     TRUESKILL = 0
     ONLINE_TRUESKILL = 1
 
@@ -43,7 +50,7 @@ class ExternalRatingDelta(BaseModel):
     date = models.DateField(default=None, null=True, blank=True, db_index=True)
     base_rank = models.FloatField(default=0.0)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
-    tournament_numbers = models.PositiveIntegerField(null=True, blank=True)
+    game_numbers = models.PositiveIntegerField(null=True, blank=True)
     last_game_date = models.DateField(default=None, null=True, blank=True, db_index=True)
 
     def __unicode__(self):

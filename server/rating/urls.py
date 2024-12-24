@@ -16,4 +16,10 @@ urlpatterns = [
         rating_details,
         name="rating",
     ),
+    url(r"^riichi/(?P<slug>[\w\-]+)/filter/(?P<stat_type>[\w\-]+)/$", rating_details, name="rating_filter"),
+    url(
+        r"^riichi/(?P<slug>[\w\-]+)/(?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)/filter/(?P<stat_type>[\w\-]+)/$",
+        rating_details,
+        name="rating_filter",
+    ),
 ]
