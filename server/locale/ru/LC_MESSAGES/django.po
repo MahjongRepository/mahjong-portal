@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 19:55+0000\n"
+"POT-Creation-Date: 2024-12-26 19:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1236,24 +1236,24 @@ msgid "All time"
 msgstr "За всё время"
 
 #: templates/rating/_external_results_table.html:17
-msgid ">20 games"
-msgstr "Больше 20 игр"
+msgid "at least 20 games"
+msgstr "не менее 20 игр"
 
 #: templates/rating/_external_results_table.html:25
-msgid ">50 games"
-msgstr "Больше 50 игр"
+msgid "at least 50 games"
+msgstr "не менее 50 игр"
 
 #: templates/rating/_external_results_table.html:33
-msgid "last game 1y. ago."
-msgstr "последняя игра больше года назад"
+msgid "last game at least 1 year ago"
+msgstr "последняя игра менее года назад"
 
 #: templates/rating/_external_results_table.html:41
-msgid "last game 2y. ago."
-msgstr "последняя игра больше 2 лет назад"
+msgid "last game at least 2 year ago"
+msgstr "последняя игра менее 2 лет назад"
 
 #: templates/rating/_external_results_table.html:49
-msgid "last game 3y. ago."
-msgstr "последняя игра больше 3 лет назад"
+msgid "last game at least 3 year ago"
+msgstr "последняя игра менее 3 лет назад"
 
 #: templates/rating/_external_results_table.html:57
 #: templates/rating/_results_table.html:7

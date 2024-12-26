@@ -14,7 +14,7 @@
     {% else %}
         <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_20_games %}">
     {% endif %}
-            <span class="badge bg-{% if not more_20_games %}success{% else %}primary{% endif %}">{% trans '>20 games' %}</span>
+            <span class="badge bg-{% if not more_20_games %}success{% else %}primary{% endif %}">{% trans 'at least 20 games' %}</span>
         </a>
 
     {% if is_last == True %}
@@ -22,7 +22,7 @@
     {% else %}
         <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_50_games %}">
     {% endif %}
-            <span class="badge bg-{% if not more_50_games %}success{% else %}primary{% endif %}">{% trans '>50 games' %}</span>
+            <span class="badge bg-{% if not more_50_games %}success{% else %}primary{% endif %}">{% trans 'at least 50 games' %}</span>
         </a>
 
     {% if is_last == True %}
@@ -30,7 +30,7 @@
     {% else %}
         <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_year %}">
     {% endif %}
-            <span class="badge bg-{% if not last_game_year %}success{% else %}primary{% endif %}">{% trans 'last game 1y. ago.' %}</span>
+            <span class="badge bg-{% if not last_game_year %}success{% else %}primary{% endif %}">{% trans 'last game at least 1 year ago' %}</span>
         </a>
 
     {% if is_last == True %}
@@ -38,7 +38,7 @@
     {% else %}
         <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_two_years %}">
     {% endif %}
-            <span class="badge bg-{% if not last_game_two_years %}success{% else %}primary{% endif %}">{% trans 'last game 2y. ago.' %}</span>
+            <span class="badge bg-{% if not last_game_two_years %}success{% else %}primary{% endif %}">{% trans 'last game at least 2 year ago' %}</span>
         </a>
 
     {% if is_last == True %}
@@ -46,7 +46,7 @@
     {% else %}
         <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_three_years %}">
     {% endif %}
-            <span class="badge bg-{% if not last_game_three_years %}success{% else %}primary{% endif %}">{% trans 'last game 3y. ago.' %}</span>
+            <span class="badge bg-{% if not last_game_three_years %}success{% else %}primary{% endif %}">{% trans 'last game at least 3 year ago' %}</span>
         </a>
 </div>
 
