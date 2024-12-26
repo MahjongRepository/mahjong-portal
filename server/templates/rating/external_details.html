@@ -10,7 +10,7 @@
         <h1>{{ rating.name }}</h1>
 
         {% if rating.description %}
-            <p class="d-print-none">{{ rating.description }}</p>
+            <p class="d-print-none">{{ rating.description|urlize_target_blank }}</p>
         {% endif %}
 
         {% if rating_results %}
