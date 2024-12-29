@@ -95,7 +95,7 @@
                         {% endwith %}
                     </td>
                 {% endif %}
-                <td>{{ rating_result.base_rank|floatformat:1 }}</td>
+                <td>{{ rating_result.base_rank|floatformat:"3u" }}</td>
                 {% if show_games_numbers %}
                     <td>{{ rating_result.game_numbers|default:'' }}</td>
                 {% endif %}
