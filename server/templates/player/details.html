@@ -15,7 +15,7 @@
 
         {% include 'player/_player_header.html' %}
 
-        {% if rating_results %}
+        {% if rating_results or external_rating_results %}
             <h4>{% trans 'Ratings' %}</h4>
             <p>{% trans 'Table with all ratings where a player was counted' %}</p>
 
@@ -47,6 +47,19 @@
                             </td>
                             <td>
                                 {{ rating_result.score }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% for external_rating_result in external_rating_results %}
+                        <tr>
+                            <td width="250px">
+                                {{ external_rating_result.rating.name|slice:":-14" }}
+                            </td>
+                            <td>
+                                {{ external_rating_result.place }}
+                            </td>
+                            <td>
+                                {{ external_rating_result.base_rank }}
                             </td>
                         </tr>
                     {% endfor %}

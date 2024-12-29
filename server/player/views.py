@@ -9,7 +9,7 @@ from club.club_games.models import ClubRating
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
 from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
-from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
+from rating.models import ExternalRating, ExternalRatingDelta, Rating, RatingDelta, RatingResult, TournamentCoefficients
 from rating.utils import get_latest_rating_date, parse_rating_date
 from tournament.models import TournamentResult
 
@@ -41,6 +41,21 @@ def player_details(request, slug, year=None, month=None, day=None):
         if result:
             rating_results.append(result)
 
+    external_ratings = ExternalRating.objects.filter(is_hidden=False).all().order_by("order")
+    external_rating_results = []
+    _, external_entered_date, _ = parse_rating_date(year, month, day)
+    for external_rating in external_ratings:
+        if not external_entered_date:
+            _, external_rating_date = get_latest_rating_date(external_rating, is_external=True)
+        else:
+            external_rating_date = external_entered_date
+
+        external_result = ExternalRatingDelta.objects.filter(
+            date=external_rating_date, rating=external_rating, player=player
+        ).first()
+        if external_result:
+            external_rating_results.append(external_result)
+
     tournament_results = (
         TournamentResult.objects.filter(player=player).prefetch_related("tournament").order_by("-tournament__end_date")
     )[:10]
@@ -57,9 +72,11 @@ def player_details(request, slug, year=None, month=None, day=None):
         {
             "player": player,
             "rating_results": rating_results,
+            "external_rating_results": external_rating_results,
             "tournament_results": tournament_results,
             "tenhou_data": tenhou_data,
             "rating_date": entered_date,
+            "external_rating_date": external_entered_date,
             "ms_data": ms_data,
             "club_ratings": club_ratings,
         },
