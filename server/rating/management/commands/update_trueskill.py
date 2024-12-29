@@ -50,7 +50,7 @@ def get_rating_by_type(type):
             name_ru="Online Trueskill рейтинг (бета версия)",
             slug="online-trueskill",
             description="Online Trueskill rating",
-            description_en="Trueskill rating system for players developed by "
+            description_en="Trueskill online rating system for players developed by "
             "Microsoft Research. Link for more information https://trueskill.org/",
             description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
             "Ссылка на подробное описание https://trueskill.org/",
