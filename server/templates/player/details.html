@@ -59,7 +59,7 @@
                                 {{ external_rating_result.place }}
                             </td>
                             <td>
-                                {{ external_rating_result.base_rank }}
+                                {{ external_rating_result.base_rank|floatformat:1 }}
                             </td>
                         </tr>
                     {% endfor %}
