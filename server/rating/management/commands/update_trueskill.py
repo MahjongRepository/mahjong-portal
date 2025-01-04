@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from typing import Optional
+
 import ujson
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -60,6 +62,34 @@ def get_rating_by_type(type):
     raise AssertionError("Passed type not allowed!")
 
 
+def find_one_player(first_name: str, last_name: str) -> Optional[Player]:
+    try:
+        player = Player.objects.get(
+            first_name_ru=first_name, last_name_ru=last_name, is_exclude_from_rating=False
+        )
+        return player
+    except (Player.DoesNotExist, Player.MultipleObjectsReturned):
+        return None
+
+
+def find_player_smart(ts_player_name: str) -> Optional[Player]:
+    arr = ts_player_name.strip().split()
+    if len(arr) != 2:
+        return None
+    arr[0] = arr[0].strip()
+    arr[1] = arr[1].strip()
+
+    found_players = [
+        find_one_player(arr[0], arr[1]),
+        find_one_player(arr[1], arr[0]),
+    ]
+    found_players = [p for p in found_players if p is not None]
+    if len(found_players) == 1:
+        return found_players[0]
+    else:
+        return None
+
+
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("trueskill_file", type=str)
@@ -86,27 +116,21 @@ class Command(BaseCommand):
                 sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
                 place = 1
                 for ts_player in sorted_rating:
-                    try:
-                        full_name = ts_player["player"].split(" ")
-                        if len(full_name) == 2:
-                            player = Player.objects.get(
-                                first_name_ru=full_name[1], last_name_ru=full_name[0], is_exclude_from_rating=False
+                    player = find_player_smart(ts_player_name=ts_player["player"])
+                    if player is not None:
+                        deltas.append(
+                            ExternalRatingDelta(
+                                rating=rating,
+                                player=player,
+                                date=now,
+                                base_rank=ts_player["rating"],
+                                is_active=True,
+                                place=place,
+                                game_numbers=ts_player["game_count"],
+                                last_game_date=ts_player["last_game_date"],
                             )
-                            deltas.append(
-                                ExternalRatingDelta(
-                                    rating=rating,
-                                    player=player,
-                                    date=now,
-                                    base_rank=ts_player["rating"],
-                                    is_active=True,
-                                    place=place,
-                                    game_numbers=ts_player["game_count"],
-                                    last_game_date=ts_player["last_game_date"],
-                                )
-                            )
-                            place = place + 1
-                    except (Player.DoesNotExist, Player.MultipleObjectsReturned):
-                        pass
+                        )
+                        place = place + 1
 
                 if deltas:
                     ExternalRatingDelta.objects.bulk_create(deltas)
