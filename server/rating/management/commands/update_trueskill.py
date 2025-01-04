@@ -64,9 +64,7 @@ def get_rating_by_type(type):
 
 def find_one_player(first_name: str, last_name: str) -> Optional[Player]:
     try:
-        player = Player.objects.get(
-            first_name_ru=first_name, last_name_ru=last_name, is_exclude_from_rating=False
-        )
+        player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name, is_exclude_from_rating=False)
         return player
     except (Player.DoesNotExist, Player.MultipleObjectsReturned):
         return None
