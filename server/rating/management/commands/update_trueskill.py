@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Optional
+from typing import List, Optional
 
 import ujson
 from django.core.management.base import BaseCommand
@@ -70,6 +70,18 @@ def find_one_player(first_name: str, last_name: str) -> Optional[Player]:
         return None
 
 
+def generate_name_variants(name: str) -> List[str]:
+    if "ё" in name:
+        return [name.replace("ё", "е")]
+    if "е" not in name:
+        return []  # no future checks
+    res = []
+    for i in range(len(name)):
+        if name[i] == "е":
+            res.append(name[:i] + "ё" + name[i + 1 :])
+    return res
+
+
 def find_player_smart(ts_player_name: str) -> Optional[Player]:
     arr = ts_player_name.strip().split()
     if len(arr) != 2:
@@ -81,6 +93,14 @@ def find_player_smart(ts_player_name: str) -> Optional[Player]:
         find_one_player(arr[0], arr[1]),
         find_one_player(arr[1], arr[0]),
     ]
+
+    variants_0 = generate_name_variants(arr[0])
+    variants_1 = generate_name_variants(arr[1])
+    for var_0 in variants_0:
+        for var_1 in variants_1:
+            found_players.append(find_one_player(var_0, var_1))
+            found_players.append(find_one_player(var_1, var_0))
+
     found_players = [p for p in found_players if p is not None]
     if len(found_players) == 1:
         return found_players[0]
