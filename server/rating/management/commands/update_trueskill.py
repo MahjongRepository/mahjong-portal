@@ -63,21 +63,14 @@ def get_rating_by_type(type):
 
 
 def find_all_players(first_names: List[str], last_names: List[str]) -> List[Player]:
-    try:
-        players = []
-        players.extend(
-            Player.objects.filter(
-                first_name_ru__in=first_names, last_name_ru__in=last_names, is_exclude_from_rating=False
-            )
-        )
-        players.extend(
-            Player.objects.filter(
-                first_name_ru__in=last_names, last_name_ru__in=first_names, is_exclude_from_rating=False
-            )
-        )
-        return players
-    except (Player.DoesNotExist, Player.MultipleObjectsReturned):
-        return None
+    players = []
+    players.extend(
+        Player.objects.filter(first_name_ru__in=first_names, last_name_ru__in=last_names, is_exclude_from_rating=False)
+    )
+    players.extend(
+        Player.objects.filter(first_name_ru__in=last_names, last_name_ru__in=first_names, is_exclude_from_rating=False)
+    )
+    return players
 
 
 def generate_name_variants(name: str) -> List[str]:
