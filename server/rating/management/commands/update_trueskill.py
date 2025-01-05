@@ -62,20 +62,31 @@ def get_rating_by_type(type):
     raise AssertionError("Passed type not allowed!")
 
 
-def find_one_player(first_name: str, last_name: str) -> Optional[Player]:
+def find_all_players(first_names: List[str], last_names: List[str]) -> List[Player]:
     try:
-        player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name, is_exclude_from_rating=False)
-        return player
+        players = []
+        players.extend(
+            Player.objects.filter(
+                first_name_ru__in=first_names, last_name_ru__in=last_names, is_exclude_from_rating=False
+            )
+        )
+        players.extend(
+            Player.objects.filter(
+                first_name_ru__in=last_names, last_name_ru__in=first_names, is_exclude_from_rating=False
+            )
+        )
+        return players
     except (Player.DoesNotExist, Player.MultipleObjectsReturned):
         return None
 
 
 def generate_name_variants(name: str) -> List[str]:
+    res = [name]
     if "ё" in name:
-        return [name.replace("ё", "е")]
+        res.append(name.replace("ё", "е"))
+        return res
     if "е" not in name:
-        return []  # no future checks
-    res = []
+        return res
     for i in range(len(name)):
         if name[i] == "е":
             res.append(name[:i] + "ё" + name[i + 1 :])
@@ -86,25 +97,14 @@ def find_player_smart(ts_player_name: str) -> Optional[Player]:
     arr = ts_player_name.strip().split()
     if len(arr) != 2:
         return None
-    arr[0] = arr[0].strip()
-    arr[1] = arr[1].strip()
+    last_names = generate_name_variants(arr[0].strip())
+    first_names = generate_name_variants(arr[1].strip())
 
-    found_players = [
-        find_one_player(arr[0], arr[1]),
-        find_one_player(arr[1], arr[0]),
-    ]
-
-    variants_0 = generate_name_variants(arr[0])
-    variants_1 = generate_name_variants(arr[1])
-    for var_0 in variants_0:
-        for var_1 in variants_1:
-            found_players.append(find_one_player(var_0, var_1))
-            found_players.append(find_one_player(var_1, var_0))
-
-    found_players = [p for p in found_players if p is not None]
+    found_players = find_all_players(first_names=first_names, last_names=last_names)
     if len(found_players) == 1:
         return found_players[0]
     else:
+        print("find_player_smart(): found {0} players with name '{1}'".format(len(found_players), ts_player_name))
         return None
 
 
