@@ -28,6 +28,8 @@ from settings.models import City
 from tournament.models import Tournament, TournamentResult
 
 logger = logging.getLogger()
+OLD_PANTHEON_TYPE = "old"
+NEW_PANTHEON_TYPE = "new"
 
 
 def home(request):
@@ -174,6 +176,50 @@ def players_api(request):
     return JsonResponse(data, safe=False)
 
 
+def finished_tournaments_api(request):
+    translation.activate("ru")
+
+    tournaments = Tournament.objects.all()
+    new_pantheon_tournaments = []
+    old_pantheon_tournaments = []
+    for tournament in tournaments:
+        tournament_results_count = TournamentResult.objects.filter(tournament=tournament).count()
+        if tournament_results_count > 0:
+            if tournament.new_pantheon_id is not None and tournament.old_pantheon_id is not None:
+                raise RuntimeError(f"Found not valid tournament with id {tournament.id}")
+            if tournament.old_pantheon_id is not None:
+                old_pantheon_tournaments.append(tournament)
+            if tournament.new_pantheon_id is not None:
+                new_pantheon_tournaments.append(tournament)
+
+    new_pantheon_tournaments = sorted(new_pantheon_tournaments, key=lambda x: x.new_pantheon_id, reverse=False)
+    old_pantheon_tournaments = sorted(old_pantheon_tournaments, key=lambda x: x.old_pantheon_id, reverse=False)
+
+    data = []
+    aggregate_tournaments(new_pantheon_tournaments, NEW_PANTHEON_TYPE, data)
+    aggregate_tournaments(old_pantheon_tournaments, OLD_PANTHEON_TYPE, data)
+
+    return JsonResponse(data, safe=False)
+
+
+def aggregate_tournaments(tournaments, pantheon_type, result):
+    for tournament in tournaments:
+        result.append(
+            {
+                "pantheon_type": pantheon_type,
+                "pantheon_id": extract_pantheon_id(tournament, pantheon_type),
+                "name": tournament.name,
+            }
+        )
+
+
+def extract_pantheon_id(tournament, pantheon_type):
+    if pantheon_type == NEW_PANTHEON_TYPE:
+        return int(tournament.new_pantheon_id)
+    if pantheon_type == OLD_PANTHEON_TYPE:
+        return int(tournament.old_pantheon_id)
+
+
 @require_POST
 @csrf_exempt
 def update_info_from_pantheon_api(request):
@@ -274,6 +320,10 @@ def ermc_qualification_2019(request):
 
 def wrc_qualification_2020(request):
     return qualification_view(request, PlayerQuotaEvent.WRC_2020, "website/wrc_2020.html")
+
+
+def wrc_qualification_2025(request):
+    return qualification_view(request, PlayerQuotaEvent.WRC_2020, "website/wrc_2025.html")
 
 
 def qualification_view(request, q_type, template):

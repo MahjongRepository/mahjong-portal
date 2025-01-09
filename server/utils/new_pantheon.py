@@ -72,6 +72,7 @@ def update_personal_info(person_info, adminPersonId, pantheonEventId):
         ctx=context,
         request=pantheon_api.frey_pb2.PersonsUpdatePersonalInfoPayload(
             id=int(person_info["person_id"]),
+            email=str(person_info["email"]),
             tenhou_id=str(person_info["tenhou_id"]),
             ms_nickname=str(person_info["ms_nickname"]),
             ms_friend_id=int(person_info["ms_friend_id"]),
@@ -79,7 +80,7 @@ def update_personal_info(person_info, adminPersonId, pantheonEventId):
             title=str(person_info["title"]),
             city=str(person_info["city"]),
             country=str(person_info["country"]),
-            has_avatar=bool(person_info["has_avatar"], email=str(person_info["email"])),
+            has_avatar=bool(person_info["has_avatar"]),
         ),
         server_path_prefix="/v2",
     )

@@ -3,12 +3,18 @@
 from django import forms
 from django.contrib import admin
 
-from rating.models import Rating, RatingDate
+from rating.models import ExternalRating, Rating, RatingDate
 
 
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
+        exclude = ["name", "description"]
+
+
+class ExternalRatingForm(forms.ModelForm):
+    class Meta:
+        model = ExternalRating
         exclude = ["name", "description"]
 
 
@@ -22,5 +28,11 @@ class RatingDateAdmin(admin.ModelAdmin):
     list_filter = ["rating"]
 
 
+class ExternalRatingAdmin(admin.ModelAdmin):
+    form = ExternalRatingForm
+    list_display = ["name", "order"]
+
+
 admin.site.register(Rating, RatingAdmin)
 admin.site.register(RatingDate, RatingDateAdmin)
+admin.site.register(ExternalRating, ExternalRatingAdmin)

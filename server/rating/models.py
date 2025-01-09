@@ -8,6 +8,66 @@ from tournament.models import Tournament
 from utils.general import get_tournament_coefficient
 
 
+class ExternalRating(BaseModel):
+    EXT_FILTER_ALL_RESULTS = "all_results"
+    EXT_FILTER_MORE_20_GAMES = "more_20_games"
+    EXT_FILTER_MORE_50_GAMES = "more_50_games"
+    EXT_FILTER_LAST_GAME_YEAR = "last_game_year"
+    EXT_FILTER_LAST_GAME_TWO_YEARS = "last_game_two_years"
+    EXT_FILTER_LAST_GAME_THREE_YEARS = "last_game_three_years"
+
+    TRUESKILL = 0
+    ONLINE_TRUESKILL = 1
+
+    TYPES = [[TRUESKILL, "TRUESKILL"], [ONLINE_TRUESKILL, "ONLINE_TRUESKILL"]]
+
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(null=True, blank=True, default="")
+    order = models.PositiveIntegerField(default=0)
+    is_hidden = models.BooleanField(default=True)
+    type = models.PositiveSmallIntegerField(choices=TYPES, null=True, blank=True)
+
+    class Meta:
+        ordering = ["id"]
+
+    def __unicode__(self):
+        return self.name
+
+
+class ExternalRatingTournament(BaseModel):
+    rating = models.ForeignKey(ExternalRating, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.PROTECT, related_name="external_rating_delta")
+
+    def __unicode__(self):
+        return self.tournament.name
+
+
+class ExternalRatingDelta(BaseModel):
+    rating = models.ForeignKey(ExternalRating, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, related_name="external_rating_delta")
+    is_active = models.BooleanField(default=False)
+    date = models.DateField(default=None, null=True, blank=True, db_index=True)
+    base_rank = models.FloatField(default=0.0)
+    place = models.PositiveIntegerField(default=None, null=True, blank=True)
+    game_numbers = models.PositiveIntegerField(null=True, blank=True)
+    last_game_date = models.DateField(default=None, null=True, blank=True, db_index=True)
+
+    def __unicode__(self):
+        return self.player.full_name
+
+
+class ExternalRatingDate(BaseModel):
+    rating = models.ForeignKey(ExternalRating, on_delete=models.CASCADE)
+    date = models.DateField(db_index=True)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __unicode__(self):
+        return self.rating.__unicode__()
+
+
 class Rating(BaseModel):
     RR = 0
     EMA = 1
