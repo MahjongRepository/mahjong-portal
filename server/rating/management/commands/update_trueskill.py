@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+
 import ujson
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.models import Player
+from player.player_helper import PlayerHelper
 from rating.models import ExternalRating, ExternalRatingDate, ExternalRatingDelta, ExternalRatingTournament
 from tournament.models import Tournament
 from website.views import NEW_PANTHEON_TYPE, OLD_PANTHEON_TYPE
@@ -86,27 +87,24 @@ class Command(BaseCommand):
                 sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
                 place = 1
                 for ts_player in sorted_rating:
-                    try:
-                        full_name = ts_player["player"].split(" ")
-                        if len(full_name) == 2:
-                            player = Player.objects.get(
-                                first_name_ru=full_name[1], last_name_ru=full_name[0], is_exclude_from_rating=False
+                    player_full_name = ts_player["player"]
+                    player = PlayerHelper.find_player_smart(player_full_name=player_full_name)
+                    if player:
+                        deltas.append(
+                            ExternalRatingDelta(
+                                rating=rating,
+                                player=player,
+                                date=now,
+                                base_rank=ts_player["rating"],
+                                is_active=True,
+                                place=place,
+                                game_numbers=ts_player["game_count"],
+                                last_game_date=ts_player["last_game_date"],
                             )
-                            deltas.append(
-                                ExternalRatingDelta(
-                                    rating=rating,
-                                    player=player,
-                                    date=now,
-                                    base_rank=ts_player["rating"],
-                                    is_active=True,
-                                    place=place,
-                                    game_numbers=ts_player["game_count"],
-                                    last_game_date=ts_player["last_game_date"],
-                                )
-                            )
-                            place = place + 1
-                    except (Player.DoesNotExist, Player.MultipleObjectsReturned):
-                        pass
+                        )
+                        place = place + 1
+                    else:
+                        print("find_player_smart(): found 0 players with name '{0}'".format(player_full_name))
 
                 if deltas:
                     ExternalRatingDelta.objects.bulk_create(deltas)
