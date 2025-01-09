@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from typing import List, Optional
 
 import ujson
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.models import Player
+from player.player_helper import PlayerHelper
 from rating.models import ExternalRating, ExternalRatingDate, ExternalRatingDelta, ExternalRatingTournament
 from tournament.models import Tournament
 from website.views import NEW_PANTHEON_TYPE, OLD_PANTHEON_TYPE
@@ -62,45 +61,6 @@ def get_rating_by_type(type):
     raise AssertionError("Passed type not allowed!")
 
 
-def find_all_players(first_names: List[str], last_names: List[str]) -> List[Player]:
-    players = []
-    players.extend(
-        Player.objects.filter(first_name_ru__in=first_names, last_name_ru__in=last_names, is_exclude_from_rating=False)
-    )
-    players.extend(
-        Player.objects.filter(first_name_ru__in=last_names, last_name_ru__in=first_names, is_exclude_from_rating=False)
-    )
-    return players
-
-
-def generate_name_variants(name: str) -> List[str]:
-    res = [name]
-    if "ё" in name:
-        res.append(name.replace("ё", "е"))
-        return res
-    if "е" not in name:
-        return res
-    for i in range(len(name)):
-        if name[i] == "е":
-            res.append(name[:i] + "ё" + name[i + 1 :])
-    return res
-
-
-def find_player_smart(ts_player_name: str) -> Optional[Player]:
-    arr = ts_player_name.strip().split()
-    if len(arr) != 2:
-        return None
-    last_names = generate_name_variants(arr[0].strip())
-    first_names = generate_name_variants(arr[1].strip())
-
-    found_players = find_all_players(first_names=first_names, last_names=last_names)
-    if len(found_players) == 1:
-        return found_players[0]
-    else:
-        print("find_player_smart(): found {0} players with name '{1}'".format(len(found_players), ts_player_name))
-        return None
-
-
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("trueskill_file", type=str)
@@ -127,8 +87,9 @@ class Command(BaseCommand):
                 sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
                 place = 1
                 for ts_player in sorted_rating:
-                    player = find_player_smart(ts_player_name=ts_player["player"])
-                    if player is not None:
+                    player_full_name = ts_player["player"]
+                    player = PlayerHelper.find_player_smart(player_full_name=player_full_name)
+                    if player:
                         deltas.append(
                             ExternalRatingDelta(
                                 rating=rating,
@@ -142,6 +103,8 @@ class Command(BaseCommand):
                             )
                         )
                         place = place + 1
+                    else:
+                        print("find_player_smart(): found 0 players with name '{0}'".format(player_full_name))
 
                 if deltas:
                     ExternalRatingDelta.objects.bulk_create(deltas)
