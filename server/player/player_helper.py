@@ -5,21 +5,23 @@ from player.models import Player
 
 class PlayerHelper:
     @staticmethod
-    def find_player_smart(player_full_name: str) -> Optional[Player]:
+    def find_player_smart(player_full_name: str, city_object=None) -> Optional[Player]:
         arr = player_full_name.strip().split()
         if len(arr) != 2:
             return None
-        last_names = PlayerHelper.generate_name_variants(arr[0].strip())
-        first_names = PlayerHelper.generate_name_variants(arr[1].strip())
+        last_names = PlayerHelper.__generate_name_variants(arr[0].strip())
+        first_names = PlayerHelper.__generate_name_variants(arr[1].strip())
 
-        found_players = PlayerHelper.find_all_players(first_names=first_names, last_names=last_names)
+        found_players = PlayerHelper.__find_all_players(
+            first_names=first_names, last_names=last_names, city_object=city_object
+        )
         if len(found_players) == 1:
             return found_players[0]
         else:
             return None
 
     @staticmethod
-    def generate_name_variants(name: str) -> List[str]:
+    def __generate_name_variants(name: str) -> List[str]:
         res = [name]
         if "ё" in name:
             res.append(name.replace("ё", "е"))
@@ -32,13 +34,37 @@ class PlayerHelper:
         return res
 
     @staticmethod
-    def find_all_players(first_names: List[str], last_names: List[str]) -> List[Player]:
+    def __find_all_players(first_names: List[str], last_names: List[str], city_object=None) -> List[Player]:
         players = []
         all_names = first_names + last_names
-        players.extend(
-            Player.objects.filter(first_name_ru__in=all_names, last_name_ru__in=all_names, is_exclude_from_rating=False)
-        )
-        players.extend(
-            Player.objects.filter(first_name_en__in=all_names, last_name_en__in=all_names, is_exclude_from_rating=False)
-        )
+        players.extend(PlayerHelper.__get_players_by_ru_full_name(all_full_names=all_names, city_object=city_object))
+        players.extend(PlayerHelper.__get_players_by_en_full_name(all_full_names=all_names, city_object=city_object))
         return players
+
+    @staticmethod
+    def __get_players_by_ru_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
+        if city_object:
+            return Player.objects.filter(
+                first_name_ru__in=all_full_names,
+                last_name_ru__in=all_full_names,
+                city=city_object,
+                is_exclude_from_rating=False,
+            )
+        else:
+            return Player.objects.filter(
+                first_name_ru__in=all_full_names, last_name_ru__in=all_full_names, is_exclude_from_rating=False
+            )
+
+    @staticmethod
+    def __get_players_by_en_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
+        if city_object:
+            return Player.objects.filter(
+                first_name_en__in=all_full_names,
+                last_name_en__in=all_full_names,
+                city=city_object,
+                is_exclude_from_rating=False,
+            )
+        else:
+            return Player.objects.filter(
+                first_name_en__in=all_full_names, last_name_en__in=all_full_names, is_exclude_from_rating=False
+            )

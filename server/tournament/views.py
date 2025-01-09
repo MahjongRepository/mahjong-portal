@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from account.models import PantheonInfoUpdateLog
 from pantheon_api.api_calls.user import get_pantheon_public_person_information
 from player.models import Player
+from player.player_helper import PlayerHelper
 from settings.models import City
 from tournament.forms import (
     MajsoulOnlineTournamentPantheonRegistrationForm,
@@ -221,11 +222,10 @@ def pantheon_tournament_registration(request, tournament_id):
     # todo get ms_data and store into PantheonInfoUpdateLog
     data = get_pantheon_public_person_information(user.new_pantheon_id)
     PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=user.new_pantheon_id, updated_information=data)
-    first_name, last_name = split_name(data["title"])
+    full_name = data["title"]
+    first_name, last_name = split_name(full_name)
 
-    player = Player.objects.filter(first_name_ru=first_name, last_name_ru=last_name).first()
-    if not player:
-        player = Player.objects.filter(first_name_ru=last_name, last_name_ru=first_name).first()
+    player = PlayerHelper.find_player_smart(player_full_name=full_name)
     city_object = City.objects.filter(name_ru=data["city"].title()).first()
 
     if not tournament.is_majsoul_tournament and not data["tenhou_id"]:
@@ -302,16 +302,15 @@ def tournament_registration(request, tournament_id):
             pass
 
         try:
+            full_name = f"{instance.first_name.title()} {instance.last_name.title()}"
             if instance.city_object:
-                instance.player = Player.objects.get(
-                    first_name_ru=instance.first_name.title(),
-                    last_name_ru=instance.last_name.title(),
-                    city=instance.city_object,
+                instance.player = PlayerHelper.find_player_smart(
+                    player_full_name=full_name, city_object=instance.city_object
                 )
             else:
-                instance.player = Player.objects.get(
-                    first_name_ru=instance.first_name.title(), last_name_ru=instance.last_name.title()
-                )
+                instance.player = PlayerHelper.find_player_smart(player_full_name=full_name)
+            if not instance.player:
+                raise Player.DoesNotExist
         except (Player.DoesNotExist, Player.MultipleObjectsReturned):
             # TODO if multiple players are here, let's try to filter by city
             pass
