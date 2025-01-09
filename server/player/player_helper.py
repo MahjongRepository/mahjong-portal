@@ -39,7 +39,7 @@ class PlayerHelper:
         all_names = first_names + last_names
         players.extend(PlayerHelper.__get_players_by_ru_full_name(all_full_names=all_names, city_object=city_object))
         players.extend(PlayerHelper.__get_players_by_en_full_name(all_full_names=all_names, city_object=city_object))
-        return players
+        return list(set(players))
 
     @staticmethod
     def __get_players_by_ru_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
