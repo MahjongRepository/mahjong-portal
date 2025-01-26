@@ -284,7 +284,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
 
             game_date = datetime.utcfromtimestamp(int(game["starttime"])).astimezone(pytz.timezone("Asia/Tokyo"))
 
-            lobby_name = lobbies_dict[game["playerlevel"]]
+            lobby_name = lobbies_dict[str(game["playerlevel"])]
             lobbies_data[lobby_name]["all"]["played_games"] += 1
             lobbies_data[lobby_name]["all"][place] += 1
 
@@ -298,14 +298,14 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
                 game_rules = "四"
             else:
                 game_rules = "二"
-            game_rules += lobbies_tenhou_dict[game["playerlevel"]]
+            game_rules += lobbies_tenhou_dict[str(game["playerlevel"])]
             game_rules += game_type
 
             player_games.append(
                 {
                     "game_date": game_date,
                     "place": place,
-                    "lobby": lobbies_tenhou_dict[game["playerlevel"]],
+                    "lobby": lobbies_tenhou_dict[str(game["playerlevel"])],
                     "game_type": game_type,
                     "lobby_number": game.get("lobby") or "L0000",
                     "game_rules": game_rules,
