@@ -3,7 +3,7 @@
 from django import forms
 from django.contrib import admin
 
-from rating.models import ExternalRating, Rating, RatingDate, ExternalRatingDelta
+from rating.models import ExternalRating, ExternalRatingDelta, Rating, RatingDate
 
 
 class RatingForm(forms.ModelForm):
@@ -32,10 +32,12 @@ class ExternalRatingAdmin(admin.ModelAdmin):
     form = ExternalRatingForm
     list_display = ["name", "order"]
 
+
 class ExternalRatingDeltaForm(forms.ModelForm):
     class Meta:
         model = ExternalRatingDelta
         exclude = ["player", "date", "rating"]
+
 
 class ExternalRatingDeltaAdmin(admin.ModelAdmin):
     form = ExternalRatingDeltaForm
