@@ -14,7 +14,8 @@ from utils.tenhou.yakuman_list import YAKUMAN_CONST
 
 class TenhouActiveNicknameManager(models.Manager):
     def get_queryset(self):
-        return super(TenhouActiveNicknameManager, self).get_queryset()
+        queryset = super(TenhouActiveNicknameManager, self).get_queryset()
+        return queryset.filter(is_active=True)
 
 
 class TenhouNickname(BaseModel):
