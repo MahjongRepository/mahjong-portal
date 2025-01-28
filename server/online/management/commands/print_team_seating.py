@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         for tournament_player in players:
             try:
-                tenhou_obj = TenhouNickname.objects.get(tenhou_username=tournament_player.tenhou_username)
+                tenhou_obj = TenhouNickname.active_objects.get(tenhou_username=tournament_player.tenhou_username)
                 stat_obj = tenhou_obj.aggregated_statistics.filter(
                     game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
                 ).first()
@@ -43,7 +43,7 @@ class Command(BaseCommand):
 
                 is_main = False
                 player = Player.objects.all().first()
-                tenhou_object = TenhouNickname.objects.create(
+                tenhou_object = TenhouNickname.active_objects.create(
                     is_main=is_main,
                     player=player,
                     tenhou_username=tournament_player.tenhou_username,
