@@ -118,7 +118,8 @@ class PlayerQuotaEvent(BaseModel):
 
     ERMC_2019 = 0
     WRC_2020 = 1
-    TYPES = [[ERMC_2019, "ERMC 2019"], [WRC_2020, "WRC 2020"]]
+    WRC_2025 = 2
+    TYPES = [[ERMC_2019, "ERMC 2019"], [WRC_2020, "WRC 2020"], [WRC_2025, "WRC 2025"]]
 
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     place = models.PositiveIntegerField(default=None, null=True, blank=True)
