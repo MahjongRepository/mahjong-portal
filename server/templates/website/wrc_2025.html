@@ -5,6 +5,14 @@
     {% trans 'World Riichi Championship 2025 Qualifications' %}
 {% endblock %}
 
+{% block additional_css %}
+    <style>
+        .table td, .table th {
+            background-color: initial;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div>
         <h2>{% trans 'World Riichi Championship 2025 Qualifications' %}</h2>
@@ -48,6 +56,35 @@
                 и решений международного олимпийского комитета представители от РФ
                 могут выступать только под нейтральным флагом как независимые игроки.
             </p>
+
+            <p>
+                Рейтинг RR на 3 февраля 2025 года приведен ниже.
+            </p>
+            <p>
+                Игроки в топе таблицы выделены цветами согласно их текущему статусу.
+            </p>
+            <p>
+                <span style="background-color: {{ 'green'|ermc_color }}; padding: 5px;">Зеленый</span> - точно едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'yellow'|ermc_color }}; padding: 5px;">Желтый</span> - скорее всего едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'orange'|ermc_color }}; padding: 5px;">Оранжевый</span> - пока сомневается, но скорее всего не едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'blue'|ermc_color }}; padding: 5px;">Голубой</span> - игрок пока ничего не ответил.
+            </p>
+            <p>
+                <span style="background-color: {{ 'pink'|ermc_color }}; padding: 5px;">Розовый</span> - игрок пока что не проходит, но готов ехать, если появится квота.
+            </p>
+            <p>
+                <span style="background-color: {{ 'gray'|ermc_color }}; padding: 5px;">Серый</span> - точно не едет.
+            </p>
+            <p>
+                <span style="background-color: {{ 'violet'|ermc_color }}; padding: 5px;">Фиолетовый</span> - игрок замены, готовый ехать если представится случай.
+            </p>
+
         {% else %}
             <p>{% trans 'List of players sorted by RR rating (on 3st February 2025)' %}</p>
         {% endif %}
