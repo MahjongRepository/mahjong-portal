@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
         games = get_latest_wg_games()
 
-        tenhou_objects = TenhouNickname.objects.all().prefetch_related("player")
+        tenhou_objects = TenhouNickname.active_objects.all().prefetch_related("player")
         player_profiles = {}
         for tenhou_object in tenhou_objects:
             player_profiles[tenhou_object.tenhou_username] = tenhou_object

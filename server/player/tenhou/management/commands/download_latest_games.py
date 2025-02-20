@@ -25,7 +25,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("{0}: Start".format(get_date_string()))
 
-        tenhou_objects = TenhouNickname.objects.all()
+        tenhou_objects = TenhouNickname.active_objects.all()
         watching_nicknames = []
         cached_objects = {}
         for obj in tenhou_objects:

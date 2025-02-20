@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 import ujson
 from django.core.management.base import BaseCommand
@@ -65,22 +66,25 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("trueskill_file", type=str)
         parser.add_argument("type", type=str)
+        parser.add_argument("--date", default=None, type=str)
 
     def handle(self, *args, **options):
         print("{0}: Start trueskill rating update".format(get_date_string()))
 
         trueskill_file = options["trueskill_file"]
         trueskill_type = options["type"]
+        trueskill_date = options["date"]
         with open(trueskill_file, "r") as f:
             trueskill_map = ujson.loads(f.read())
 
         try:
             with transaction.atomic():
-                now = timezone.now().date()
+                rating_date = datetime.strptime(trueskill_date, "%d%m%Y") if trueskill_date else timezone.now().date()
+                rating_date_str = rating_date.strftime("%d-%m-%Y")
                 rating = get_rating_by_type(trueskill_type)
-                print("Erasing dates...")
-                ExternalRatingDelta.objects.filter(rating=rating, date=now).delete()
-                ExternalRatingDate.objects.filter(rating=rating, date=now).delete()
+                print(f"Erasing dates {rating_date_str}...")
+                ExternalRatingDelta.objects.filter(rating=rating, date=rating_date).delete()
+                ExternalRatingDate.objects.filter(rating=rating, date=rating_date).delete()
                 ExternalRatingTournament.objects.filter(rating=rating).delete()
 
                 deltas = []
@@ -94,7 +98,7 @@ class Command(BaseCommand):
                             ExternalRatingDelta(
                                 rating=rating,
                                 player=player,
-                                date=now,
+                                date=rating_date,
                                 base_rank=ts_player["rating"],
                                 is_active=True,
                                 place=place,
@@ -108,7 +112,7 @@ class Command(BaseCommand):
 
                 if deltas:
                     ExternalRatingDelta.objects.bulk_create(deltas)
-                print("Trueskill players updated!")
+                print(f"Trueskill players updated on date {rating_date_str}!")
 
                 tournaments = []
                 ts_tournaments_count = len(trueskill_map["tournament_ids"])
@@ -128,9 +132,9 @@ class Command(BaseCommand):
 
                 if tournaments:
                     ExternalRatingTournament.objects.bulk_create(tournaments)
-                print("Trueskill tournaments updated!")
+                print(f"Trueskill tournaments updated on date {rating_date_str}!")
 
-                ExternalRatingDate.objects.create(rating=rating, date=now)
+                ExternalRatingDate.objects.create(rating=rating, date=rating_date)
 
         except Exception as e:
             print(e)

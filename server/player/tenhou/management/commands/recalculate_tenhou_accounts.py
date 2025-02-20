@@ -26,9 +26,9 @@ class Command(BaseCommand):
         print("{0}: Start".format(get_date_string()))
 
         if tenhou_nickname:
-            tenhou_objects = TenhouNickname.objects.filter(is_active=True, tenhou_username=tenhou_nickname)
+            tenhou_objects = TenhouNickname.active_objects.filter(is_active=True, tenhou_username=tenhou_nickname)
         else:
-            tenhou_objects = TenhouNickname.objects.filter(is_active=True)
+            tenhou_objects = TenhouNickname.active_objects.filter(is_active=True)
         tenhou_players_count = len(tenhou_objects)
         current_player_index = 1
         for tenhou_object in tenhou_objects:

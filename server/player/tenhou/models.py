@@ -18,8 +18,14 @@ class TenhouActiveNicknameManager(models.Manager):
         return queryset.filter(is_active=True)
 
 
+class TenhouAllNicknameManager(models.Manager):
+    def get_queryset(self):
+        return super(TenhouAllNicknameManager, self).get_queryset()
+
+
 class TenhouNickname(BaseModel):
-    objects = TenhouActiveNicknameManager()
+    objects = TenhouAllNicknameManager()
+    active_objects = TenhouActiveNicknameManager()
     all_objects = models.Manager()
 
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="tenhou")

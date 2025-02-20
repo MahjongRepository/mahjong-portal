@@ -60,7 +60,7 @@ def player_details(request, slug, year=None, month=None, day=None):
         TournamentResult.objects.filter(player=player).prefetch_related("tournament").order_by("-tournament__end_date")
     )[:10]
 
-    tenhou_data = TenhouNickname.objects.filter(player=player, is_main=True)
+    tenhou_data = TenhouNickname.all_objects.filter(player=player, is_main=True)
     ms_data = MSAccount.objects.filter(player=player).first()
     club_ratings = (
         ClubRating.objects.filter(player=player).prefetch_related("club", "club__city").order_by("-games_count")
@@ -206,7 +206,9 @@ def _get_rating_changes(rating, player, today):
 def player_tenhou_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
     tenhou_data = (
-        TenhouNickname.objects.filter(player=player).order_by("-is_main").prefetch_related("aggregated_statistics")
+        TenhouNickname.active_objects.filter(player=player)
+        .order_by("-is_main")
+        .prefetch_related("aggregated_statistics")
     )
     return render(
         request,

@@ -136,8 +136,11 @@ def city_page(request, slug):
                 game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
             ).first()
 
-            player.rank = stat.rank
-            player.rank_display = stat.get_rank_display()
+            if stat:
+                player.rank = stat.rank
+                player.rank_display = stat.get_rank_display()
+            else:
+                player.rank_display = ""
 
     players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
@@ -323,7 +326,7 @@ def wrc_qualification_2020(request):
 
 
 def wrc_qualification_2025(request):
-    return qualification_view(request, PlayerQuotaEvent.WRC_2020, "website/wrc_2025.html")
+    return qualification_view(request, PlayerQuotaEvent.WRC_2025, "website/wrc_2025.html")
 
 
 def qualification_view(request, q_type, template):
