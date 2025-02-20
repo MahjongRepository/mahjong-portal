@@ -136,8 +136,11 @@ def city_page(request, slug):
                 game_players=TenhouAggregatedStatistics.FOUR_PLAYERS
             ).first()
 
-            player.rank = stat.rank
-            player.rank_display = stat.get_rank_display()
+            if stat:
+                player.rank = stat.rank
+                player.rank_display = stat.get_rank_display()
+            else:
+                player.rank_display = ""
 
     players = sorted(players, key=lambda x: (-x.rank, x.full_name))
 
