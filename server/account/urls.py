@@ -6,8 +6,14 @@ from django.urls import re_path as url
 
 from account.views import account_settings, do_login, request_player_and_user_connection
 
+
+class CustomLogoutView(auth_views.LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
 urlpatterns = [
-    url(r"^logout/$", auth_views.LogoutView.as_view(), name="logout"),
+    url(r"^logout/$", CustomLogoutView.as_view(), name="logout"),
     url(r"^login/$", do_login, name="do_login"),
     url(r"^settings/$", account_settings, name="account_settings"),
     path(
