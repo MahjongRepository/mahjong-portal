@@ -20,7 +20,7 @@ class PublicTournamentManager(models.Manager):
 
 
 class OnlineTournamentConfig(BaseModel):
-    token = models.CharField(unique=True)
+    token = models.CharField(unique=True, max_length=2048)
     online_config = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
