@@ -8,6 +8,7 @@ import platform
 import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import connection
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -88,8 +89,25 @@ def server(request):
         platform_name = "PyPy3"
     else:
         platform_name = "Python3"
+    db_backend = _get_pretty_name_db_backend(connection.vendor)
 
-    return render(request, "website/{}".format(template), {"page": "server", "platform_name": platform_name})
+    return render(
+        request,
+        "website/{}".format(template),
+        {"page": "server", "platform_name": platform_name, "db_backend": db_backend},
+    )
+
+
+def _get_pretty_name_db_backend(vendor):
+    if vendor == "mysql":
+        return "MySQL"
+    if vendor == "oracle":
+        return "Oracle"
+    if vendor == "postgresql":
+        return "PostgreSQL"
+    if vendor == "sqlite3":
+        return "SQLite3"
+    return vendor
 
 
 def championships(request):

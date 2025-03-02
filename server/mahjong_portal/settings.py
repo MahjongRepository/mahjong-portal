@@ -113,8 +113,9 @@ WSGI_APPLICATION = "mahjong_portal.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {"default": dj_database_url.config()}
+db_config_dict = dj_database_url.config()
+db_config_dict["OPTIONS"] = {"pool": False}
+DATABASES = {"default": db_config_dict}
 
 if os.environ.get("PANTHEON_DB_URL"):
     DATABASES["pantheon"] = dj_database_url.parse(os.environ.get("PANTHEON_DB_URL"))
@@ -142,8 +143,6 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 TIME_ZONE = "UTC"
 
 USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 
