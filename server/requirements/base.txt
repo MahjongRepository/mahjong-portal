@@ -2,10 +2,10 @@
 gunicorn==23.0.0
 
 # main deps
-Django==4.2.16
+Django==5.1.7
 django-modeltranslation==0.18.10
-psycopg==3.2.1
-psycopg2==2.9.9
+psycopg==3.2.5
+psycopg2==2.9.10
 psycopg2cffi==2.9.0
 django-bootstrap5==23.3
 dj-database-url==2.0.0
@@ -33,7 +33,7 @@ django-haystack==3.3.0
 Whoosh==2.7.4
 
 # for web parsing
-beautifulsoup4==4.12.2
+beautifulsoup4==4.13.3
 requests==2.32.3
 
 # for monitoring
