@@ -178,7 +178,7 @@ class Tournament(BaseModel):
             return _("open registration")
 
         if not self.opened_registration:
-            return _("registration close")
+            return _("registration closed")
 
         if self.is_pantheon_registration:
             return _("open registration")
