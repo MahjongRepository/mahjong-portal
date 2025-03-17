@@ -1861,10 +1861,10 @@ msgstr "премодерация"
 
 #: tournament/models.py:178 tournament/models.py:184
 msgid "open registration"
-msgstr "открытая регистрация"
+msgstr "свободная регистрация"
 
 #: tournament/models.py:181
-msgid "registration close"
+msgid "registration closed"
 msgstr "регистрация закрыта"
 
 #: tournament/models.py:206
