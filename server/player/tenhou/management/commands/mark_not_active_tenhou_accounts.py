@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("{0}: Start".format(get_date_string()))
 
-        tenhou_objects = TenhouNickname.active_objects.filter(is_active=True)
+        tenhou_objects = TenhouNickname.active_objects
         now = timezone.now().date()
         for tenhou_object in tenhou_objects:
             delta = now - tenhou_object.last_played_date
@@ -43,9 +43,7 @@ class Command(BaseCommand):
                     # we disabled main account for the player
                     # maybe there is another account to be main one
                     if tenhou_object.is_main:
-                        other_objects = TenhouNickname.active_objects.filter(
-                            player=tenhou_object.player, is_active=True
-                        ).first()
+                        other_objects = TenhouNickname.active_objects.filter(player=tenhou_object.player).first()
 
                         if other_objects:
                             other_objects.is_main = True
