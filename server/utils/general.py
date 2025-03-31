@@ -4,6 +4,7 @@ import calendar
 import random
 import string
 from datetime import datetime
+from numpy import random as nrandom
 
 import pytz
 from django.utils import timezone
@@ -109,3 +110,6 @@ def format_text(message, kwargs):
         else:
             message = message.replace("%%(%s)" % key, str(value))
     return message
+
+def get_random_confirm_code():
+    return nrandom.randint(10000, 99999)
