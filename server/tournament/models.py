@@ -367,6 +367,7 @@ class OnlineTournamentRegistration(BaseModel):
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
 
     notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
+    confirm_code = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = ["tenhou_nickname", "tournament"]
@@ -413,6 +414,7 @@ class MsOnlineTournamentRegistration(BaseModel):
 
     notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
     is_validated = models.BooleanField(default=False)
+    confirm_code = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = ["ms_nickname", "ms_friend_id", "tournament"]

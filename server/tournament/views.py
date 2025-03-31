@@ -27,7 +27,7 @@ from tournament.models import (
     TournamentRegistration,
     TournamentResult,
 )
-from utils.general import split_name
+from utils.general import split_name, get_random_confirm_code
 
 
 def tournament_list(request, tournament_type=None, year=None):
@@ -171,16 +171,23 @@ def tournament_announcement(request, slug):
             registration_results = registration_results.order_by("notes", "created_on")
 
     is_already_registered = False
+    registration_confirm_code = None
     if request.user.is_authenticated:
         # TODO support not only online tournaments
         if tournament.is_majsoul_tournament:
-            is_already_registered = MsOnlineTournamentRegistration.objects.filter(
+            current_registration = MsOnlineTournamentRegistration.objects.filter(
                 tournament=tournament, user=request.user, is_approved=True
-            ).exists()
+            )
+            is_already_registered = current_registration.exists()
+            if is_already_registered:
+                registration_confirm_code = current_registration[0].confirm_code
         else:
-            is_already_registered = OnlineTournamentRegistration.objects.filter(
+            current_registration = OnlineTournamentRegistration.objects.filter(
                 tournament=tournament, user=request.user, is_approved=True
-            ).exists()
+            )
+            is_already_registered = current_registration.exists()
+            if is_already_registered:
+                registration_confirm_code = current_registration[0].confirm_code
 
     missed_tenhou_id_error = request.GET.get("error") == "tenhou_id"
     form_data_error = request.GET.get("error") == "form_data"
@@ -197,6 +204,7 @@ def tournament_announcement(request, slug):
             "missed_tenhou_id_error": missed_tenhou_id_error,
             "form_data_error": form_data_error,
             "full_approved_players_count": full_approved_players_count,
+            "registration_confirm_code": registration_confirm_code,
         },
     )
 
@@ -251,6 +259,10 @@ def pantheon_tournament_registration(request, tournament_id):
 
         messages.success(request, message)
 
+    confirm_code = None
+    if tournament.is_online():
+        confirm_code = get_random_confirm_code()
+
     if tournament.is_majsoul_tournament:
         # todo get ms_data from pantheon
         MsOnlineTournamentRegistration.objects.create(
@@ -266,6 +278,7 @@ def pantheon_tournament_registration(request, tournament_id):
             allow_to_save_data=allow_to_save_data,
             notes=notes,
             is_approved=player_is_approved,
+            confirm_code=confirm_code,
         )
     else:
         OnlineTournamentRegistration.objects.create(
@@ -279,6 +292,7 @@ def pantheon_tournament_registration(request, tournament_id):
             city_object=city_object,
             notes=notes,
             is_approved=player_is_approved,
+            confirm_code=confirm_code,
         )
 
     return redirect(tournament.get_url())
