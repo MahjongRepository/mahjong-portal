@@ -37,7 +37,7 @@ class Command(BaseCommand):
             print("Not correct account")
             return
 
-        is_main = TenhouNickname.active_objects.filter(player=player, is_active=True).count() == 0
+        is_main = TenhouNickname.active_objects.filter(player=player).count() == 0
         tenhou_object = TenhouNickname.active_objects.create(
             is_main=is_main, player=player, tenhou_username=tenhou_nickname, username_created_at=account_start_date
         )
