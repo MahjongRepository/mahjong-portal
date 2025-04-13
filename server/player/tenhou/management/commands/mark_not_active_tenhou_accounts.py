@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("{0}: Start".format(get_date_string()))
 
-        tenhou_objects = TenhouNickname.active_objects
+        tenhou_objects = TenhouNickname.active_objects.all()
         now = timezone.now().date()
         for tenhou_object in tenhou_objects:
             delta = now - tenhou_object.last_played_date

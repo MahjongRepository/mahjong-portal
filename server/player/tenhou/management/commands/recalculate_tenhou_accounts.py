@@ -28,8 +28,8 @@ class Command(BaseCommand):
         if tenhou_nickname:
             tenhou_objects = TenhouNickname.active_objects.filter(tenhou_username=tenhou_nickname)
         else:
-            tenhou_objects = TenhouNickname.active_objects
-        tenhou_players_count = len(tenhou_objects)
+            tenhou_objects = TenhouNickname.active_objects.all()
+        tenhou_players_count = tenhou_objects.count()
         current_player_index = 1
         for tenhou_object in tenhou_objects:
             print(f"[{current_player_index}/{tenhou_players_count}] Processing {tenhou_object.tenhou_username}")
