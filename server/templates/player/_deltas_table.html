@@ -12,6 +12,7 @@
             <th scope="col">{% trans 'Coefficient' %}</th>
             <th scope="col">{% trans 'Type' %}</th>
             <th scope="col">{% trans 'Tournament' %}</th>
+            <th scope="col">{% trans 'City' %}</th>
         </tr>
         </thead>
         <tbody>
@@ -47,6 +48,13 @@
                     {% endwith %}
                 </td>
                 <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>
+                <td>
+                    {% if delta.tournament.city %}
+                        <a href="{% url 'city_page' delta.tournament.city.slug %}">{{ delta.tournament.city.name }}</a>
+                    {% else %}
+                        {{ delta.tournament.country.name }}
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>

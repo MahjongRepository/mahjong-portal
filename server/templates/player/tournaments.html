@@ -24,6 +24,7 @@
                         <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
                         <th scope="col">{% trans 'Tournament' %}</th>
+                        <th scope="col">{% trans 'City' %}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,13 @@
                                 {% endwith %}
                             </td>
                             <td><a href="{{ tournament_result.tournament.get_url }}">{{ tournament_result.tournament.name }}</a></td>
+                            <td>
+                                {% if tournament_result.tournament.city %}
+                                    <a href="{% url 'city_page' tournament_result.tournament.city.slug %}">{{ tournament_result.tournament.city.name }}</a>
+                                {% else %}
+                                    {{ tournament_result.tournament.country.name }}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
