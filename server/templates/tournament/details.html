@@ -35,11 +35,13 @@
             <p>{{ tournament.results_description|linebreaksbr|urlize }}</p>
         {% endif %}
 
-        {% for country in countries %}
-            <span class="badge bg-info">
-            {{ country.name }} ({{ country.count }})
-            </span>
-        {% endfor %}
+        {% if has_multiple_countries %}
+            {% for country in countries %}
+                <span class="badge bg-info">
+                {{ country.name }} ({{ country.count }})
+                </span>
+            {% endfor %}
+        {% endif%}
 
         {% include 'tournament/_tournament_results.html' %}
     </div>
