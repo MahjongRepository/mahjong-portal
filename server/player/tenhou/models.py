@@ -51,6 +51,9 @@ class TenhouNickname(BaseModel):
     def all_time_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.ALL_TIME)
 
+    def all_time_stat_four(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by("game_date")
+
     def current_month_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.CURRENT_MONTH)
 

@@ -10,42 +10,92 @@
     <script src="{% static 'js/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
 
     <script>
-        var rank_changes = [];
+        var rank_changes_by_count = [];
+        var rank_changes_by_date = [];
         var ranks = [];
+        var game_count = 0;
+        var rankChart;
+        var currentChartMode = 'count'; // 'count' or 'date'
+
         {% for rank in RANKS reversed %}
             ranks.push('{{ rank.1 }}');
         {% endfor %}
 
-        {% for c in tenhou_data.0.rank_changes %}
+        // Prepare data for game count view
+        {% for c in tenhou_data_all_time_stat_four %}
+            game_count += {{ c.games_since_last_change|default:1 }};
+
             {% if forloop.first %}
-                rank_changes.push({
-                    'x': '{{ c.game_date|date:'Y-m-d' }}',
+                rank_changes_by_count.push({
+                    'x': 0,
                     'y': '{{ c.get_rank_display }}'
                 });
+                previous_rank = '{{ c.get_next_rank_display }}';
+            {% else %}
+                if ('{{ c.get_next_rank_display }}' !== previous_rank) {
+                    rank_changes_by_count.push({
+                        'x': game_count,
+                        'y': previous_rank
+                    });
+                    rank_changes_by_count.push({
+                        'x': game_count,
+                        'y': '{{ c.get_next_rank_display }}'
+                    });
+                    previous_rank = '{{ c.get_next_rank_display }}';
+                }
             {% endif %}
 
-            rank_changes.push({
-                'x': '{{ c.game_date|date:'Y-m-d' }}',
-                'y': '{{ c.get_next_rank_display }}'
-            });
-
             {% if forloop.last %}
-                rank_changes.push({
-                    'x': '{% now 'Y-m-d' %}',
+                rank_changes_by_count.push({
+                    'x': game_count,
                     'y': '{{ c.get_next_rank_display }}'
                 });
             {% endif %}
         {% endfor %}
 
-        if (rank_changes.length) {
-            var rankChart = new Chart('rank_chart', {
+        // Prepare data for date view
+        {% for c in tenhou_data_all_time_stat_four %}
+            {% if forloop.first %}
+                rank_changes_by_date.push({
+                    'x': new Date('{{ c.game_date|date:"Y-m-d" }}'),
+                    'y': '{{ c.get_rank_display }}'
+                });
+                previous_rank = '{{ c.get_next_rank_display }}';
+            {% else %}
+                if ('{{ c.get_next_rank_display }}' !== previous_rank) {
+                    rank_changes_by_date.push({
+                        'x': new Date('{{ c.game_date|date:"Y-m-d" }}'),
+                        'y': previous_rank
+                    });
+                    rank_changes_by_date.push({
+                        'x': new Date('{{ c.game_date|date:"Y-m-d" }}'),
+                        'y': '{{ c.get_next_rank_display }}'
+                    });
+                    previous_rank = '{{ c.get_next_rank_display }}';
+                }
+            {% endif %}
+
+            {% if forloop.last %}
+                rank_changes_by_date.push({
+                    'x': new Date('{{ c.game_date|date:"Y-m-d" }}'),
+                    'y': '{{ c.get_next_rank_display }}'
+                });
+            {% endif %}
+        {% endfor %}
+
+        function initializeRankChart() {
+            var chartData = currentChartMode === 'count' ? rank_changes_by_count : rank_changes_by_date;
+
+            var options = {
                 responsive: true,
                 type: 'line',
                 data: {
                     datasets: [
                         {
-                            label: '{% trans 'Rank' %}',
-                            data: rank_changes,
+                            label: currentChartMode === 'count'
+                                ? '{% trans "Rank by Game Count" %}'
+                                : '{% trans "Rank by Date" %}',
+                            data: chartData,
                             fill: false,
                             borderColor: 'rgb(153, 102, 255)',
                             backgroundColor: 'rgb(153, 102, 255)',
@@ -56,59 +106,119 @@
                 options: {
                     scales: {
                         x: {
-                            type: 'time'
+                            type: currentChartMode === 'count' ? 'linear' : 'time',
+                            title: {
+                                display: true,
+                                text: currentChartMode === 'count'
+                                    ? '{% trans "Games Played" %}'
+                                    : '{% trans "Date" %}'
+                            },
+                            min: currentChartMode === 'count' ? 0 : undefined,
+                            ticks: currentChartMode === 'count' ? {
+                                stepSize: 10
+                            } : {
+                                autoSkip: true,
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            time: currentChartMode === 'date' ? {
+                                tooltipFormat: 'PP',
+                                displayFormats: {
+                                    day: 'MMM d'
+                                }
+                            } : undefined
                         },
                         y: {
                             type: 'category',
-                            labels: ranks
+                            labels: ranks,
+                            title: {
+                                display: true,
+                                text: '{% trans "Rank" %}'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (currentChartMode === 'count') {
+                                        return context.parsed.y + ' (Game #' + context.parsed.x + ')';
+                                    } else {
+                                        var date = new Date(context.parsed.x);
+                                        return context.parsed.y + ' (' + date.toLocaleDateString() + ')';
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            });
+            };
+
+            if (rankChart) {
+                rankChart.destroy();
+            }
+
+            rankChart = new Chart('rank_chart', options);
         }
 
-        var pt_changes = [];
-        var labels = [];
-        {% for c in tenhou_data.0.pt_changes %}
-            {% if forloop.first %}
-                pt_changes.push({{ tenhou_data.0.dan_settings.start_pt }});
+        function toggleChartMode() {
+            currentChartMode = currentChartMode === 'count' ? 'date' : 'count';
+            document.getElementById('toggleChartBtn').textContent =
+                currentChartMode === 'count'
+                    ? '{% trans "Show by Date" %}'
+                    : '{% trans "Show by Game Count" %}';
+            initializeRankChart();
+        }
+
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (rank_changes_by_count.length) {
+                initializeRankChart();
+            }
+
+            var pt_changes = [];
+            var labels = [];
+            {% for c in tenhou_data.0.pt_changes %}
+                {% if forloop.first %}
+                    pt_changes.push({{ tenhou_data.0.dan_settings.start_pt }});
+                    labels.push("{{ c.game_date|date:'Y-m-d' }}");
+                {% endif %}
+
+                pt_changes.push(pt_changes[pt_changes.length - 1] + {{ c.delta }});
                 labels.push("{{ c.game_date|date:'Y-m-d' }}");
-            {% endif %}
+            {% endfor %}
 
-            pt_changes.push(pt_changes[pt_changes.length - 1] + {{ c.delta }});
-            labels.push("{{ c.game_date|date:'Y-m-d' }}");
-        {% endfor %}
-
-        if (pt_changes.length) {
-            var ptChart = new Chart('pt_chart', {
-                responsive: true,
-                type: 'line',
-                data: {
-                    datasets: [
-                        {
-                            label: '{% trans 'Points' %}',
-                            data: pt_changes,
-                            fill: false,
-                            borderColor: 'green',
-                            backgroundColor: 'green',
-                            cubicInterpolationMode: 'monotone'
-                        }
-                    ]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            type: 'category',
-                            labels: labels,
-                        },
-                        y: {
-                            min: 0,
-                            max: {{ tenhou_data.0.dan_settings.end_pt }}
+            if (pt_changes.length) {
+                var ptChart = new Chart('pt_chart', {
+                    responsive: true,
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                label: '{% trans 'Points' %}',
+                                data: pt_changes,
+                                fill: false,
+                                borderColor: 'green',
+                                backgroundColor: 'green',
+                                cubicInterpolationMode: 'monotone'
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: labels,
+                            },
+                            y: {
+                                min: 0,
+                                max: {{ tenhou_data.0.dan_settings.end_pt }}
+                            }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     </script>
 {% endblock %}
 
@@ -149,7 +259,12 @@
                     {% if forloop.first %}
                         <div class="d-block d-print-none">
                             {% if tenhou_item.rank_changes %}
-                                <h5>{% trans "Rank chart" %}</h5>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="mb-0">{% trans "Rank chart" %}</h5>
+                                    <button id="toggleChartBtn" class="btn btn-sm btn-outline-primary" onclick="toggleChartMode()">
+                                        {% trans "Show by Date" %}
+                                    </button>
+                                </div>
                                 <canvas id="rank_chart"></canvas>
                             {% endif %}
 
