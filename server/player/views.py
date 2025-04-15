@@ -215,7 +215,12 @@ def player_tenhou_details(request, slug):
     return render(
         request,
         "player/tenhou.html",
-        {"player": player, "tenhou_data": tenhou_data, "tenhou_data_all_time_stat_four": tenhou_data_all_time_stat_four, "RANKS": TenhouAggregatedStatistics.RANKS},
+        {
+            "player": player,
+            "tenhou_data": tenhou_data,
+            "tenhou_data_all_time_stat_four": tenhou_data_all_time_stat_four,
+            "RANKS": TenhouAggregatedStatistics.RANKS,
+        },
     )
 
 
