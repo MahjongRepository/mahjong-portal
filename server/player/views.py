@@ -210,7 +210,7 @@ def player_tenhou_details(request, slug):
         .order_by("-is_main")
         .prefetch_related("aggregated_statistics")
     )
-    tenhou_data_all_time_stat_four = tenhou_data[0].all_time_stat_four;
+    tenhou_data_all_time_stat_four = tenhou_data[0].all_time_stat_four()
 
     return render(
         request,

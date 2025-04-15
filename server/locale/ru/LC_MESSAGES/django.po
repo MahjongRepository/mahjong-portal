@@ -248,7 +248,7 @@ msgstr ""
 "\n"
 " Полезные ссылки:\n"
 " - турнирное лобби: %(lobby_link)s\n"
-" - турнирный рейтинг: %(rating_link)s\n"
+" - турнирный рейтинг: %(rating_link)s"
 
 #: online/handler.py:1317
 #, python-format
@@ -268,7 +268,7 @@ msgstr ""
 "\n"
 " Полезные ссылки:\n"
 " - турнирное лобби: %(lobby_link)s\n"
-" - турнирный рейтинг: %(rating_link)s\n"
+" - турнирный рейтинг: %(rating_link)s"
 
 #: online/handler.py:1332
 #, python-format
@@ -409,8 +409,8 @@ msgid ""
 "to enter the tournament lobby. Games will start automatically."
 msgstr ""
 "Этап подтверждение закончился! Подтвердили своё участие "
-"%(confirmed_players)s игроков. Игры начнутся через 10 минут в 10-30 МСК. "
-"Пожалуйста, пройдите в лобби %(lobby_link)s и ждите начала игр (игры "
+"%(confirmed_players) игроков. Игры начнутся через 10 минут в 10-30 МСК. "
+"Пожалуйста, пройдите в лобби %(lobby_link) и ждите начала игр (игры "
 "начнутся автоматически)."
 
 #: online/handler.py:1416
