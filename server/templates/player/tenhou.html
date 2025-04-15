@@ -22,7 +22,7 @@
         {% endfor %}
 
         // Prepare data for game count view
-        {% for c in tenhou_data.0.all_time_stat_four %}
+        {% for c in tenhou_data_all_time_stat_four %}
             game_count += {{ c.games_since_last_change|default:1 }};
 
             {% if forloop.first %}
@@ -54,7 +54,7 @@
         {% endfor %}
 
         // Prepare data for date view
-        {% for c in tenhou_data.0.all_time_stat_four %}
+        {% for c in tenhou_data_all_time_stat_four %}
             {% if forloop.first %}
                 rank_changes_by_date.push({
                     'x': new Date('{{ c.game_date|date:"Y-m-d" }}'),
