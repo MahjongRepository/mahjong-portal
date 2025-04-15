@@ -109,7 +109,13 @@ def tournament_details(request, slug):
     return render(
         request,
         "tournament/details.html",
-        {"tournament": tournament, "results": results, "page": "tournament", "countries": countries, "has_multiple_countries": has_multiple_countries},
+        {
+            "tournament": tournament,
+            "results": results,
+            "page": "tournament",
+            "countries": countries,
+            "has_multiple_countries": has_multiple_countries,
+        },
     )
 
 
