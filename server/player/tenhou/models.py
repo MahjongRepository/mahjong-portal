@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.db import models
 from django.db.models import F
+from django.db.models import Avg, Count, Case, When, FloatField
 from django.utils.translation import gettext_lazy
 
 from mahjong_portal.models import BaseModel
@@ -53,6 +54,92 @@ class TenhouNickname(BaseModel):
 
     def all_time_stat_four(self):
         return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS).order_by("game_date")
+
+    def all_time_stat_ton_Ippan(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四般東").order_by("game_date")
+
+    def all_time_stat_nan_Ippan(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四般南").order_by("game_date")
+
+    def all_time_stat_ton_Joukyuu(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四上東").order_by("game_date")
+
+    def all_time_stat_nan_Joukyuu(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四上南").order_by("game_date")
+
+    def all_time_stat_ton_Tokujou(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四特東").order_by("game_date")
+
+    def all_time_stat_nan_Tokujou(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四特南").order_by("game_date")
+
+    def all_time_stat_ton_Houou(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四鳳東").order_by("game_date")
+
+    def all_time_stat_nan_Houou(self):
+        return self.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS, game_rules__startswith="四鳳南").order_by("game_date")
+
+    def calculate_statistics(self, queryset):
+        if not queryset.exists():
+            return None
+
+        stats = queryset.aggregate(
+            total_games=Count('id'),
+            average_place=Avg('place'),
+            first_place=100.0 * Avg(
+                Case(
+                    When(place=1, then=1),
+                    default=0,
+                    output_field=FloatField()
+                )
+            ),
+            second_place=100.0 * Avg(
+                Case(
+                    When(place=2, then=1),
+                    default=0,
+                    output_field=FloatField()
+                )
+            ),
+            third_place=100.0 * Avg(
+                Case(
+                    When(place=3, then=1),
+                    default=0,
+                    output_field=FloatField()
+                )
+            ),
+            fourth_place=100.0 * Avg(
+                Case(
+                    When(place=4, then=1),
+                    default=0,
+                    output_field=FloatField()
+                )
+            )
+        )
+        return stats
+
+    def get_Ippan_ton_stats(self):
+        return self.calculate_statistics(self.all_time_stat_ton_Ippan())
+
+    def get_Ippan_nan_stats(self):
+        return self.calculate_statistics(self.all_time_stat_nan_Ippan())
+
+    def get_Joukyuu_ton_stats(self):
+        return self.calculate_statistics(self.all_time_stat_ton_Joukyuu())
+
+    def get_Joukyuu_nan_stats(self):
+        return self.calculate_statistics(self.all_time_stat_nan_Joukyuu())
+
+    def get_Tokujou_ton_stats(self):
+        return self.calculate_statistics(self.all_time_stat_ton_Tokujou())
+
+    def get_Tokujou_nan_stats(self):
+        return self.calculate_statistics(self.all_time_stat_nan_Tokujou())
+
+    def get_Houou_ton_stats(self):
+        return self.calculate_statistics(self.all_time_stat_ton_Houou())
+
+    def get_Houou_nan_stats(self):
+        return self.calculate_statistics(self.all_time_stat_nan_Houou())
 
     def current_month_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.CURRENT_MONTH)
