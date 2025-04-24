@@ -2,9 +2,9 @@
 
 from collections import defaultdict
 
-from django.db.models import F
+from django.db.models import Avg, Case, Count, F, FloatField, When
 from django.shortcuts import get_object_or_404, redirect, render
-from django.db.models import Avg, Count, Case, When, FloatField
+
 from club.club_games.models import ClubRating
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
@@ -202,41 +202,18 @@ def _get_rating_changes(rating, player, today):
 
     return filtered_results
 
+
 def calculate_statistics(queryset):
     if not queryset.exists():
         return None
 
     stats = queryset.aggregate(
-        total_games=Count('id'),
-        average_place=Avg('place'),
-        first_place=100.0 * Avg(
-            Case(
-                When(place=1, then=1),
-                default=0,
-                output_field=FloatField()
-            )
-        ),
-        second_place=100.0 * Avg(
-            Case(
-                When(place=2, then=1),
-                default=0,
-                output_field=FloatField()
-            )
-        ),
-        third_place=100.0 * Avg(
-            Case(
-                When(place=3, then=1),
-                default=0,
-                output_field=FloatField()
-            )
-        ),
-        fourth_place=100.0 * Avg(
-            Case(
-                When(place=4, then=1),
-                default=0,
-                output_field=FloatField()
-            )
-        )
+        total_games=Count("id"),
+        average_place=Avg("place"),
+        first_place=100.0 * Avg(Case(When(place=1, then=1), default=0, output_field=FloatField())),
+        second_place=100.0 * Avg(Case(When(place=2, then=1), default=0, output_field=FloatField())),
+        third_place=100.0 * Avg(Case(When(place=3, then=1), default=0, output_field=FloatField())),
+        fourth_place=100.0 * Avg(Case(When(place=4, then=1), default=0, output_field=FloatField())),
     )
     return stats
 
@@ -250,29 +227,21 @@ def player_tenhou_details(request, slug):
     )
     tenhou_data_all_time_stat_four = tenhou_data[0].all_time_stat_four() if tenhou_data else []
 
-    ippan_ton = calculate_statistics(tenhou_data_all_time_stat_four
-                                     .filter(game_rules__startswith="四般東"))
+    ippan_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般東"))
 
-    ippan_nan = calculate_statistics(tenhou_data_all_time_stat_four
-                                     .filter(game_rules__startswith="四般南"))
+    ippan_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般南"))
 
-    joukyuu_ton = calculate_statistics(tenhou_data_all_time_stat_four
-                                       .filter(game_rules__startswith="四上東"))
+    joukyuu_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四上東"))
 
-    joukyuu_nan = calculate_statistics(tenhou_data_all_time_stat_four
-                                       .filter(game_rules__startswith="四上南"))
+    joukyuu_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四上南"))
 
-    tokujou_ton = calculate_statistics(tenhou_data_all_time_stat_four
-                                       .filter(game_rules__startswith="四特東"))
+    tokujou_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四特東"))
 
-    tokujou_nan = calculate_statistics(tenhou_data_all_time_stat_four
-                                       .filter(game_rules__startswith="四特南"))
+    tokujou_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四特南"))
 
-    houou_ton = calculate_statistics(tenhou_data_all_time_stat_four
-                                     .filter(game_rules__startswith="四鳳東"))
+    houou_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四鳳東"))
 
-    houou_nan = calculate_statistics(tenhou_data_all_time_stat_four
-                                     .filter(game_rules__startswith="四鳳南"))
+    houou_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四鳳南"))
 
     return render(
         request,
