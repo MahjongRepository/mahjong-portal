@@ -1288,35 +1288,35 @@ msgstr "За всё время"
 
 #: templates/player/tenhou.html:422
 msgid "四般東 (Ippan Tonpuusen)"
-msgstr "Кю-лобби тонпусены"
+msgstr "四般東 (Кю-лобби тонпусены)"
 
 #: templates/player/tenhou.html:453
 msgid "四般南 (Ippan Hanchan)"
-msgstr "Кю-лобби ханчаны"
+msgstr "四般南 (Кю-лобби ханчаны)"
 
 #: templates/player/tenhou.html:484
 msgid "四上東 (Joukyuu Tonpuusen)"
-msgstr "Перводан тонпусены"
+msgstr "四上東 (Перводан тонпусены)"
 
 #: templates/player/tenhou.html:515
 msgid "四上南 (Joukyuu Hanchan)"
-msgstr "Перводан ханчаны"
+msgstr "四上南 (Перводан ханчаны)"
 
 #: templates/player/tenhou.html:546
 msgid "四特東 (Tokujou Tonpuusen)"
-msgstr "Втородан тонпусены"
+msgstr "四特東 (Втородан тонпусены)"
 
 #: templates/player/tenhou.html:577
 msgid "四特南 (Tokujou Hanchan)"
-msgstr "Втородан ханчаны"
+msgstr "四特南 (Втородан ханчаны)"
 
 #: templates/player/tenhou.html:608
 msgid "四鳳東 (Houou Ton)"
-msgstr "Феникс тонпусены"
+msgstr "四鳳東 (Феникс тонпусены)"
 
 #: templates/player/tenhou.html:639
 msgid "四鳳南 (Houou Hanchan)"
-msgstr "Феникс ханчаны"
+msgstr "四鳳南 (Феникс ханчаны)"
 
 #: templates/rating/_external_results_table.html:17
 msgid "at least 20 games"
