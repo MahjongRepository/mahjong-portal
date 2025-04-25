@@ -277,7 +277,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
                     place = x
                     break
 
-            if str(game["playlength"]) == "1":
+            if game["playlength"] == 1:
                 game_type = "東"
             else:
                 game_type = "南"
