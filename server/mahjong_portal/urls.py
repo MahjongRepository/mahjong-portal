@@ -75,7 +75,7 @@ urlpatterns = [
     url("^api/v0/autobot/add_penalty_game$", add_penalty_game),
     url("^api/v0/autobot/send_team_names_to_pantheon$", send_team_names_to_pantheon),
     url(r"^online/", include("online.urls")),
-    url('i18n/', include('django.conf.urls.i18n')),
+    url("i18n/", include("django.conf.urls.i18n")),
 ]
 
 urlpatterns += i18n_patterns(
@@ -91,5 +91,5 @@ urlpatterns += i18n_patterns(
     url(r"^account/", include("account.urls")),
     url(r"^wiki/", include("wiki.urls")),
     url(r"^league/", include("league.urls")),
-    url('i18n/', include('django.conf.urls.i18n')),
+    url("i18n/", include("django.conf.urls.i18n")),
 )
