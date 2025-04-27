@@ -219,6 +219,276 @@
                 });
             }
         });
+
+        function getPeriodBounds(date, periodType) {
+            const d = new Date(date);
+            let start, end;
+
+            switch(periodType) {
+                case 'year':
+                    start = new Date(d.getFullYear(), 0, 1);
+                    end = new Date(d.getFullYear(), 11, 31);
+                    break;
+                case 'month':
+                    start = new Date(d.getFullYear(), d.getMonth(), 1);
+                    end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+                    break;
+                case 'week':
+                    // start week - monday
+                    const day = d.getDay();
+                    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                    start = new Date(d.setDate(diff));
+                    end = new Date(start);
+                    end.setDate(start.getDate() + 6);
+                    break;
+            }
+
+            return { start, end };
+        }
+
+        var ptSummaryData = {
+            month: [],
+            year: [],
+            week: []
+        };
+
+        {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y-m" as monthly_games %}
+        {% for month in monthly_games %}
+            var totalPt = 0;
+            var totalGames = 0;
+            var totalPlace = 0;
+            var totalTime = 0;
+
+            {% for game in month.list %}
+                totalPt += {{ game.delta|default:0 }};
+                totalGames += 1;
+                totalPlace += {{ game.place }};
+                totalTime += {{ game.game_length|default:0 }};
+            {% endfor %}
+
+            var avgPlace = totalPlace / totalGames;
+            var period = getPeriodBounds(new Date('{{ month.list.0.game_date|date:"Y-m-d" }}'), 'month');
+
+            ptSummaryData.month.push({
+                x: period.start,
+                x2: period.end,
+                y: totalPt,
+                games: totalGames,
+                avgPlace: avgPlace.toFixed(2),
+                time: totalTime,
+                label: '{{ month.grouper }}'
+            });
+        {% endfor %}
+
+        {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y" as yearly_games %}
+        {% for year in yearly_games %}
+            var totalPt = 0;
+            var totalGames = 0;
+            var totalPlace = 0;
+            var totalTime = 0;
+
+            {% for game in year.list %}
+                totalPt += {{ game.delta|default:0 }};
+                totalGames += 1;
+                totalPlace += {{ game.place }};
+                totalTime += {{ game.game_length|default:0 }};
+            {% endfor %}
+
+            var avgPlace = totalPlace / totalGames;
+            var period = getPeriodBounds(new Date('{{ year.list.0.game_date|date:"Y-m-d" }}'), 'year');
+
+            ptSummaryData.year.push({
+                x: period.start,
+                x2: period.end,
+                y: totalPt,
+                games: totalGames,
+                avgPlace: avgPlace.toFixed(2),
+                time: totalTime,
+                label: '{{ year.grouper }}'
+            });
+        {% endfor %}
+
+        {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y-W" as weekly_games %}
+        {% for week in weekly_games %}
+            var totalPt = 0;
+            var totalGames = 0;
+            var totalPlace = 0;
+            var totalTime = 0;
+
+            {% for game in week.list %}
+                totalPt += {{ game.delta|default:0 }};
+                totalGames += 1;
+                totalPlace += {{ game.place }};
+                totalTime += {{ game.game_length|default:0 }};
+            {% endfor %}
+
+            var avgPlace = totalPlace / totalGames;
+            var period = getPeriodBounds(new Date('{{ week.list.0.game_date|date:"Y-m-d" }}'), 'week');
+
+            ptSummaryData.week.push({
+                x: period.start,
+                x2: period.end,
+                y: totalPt,
+                games: totalGames,
+                avgPlace: avgPlace.toFixed(2),
+                time: totalTime,
+                label: 'Week {{ week.grouper|slice:"5:" }} of {{ week.grouper|slice:":4" }}'
+            });
+        {% endfor %}
+
+        //initialization graph
+        var ptSummaryChart;
+        var currentPtSummaryMode = 'month';
+
+        function initializePtSummaryChart() {
+            const chartData = ptSummaryData[currentPtSummaryMode];
+
+            // for correct positioning bars
+            const barRangePlugin = {
+            id: 'barRange',
+            beforeDraw: function(chart) {
+                const ctx = chart.ctx;
+                const xAxis = chart.scales.x;
+                const yAxis = chart.scales.y;
+
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach((bar, index) => {
+                        const data = dataset.data[index];
+                        if (data.x2) {
+                            const startPixel = xAxis.getPixelForValue(data.x);
+                            const endPixel = xAxis.getPixelForValue(data.x2);
+                            const width = endPixel - startPixel;
+
+                            //that first bar start with left side
+                            bar.x = startPixel;
+                            bar.width = width;
+                            bar.base = yAxis.getPixelForValue(0);
+                        }
+                    });
+                });
+            }
+        };
+
+        var options = {
+            responsive: true,
+            type: 'bar',
+            plugins: [barRangePlugin],
+            data: {
+                datasets: [
+                    {
+                        label: getChartLabel(),
+                        data: chartData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+
+                        barPercentage: 1.0,
+                        categoryPercentage: 1.0
+                    }
+                ]
+            },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    title: { display: true, text: '{% trans "Date" %}' },
+                    time: {
+                        unit: getTimeUnit(),
+                        tooltipFormat: 'PP',
+                        displayFormats: {
+                            month: 'MMM yyyy',
+                            year: 'yyyy',
+                            week: 'PP'
+                        }
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+
+                    offset: false,
+                    grid: {
+                        offset: false
+                    }
+                },
+                y: {
+                    title: { display: true, text: '{% trans "PT Sum" %}' },
+                    beginAtZero: true
+                }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: () => '',
+                            afterLabel: function(context) {
+                                const data = context.raw;
+                                const timeSpent = formatTime(data.time);
+
+                                return [
+                                    '{% trans "Period" %}: ' + data.label,
+                                    '{% trans "Games Played" %}: ' + data.games,
+                                    '{% trans "Average Place" %}: ' + data.avgPlace,
+                                    '{% trans "PT Sum" %}: ' + data.y,
+                                    '{% trans "Time Spent" %}: ' + timeSpent
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        if (ptSummaryChart) {
+            ptSummaryChart.destroy();
+        }
+
+        ptSummaryChart = new Chart('pt_summary_chart', options);
+    }
+
+        function getChartLabel() {
+            switch(currentPtSummaryMode) {
+                case 'month': return '{% trans "PT Sum by Month" %}';
+                case 'year': return '{% trans "PT Sum by Year" %}';
+                case 'week': return '{% trans "PT Sum by Week" %}';
+                default: return '{% trans "PT Sum" %}';
+            }
+        }
+
+        function getTimeUnit() {
+            switch(currentPtSummaryMode) {
+                case 'month': return 'month';
+                case 'year': return 'year';
+                case 'week': return 'week';
+                default: return 'month';
+            }
+        }
+
+        function formatTime(minutes) {
+            if (!minutes) return '0m';
+            const days = Math.floor(minutes / 60 / 24)
+            const hours = Math.floor(minutes / 60 % 24 );
+            const minutes_res = Math.floor(minutes % 60)
+            return (days > 0 ? days + 'd ' : '') + (hours > 0 ? hours + 'h ' : '') + minutes_res + 'm';
+        }
+
+        function togglePtSummaryMode(mode) {
+            currentPtSummaryMode = mode;
+            initializePtSummaryChart();
+            document.querySelectorAll('.pt-summary-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('pt-summary-' + mode + '-btn').classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (ptSummaryData.month.length) {
+                initializePtSummaryChart();
+                document.getElementById('pt-summary-month-btn').classList.add('active');
+            }
+        });
+
     </script>
 {% endblock %}
 
@@ -272,6 +542,23 @@
                                 <h5>{% trans "Pt chart" %}</h5>
                                 <canvas id="pt_chart" class="d-block d-print-none"></canvas>
                             {% endif %}
+
+                            <h3>{% trans "PT Summary" %}</h3>
+                            <div class="btn-group mb-3">
+                                <button id="pt-summary-month-btn" class="btn btn-sm pt-summary-btn"
+                                        onclick="togglePtSummaryMode('month')">
+                                    {% trans "By Month" %}
+                                </button>
+                                <button id="pt-summary-year-btn" class="btn btn-sm pt-summary-btn"
+                                        onclick="togglePtSummaryMode('year')">
+                                    {% trans "By Year" %}
+                                </button>
+                                <button id="pt-summary-week-btn" class="btn btn-sm pt-summary-btn"
+                                        onclick="togglePtSummaryMode('week')">
+                                    {% trans "By Week" %}
+                                </button>
+                            </div>
+                            <canvas id="pt_summary_chart"></canvas>
                         </div>
                     {% endif %}
 
