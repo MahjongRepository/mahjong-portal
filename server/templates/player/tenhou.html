@@ -684,258 +684,114 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
+                                {% with ippan_ton as ipp_ton %}
+                                    {% if ipp_ton %}
+                                        <tr>
+                                            <td>{% trans '四般東 (Ippan Tonpuusen)' %}</td>
+                                            <td>{{ ipp_ton.total_games }}</td>
+                                            <td>{{ ipp_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with ippan_nan as ipp_nan %}
+                                    {% if ipp_nan %}
+                                        <tr>
+                                            <td>{% trans '四般南 (Ippan Hanchan)' %}</td>
+                                            <td>{{ ipp_nan.total_games }}</td>
+                                            <td>{{ ipp_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.first_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with joukyuu_ton as Jou_ton %}
+                                    {% if Jou_ton %}
+                                        <tr>
+                                            <td>{% trans '四上東 (Joukyuu Tonpuusen)' %}</td>
+                                            <td>{{ Jou_ton.total_games }}</td>
+                                            <td>{{ Jou_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with joukyuu_nan as Jou_nan %}
+                                    {% if Jou_nan %}
+                                        <tr>
+                                            <td>{% trans '四上南 (Joukyuu Hanchan)' %}</td>
+                                            <td>{{ Jou_nan.total_games }}</td>
+                                            <td>{{ Jou_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_nan.first_place|floatformat:2 }}%</td>
+                                            <td>{{ Jou_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_nan.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with tokujou_ton as Tok_ton %}
+                                    {% if Tok_ton %}
+                                        <tr>
+                                            <td>{% trans '四特東 (Tokujou Tonpuusen)' %}</td>
+                                            <td>{{ Tok_ton.total_games }}</td>
+                                            <td>{{ Tok_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with tokujou_nan as Tok_nan %}
+                                    {% if Tok_nan %}
+                                        <tr>
+                                            <td>{% trans '四特南 (Tokujou Hanchan)' %}</td>
+                                            <td>{{ Tok_nan.total_games }}</td>
+                                            <td>{{ Tok_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.first_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with houou_ton as Hou_ton %}
+                                    {% if Hou_ton %}
+                                        <tr>
+                                            <td>{% trans '四鳳東 (Houou Ton)' %}</td>
+                                            <td>{{ Hou_ton.total_games }}</td>
+                                            <td>{{ Hou_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with houou_nan as Hou_nan %}
+                                    {% if Hou_nan %}
+                                        <tr>
+                                            <td>{% trans '四鳳南 (Houou Hanchan)' %}</td>
+                                            <td>{{ Hou_nan.total_games }}</td>
+                                            <td>{{ Hou_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.first_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.fourth_place|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endwith %}
                                 </tbody>
                             </table>
                         </div>
                     {% endif %}
-
-                    {% with ippan_ton as ipp_ton %}
-                        {% if ipp_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四般東 (Ippan Tonpuusen)' %}</td>
-                                                <td>{{ ipp_ton.total_games }}</td>
-                                                <td>{{ ipp_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with ippan_nan as ipp_nan %}
-                        {% if ipp_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四般南 (Ippan Hanchan)' %}</td>
-                                                <td>{{ ipp_nan.total_games }}</td>
-                                                <td>{{ ipp_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.first_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with joukyuu_ton as Jou_ton %}
-                        {% if Jou_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四上東 (Joukyuu Tonpuusen)' %}</td>
-                                                <td>{{ Jou_ton.total_games }}</td>
-                                                <td>{{ Jou_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with joukyuu_nan as Jou_nan %}
-                        {% if Jou_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四上南 (Joukyuu Hanchan)' %}</td>
-                                                <td>{{ Jou_nan.total_games }}</td>
-                                                <td>{{ Jou_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_nan.first_place|floatformat:2 }}%</td>
-                                                <td>{{ Jou_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with tokujou_ton as Tok_ton %}
-                        {% if Tok_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四特東 (Tokujou Tonpuusen)' %}</td>
-                                                <td>{{ Tok_ton.total_games }}</td>
-                                                <td>{{ Tok_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with tokujou_nan as Tok_nan %}
-                        {% if Tok_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四特南 (Tokujou Hanchan)' %}</td>
-                                                <td>{{ Tok_nan.total_games }}</td>
-                                                <td>{{ Tok_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.first_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with houou_ton as Hou_ton %}
-                        {% if Hou_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四鳳東 (Houou Ton)' %}</td>
-                                                <td>{{ Hou_ton.total_games }}</td>
-                                                <td>{{ Hou_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with houou_nan as Hou_nan %}
-                        {% if Hou_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四鳳南 (Houou Hanchan)' %}</td>
-                                                <td>{{ Hou_nan.total_games }}</td>
-                                                <td>{{ Hou_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.first_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
 
                     {% with tenhou_item.latest_yakumans as yakumans %}
                         {% if yakumans %}
