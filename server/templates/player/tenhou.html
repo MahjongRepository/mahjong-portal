@@ -221,37 +221,38 @@
         });
 
         function getPeriodBounds(date, periodType) {
-            const d = new Date(date);
-            let start, end;
+        const d = new Date(date);
+        let start, end;
 
-            switch(periodType) {
-                case 'year':
-                    start = new Date(d.getFullYear(), 0, 1);
-                    end = new Date(d.getFullYear(), 11, 31);
-                    break;
-                case 'month':
-                    start = new Date(d.getFullYear(), d.getMonth(), 1);
-                    end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-                    break;
-                case 'week':
-                    // start week - monday
-                    const day = d.getDay();
-                    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-                    start = new Date(d.setDate(diff));
-                    end = new Date(start);
-                    end.setDate(start.getDate() + 6);
-                    break;
-            }
-
-            return { start, end };
+        switch(periodType) {
+            case 'year':
+                start = new Date(d.getFullYear(), 0, 1);
+                end = new Date(d.getFullYear(), 11, 31);
+                break;
+            case 'month':
+                start = new Date(d.getFullYear(), d.getMonth(), 1);
+                end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+                break;
+            case 'week':
+                // start week - monday
+                const day = d.getDay();
+                const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                start = new Date(d.setDate(diff));
+                end = new Date(start);
+                end.setDate(start.getDate() + 6);
+                break;
         }
 
-        var ptSummaryData = {
-            month: [],
-            year: [],
-            week: []
-        };
+        return { start, end };
+    }
 
+    var ptSummaryData = {
+        month: [],
+        year: [],
+        week: []
+    };
+
+    function processData(){
         {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y-m" as monthly_games %}
         {% for month in monthly_games %}
             var totalPt = 0;
@@ -335,16 +336,62 @@
                 label: 'Week {{ week.grouper|slice:"5:" }} of {{ week.grouper|slice:":4" }}'
             });
         {% endfor %}
+    }
 
-        //initialization graph
-        var ptSummaryChart;
-        var currentPtSummaryMode = 'month';
+    // Chart variables
+    var ptSummaryChart = null;
+    var currentPtSummaryMode = null;
+    var isDataLoaded = false;
 
-        function initializePtSummaryChart() {
-            const chartData = ptSummaryData[currentPtSummaryMode];
+    function loadChartData(mode) {
+        if (currentPtSummaryMode === mode && ptSummaryChart) {
+            return;
+        }
 
-            // for correct positioning bars
-            const barRangePlugin = {
+        const scrollPosition = window.scrollY || window.pageYOffset;
+
+        currentPtSummaryMode = mode;
+        var container = document.getElementById('pt_summary_chart_container');
+        container.innerHTML = '<p>Loading chart...</p>';
+
+        setTimeout(() => {
+            if (!isDataLoaded) {
+                processData();
+                isDataLoaded = true;
+            }
+
+            // Clear container and create fresh canvas
+            container.innerHTML = '<canvas id="pt_summary_chart"></canvas>';
+
+            // Initialize chart after canvas is created
+            initializePtSummaryChart();
+
+            //scroll to graph
+            window.scrollTo({
+                top: scrollPosition,
+                behavior: 'smooth'
+            });
+
+            // Update active button
+            document.querySelectorAll('.pt-summary-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`pt-summary-${mode}-btn`).classList.add('active');
+        }, 300);
+    }
+
+    function initializePtSummaryChart() {
+        const chartData = ptSummaryData[currentPtSummaryMode];
+        if (!chartData || chartData.length === 0) {
+            console.error('No chart data available');
+            return;
+        }
+
+        const backgroundColors = chartData.map(data =>
+            data.y >= 0 ? 'rgba(75, 192, 192, 0.7)' : 'rgba(255, 99, 132, 0.7)'
+        );
+
+        const barRangePlugin = {
             id: 'barRange',
             beforeDraw: function(chart) {
                 const ctx = chart.ctx;
@@ -360,7 +407,6 @@
                             const endPixel = xAxis.getPixelForValue(data.x2);
                             const width = endPixel - startPixel;
 
-                            //that first bar start with left side
                             bar.x = startPixel;
                             bar.width = width;
                             bar.base = yAxis.getPixelForValue(0);
@@ -370,53 +416,43 @@
             }
         };
 
-        var options = {
+        const options = {
             responsive: true,
             type: 'bar',
             plugins: [barRangePlugin],
             data: {
-                datasets: [
-                    {
-                        label: getChartLabel(),
-                        data: chartData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-
-                        barPercentage: 1.0,
-                        categoryPercentage: 1.0
-                    }
-                ]
+                datasets: [{
+                    label: getChartLabel(),
+                    data: chartData,
+                    backgroundColor: backgroundColors,
+                    borderColor: 'rgba(0,0,0,1)',
+                    borderWidth: 1,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                }]
             },
-        options: {
-            scales: {
-                x: {
-                    type: 'time',
-                    title: { display: true, text: '{% trans "Date" %}' },
-                    time: {
-                        unit: getTimeUnit(),
-                        tooltipFormat: 'PP',
-                        displayFormats: {
-                            month: 'MMM yyyy',
-                            year: 'yyyy',
-                            week: 'PP'
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: getTimeUnit(),
+                            tooltipFormat: 'PP',
+                            displayFormats: {
+                                month: 'MMM yyyy',
+                                year: 'yyyy',
+                                week: 'PP'
+                            }
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 45
                         }
                     },
-                    ticks: {
-                        autoSkip: true,
-                        maxRotation: 45,
-                        minRotation: 45
-                    },
-
-                    offset: false,
-                    grid: {
-                        offset: false
+                    y: {
+                        beginAtZero: true
                     }
-                },
-                y: {
-                    title: { display: true, text: '{% trans "PT Sum" %}' },
-                    beginAtZero: true
-                }
                 },
                 plugins: {
                     tooltip: {
@@ -425,13 +461,12 @@
                             afterLabel: function(context) {
                                 const data = context.raw;
                                 const timeSpent = formatTime(data.time);
-
                                 return [
-                                    '{% trans "Period" %}: ' + data.label,
-                                    '{% trans "Games Played" %}: ' + data.games,
-                                    '{% trans "Average Place" %}: ' + data.avgPlace,
-                                    '{% trans "PT Sum" %}: ' + data.y,
-                                    '{% trans "Time Spent" %}: ' + timeSpent
+                                    'Period: ' + data.label,
+                                    'Games Played: ' + data.games,
+                                    'Avg Place: ' + data.avgPlace,
+                                    'PT Sum: ' + data.y,
+                                    'Time Spent: ' + timeSpent
                                 ];
                             }
                         }
@@ -439,14 +474,6 @@
                 }
             }
         };
-
-        if (ptSummaryChart) {
-            ptSummaryChart.destroy();
-        }
-
-        ptSummaryChart = new Chart('pt_summary_chart', options);
-    }
-
         function getChartLabel() {
             switch(currentPtSummaryMode) {
                 case 'month': return '{% trans "PT Sum by Month" %}';
@@ -473,22 +500,28 @@
             return (days > 0 ? days + 'd ' : '') + (hours > 0 ? hours + 'h ' : '') + minutes_res + 'm';
         }
 
-        function togglePtSummaryMode(mode) {
-            currentPtSummaryMode = mode;
-            initializePtSummaryChart();
-            document.querySelectorAll('.pt-summary-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById('pt-summary-' + mode + '-btn').classList.add('active');
+        // Destroy previous chart if exists
+        if (ptSummaryChart) {
+            ptSummaryChart.destroy();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            if (ptSummaryData.month.length) {
-                initializePtSummaryChart();
-                document.getElementById('pt-summary-month-btn').classList.add('active');
-            }
-        });
+        // Get the canvas element
+        const ctx = document.getElementById('pt_summary_chart').getContext('2d');
+        ptSummaryChart = new Chart(ctx, options);
+    }
 
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('pt-summary-month-btn').addEventListener('click', function() {
+            loadChartData('month');
+        });
+        document.getElementById('pt-summary-year-btn').addEventListener('click', function() {
+            loadChartData('year');
+        });
+        document.getElementById('pt-summary-week-btn').addEventListener('click', function() {
+            loadChartData('week');
+        });
+    });
     </script>
 {% endblock %}
 
@@ -543,22 +576,24 @@
                                 <canvas id="pt_chart" class="d-block d-print-none"></canvas>
                             {% endif %}
 
-                            <h3>{% trans "PT Summary" %}</h3>
+                            <h5>{% trans "PT Summary" %}</h5>
+                            <div id="pt_summary_chart_container">
+                                <canvas id="pt_summary_chart"></canvas>
+                            </div>
                             <div class="btn-group mb-3">
                                 <button id="pt-summary-month-btn" class="btn btn-sm pt-summary-btn"
-                                        onclick="togglePtSummaryMode('month')">
+                                        onclick="loadChartData('month')">
                                     {% trans "By Month" %}
                                 </button>
                                 <button id="pt-summary-year-btn" class="btn btn-sm pt-summary-btn"
-                                        onclick="togglePtSummaryMode('year')">
+                                        onclick="loadChartData('year')">
                                     {% trans "By Year" %}
                                 </button>
                                 <button id="pt-summary-week-btn" class="btn btn-sm pt-summary-btn"
-                                        onclick="togglePtSummaryMode('week')">
+                                        onclick="loadChartData('week')">
                                     {% trans "By Week" %}
                                 </button>
                             </div>
-                            <canvas id="pt_summary_chart"></canvas>
                         </div>
                     {% endif %}
 
@@ -633,6 +668,7 @@
 
                         <div class="table-responsive-sm">
                             <table class="table table-hover mt-4">
+                                <caption>{% trans 'Statistics by lobby' %}</caption>
                                 <thead>
                                 <tr>
                                     <th scope="col">
@@ -684,6 +720,41 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+                    {% if aggregated_stat.played_games %}
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover mt-4">
+                                <caption>{% trans 'Statistics by type game' %}</caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col">
+                                        {% trans 'Lobby' %}
+                                    </th>
+                                    <th scope="col">
+                                        {% trans 'Games' %}
+                                    </th>
+                                    <th scope="col">
+                                        <nobr>{% trans 'Avg. place' %}</nobr>
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '1st' %}, %
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '2nd' %}, %
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '3rd' %}, %
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '4th' %}, %
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 {% with ippan_ton as ipp_ton %}
                                     {% if ipp_ton %}
                                         <tr>
