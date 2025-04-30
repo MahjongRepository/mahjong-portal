@@ -209,6 +209,10 @@
                             x: {
                                 type: 'category',
                                 labels: labels,
+                                title: {
+                                    display: true,
+                                    text: '{% trans "Date" %}'
+                                },
                             },
                             y: {
                                 min: 0,
@@ -462,11 +466,11 @@
                                 const data = context.raw;
                                 const timeSpent = formatTime(data.time);
                                 return [
-                                    'Period: ' + data.label,
-                                    'Games Played: ' + data.games,
-                                    'Avg Place: ' + data.avgPlace,
-                                    'PT Sum: ' + data.y,
-                                    'Time Spent: ' + timeSpent
+                                    '{% trans "Period: "%}' + data.label,
+                                    '{% trans "Games Played: "%}' + data.games,
+                                    '{% trans "Avg Place: "%}' + data.avgPlace,
+                                    '{% trans "Pt Summary: "%}' + data.y,
+                                    '{% trans "Time Spent: "%}' + timeSpent
                                 ];
                             }
                         }
@@ -476,10 +480,10 @@
         };
         function getChartLabel() {
             switch(currentPtSummaryMode) {
-                case 'month': return '{% trans "PT Sum by Month" %}';
-                case 'year': return '{% trans "PT Sum by Year" %}';
-                case 'week': return '{% trans "PT Sum by Week" %}';
-                default: return '{% trans "PT Sum" %}';
+                case 'month': return '{% trans "Pt Sumary by Month" %}';
+                case 'year': return '{% trans "Pt Summary by Year" %}';
+                case 'week': return '{% trans "Pt Summary by Week" %}';
+                default: return '{% trans "Pt Summary" %}';
             }
         }
 
@@ -508,6 +512,18 @@
         // Get the canvas element
         const ctx = document.getElementById('pt_summary_chart').getContext('2d');
         ptSummaryChart = new Chart(ctx, options);
+    }
+
+    function showPtSummary(){
+        // Hide the "Show graph" button
+        document.getElementById('show_pt_summary').style.display = 'none';
+
+        // Show the button group and chart container
+        document.getElementById('pt_summary_buttons').style.display = 'block';
+        document.getElementById('pt_summary_chart_container').style.display = 'block';
+
+        // Load initial chart data (month by default)
+        loadChartData('month');
     }
 
     // Initialize event listeners
@@ -576,11 +592,12 @@
                                 <canvas id="pt_chart" class="d-block d-print-none"></canvas>
                             {% endif %}
 
-                            <h5>{% trans "PT Summary" %}</h5>
-                            <div id="pt_summary_chart_container">
-                                <canvas id="pt_summary_chart"></canvas>
-                            </div>
-                            <div class="btn-group mb-3">
+                            <h5>{% trans "Pt summary chart" %}</h5>
+                            <button id="show_pt_summary" class="btn btn-sm btn-outline-primary"
+                                        onclick="showPtSummary()">
+                                    {% trans "Show graph" %}
+                            </button>
+                            <div class="btn-group mb-3" id="pt_summary_buttons" style="display: none;">
                                 <button id="pt-summary-month-btn" class="btn btn-sm pt-summary-btn"
                                         onclick="loadChartData('month')">
                                     {% trans "By Month" %}
@@ -593,6 +610,9 @@
                                         onclick="loadChartData('week')">
                                     {% trans "By Week" %}
                                 </button>
+                            </div>
+                            <div id="pt_summary_chart_container" style="display: none;">
+                                <canvas id="pt_summary_chart"></canvas>
                             </div>
                         </div>
                     {% endif %}
