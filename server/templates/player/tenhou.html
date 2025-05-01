@@ -209,6 +209,10 @@
                             x: {
                                 type: 'category',
                                 labels: labels,
+                                title: {
+                                    display: true,
+                                    text: '{% trans "Date" %}'
+                                },
                             },
                             y: {
                                 min: 0,
@@ -219,6 +223,321 @@
                 });
             }
         });
+
+        function getPeriodBounds(date, periodType) {
+        const d = new Date(date);
+        let start, end;
+
+        switch(periodType) {
+            case 'year':
+                start = new Date(d.getFullYear(), 0, 1);
+                end = new Date(d.getFullYear(), 11, 31);
+                break;
+            case 'month':
+                start = new Date(d.getFullYear(), d.getMonth(), 1);
+                end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+                break;
+            case 'week':
+                // start week - monday
+                const day = d.getDay();
+                const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                start = new Date(d.setDate(diff));
+                end = new Date(start);
+                end.setDate(start.getDate() + 6);
+                break;
+        }
+
+        return { start, end };
+    }
+
+    var ptSummaryData = {
+        month: [],
+        year: [],
+        week: []
+    };
+
+    function processData(){
+        {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y-m" as monthly_games %}
+        {% for month in monthly_games %}
+            var totalPt = 0;
+            var totalGames = 0;
+            var totalPlace = 0;
+            var totalTime = 0;
+
+            {% for game in month.list %}
+                totalPt += {{ game.delta|default:0 }};
+                totalGames += 1;
+                totalPlace += {{ game.place }};
+                totalTime += {{ game.game_length|default:0 }};
+            {% endfor %}
+
+            var avgPlace = totalPlace / totalGames;
+            var period = getPeriodBounds(new Date('{{ month.list.0.game_date|date:"Y-m-d" }}'), 'month');
+
+            ptSummaryData.month.push({
+                x: period.start,
+                x2: period.end,
+                y: totalPt,
+                games: totalGames,
+                avgPlace: avgPlace.toFixed(2),
+                time: totalTime,
+                label: '{{ month.grouper }}'
+            });
+        {% endfor %}
+
+        {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y" as yearly_games %}
+        {% for year in yearly_games %}
+            var totalPt = 0;
+            var totalGames = 0;
+            var totalPlace = 0;
+            var totalTime = 0;
+
+            {% for game in year.list %}
+                totalPt += {{ game.delta|default:0 }};
+                totalGames += 1;
+                totalPlace += {{ game.place }};
+                totalTime += {{ game.game_length|default:0 }};
+            {% endfor %}
+
+            var avgPlace = totalPlace / totalGames;
+            var period = getPeriodBounds(new Date('{{ year.list.0.game_date|date:"Y-m-d" }}'), 'year');
+
+            ptSummaryData.year.push({
+                x: period.start,
+                x2: period.end,
+                y: totalPt,
+                games: totalGames,
+                avgPlace: avgPlace.toFixed(2),
+                time: totalTime,
+                label: '{{ year.grouper }}'
+            });
+        {% endfor %}
+
+        {% regroup tenhou_data_all_time_stat_four by game_date|date:"Y-W" as weekly_games %}
+        {% for week in weekly_games %}
+            var totalPt = 0;
+            var totalGames = 0;
+            var totalPlace = 0;
+            var totalTime = 0;
+
+            {% for game in week.list %}
+                totalPt += {{ game.delta|default:0 }};
+                totalGames += 1;
+                totalPlace += {{ game.place }};
+                totalTime += {{ game.game_length|default:0 }};
+            {% endfor %}
+
+            var avgPlace = totalPlace / totalGames;
+            var period = getPeriodBounds(new Date('{{ week.list.0.game_date|date:"Y-m-d" }}'), 'week');
+
+            ptSummaryData.week.push({
+                x: period.start,
+                x2: period.end,
+                y: totalPt,
+                games: totalGames,
+                avgPlace: avgPlace.toFixed(2),
+                time: totalTime,
+                label: 'Week {{ week.grouper|slice:"5:" }} of {{ week.grouper|slice:":4" }}'
+            });
+        {% endfor %}
+    }
+
+    // Chart variables
+    var ptSummaryChart = null;
+    var currentPtSummaryMode = null;
+    var isDataLoaded = false;
+
+    function loadChartData(mode) {
+        if (currentPtSummaryMode === mode && ptSummaryChart) {
+            return;
+        }
+
+        const scrollPosition = window.scrollY || window.pageYOffset;
+
+        currentPtSummaryMode = mode;
+        var container = document.getElementById('pt_summary_chart_container');
+        container.innerHTML = '<p>Loading chart...</p>';
+
+        setTimeout(() => {
+            if (!isDataLoaded) {
+                processData();
+                isDataLoaded = true;
+            }
+
+            // Clear container and create fresh canvas
+            container.innerHTML = '<canvas id="pt_summary_chart"></canvas>';
+
+            // Initialize chart after canvas is created
+            initializePtSummaryChart();
+
+            //scroll to graph
+            window.scrollTo({
+                top: scrollPosition,
+                behavior: 'smooth'
+            });
+
+            // Update active button
+            document.querySelectorAll('.pt-summary-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`pt-summary-${mode}-btn`).classList.add('active');
+        }, 300);
+    }
+
+    function initializePtSummaryChart() {
+        const chartData = ptSummaryData[currentPtSummaryMode];
+        if (!chartData || chartData.length === 0) {
+            console.error('No chart data available');
+            return;
+        }
+
+        const backgroundColors = chartData.map(data =>
+            data.y >= 0 ? 'rgba(75, 192, 192, 0.7)' : 'rgba(255, 99, 132, 0.7)'
+        );
+
+        const barRangePlugin = {
+            id: 'barRange',
+            beforeDraw: function(chart) {
+                const ctx = chart.ctx;
+                const xAxis = chart.scales.x;
+                const yAxis = chart.scales.y;
+
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach((bar, index) => {
+                        const data = dataset.data[index];
+                        if (data.x2) {
+                            const startPixel = xAxis.getPixelForValue(data.x);
+                            const endPixel = xAxis.getPixelForValue(data.x2);
+                            const width = endPixel - startPixel;
+
+                            bar.x = startPixel;
+                            bar.width = width;
+                            bar.base = yAxis.getPixelForValue(0);
+                        }
+                    });
+                });
+            }
+        };
+
+        const options = {
+            responsive: true,
+            type: 'bar',
+            plugins: [barRangePlugin],
+            data: {
+                datasets: [{
+                    label: getChartLabel(),
+                    data: chartData,
+                    backgroundColor: backgroundColors,
+                    borderColor: 'rgba(0,0,0,1)',
+                    borderWidth: 1,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: getTimeUnit(),
+                            tooltipFormat: 'PP',
+                            displayFormats: {
+                                month: 'MMM yyyy',
+                                year: 'yyyy',
+                                week: 'PP'
+                            }
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: () => '',
+                            afterLabel: function(context) {
+                                const data = context.raw;
+                                const timeSpent = formatTime(data.time);
+                                return [
+                                    '{% trans "Period: "%}' + data.label,
+                                    '{% trans "Games Played: "%}' + data.games,
+                                    '{% trans "Avg Place: "%}' + data.avgPlace,
+                                    '{% trans "Pt Summary: "%}' + data.y,
+                                    '{% trans "Time Spent: "%}' + timeSpent
+                                ];
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        function getChartLabel() {
+            switch(currentPtSummaryMode) {
+                case 'month': return '{% trans "Pt Sumary by Month" %}';
+                case 'year': return '{% trans "Pt Summary by Year" %}';
+                case 'week': return '{% trans "Pt Summary by Week" %}';
+                default: return '{% trans "Pt Summary" %}';
+            }
+        }
+
+        function getTimeUnit() {
+            switch(currentPtSummaryMode) {
+                case 'month': return 'month';
+                case 'year': return 'year';
+                case 'week': return 'week';
+                default: return 'month';
+            }
+        }
+
+        function formatTime(minutes) {
+            if (!minutes) return '0m';
+            const days = Math.floor(minutes / 60 / 24)
+            const hours = Math.floor(minutes / 60 % 24 );
+            const minutes_res = Math.floor(minutes % 60)
+            return (days > 0 ? days + 'd ' : '') + (hours > 0 ? hours + 'h ' : '') + minutes_res + 'm';
+        }
+
+        // Destroy previous chart if exists
+        if (ptSummaryChart) {
+            ptSummaryChart.destroy();
+        }
+
+        // Get the canvas element
+        const ctx = document.getElementById('pt_summary_chart').getContext('2d');
+        ptSummaryChart = new Chart(ctx, options);
+    }
+
+    function showPtSummary(){
+        // Hide the "Show graph" button
+        document.getElementById('show_pt_summary').style.display = 'none';
+
+        // Show the button group and chart container
+        document.getElementById('pt_summary_buttons').style.display = 'block';
+        document.getElementById('pt_summary_chart_container').style.display = 'block';
+
+        // Load initial chart data (month by default)
+        loadChartData('month');
+    }
+
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('pt-summary-month-btn').addEventListener('click', function() {
+            loadChartData('month');
+        });
+        document.getElementById('pt-summary-year-btn').addEventListener('click', function() {
+            loadChartData('year');
+        });
+        document.getElementById('pt-summary-week-btn').addEventListener('click', function() {
+            loadChartData('week');
+        });
+    });
     </script>
 {% endblock %}
 
@@ -257,7 +576,7 @@
                     {% endwith %}
 
                     {% if forloop.first %}
-                        <div class="d-block d-print-none">
+                        <div class="d-block d-print-none" style="margin-bottom: 20px;">
                             {% if tenhou_item.rank_changes %}
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0">{% trans "Rank chart" %}</h5>
@@ -272,6 +591,29 @@
                                 <h5>{% trans "Pt chart" %}</h5>
                                 <canvas id="pt_chart" class="d-block d-print-none"></canvas>
                             {% endif %}
+
+                            <h5>{% trans "Pt summary chart" %}</h5>
+                            <button id="show_pt_summary" class="btn btn-sm btn-outline-primary"
+                                        onclick="showPtSummary()">
+                                    {% trans "Show graph" %}
+                            </button>
+                            <div class="btn-group mb-3" id="pt_summary_buttons" style="display: none;">
+                                <button id="pt-summary-month-btn" class="btn btn-sm pt-summary-btn"
+                                        onclick="loadChartData('month')">
+                                    {% trans "By Month" %}
+                                </button>
+                                <button id="pt-summary-year-btn" class="btn btn-sm pt-summary-btn"
+                                        onclick="loadChartData('year')">
+                                    {% trans "By Year" %}
+                                </button>
+                                <button id="pt-summary-week-btn" class="btn btn-sm pt-summary-btn"
+                                        onclick="loadChartData('week')">
+                                    {% trans "By Week" %}
+                                </button>
+                            </div>
+                            <div id="pt_summary_chart_container" style="display: none;">
+                                <canvas id="pt_summary_chart"></canvas>
+                            </div>
                         </div>
                     {% endif %}
                     <h5>{% trans 'Current month' %}</h5>
@@ -351,6 +693,7 @@
 
                         <div class="table-responsive-sm">
                             <table class="table table-hover mt-4">
+                                <caption>{% trans 'Statistics by lobby' %}</caption>
                                 <thead>
                                 <tr>
                                     <th scope="col">
@@ -407,253 +750,144 @@
                         </div>
                     {% endif %}
 
-                    {% with ippan_ton as ipp_ton %}
-                        {% if ipp_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                    {% if aggregated_stat.played_games %}
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover mt-4">
+                                <caption>{% trans 'Statistics by type game' %}</caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col">
+                                        {% trans 'Lobby' %}
+                                    </th>
+                                    <th scope="col">
+                                        {% trans 'Games' %}
+                                    </th>
+                                    <th scope="col">
+                                        <nobr>{% trans 'Avg. place' %}</nobr>
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '1st' %}, %
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '2nd' %}, %
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '3rd' %}, %
+                                    </th>
+                                    <th scope="col">
+                                        {% trans '4th' %}, %
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% with ippan_ton as ipp_ton %}
+                                    {% if ipp_ton %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四般東 (Ippan Tonpuusen)' %}</td>
+                                            <td>{{ ipp_ton.total_games }}</td>
+                                            <td>{{ ipp_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_ton.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四般東 (Ippan Tonpuusen)' %}</td>
-                                                <td>{{ ipp_ton.total_games }}</td>
-                                                <td>{{ ipp_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with ippan_nan as ipp_nan %}
-                        {% if ipp_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with ippan_nan as ipp_nan %}
+                                    {% if ipp_nan %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四般南 (Ippan Hanchan)' %}</td>
+                                            <td>{{ ipp_nan.total_games }}</td>
+                                            <td>{{ ipp_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.first_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ ipp_nan.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四般南 (Ippan Hanchan)' %}</td>
-                                                <td>{{ ipp_nan.total_games }}</td>
-                                                <td>{{ ipp_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.first_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ ipp_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with joukyuu_ton as Jou_ton %}
-                        {% if Jou_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with joukyuu_ton as Jou_ton %}
+                                    {% if Jou_ton %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四上東 (Joukyuu Tonpuusen)' %}</td>
+                                            <td>{{ Jou_ton.total_games }}</td>
+                                            <td>{{ Jou_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_ton.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四上東 (Joukyuu Tonpuusen)' %}</td>
-                                                <td>{{ Jou_ton.total_games }}</td>
-                                                <td>{{ Jou_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with joukyuu_nan as Jou_nan %}
-                        {% if Jou_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with joukyuu_nan as Jou_nan %}
+                                    {% if Jou_nan %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四上南 (Joukyuu Hanchan)' %}</td>
+                                            <td>{{ Jou_nan.total_games }}</td>
+                                            <td>{{ Jou_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_nan.first_place|floatformat:2 }}%</td>
+                                            <td>{{ Jou_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ Jou_nan.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四上南 (Joukyuu Hanchan)' %}</td>
-                                                <td>{{ Jou_nan.total_games }}</td>
-                                                <td>{{ Jou_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_nan.first_place|floatformat:2 }}%</td>
-                                                <td>{{ Jou_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ Jou_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with tokujou_ton as Tok_ton %}
-                        {% if Tok_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with tokujou_ton as Tok_ton %}
+                                    {% if Tok_ton %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四特東 (Tokujou Tonpuusen)' %}</td>
+                                            <td>{{ Tok_ton.total_games }}</td>
+                                            <td>{{ Tok_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_ton.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四特東 (Tokujou Tonpuusen)' %}</td>
-                                                <td>{{ Tok_ton.total_games }}</td>
-                                                <td>{{ Tok_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with tokujou_nan as Tok_nan %}
-                        {% if Tok_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with tokujou_nan as Tok_nan %}
+                                    {% if Tok_nan %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四特南 (Tokujou Hanchan)' %}</td>
+                                            <td>{{ Tok_nan.total_games }}</td>
+                                            <td>{{ Tok_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.first_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ Tok_nan.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四特南 (Tokujou Hanchan)' %}</td>
-                                                <td>{{ Tok_nan.total_games }}</td>
-                                                <td>{{ Tok_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.first_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ Tok_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with houou_ton as Hou_ton %}
-                        {% if Hou_ton %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with houou_ton as Hou_ton %}
+                                    {% if Hou_ton %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四鳳東 (Houou Ton)' %}</td>
+                                            <td>{{ Hou_ton.total_games }}</td>
+                                            <td>{{ Hou_ton.average_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.first_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.second_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.third_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_ton.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四鳳東 (Houou Ton)' %}</td>
-                                                <td>{{ Hou_ton.total_games }}</td>
-                                                <td>{{ Hou_ton.average_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.first_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.second_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.third_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_ton.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% with houou_nan as Hou_nan %}
-                        {% if Hou_nan %}
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover mt-4">
-                                    <thead>
+                                    {% endif %}
+                                {% endwith %}
+                                {% with houou_nan as Hou_nan %}
+                                    {% if Hou_nan %}
                                         <tr>
-                                            <th scope="col">{% trans 'Lobby' %}</th>
-                                            <th scope="col">{% trans 'Games' %}</th>
-                                            <th scope="col"><nobr>{% trans 'Avg. place' %}</nobr></th>
-                                            <th scope="col">{% trans '1st' %}, %</th>
-                                            <th scope="col">{% trans '2nd' %}, %</th>
-                                            <th scope="col">{% trans '3rd' %}, %</th>
-                                            <th scope="col">{% trans '4th' %}, %</th>
+                                            <td>{% trans '四鳳南 (Houou Hanchan)' %}</td>
+                                            <td>{{ Hou_nan.total_games }}</td>
+                                            <td>{{ Hou_nan.average_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.first_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.second_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.third_place|floatformat:2 }}</td>
+                                            <td>{{ Hou_nan.fourth_place|floatformat:2 }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>{% trans '四鳳南 (Houou Hanchan)' %}</td>
-                                                <td>{{ Hou_nan.total_games }}</td>
-                                                <td>{{ Hou_nan.average_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.first_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.second_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.third_place|floatformat:2 }}</td>
-                                                <td>{{ Hou_nan.fourth_place|floatformat:2 }}</td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
+                                    {% endif %}
+                                {% endwith %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
 
                     {% with tenhou_item.latest_yakumans as yakumans %}
                         {% if yakumans %}
