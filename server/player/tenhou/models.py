@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.db.models import F
@@ -47,6 +47,12 @@ class TenhouNickname(BaseModel):
 
     def four_players_aggregated_statistics(self):
         return self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
+
+    def current_month_four_players_aggregated_statistics(self):
+        if self.last_played_date and datetime.now().month == self.last_played_date.month:
+            return self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
+        else:
+            return []
 
     def all_time_stat(self):
         return self.statistics.filter(stat_type=TenhouStatistics.ALL_TIME)
