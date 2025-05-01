@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from club.club_games.models import ClubRating
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
-from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouNickname
 from rating.models import ExternalRating, ExternalRatingDelta, Rating, RatingDelta, RatingResult, TournamentCoefficients
 from rating.utils import get_latest_rating_date, parse_rating_date
 from tournament.models import TournamentResult
@@ -225,7 +225,9 @@ def player_tenhou_details(request, slug):
         .order_by("-is_main")
         .prefetch_related("aggregated_statistics")
     )
-    tenhou_data_all_time_stat_four = tenhou_data[0].all_time_stat_four() if tenhou_data else []
+    tenhou_data_all_time_stat_four = (
+        tenhou_data[0].all_time_stat_four() if tenhou_data else TenhouGameLog.objects.none()
+    )
 
     ippan_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般東"))
 
