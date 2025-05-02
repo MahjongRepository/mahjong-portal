@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <p> {% if tournament.end_date == tournament.start_date %}
-        {% trans 'Held' %} {{ tournament.end_date }},
+        {% trans 'Held' %} {{ tournament.start_date }},
     {% else %}
         {% trans 'Held' %} {{ tournament.start_date }} - {{ tournament.end_date }},
     {% endif %}
