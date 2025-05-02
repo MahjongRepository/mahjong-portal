@@ -6,6 +6,7 @@ from django.db.models import Avg, Case, Count, F, FloatField, When
 from django.shortcuts import get_object_or_404, redirect, render
 
 from club.club_games.models import ClubRating
+from mahjong_portal.templatetags.tenhou_helper import ALL_AGGREGATED_STAT_KEY, CURRENT_MONTH_AGGREGATED_STAT_KEY
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
 from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouNickname
@@ -229,6 +230,14 @@ def player_tenhou_details(request, slug):
         tenhou_data[0].all_time_stat_four() if tenhou_data else TenhouGameLog.objects.none()
     )
 
+    tenhou_data_stat = {}
+    for item in tenhou_data:
+        aggregated_stat = item.four_players_aggregated_statistics()
+        current_month_aggregated_stat = item.current_month_four_players_aggregated_statistics(aggregated_stat)
+        tenhou_data_stat[item.id] = {}
+        tenhou_data_stat[item.id][CURRENT_MONTH_AGGREGATED_STAT_KEY] = current_month_aggregated_stat
+        tenhou_data_stat[item.id][ALL_AGGREGATED_STAT_KEY] = aggregated_stat
+
     ippan_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般東"))
 
     ippan_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般南"))
@@ -251,6 +260,7 @@ def player_tenhou_details(request, slug):
         {
             "player": player,
             "tenhou_data": tenhou_data,
+            "tenhou_data_stat": tenhou_data_stat,
             "tenhou_data_all_time_stat_four": tenhou_data_all_time_stat_four,
             "RANKS": TenhouAggregatedStatistics.RANKS,
             "ippan_ton": ippan_ton,

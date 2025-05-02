@@ -48,9 +48,9 @@ class TenhouNickname(BaseModel):
     def four_players_aggregated_statistics(self):
         return self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
 
-    def current_month_four_players_aggregated_statistics(self):
+    def current_month_four_players_aggregated_statistics(self, all_aggregated_statistics):
         if self.last_played_date and datetime.now().month == self.last_played_date.month:
-            return self.aggregated_statistics.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS).first()
+            return all_aggregated_statistics
         else:
             return []
 
