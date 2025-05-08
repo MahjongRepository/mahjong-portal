@@ -2,13 +2,14 @@
 
 from collections import defaultdict
 
-from django.db.models import F
+from django.db.models import Avg, Case, Count, F, FloatField, When
 from django.shortcuts import get_object_or_404, redirect, render
 
 from club.club_games.models import ClubRating
+from mahjong_portal.templatetags.tenhou_helper import ALL_AGGREGATED_STAT_KEY, CURRENT_MONTH_AGGREGATED_STAT_KEY
 from player.mahjong_soul.models import MSAccount
 from player.models import Player
-from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouNickname
 from rating.models import ExternalRating, ExternalRatingDelta, Rating, RatingDelta, RatingResult, TournamentCoefficients
 from rating.utils import get_latest_rating_date, parse_rating_date
 from tournament.models import TournamentResult
@@ -203,6 +204,21 @@ def _get_rating_changes(rating, player, today):
     return filtered_results
 
 
+def calculate_statistics(queryset):
+    if not queryset.exists():
+        return None
+
+    stats = queryset.aggregate(
+        total_games=Count("id"),
+        average_place=Avg("place"),
+        first_place=100.0 * Avg(Case(When(place=1, then=1), default=0, output_field=FloatField())),
+        second_place=100.0 * Avg(Case(When(place=2, then=1), default=0, output_field=FloatField())),
+        third_place=100.0 * Avg(Case(When(place=3, then=1), default=0, output_field=FloatField())),
+        fourth_place=100.0 * Avg(Case(When(place=4, then=1), default=0, output_field=FloatField())),
+    )
+    return stats
+
+
 def player_tenhou_details(request, slug):
     player = get_object_or_404(Player, slug=slug)
     tenhou_data = (
@@ -210,10 +226,52 @@ def player_tenhou_details(request, slug):
         .order_by("-is_main")
         .prefetch_related("aggregated_statistics")
     )
+    tenhou_data_all_time_stat_four = (
+        tenhou_data[0].all_time_stat_four() if tenhou_data else TenhouGameLog.objects.none()
+    )
+
+    tenhou_data_stat = {}
+    for item in tenhou_data:
+        aggregated_stat = item.four_players_aggregated_statistics()
+        current_month_aggregated_stat = item.current_month_four_players_aggregated_statistics(aggregated_stat)
+        tenhou_data_stat[item.id] = {}
+        tenhou_data_stat[item.id][CURRENT_MONTH_AGGREGATED_STAT_KEY] = current_month_aggregated_stat
+        tenhou_data_stat[item.id][ALL_AGGREGATED_STAT_KEY] = aggregated_stat
+
+    ippan_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般東"))
+
+    ippan_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四般南"))
+
+    joukyuu_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四上東"))
+
+    joukyuu_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四上南"))
+
+    tokujou_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四特東"))
+
+    tokujou_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四特南"))
+
+    houou_ton = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四鳳東"))
+
+    houou_nan = calculate_statistics(tenhou_data_all_time_stat_four.filter(game_rules__startswith="四鳳南"))
+
     return render(
         request,
         "player/tenhou.html",
-        {"player": player, "tenhou_data": tenhou_data, "RANKS": TenhouAggregatedStatistics.RANKS},
+        {
+            "player": player,
+            "tenhou_data": tenhou_data,
+            "tenhou_data_stat": tenhou_data_stat,
+            "tenhou_data_all_time_stat_four": tenhou_data_all_time_stat_four,
+            "RANKS": TenhouAggregatedStatistics.RANKS,
+            "ippan_ton": ippan_ton,
+            "ippan_nan": ippan_nan,
+            "joukyuu_ton": joukyuu_ton,
+            "joukyuu_nan": joukyuu_nan,
+            "tokujou_ton": tokujou_ton,
+            "tokujou_nan": tokujou_nan,
+            "houou_ton": houou_ton,
+            "houou_nan": houou_nan,
+        },
     )
 
 

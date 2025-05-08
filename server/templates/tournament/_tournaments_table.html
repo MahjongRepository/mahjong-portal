@@ -65,7 +65,13 @@
         {% endfor %}
 
         {% for tournament in tournaments %}
-            <tr {% if tournament.id in top_tournament_ids %}class="table-success" {% endif %}>
+
+            {% if page == "home" %}
+                <tr {% if tournament.get_tournament_registrations.count >= 72 %}class="table-warning" {% endif %}>
+            {% else %}
+                <tr {% if tournament.id in top_tournament_ids %}class="table-success" {% endif %}>
+            {% endif %}
+
                 {% if reverse_counter %}
                     <th scope="row">{{ forloop.revcounter }}</th>
                 {% else %}

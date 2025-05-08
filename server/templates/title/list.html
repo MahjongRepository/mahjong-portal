@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load i18n l10n %}
+
+{% block title %}
+    {% trans 'Titles' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{% trans 'Players Titles' %}</h1>
+
+        <div class="table-responsive-sm">
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col">{% trans 'Titles' %}</th>
+                    <th scope="col">{% trans 'Player' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key,value in titles %}
+                    <tr>
+                        <th>
+                            {% with value|get_item:'titles' as player_titles %}
+                                {% if player_titles %}
+                                    <p>
+                                    {% for current_title in player_titles %}
+                                        <span class="badge bg-primary" style="background-color: {{ current_title.background_color }} !important; color: {{ current_title.text_color }} !important;">
+                                        {% if current_title.url %}
+                                            <a style="color: {{ current_title.text_color }} !important;" href="{{ current_title.url }}">{{ current_title.text }}</a>
+                                        {% else %}
+                                            {{ current_title.text }}
+                                        {% endif %}
+                                        </span>
+                                    {% endfor %}
+                                    </p>
+                                {% endif %}
+                            {% endwith %}
+                        </th>
+                        <td>
+                            {% with value|get_item:'player' as player %}
+                                {% include 'common/_player_name.html' %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -7,6 +7,9 @@ from player.tenhou.models import TenhouAggregatedStatistics
 
 register = template.Library()
 
+CURRENT_MONTH_AGGREGATED_STAT_KEY = "current_month_aggregated_stat"
+ALL_AGGREGATED_STAT_KEY = "all_aggregated_stat"
+
 
 @register.filter
 def display_dan(dan):
@@ -35,3 +38,33 @@ def display_rate(value):
         return int(value)
     except ValueError:
         return value
+
+
+@register.filter
+def get_current_month_aggregated_stat(tenhou_data_stat, key):
+    return tenhou_data_stat[key][CURRENT_MONTH_AGGREGATED_STAT_KEY]
+
+
+@register.filter
+def get_all_aggregated_stat(tenhou_data_stat, key):
+    return tenhou_data_stat[key][ALL_AGGREGATED_STAT_KEY]
+
+
+@register.filter
+def get_rank_display(aggregated_stat):
+    return aggregated_stat.get_rank_display()
+
+
+@register.filter
+def get_pt(aggregated_stat):
+    return aggregated_stat.pt
+
+
+@register.filter
+def get_end_pt(aggregated_stat):
+    return aggregated_stat.end_pt
+
+
+@register.filter
+def get_rate(aggregated_stat):
+    return aggregated_stat.rate

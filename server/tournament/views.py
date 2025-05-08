@@ -104,10 +104,18 @@ def tournament_details(request, slug):
 
     countries = sorted(countries.values(), key=lambda x: x["count"], reverse=True)
 
+    has_multiple_countries = len(countries) > 1
+
     return render(
         request,
         "tournament/details.html",
-        {"tournament": tournament, "results": results, "page": "tournament", "countries": countries},
+        {
+            "tournament": tournament,
+            "results": results,
+            "page": "tournament",
+            "countries": countries,
+            "has_multiple_countries": has_multiple_countries,
+        },
     )
 
 
