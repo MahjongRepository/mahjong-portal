@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-08 12:37+0000\n"
+"POT-Creation-Date: 2025-05-08 20:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -656,10 +656,10 @@ msgstr "Онлайн"
 msgid "Current tenhou.net games"
 msgstr "Текущие игры на tenhou.net"
 
-#: templates/base.html:104 templates/tenhou/tenhou_accounts.html:5
-#: templates/tenhou/tenhou_accounts.html:10
-#: templates/tenhou/tenhou_accounts.html:79
-#: templates/tenhou/tenhou_accounts.html:80
+#: templates/base.html:104 templates/tenhou/tenhou_accounts.html:25
+#: templates/tenhou/tenhou_accounts.html:30
+#: templates/tenhou/tenhou_accounts.html:165
+#: templates/tenhou/tenhou_accounts.html:166
 msgid "Tenhou accounts"
 msgstr "Аккаунты tenhou.net"
 
@@ -791,7 +791,8 @@ msgstr "Имя"
 #: templates/player/tenhou.html:766
 #: templates/rating/_external_results_table.html:72
 #: templates/tenhou/games_history.html:51
-#: templates/tenhou/tenhou_accounts.html:23
+#: templates/tenhou/tenhou_accounts.html:47
+#: templates/tenhou/tenhou_accounts.html:110
 #: templates/tournament/_tournament_results.html:11
 msgid "Games"
 msgstr "Игр"
@@ -864,7 +865,8 @@ msgstr "Российские риичи маджонг клубы"
 #: templates/club/list.html:20 templates/ms/ms_accounts.html:33
 #: templates/player/_deltas_table.html:15 templates/player/details.html:85
 #: templates/player/tournaments.html:27
-#: templates/tenhou/tenhou_accounts.html:25
+#: templates/tenhou/tenhou_accounts.html:49
+#: templates/tenhou/tenhou_accounts.html:112
 #: templates/tournament/_tournaments_table.html:14
 #: templates/tournament/announcement.html:93
 #: templates/tournament_admin/tournament_manage.html:113
@@ -1015,7 +1017,8 @@ msgstr "санма"
 #: templates/ms/ms_accounts.html:27 templates/tenhou/games_history.html:19
 #: templates/tenhou/games_history.html:57
 #: templates/tenhou/latest_yakumans.html:17
-#: templates/tenhou/tenhou_accounts.html:18 templates/title/list.html:17
+#: templates/tenhou/tenhou_accounts.html:42
+#: templates/tenhou/tenhou_accounts.html:105 templates/title/list.html:17
 #: templates/website/iormc.html:37 templates/website/search.html:16
 msgid "Player"
 msgstr "Игрок"
@@ -1044,7 +1047,8 @@ msgstr "Аккаунт"
 #: templates/player/details.html:165 templates/player/ms.html:109
 #: templates/player/ms.html:202 templates/player/tenhou.html:624
 #: templates/player/tenhou.html:628 templates/player/tenhou.html:694
-#: templates/tenhou/tenhou_accounts.html:24
+#: templates/tenhou/tenhou_accounts.html:48
+#: templates/tenhou/tenhou_accounts.html:111
 msgid "Last played date"
 msgstr "Дата последней игры"
 
@@ -1108,7 +1112,8 @@ msgstr "Таблица со всеми рейтингами игрока"
 msgid "Rating"
 msgstr "Рейтинг"
 
-#: templates/player/details.html:28 templates/tenhou/tenhou_accounts.html:22
+#: templates/player/details.html:28 templates/tenhou/tenhou_accounts.html:46
+#: templates/tenhou/tenhou_accounts.html:109
 #: templates/tournament/_tournament_results.html:9
 msgid "Scores"
 msgstr "Очки"
@@ -1463,21 +1468,33 @@ msgstr "часов потратили"
 msgid "Delta"
 msgstr "Дельта"
 
-#: templates/tenhou/tenhou_accounts.html:11
+#: templates/tenhou/tenhou_accounts.html:14
+#: templates/tenhou/tenhou_accounts.html:34
+msgid "Sort by pt"
+msgstr "Сортировать по pt"
+
+#: templates/tenhou/tenhou_accounts.html:18
+msgid "Sort by rate"
+msgstr "Сортировать по дате"
+
+#: templates/tenhou/tenhou_accounts.html:31
 msgid "Statistics updated every 5 minutes."
 msgstr "Статистика обновляется раз в 5 минут."
 
-#: templates/tenhou/tenhou_accounts.html:19
+#: templates/tenhou/tenhou_accounts.html:43
+#: templates/tenhou/tenhou_accounts.html:106
 #: templates/tournament/announcement.html:103 templates/website/city.html:47
 #: templates/website/search.html:17
 msgid "Dan"
 msgstr "Дан"
 
-#: templates/tenhou/tenhou_accounts.html:20
+#: templates/tenhou/tenhou_accounts.html:44
+#: templates/tenhou/tenhou_accounts.html:107
 msgid "Rate"
 msgstr "Рейт"
 
-#: templates/tenhou/tenhou_accounts.html:21 templates/website/search.html:18
+#: templates/tenhou/tenhou_accounts.html:45
+#: templates/tenhou/tenhou_accounts.html:108 templates/website/search.html:18
 msgid "Tenhou account"
 msgstr "Ник на тенхе"
 
