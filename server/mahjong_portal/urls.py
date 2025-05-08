@@ -91,5 +91,6 @@ urlpatterns += i18n_patterns(
     url(r"^account/", include("account.urls")),
     url(r"^wiki/", include("wiki.urls")),
     url(r"^league/", include("league.urls")),
+    url(r"^titles/", include("title.urls")),
     url("i18n/", include("django.conf.urls.i18n")),
 )

@@ -89,6 +89,9 @@
                 <li class="nav-item {% if page == 'club' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'club_list' %}">{% trans 'Clubs' %}</a>
                 </li>
+                <li class="nav-item {% if page == 'titles' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'titles_list' %}">{% trans 'Titles' %}</a>
+                </li>
 {#                <li class="nav-item {% if page == 'wiki' %}active{% endif %}">#}
 {#                    <a class="nav-link" href="{% url 'wiki_home' %}">{% trans 'Wiki' %}</a>#}
 {#                </li>#}
