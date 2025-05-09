@@ -71,21 +71,17 @@ def latest_yakumans(request):
 
 
 def tenhou_accounts(request):
-    stat_query = (TenhouAggregatedStatistics.objects
-                  .filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
-                  .filter(tenhou_object__is_active=True)
-                  .exclude(played_games=0)
-                  .prefetch_related("tenhou_object")
-                  .prefetch_related("tenhou_object__player")
-                  .prefetch_related("tenhou_object__player__city"))
-
-    accounts = (
-        stat_query.order_by("-rank", "-rate", "-pt")
+    stat_query = (
+        TenhouAggregatedStatistics.objects.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
+        .filter(tenhou_object__is_active=True)
+        .exclude(played_games=0)
+        .prefetch_related("tenhou_object")
+        .prefetch_related("tenhou_object__player")
+        .prefetch_related("tenhou_object__player__city")
     )
 
-    accounts_sort_by_pt = (
-        stat_query.order_by("-rank", "-pt", "-rate")
-    )
+    accounts = stat_query.order_by("-rank", "-rate", "-pt")
+    accounts_sort_by_pt = stat_query.order_by("-rank", "-pt", "-rate")
 
     return render(
         request,
@@ -93,7 +89,7 @@ def tenhou_accounts(request):
         {
             "accounts": accounts,
             "accounts_sort_by_pt": accounts_sort_by_pt,
-       }
+        },
     )
 
 
