@@ -1475,7 +1475,7 @@ msgstr "Сортировать по pt"
 
 #: templates/tenhou/tenhou_accounts.html:18
 msgid "Sort by rate"
-msgstr "Сортировать по дате"
+msgstr "Сортировать по рейтингу"
 
 #: templates/tenhou/tenhou_accounts.html:31
 msgid "Statistics updated every 5 minutes."
