@@ -142,10 +142,10 @@
                             callbacks: {
                                 label: function(context) {
                                     if (currentChartMode === 'count') {
-                                        return context.parsed.y + ' (Game #' + context.parsed.x + ')';
+                                        return ranks[context.parsed.y] + ' ({% trans "Game" %} №' + context.parsed.x + ')';
                                     } else {
                                         var date = new Date(context.parsed.x);
-                                        return context.parsed.y + ' (' + date.toLocaleDateString() + ')';
+                                        return ranks[context.parsed.y] + ' (' + date.toLocaleDateString() + ')';
                                     }
                                 }
                             }
