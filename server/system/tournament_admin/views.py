@@ -39,7 +39,7 @@ def update_placing(rows: ty.List[list]) -> None:
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def new_tournaments(request):
-    tournaments = Tournament.objects.filter(is_upcoming=True).order_by("start_date")
+    tournaments = Tournament.objects.filter(is_upcoming=True, is_hidden = False).order_by("start_date")
     return render(request, "tournament_admin/new_tournaments.html", {"tournaments": tournaments})
 
 
