@@ -156,6 +156,7 @@ def upload_results(request, tournament_id):
                     )
 
                 tournament.is_upcoming = False
+                tournament.opened_registration = False
                 tournament.number_of_players = len(filtered_results)
                 tournament.save()
 
