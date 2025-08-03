@@ -150,8 +150,8 @@
                             </td>
                             <td>
                                 <nobr>
-                                    {{ registration_item.created_on|date:SHORT_DATE_FORMAT }}
                                     {% timezone 'Europe/Moscow' %}
+                                        {{ registration_item.created_on|date:SHORT_DATE_FORMAT }}
                                         {{ registration_item.created_on|time }}
                                     {% endtimezone %}
                                 </nobr>
