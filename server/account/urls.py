@@ -9,6 +9,9 @@ from account.views import account_settings, do_login, request_player_and_user_co
 
 class CustomLogoutView(auth_views.LogoutView):
     def dispatch(self, request, *args, **kwargs):
+        updated_request = request.POST.copy()
+        updated_request.update({self.redirect_field_name: request.META.get("HTTP_REFERER", "/")})
+        request.POST = updated_request
         return self.post(request, *args, **kwargs)
 
 
