@@ -26,7 +26,7 @@
                         {% elif delta.base_rank >= 500 %}
                             <span class="badge bg-primary">{{ delta.base_rank|floatformat:0 }}</span>
                         {% elif delta.base_rank >= 250 %}
-                            <span class="badge bg-warning">{{ delta.base_rank|floatformat:0 }}</span>
+                            <span class="badge bg-warning text-dark">{{ delta.base_rank|floatformat:0 }}</span>
                         {% else %}
                             <span class="badge bg-danger">{{ delta.base_rank|floatformat:0 }}</span>
                         {% endif %}
