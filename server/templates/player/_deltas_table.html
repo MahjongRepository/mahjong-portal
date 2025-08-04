@@ -21,10 +21,12 @@
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>
                     {% if delta.is_active %}
-                        {% if delta.base_rank > 500 %}
+                        {% if delta.base_rank >= 750 %}
                             <span class="badge bg-success">{{ delta.base_rank|floatformat:0 }}</span>
-                        {% elif delta.base_rank == 0 %}
+                        {% elif delta.base_rank >= 500 %}
                             <span class="badge bg-primary">{{ delta.base_rank|floatformat:0 }}</span>
+                        {% elif delta.base_rank >= 250 %}
+                            <span class="badge bg-warning">{{ delta.base_rank|floatformat:0 }}</span>
                         {% else %}
                             <span class="badge bg-danger">{{ delta.base_rank|floatformat:0 }}</span>
                         {% endif %}
