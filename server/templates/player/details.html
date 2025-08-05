@@ -78,6 +78,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Base rank' %}</th>
+                        <th scope="col" width="1ch"></th> <!-- medal for 1st-3rd places -->
                         <th scope="col">{% trans 'Place' %}</th>
                         <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
@@ -100,10 +101,8 @@
                                     <span class="badge bg-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
-                            <td>
-                                {{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}
-                                {{ tournament_result.place_medal }}
-                            </td>
+                            <td width="1ch">{{ delta.place_medal }}</td>
+                            <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
                             <td>
                                 <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                             </td>

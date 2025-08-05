@@ -7,6 +7,7 @@
             <th scope="col">#</th>
             <th scope="col">{% trans 'Base rank' %}</th>
             <th scope="col">{% trans 'Date' %}</th>
+            <th scope="col" width="1ch"></th> <!-- medal for 1st-3rd places -->
             <th scope="col">{% trans 'Place' %}</th>
             <th scope="col">{% trans 'Power' %}</th>
             <th scope="col">{% trans 'Coefficient' %}</th>
@@ -37,10 +38,8 @@
                 <td>
                     <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                 </td>
-                <td>
-                    {{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}
-                    {{ delta.place_medal }}
-                </td>
+                <td width="1ch">{{ delta.place_medal }}</td>
+                <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
                 <td>
                     {{ delta.coefficient_obj.age|floatformat:0 }}%
                 </td>
