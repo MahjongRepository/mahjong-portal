@@ -295,6 +295,12 @@ class TournamentResult(BaseModel):
 
         return round(((number_of_players - place) / (number_of_players - 1)) * 1000, 2)
 
+    @property
+    def place_medal(self):
+        if 1 <= self.place <= 3:
+            return "🥇🥈🥉"[self.place - 1]
+        return ""
+
 
 class TournamentRegistration(BaseModel):
     tournament = models.ForeignKey(Tournament, related_name="tournament_registrations", on_delete=models.PROTECT)

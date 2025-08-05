@@ -37,7 +37,10 @@
                 <td>
                     <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                 </td>
-                <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
+                <td>
+                    {{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}
+                    {{ delta.place_medal }}
+                </td>
                 <td>
                     {{ delta.coefficient_obj.age|floatformat:0 }}%
                 </td>
