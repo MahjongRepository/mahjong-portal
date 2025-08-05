@@ -119,12 +119,6 @@ class RatingDelta(BaseModel):
             self.rating.type == Rating.EMA, self.tournament_id, self.player, coefficient_obj.coefficient
         )
 
-    @property
-    def place_medal(self):
-        if 1 <= self.tournament_place <= 3:
-            return "🥇🥈🥉"[self.tournament_place - 1]
-        return ""
-
 
 class RatingResult(BaseModel):
     rating = models.ForeignKey(Rating, on_delete=models.PROTECT)

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper %}
+{% load i18n russian_words_morph meta_tags_helper player_helper %}
 
 {% block title %}
     {{ player.full_name }}. {% trans 'Tournaments' %}
@@ -43,7 +43,7 @@
                                     <span class="badge bg-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
-                            <td width="1ch">{{ delta.place_medal }}</td>
+                            <td>{{ tournament_result.place|place_medal|safe }}</td>
                             <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
                             <td>
                                 <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
