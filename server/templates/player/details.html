@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper tz tenhou_helper %}
+{% load i18n russian_words_morph meta_tags_helper tz tenhou_helper player_helper %}
 
 {% block title %}
     {{ player.full_name }}
@@ -78,6 +78,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Base rank' %}</th>
+                        <th scope="col" width="1ch"></th>
                         <th scope="col">{% trans 'Place' %}</th>
                         <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
@@ -100,6 +101,7 @@
                                     <span class="badge bg-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
+                            <td>{{ tournament_result.place|place_medal|safe }}</td>
                             <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
                             <td>
                                 <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>

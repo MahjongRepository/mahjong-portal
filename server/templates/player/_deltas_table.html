@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n player_helper %}
 
 <div class="table-responsive-sm">
     <table class="table table-hover">
@@ -7,6 +7,7 @@
             <th scope="col">#</th>
             <th scope="col">{% trans 'Base rank' %}</th>
             <th scope="col">{% trans 'Date' %}</th>
+            <th scope="col" width="1ch"></th>
             <th scope="col">{% trans 'Place' %}</th>
             <th scope="col">{% trans 'Power' %}</th>
             <th scope="col">{% trans 'Coefficient' %}</th>
@@ -37,6 +38,7 @@
                 <td>
                     <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                 </td>
+                <td>{{ delta.tournament_place|place_medal|safe }}</td>
                 <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
                 <td>
                     {{ delta.coefficient_obj.age|floatformat:0 }}%
