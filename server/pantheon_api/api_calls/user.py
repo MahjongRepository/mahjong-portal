@@ -21,8 +21,8 @@ def get_current_pantheon_user_data(person_id, auth_token):
     client = FreyClient(settings.PANTHEON_AUTH_API_URL)
 
     response = client.Me(
-        ctx=Context(),
-        request=frey_pb2.AuthMePayload(person_id=person_id, auth_token=auth_token),
+        ctx=Context(headers={"X-Current-Person-Id": str(person_id), "X-Auth-Token": auth_token}),
+        request=frey_pb2.AuthMePayload(),
         server_path_prefix="/v2",
     )
 

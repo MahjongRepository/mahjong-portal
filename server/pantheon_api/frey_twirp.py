@@ -11,6 +11,7 @@ _sym_db = _symbol_database.Default()
 
 
 class FreyServer(TwirpServer):
+
     def __init__(self, *args, service, server_path_prefix="/twirp"):
         super().__init__(service=service)
         self._prefix = f"{server_path_prefix}/common.Frey"
@@ -78,20 +79,6 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.AuthApproveResetPasswordPayload"),
                 output=_sym_db.GetSymbol("common.AuthApproveResetPasswordResponse"),
             ),
-            "GetAccessRules": Endpoint(
-                service_name="Frey",
-                name="GetAccessRules",
-                function=getattr(service, "GetAccessRules"),
-                input=_sym_db.GetSymbol("common.AccessGetAccessRulesPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetAccessRulesResponse"),
-            ),
-            "GetRuleValue": Endpoint(
-                service_name="Frey",
-                name="GetRuleValue",
-                function=getattr(service, "GetRuleValue"),
-                input=_sym_db.GetSymbol("common.AccessGetRuleValuePayload"),
-                output=_sym_db.GetSymbol("common.AccessGetRuleValueResponse"),
-            ),
             "UpdatePersonalInfo": Endpoint(
                 service_name="Frey",
                 name="UpdatePersonalInfo",
@@ -126,13 +113,6 @@ class FreyServer(TwirpServer):
                 function=getattr(service, "FindByTitle"),
                 input=_sym_db.GetSymbol("common.PersonsFindByTitlePayload"),
                 output=_sym_db.GetSymbol("common.PersonsFindByTitleResponse"),
-            ),
-            "GetGroups": Endpoint(
-                service_name="Frey",
-                name="GetGroups",
-                function=getattr(service, "GetGroups"),
-                input=_sym_db.GetSymbol("common.PersonsGetGroupsPayload"),
-                output=_sym_db.GetSymbol("common.PersonsGetGroupsResponse"),
             ),
             "GetEventAdmins": Endpoint(
                 service_name="Frey",
@@ -169,75 +149,12 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.AccessGetOwnedEventIdsPayload"),
                 output=_sym_db.GetSymbol("common.AccessGetOwnedEventIdsResponse"),
             ),
-            "GetRulesList": Endpoint(
-                service_name="Frey",
-                name="GetRulesList",
-                function=getattr(service, "GetRulesList"),
-                input=_sym_db.GetSymbol("common.AccessGetRulesListPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetRulesListResponse"),
-            ),
-            "GetAllEventRules": Endpoint(
-                service_name="Frey",
-                name="GetAllEventRules",
-                function=getattr(service, "GetAllEventRules"),
-                input=_sym_db.GetSymbol("common.AccessGetAllEventRulesPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetAllEventRulesResponse"),
-            ),
-            "GetPersonAccess": Endpoint(
-                service_name="Frey",
-                name="GetPersonAccess",
-                function=getattr(service, "GetPersonAccess"),
-                input=_sym_db.GetSymbol("common.AccessGetPersonAccessPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetPersonAccessResponse"),
-            ),
-            "GetGroupAccess": Endpoint(
-                service_name="Frey",
-                name="GetGroupAccess",
-                function=getattr(service, "GetGroupAccess"),
-                input=_sym_db.GetSymbol("common.AccessGetGroupAccessPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetGroupAccessResponse"),
-            ),
-            "GetAllPersonAccess": Endpoint(
-                service_name="Frey",
-                name="GetAllPersonAccess",
-                function=getattr(service, "GetAllPersonAccess"),
-                input=_sym_db.GetSymbol("common.AccessGetAllPersonAccessPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetAllPersonAccessResponse"),
-            ),
-            "GetAllGroupAccess": Endpoint(
-                service_name="Frey",
-                name="GetAllGroupAccess",
-                function=getattr(service, "GetAllGroupAccess"),
-                input=_sym_db.GetSymbol("common.AccessGetAllGroupAccessPayload"),
-                output=_sym_db.GetSymbol("common.AccessGetAllGroupAccessResponse"),
-            ),
             "AddRuleForPerson": Endpoint(
                 service_name="Frey",
                 name="AddRuleForPerson",
                 function=getattr(service, "AddRuleForPerson"),
                 input=_sym_db.GetSymbol("common.AccessAddRuleForPersonPayload"),
                 output=_sym_db.GetSymbol("common.AccessAddRuleForPersonResponse"),
-            ),
-            "AddRuleForGroup": Endpoint(
-                service_name="Frey",
-                name="AddRuleForGroup",
-                function=getattr(service, "AddRuleForGroup"),
-                input=_sym_db.GetSymbol("common.AccessAddRuleForGroupPayload"),
-                output=_sym_db.GetSymbol("common.AccessAddRuleForGroupResponse"),
-            ),
-            "UpdateRuleForPerson": Endpoint(
-                service_name="Frey",
-                name="UpdateRuleForPerson",
-                function=getattr(service, "UpdateRuleForPerson"),
-                input=_sym_db.GetSymbol("common.AccessUpdateRuleForPersonPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "UpdateRuleForGroup": Endpoint(
-                service_name="Frey",
-                name="UpdateRuleForGroup",
-                function=getattr(service, "UpdateRuleForGroup"),
-                input=_sym_db.GetSymbol("common.AccessUpdateRuleForGroupPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "DeleteRuleForPerson": Endpoint(
                 service_name="Frey",
@@ -246,75 +163,12 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.AccessDeleteRuleForPersonPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
-            "DeleteRuleForGroup": Endpoint(
-                service_name="Frey",
-                name="DeleteRuleForGroup",
-                function=getattr(service, "DeleteRuleForGroup"),
-                input=_sym_db.GetSymbol("common.AccessDeleteRuleForGroupPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "ClearAccessCache": Endpoint(
-                service_name="Frey",
-                name="ClearAccessCache",
-                function=getattr(service, "ClearAccessCache"),
-                input=_sym_db.GetSymbol("common.AccessClearAccessCachePayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
             "CreateAccount": Endpoint(
                 service_name="Frey",
                 name="CreateAccount",
                 function=getattr(service, "CreateAccount"),
                 input=_sym_db.GetSymbol("common.PersonsCreateAccountPayload"),
                 output=_sym_db.GetSymbol("common.PersonsCreateAccountResponse"),
-            ),
-            "CreateGroup": Endpoint(
-                service_name="Frey",
-                name="CreateGroup",
-                function=getattr(service, "CreateGroup"),
-                input=_sym_db.GetSymbol("common.PersonsCreateGroupPayload"),
-                output=_sym_db.GetSymbol("common.PersonsCreateGroupResponse"),
-            ),
-            "UpdateGroup": Endpoint(
-                service_name="Frey",
-                name="UpdateGroup",
-                function=getattr(service, "UpdateGroup"),
-                input=_sym_db.GetSymbol("common.PersonsUpdateGroupPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "DeleteGroup": Endpoint(
-                service_name="Frey",
-                name="DeleteGroup",
-                function=getattr(service, "DeleteGroup"),
-                input=_sym_db.GetSymbol("common.PersonsDeleteGroupPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "AddPersonToGroup": Endpoint(
-                service_name="Frey",
-                name="AddPersonToGroup",
-                function=getattr(service, "AddPersonToGroup"),
-                input=_sym_db.GetSymbol("common.PersonsAddPersonToGroupPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "RemovePersonFromGroup": Endpoint(
-                service_name="Frey",
-                name="RemovePersonFromGroup",
-                function=getattr(service, "RemovePersonFromGroup"),
-                input=_sym_db.GetSymbol("common.PersonsRemovePersonFromGroupPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "GetPersonsOfGroup": Endpoint(
-                service_name="Frey",
-                name="GetPersonsOfGroup",
-                function=getattr(service, "GetPersonsOfGroup"),
-                input=_sym_db.GetSymbol("common.PersonsGetPersonsOfGroupPayload"),
-                output=_sym_db.GetSymbol("common.PersonsGetPersonsOfGroupResponse"),
-            ),
-            "GetGroupsOfPerson": Endpoint(
-                service_name="Frey",
-                name="GetGroupsOfPerson",
-                function=getattr(service, "GetGroupsOfPerson"),
-                input=_sym_db.GetSymbol("common.PersonsGetGroupsOfPersonPayload"),
-                output=_sym_db.GetSymbol("common.PersonsGetGroupsOfPersonResponse"),
             ),
             "GetNotificationsSettings": Endpoint(
                 service_name="Frey",
@@ -330,24 +184,11 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.PersonsSetNotificationsSettingsPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
-            "AddSystemWideRuleForPerson": Endpoint(
-                service_name="Frey",
-                name="AddSystemWideRuleForPerson",
-                function=getattr(service, "AddSystemWideRuleForPerson"),
-                input=_sym_db.GetSymbol("common.AccessAddSystemWideRuleForPersonPayload"),
-                output=_sym_db.GetSymbol("common.AccessAddSystemWideRuleForPersonResponse"),
-            ),
-            "AddSystemWideRuleForGroup": Endpoint(
-                service_name="Frey",
-                name="AddSystemWideRuleForGroup",
-                function=getattr(service, "AddSystemWideRuleForGroup"),
-                input=_sym_db.GetSymbol("common.AccessAddSystemWideRuleForGroupPayload"),
-                output=_sym_db.GetSymbol("common.AccessAddSystemWideRuleForGroupResponse"),
-            ),
         }
 
 
 class FreyClient(TwirpClient):
+
     def RequestRegistration(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/RequestRegistration",
@@ -429,24 +270,6 @@ class FreyClient(TwirpClient):
             **kwargs,
         )
 
-    def GetAccessRules(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetAccessRules",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetAccessRulesResponse"),
-            **kwargs,
-        )
-
-    def GetRuleValue(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetRuleValue",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetRuleValueResponse"),
-            **kwargs,
-        )
-
     def UpdatePersonalInfo(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/UpdatePersonalInfo",
@@ -489,15 +312,6 @@ class FreyClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.PersonsFindByTitleResponse"),
-            **kwargs,
-        )
-
-    def GetGroups(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetGroups",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.PersonsGetGroupsResponse"),
             **kwargs,
         )
 
@@ -546,93 +360,12 @@ class FreyClient(TwirpClient):
             **kwargs,
         )
 
-    def GetRulesList(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetRulesList",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetRulesListResponse"),
-            **kwargs,
-        )
-
-    def GetAllEventRules(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetAllEventRules",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetAllEventRulesResponse"),
-            **kwargs,
-        )
-
-    def GetPersonAccess(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetPersonAccess",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetPersonAccessResponse"),
-            **kwargs,
-        )
-
-    def GetGroupAccess(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetGroupAccess",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetGroupAccessResponse"),
-            **kwargs,
-        )
-
-    def GetAllPersonAccess(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetAllPersonAccess",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetAllPersonAccessResponse"),
-            **kwargs,
-        )
-
-    def GetAllGroupAccess(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetAllGroupAccess",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessGetAllGroupAccessResponse"),
-            **kwargs,
-        )
-
     def AddRuleForPerson(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/AddRuleForPerson",
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.AccessAddRuleForPersonResponse"),
-            **kwargs,
-        )
-
-    def AddRuleForGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/AddRuleForGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessAddRuleForGroupResponse"),
-            **kwargs,
-        )
-
-    def UpdateRuleForPerson(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/UpdateRuleForPerson",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def UpdateRuleForGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/UpdateRuleForGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             **kwargs,
         )
 
@@ -645,93 +378,12 @@ class FreyClient(TwirpClient):
             **kwargs,
         )
 
-    def DeleteRuleForGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/DeleteRuleForGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def ClearAccessCache(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/ClearAccessCache",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
     def CreateAccount(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/CreateAccount",
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.PersonsCreateAccountResponse"),
-            **kwargs,
-        )
-
-    def CreateGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/CreateGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.PersonsCreateGroupResponse"),
-            **kwargs,
-        )
-
-    def UpdateGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/UpdateGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def DeleteGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/DeleteGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def AddPersonToGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/AddPersonToGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def RemovePersonFromGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/RemovePersonFromGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def GetPersonsOfGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetPersonsOfGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.PersonsGetPersonsOfGroupResponse"),
-            **kwargs,
-        )
-
-    def GetGroupsOfPerson(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/GetGroupsOfPerson",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.PersonsGetGroupsOfPersonResponse"),
             **kwargs,
         )
 
@@ -750,23 +402,5 @@ class FreyClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def AddSystemWideRuleForPerson(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/AddSystemWideRuleForPerson",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessAddSystemWideRuleForPersonResponse"),
-            **kwargs,
-        )
-
-    def AddSystemWideRuleForGroup(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Frey/AddSystemWideRuleForGroup",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.AccessAddSystemWideRuleForGroupResponse"),
             **kwargs,
         )

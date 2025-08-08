@@ -11,6 +11,7 @@ _sym_db = _symbol_database.Default()
 
 
 class MimirServer(TwirpServer):
+
     def __init__(self, *args, service, server_path_prefix="/twirp"):
         super().__init__(service=service)
         self._prefix = f"{server_path_prefix}/common.Mimir"
@@ -82,7 +83,7 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="GetGame",
                 function=getattr(service, "GetGame"),
-                input=_sym_db.GetSymbol("common.EventsGetGamePayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.EventsGetGameResponse"),
             ),
             "GetGamesSeries": Endpoint(
@@ -117,7 +118,7 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="GetSessionOverview",
                 function=getattr(service, "GetSessionOverview"),
-                input=_sym_db.GetSymbol("common.GamesGetSessionOverviewPayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.GamesGetSessionOverviewResponse"),
             ),
             "GetPlayerStats": Endpoint(
@@ -166,14 +167,14 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="GetAllRounds",
                 function=getattr(service, "GetAllRounds"),
-                input=_sym_db.GetSymbol("common.PlayersGetAllRoundsPayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.PlayersGetAllRoundsResponse"),
             ),
             "GetLastRoundByHash": Endpoint(
                 service_name="Mimir",
                 name="GetLastRoundByHash",
                 function=getattr(service, "GetLastRoundByHash"),
-                input=_sym_db.GetSymbol("common.PlayersGetLastRoundByHashPayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.PlayersGetLastRoundByHashResponse"),
             ),
             "GetEventForEdit": Endpoint(
@@ -300,20 +301,20 @@ class MimirServer(TwirpServer):
                 name="StartGame",
                 function=getattr(service, "StartGame"),
                 input=_sym_db.GetSymbol("common.GamesStartGamePayload"),
-                output=_sym_db.GetSymbol("common.GamesStartGameResponse"),
+                output=_sym_db.GetSymbol("common.GenericSessionPayload"),
             ),
             "EndGame": Endpoint(
                 service_name="Mimir",
                 name="EndGame",
                 function=getattr(service, "EndGame"),
-                input=_sym_db.GetSymbol("common.GamesEndGamePayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "CancelGame": Endpoint(
                 service_name="Mimir",
                 name="CancelGame",
                 function=getattr(service, "CancelGame"),
-                input=_sym_db.GetSymbol("common.GamesCancelGamePayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "FinalizeSession": Endpoint(
@@ -334,7 +335,7 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="DefinalizeGame",
                 function=getattr(service, "DefinalizeGame"),
-                input=_sym_db.GetSymbol("common.GamesDefinalizeGamePayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "AddPenalty": Endpoint(
@@ -349,7 +350,7 @@ class MimirServer(TwirpServer):
                 name="AddPenaltyGame",
                 function=getattr(service, "AddPenaltyGame"),
                 input=_sym_db.GetSymbol("common.GamesAddPenaltyGamePayload"),
-                output=_sym_db.GetSymbol("common.GamesAddPenaltyGameResponse"),
+                output=_sym_db.GetSymbol("common.GenericSessionPayload"),
             ),
             "GetPlayer": Endpoint(
                 service_name="Mimir",
@@ -453,7 +454,7 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="ForceFinishGame",
                 function=getattr(service, "ForceFinishGame"),
-                input=_sym_db.GetSymbol("common.ForceFinishGamePayload"),
+                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "AddTypedOnlineReplay": Endpoint(
@@ -505,6 +506,13 @@ class MimirServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.CancelPenaltyPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
+            "AddExtraTime": Endpoint(
+                service_name="Mimir",
+                name="AddExtraTime",
+                function=getattr(service, "AddExtraTime"),
+                input=_sym_db.GetSymbol("common.AddExtraTimePayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
             "ListMyPenalties": Endpoint(
                 service_name="Mimir",
                 name="ListMyPenalties",
@@ -512,10 +520,25 @@ class MimirServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.GenericEventPayload"),
                 output=_sym_db.GetSymbol("common.PenaltiesResponse"),
             ),
+            "ListChombo": Endpoint(
+                service_name="Mimir",
+                name="ListChombo",
+                function=getattr(service, "ListChombo"),
+                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                output=_sym_db.GetSymbol("common.ChomboResponse"),
+            ),
+            "GetCurrentStateForPlayer": Endpoint(
+                service_name="Mimir",
+                name="GetCurrentStateForPlayer",
+                function=getattr(service, "GetCurrentStateForPlayer"),
+                input=_sym_db.GetSymbol("common.GetCurrentStatePayload"),
+                output=_sym_db.GetSymbol("common.GetCurrentStateResponse"),
+            ),
         }
 
 
 class MimirClient(TwirpClient):
+
     def GetRulesets(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Mimir/GetRulesets",
@@ -881,7 +904,7 @@ class MimirClient(TwirpClient):
             url=f"{server_path_prefix}/common.Mimir/StartGame",
             ctx=ctx,
             request=request,
-            response_obj=_sym_db.GetSymbol("common.GamesStartGameResponse"),
+            response_obj=_sym_db.GetSymbol("common.GenericSessionPayload"),
             **kwargs,
         )
 
@@ -944,7 +967,7 @@ class MimirClient(TwirpClient):
             url=f"{server_path_prefix}/common.Mimir/AddPenaltyGame",
             ctx=ctx,
             request=request,
-            response_obj=_sym_db.GetSymbol("common.GamesAddPenaltyGameResponse"),
+            response_obj=_sym_db.GetSymbol("common.GenericSessionPayload"),
             **kwargs,
         )
 
@@ -1146,11 +1169,38 @@ class MimirClient(TwirpClient):
             **kwargs,
         )
 
+    def AddExtraTime(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/AddExtraTime",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
     def ListMyPenalties(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Mimir/ListMyPenalties",
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.PenaltiesResponse"),
+            **kwargs,
+        )
+
+    def ListChombo(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/ListChombo",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.ChomboResponse"),
+            **kwargs,
+        )
+
+    def GetCurrentStateForPlayer(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/GetCurrentStateForPlayer",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GetCurrentStateResponse"),
             **kwargs,
         )
