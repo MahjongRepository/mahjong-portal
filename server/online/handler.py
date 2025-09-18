@@ -335,6 +335,7 @@ class TournamentHandler:
                 self.process_add_game_log(status=status, log_link=log_link, log_id=log_id, game=game)
                 self.check_round_was_finished()
             except Exception as err:
+                transaction.set_rollback(True)
                 logger.error(err)
                 return error_message, False
             finally:
