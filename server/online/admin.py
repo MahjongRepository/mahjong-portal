@@ -42,6 +42,7 @@ class TournamentPlayersForm(forms.ModelForm):
 
 class TournamentStatusAdmin(admin.ModelAdmin):
     list_display = ["tournament", "current_round", "end_break_time"]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
 class TournamentPlayersAdmin(admin.ModelAdmin):

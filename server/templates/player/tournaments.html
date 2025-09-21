@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n russian_words_morph meta_tags_helper %}
+{% load i18n russian_words_morph meta_tags_helper player_helper %}
 
 {% block title %}
     {{ player.full_name }}. {% trans 'Tournaments' %}
@@ -20,6 +20,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Base rank' %}</th>
+                        <th scope="col" width="1ch"></th> <!-- medal for 1st-3rd places -->
                         <th scope="col">{% trans 'Place' %}</th>
                         <th scope="col">{% trans 'Date' %}</th>
                         <th scope="col">{% trans 'Type' %}</th>
@@ -32,14 +33,17 @@
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
                             <td>
-                                {% if tournament_result.base_rank > 500 %}
+                                {% if tournament_result.base_rank >= 750 %}
                                     <span class="badge bg-success">{{ tournament_result.base_rank|floatformat:0 }}</span>
-                                {% elif tournament_result.base_rank == 0 %}
+                                {% elif tournament_result.base_rank >= 500 %}
                                     <span class="badge bg-primary">{{ tournament_result.base_rank|floatformat:0 }}</span>
+                                {% elif tournament_result.base_rank >= 250 %}
+                                    <span class="badge bg-warning text-dark">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% else %}
                                     <span class="badge bg-danger">{{ tournament_result.base_rank|floatformat:0 }}</span>
                                 {% endif %}
                             </td>
+                            <td>{{ tournament_result.place|place_medal|safe }}</td>
                             <td>{{ tournament_result.place }}/{{ tournament_result.tournament.number_of_players }}</td>
                             <td>
                                 <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>

@@ -22,3 +22,10 @@ def ermc_color(color):
     }.get(color)
 
     return PlayerQuotaEvent.color_map(index)
+
+
+@register.filter
+def place_medal(place):
+    if 1 <= place <= 3:
+        return ["&#129351;", "&#129352;", "&#129353;"][place - 1]
+    return ""

@@ -57,6 +57,7 @@ class TournamentRegistrationAdmin(admin.ModelAdmin):
     ]
 
     raw_id_fields = ["tournament", "player", "city_object"]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
 class OnlineTournamentRegistrationAdmin(admin.ModelAdmin):
@@ -74,7 +75,8 @@ class OnlineTournamentRegistrationAdmin(admin.ModelAdmin):
         "allow_to_save_data",
     ]
 
-    raw_id_fields = ["tournament", "player", "city_object"]
+    raw_id_fields = ["tournament", "player", "city_object", "user"]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
 class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
@@ -93,7 +95,8 @@ class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
         "allow_to_save_data",
     ]
 
-    raw_id_fields = ["tournament", "player", "city_object"]
+    raw_id_fields = ["tournament", "player", "city_object", "user"]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
 class TournamentApplicationAdmin(admin.ModelAdmin):
@@ -111,6 +114,7 @@ class TournamentResultAdmin(admin.ModelAdmin):
         "player_string",
     ]
     raw_id_fields = ["tournament", "player"]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
 class OnlineTournamentConfigAdmin(admin.ModelAdmin):

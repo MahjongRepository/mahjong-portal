@@ -171,11 +171,11 @@ def tournament_announcement(request, slug):
         # TODO support not only online tournaments
         if tournament.is_majsoul_tournament:
             is_already_registered = MsOnlineTournamentRegistration.objects.filter(
-                tournament=tournament, user=request.user
+                tournament=tournament, user=request.user, is_approved=True
             ).exists()
         else:
             is_already_registered = OnlineTournamentRegistration.objects.filter(
-                tournament=tournament, user=request.user
+                tournament=tournament, user=request.user, is_approved=True
             ).exists()
 
     missed_tenhou_id_error = request.GET.get("error") == "tenhou_id"
