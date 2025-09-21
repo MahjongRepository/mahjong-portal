@@ -75,7 +75,7 @@ class OnlineTournamentRegistrationAdmin(admin.ModelAdmin):
         "allow_to_save_data",
     ]
 
-    raw_id_fields = ["tournament", "player", "city_object"]
+    raw_id_fields = ["tournament", "player", "city_object", "user"]
     list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
@@ -95,7 +95,7 @@ class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
         "allow_to_save_data",
     ]
 
-    raw_id_fields = ["tournament", "player", "city_object"]
+    raw_id_fields = ["tournament", "player", "city_object", "user"]
     list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
 
 
