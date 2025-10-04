@@ -267,14 +267,14 @@ def update_info_from_pantheon_api(request):
         user = None
 
     feed = PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
-    # with transaction.atomic():
-    #     try:
-    #         PlayerHelper.update_player_from_pantheon_feed(feed)
-    #         feed.is_applied = True
-    #         feed.save()
-    #     except Exception as err:
-    #         transaction.set_rollback(True)
-    #         raise err
+    with transaction.atomic():
+        try:
+            PlayerHelper.update_player_from_pantheon_feed(feed)
+            feed.is_applied = True
+            feed.save()
+        except Exception as err:
+            transaction.set_rollback(True)
+            raise err
 
     return JsonResponse({"status": "ok"})
 

@@ -30,7 +30,7 @@ class TenhouNickname(BaseModel):
 
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="tenhou")
 
-    tenhou_username = models.CharField(max_length=8)
+    tenhou_username = models.CharField(max_length=8, db_index=True)
     username_created_at = models.DateField()
 
     last_played_date = models.DateField(null=True, blank=True)

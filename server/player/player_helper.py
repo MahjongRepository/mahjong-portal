@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 from typing import List, Optional
 
 from django.utils import timezone
@@ -9,6 +12,44 @@ from settings.models import City
 
 
 class PlayerHelper:
+
+    class TenhouNicknameSearchContext:
+        is_tenhou_account_exist: bool
+        is_tenhou_account_relate_to_player: bool
+        old_tenhou_account: TenhouNickname
+
+        def __init__(self, is_tenhou_account_exist: bool, is_tenhou_account_relate_to_player: bool, old_tenhou_account):
+            self.is_tenhou_account_exist = is_tenhou_account_exist
+            self.is_tenhou_account_relate_to_player = is_tenhou_account_relate_to_player
+            self.old_tenhou_account = old_tenhou_account
+
+    @staticmethod
+    def __resolve_tenhou_nickname(feed_tenhou_id: str, player) -> TenhouNicknameSearchContext:
+        all_tenhou_nicknames = TenhouNickname.objects.filter(tenhou_username=feed_tenhou_id)
+        existed_player_tenhou_nickname = all_tenhou_nicknames.filter(player=player)
+        is_tenhou_account_relate_to_player = existed_player_tenhou_nickname.exists()
+        old_tenhou_account = None
+        if is_tenhou_account_relate_to_player:
+            old_tenhou_account = existed_player_tenhou_nickname.first()
+        return PlayerHelper.TenhouNicknameSearchContext(
+            all_tenhou_nicknames.exists(), is_tenhou_account_relate_to_player, old_tenhou_account
+        )
+
+    @staticmethod
+    def __update_old_tenhou_account(current_player, tenhou_nickname_search_context, feed_tenhou_id, updated_fields):
+        old_tenhou_objects = current_player.tenhou.all().exclude(
+            id=tenhou_nickname_search_context.old_tenhou_account.id
+        )
+        updated_fields.append("old tenhou account updated")
+        updated_fields.append("new tenhou account added")
+        PlayerHelper.update_player_tenhou_object(
+            current_player,
+            tenhou_nickname_search_context.old_tenhou_account,
+            feed_tenhou_id,
+            old_tenhou_objects,
+            updated_fields,
+        )
+
     @staticmethod
     def update_player_from_pantheon_feed(feed) -> List[str]:
         updated_fields = []
@@ -52,6 +93,55 @@ class PlayerHelper:
                         current_player.tenhou_object is not None
                         and current_player.tenhou_object.tenhou_username != feed_tenhou_id
                     ):
+                        tenhou_nickname_search_context = PlayerHelper.__resolve_tenhou_nickname(
+                            feed_tenhou_id, current_player
+                        )
+                        if not tenhou_nickname_search_context.is_tenhou_account_exist:
+                            new_tenhou_object = TenhouNickname.objects.create(
+                                username_created_at=timezone.now(),
+                                player_id=current_player.id,
+                                tenhou_username=feed_tenhou_id,
+                            )
+                            old_tenhou_objects = current_player.tenhou.all().exclude(id=new_tenhou_object.id)
+                            updated_fields.append("old tenhou account updated")
+                            updated_fields.append("new tenhou account added")
+                            PlayerHelper.update_player_tenhou_object(
+                                current_player,
+                                new_tenhou_object,
+                                feed_tenhou_id,
+                                old_tenhou_objects,
+                                updated_fields,
+                            )
+                        else:
+                            if tenhou_nickname_search_context.is_tenhou_account_relate_to_player:
+                                PlayerHelper.__update_old_tenhou_account(
+                                    current_player, tenhou_nickname_search_context, feed_tenhou_id, updated_fields
+                                )
+                    elif current_player.tenhou_object is None:
+                        tenhou_nickname_search_context = PlayerHelper.__resolve_tenhou_nickname(
+                            feed_tenhou_id, current_player
+                        )
+                        if not tenhou_nickname_search_context.is_tenhou_account_exist:
+                            new_tenhou_object = TenhouNickname.objects.create(
+                                username_created_at=timezone.now(),
+                                player_id=current_player.id,
+                                tenhou_username=feed_tenhou_id,
+                            )
+                            old_tenhou_objects = []
+                            updated_fields.append("new tenhou account added")
+                            PlayerHelper.update_player_tenhou_object(
+                                current_player,
+                                new_tenhou_object,
+                                feed_tenhou_id,
+                                old_tenhou_objects,
+                                updated_fields,
+                            )
+                        else:
+                            if tenhou_nickname_search_context.is_tenhou_account_relate_to_player:
+                                PlayerHelper.__update_old_tenhou_account(
+                                    current_player, tenhou_nickname_search_context, feed_tenhou_id, updated_fields
+                                )
+                    else:
                         old_tenhou_objects = current_player.tenhou.all().exclude(id=current_player.tenhou_object.id)
                         updated_fields.append("old tenhou account updated")
                         PlayerHelper.update_player_tenhou_object(
@@ -60,15 +150,6 @@ class PlayerHelper:
                             feed_tenhou_id,
                             old_tenhou_objects,
                             updated_fields,
-                        )
-                    else:
-                        old_tenhou_objects = current_player.tenhou.all()
-                        new_tenhou_object = TenhouNickname.objects.create(
-                            username_created_at=timezone.now(), player_id=current_player.id
-                        )
-                        updated_fields.append("new tenhou account added")
-                        PlayerHelper.update_player_tenhou_object(
-                            current_player, new_tenhou_object, feed_tenhou_id, old_tenhou_objects, updated_fields
                         )
 
             if current_player is not None and current_player.pantheon_id != int(feed.updated_information["person_id"]):
