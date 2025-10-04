@@ -8,7 +8,7 @@ import platform
 import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -22,6 +22,7 @@ from haystack.forms import ModelSearchForm
 from account.models import PantheonInfoUpdateLog, User
 from club.models import Club
 from player.models import Player, PlayerQuotaEvent
+from player.player_helper import PlayerHelper
 from player.tenhou.models import TenhouAggregatedStatistics
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
@@ -265,7 +266,15 @@ def update_info_from_pantheon_api(request):
     except User.DoesNotExist:
         user = None
 
-    PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
+    feed = PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
+    with transaction.atomic():
+        try:
+            PlayerHelper.update_player_from_pantheon_feed(feed)
+            feed.is_applied = True
+            feed.save()
+        except Exception as err:
+            transaction.set_rollback(True)
+            raise err
 
     return JsonResponse({"status": "ok"})
 
