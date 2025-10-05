@@ -8,7 +8,7 @@ from django.utils import timezone
 from account.models import User
 from player.models import Player
 from player.tenhou.models import TenhouNickname
-from settings.models import City
+from settings.models import City, Country
 
 
 class PlayerHelper:
@@ -58,6 +58,7 @@ class PlayerHelper:
             feed_title = PlayerHelper.safe_strip(feed, "title")
             feed_email = PlayerHelper.safe_strip(feed, "email")
             feed_tenhou_id = PlayerHelper.safe_strip(feed, "tenhou_id")
+            feed_country_code = PlayerHelper.safe_strip(feed, "country")
 
             city_object = None
             try:
@@ -86,8 +87,31 @@ class PlayerHelper:
                     current_user.attached_player = current_player
                     updated_fields.append("user's attached player updated")
                     is_need_update_user = True
+                else:
+                    if current_user.attached_player.id != current_player.id:
+                        current_user.attached_player = current_player
+                        updated_fields.append("user's attached player updated")
+                        is_need_update_user = True
 
             if current_player is not None:
+                country_object = None
+                try:
+                    country_object = (
+                        Country.objects.get(code=feed_country_code) if feed_country_code is not None else None
+                    )
+                except Country.DoesNotExist:
+                    country_object = None
+
+                if country_object is not None:
+                    current_player.country = country_object
+                    updated_fields.append("player's country updated")
+                    is_need_update_user = False
+
+                if city_object is not None:
+                    current_player.city = city_object
+                    updated_fields.append("player's city updated")
+                    is_need_update_user = False
+
                 if feed_tenhou_id is not None and len(feed_tenhou_id) <= 8:
                     if (
                         current_player.tenhou_object is not None

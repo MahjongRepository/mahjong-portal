@@ -25,7 +25,7 @@ class Command(BaseCommand):
                     updates = PlayerHelper.update_player_from_pantheon_feed(feed)
                     feed.is_applied = True
                     feed.save()
-                    print("{0}/{1}: player update:{2}".format(feed_update_index, feed_count, updates))
+                    print("{0}/{1}: player updates:{2}".format(feed_update_index, feed_count, updates))
                     feed_update_index = feed_update_index + 1
                 except Exception as err:
                     transaction.set_rollback(True)
