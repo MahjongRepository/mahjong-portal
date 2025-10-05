@@ -66,6 +66,8 @@ class PlayerHelper:
             except City.DoesNotExist:
                 city_object = None
             current_player = PlayerHelper.find_player_smart(player_full_name=feed_title, city_object=city_object)
+            if current_player is None:
+                current_player = PlayerHelper.find_player_smart(player_full_name=feed_title)
 
             is_need_update_user = False
             is_need_update_player = False
@@ -105,12 +107,12 @@ class PlayerHelper:
                 if country_object is not None:
                     current_player.country = country_object
                     updated_fields.append("player's country updated")
-                    is_need_update_user = False
+                    is_need_update_player = True
 
                 if city_object is not None:
                     current_player.city = city_object
                     updated_fields.append("player's city updated")
-                    is_need_update_user = False
+                    is_need_update_player = True
 
                 if feed_tenhou_id is not None and len(feed_tenhou_id) <= 8:
                     if (
