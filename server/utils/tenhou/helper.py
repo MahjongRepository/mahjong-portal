@@ -209,6 +209,9 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
     }
     response = requests.get(url, headers=headers).json()
 
+    if type(response) == bool and response is False:
+        return [], None, None, False
+
     lobbies_dict = {
         "0": TenhouStatistics.KYU_LOBBY,
         "1": TenhouStatistics.DAN_LOBBY,
@@ -249,7 +252,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
 
     games = response.get("list", [])
     if not games:
-        return [], None, None
+        return [], None, None, True
 
     account_start_date = datetime.utcfromtimestamp(int(games[0]["starttime"])).astimezone(pytz.timezone("Asia/Tokyo"))
     last_game_time = account_start_date
@@ -313,7 +316,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
                 }
             )
 
-    return player_games, account_start_date, four_games_rate
+    return player_games, account_start_date, four_games_rate, True
 
 
 def save_played_games(tenhou_object, player_games):

@@ -36,16 +36,19 @@ class Command(BaseCommand):
 
             TenhouGameLog.objects.filter(tenhou_object=tenhou_object).delete()
 
-            player_games, account_start_date, four_players_rate = download_all_games_from_nodochi(
+            player_games, account_start_date, four_players_rate, is_active_account = download_all_games_from_nodochi(
                 tenhou_object.tenhou_username, only_ranking_games=True
             )
 
-            tenhou_object.username_created_at = account_start_date
-
-            save_played_games(tenhou_object, player_games)
-
-            recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate)
-            current_player_index = current_player_index + 1
+            if is_active_account:
+                tenhou_object.username_created_at = account_start_date
+                save_played_games(tenhou_object, player_games)
+                recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate)
+                current_player_index = current_player_index + 1
+            else:
+                tenhou_object.is_active = False
+                tenhou_object.is_main = False
+                tenhou_object.save()
 
             # let's be gentle and don't ddos nodochi
             sleep(10)
