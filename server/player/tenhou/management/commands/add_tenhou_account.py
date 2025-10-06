@@ -31,7 +31,7 @@ class Command(BaseCommand):
         player = Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
         tenhou_nickname = options.get("tenhou_nickname")
 
-        player_games, account_start_date, four_players_rate = download_all_games_from_nodochi(tenhou_nickname)
+        player_games, account_start_date, four_players_rate, _ = download_all_games_from_nodochi(tenhou_nickname)
 
         if not player_games:
             print("Not correct account")

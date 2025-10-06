@@ -37,7 +37,7 @@ class Command(BaseCommand):
                 tenhou_nicknames[tournament_player.tenhou_username] = stat_obj.rank
             except TenhouNickname.DoesNotExist:
                 print(f"Downloading tenhou stat for {tournament_player.tenhou_username}...")
-                player_games, account_start_date, four_players_rate = download_all_games_from_nodochi(
+                player_games, account_start_date, four_players_rate, _ = download_all_games_from_nodochi(
                     tournament_player.tenhou_username
                 )
 
