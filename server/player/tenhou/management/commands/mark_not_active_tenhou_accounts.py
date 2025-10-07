@@ -62,4 +62,4 @@ class Command(BaseCommand):
             else:
                 print("last_played_date not found, skipping...")
             current_player_index = current_player_index + 1
-            print("{0}: End".format(get_date_string()))
+        print("{0}: End".format(get_date_string()))
