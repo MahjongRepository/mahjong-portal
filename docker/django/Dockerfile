@@ -13,7 +13,7 @@ ARG mode
 RUN echo "Mode=$mode"
 RUN if [ "$mode" != "production" ] ; then cat /base.txt /dev.txt > /requirements.txt ; fi
 
-RUN apk update && apk add libpq gettext-dev
+RUN apk update && apk add libpq gettext-dev curl
 
 RUN \
  apk add --no-cache --virtual .build-deps postgresql-dev gcc musl-dev curl-dev && \
