@@ -20,6 +20,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--nickname", default=None, type=str)
         parser.add_argument("--rebuild-from-zero", default=False, type=bool)
+        parser.add_argument("--with-curl", default=False, type=bool)
 
     def is_need_update(self, now, tenhou_object) -> bool:
         if tenhou_object.last_recalculated_date is not None:
@@ -30,6 +31,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         tenhou_nickname = options.get("nickname")
         rebuild_from_zero = options.get("rebuild_from_zero")
+        with_pycurl = options.get("with_curl")
         print("{0}: Start".format(get_date_string()))
 
         if tenhou_nickname:
@@ -45,7 +47,9 @@ class Command(BaseCommand):
                 TenhouGameLog.objects.filter(tenhou_object=tenhou_object).delete()
 
                 player_games, account_start_date, four_players_rate, is_active_account = (
-                    download_all_games_from_nodochi(tenhou_object.tenhou_username, only_ranking_games=True)
+                    download_all_games_from_nodochi(
+                        tenhou_object.tenhou_username, only_ranking_games=True, with_pycurl=with_pycurl
+                    )
                 )
 
                 if is_active_account:

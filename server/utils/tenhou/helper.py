@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from io import BytesIO
 from urllib.parse import quote, unquote
 
+import pycurl
 import pytz
 import requests
+import ujson
 from django.db import transaction
 from tenacity import retry, wait_exponential
 
@@ -193,17 +196,38 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         return stat
 
 
+def get_response(url, with_pycurl=False):
+    if with_pycurl:
+        headers = [
+            "Accept: application/json; charset=UTF-8",
+            "Content-Type: application/json; charset=UTF-8",
+        ]
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.HTTPHEADER, headers)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(pycurl.SSL_VERIFYPEER, 0)
+        c.setopt(pycurl.SSL_VERIFYHOST, 0)
+        c.perform()
+        c.close()
+
+        return ujson.loads(unquote(buffer.getvalue().decode("utf-8")))
+    else:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
+            "Accept": "application/json; charset=UTF-8",
+            "Content-Type": "application/json; charset=UTF-8",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+        }
+        return requests.get(url, headers=headers).json()
+
+
 @retry(wait=wait_exponential(multiplier=1, min=5, max=30))
-def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
+def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True, with_pycurl=False):
     url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
-        "Accept": "application/json; charset=UTF-8",
-        "Content-Type": "application/json; charset=UTF-8",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-    }
-    response = requests.get(url, headers=headers).json()
+    response = get_response(url, with_pycurl)
 
     if type(response) == bool and response is False:
         return [], None, None, False
