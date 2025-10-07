@@ -34,6 +34,7 @@ class TenhouNickname(BaseModel):
     username_created_at = models.DateField()
 
     last_played_date = models.DateField(null=True, blank=True)
+    last_recalculated_date = models.DateField(null=True, blank=True)
 
     is_main = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)

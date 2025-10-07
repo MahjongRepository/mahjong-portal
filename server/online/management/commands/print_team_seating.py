@@ -5,6 +5,7 @@ from time import sleep
 import ujson as json
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 from django.utils.translation import activate
 
 from online.models import TournamentPlayers
@@ -52,7 +53,7 @@ class Command(BaseCommand):
 
                 save_played_games(tenhou_object, player_games)
                 stat_obj = recalculate_tenhou_statistics_for_four_players(
-                    tenhou_object, player_games, four_players_rate
+                    tenhou_object, player_games, four_players_rate, timezone.now()
                 )
                 tenhou_nicknames[tournament_player.tenhou_username] = stat_obj.rank
                 sleep(2)

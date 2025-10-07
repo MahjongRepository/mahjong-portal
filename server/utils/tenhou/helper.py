@@ -46,7 +46,7 @@ def parse_log_line(line):
     return {"players": players, "game_rules": game_rules, "game_time": game_time, "game_length": game_length}
 
 
-def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None, four_players_rate=None):
+def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None, four_players_rate=None, now=None):
     with transaction.atomic():
         games = tenhou_object.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS)
 
@@ -164,6 +164,7 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
             last_played_date = games.exists() and games.last().game_date or None
 
         tenhou_object.last_played_date = last_played_date
+        tenhou_object.last_recalculated_date = now
         tenhou_object.save()
 
         stat, _ = TenhouAggregatedStatistics.objects.get_or_create(
@@ -197,15 +198,10 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
     url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
-        "Accept": "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
+        "Accept": "application/json; charset=UTF-8",
+        "Content-Type": "application/json; charset=UTF-8",
         "Connection": "keep-alive",
         "Upgrade-Insecure-Requests": "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "TE": "trailers",
     }
     response = requests.get(url, headers=headers).json()
 
