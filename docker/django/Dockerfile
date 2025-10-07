@@ -16,7 +16,7 @@ RUN if [ "$mode" != "production" ] ; then cat /base.txt /dev.txt > /requirements
 RUN apk update && apk add libpq gettext-dev
 
 RUN \
- apk add --no-cache --virtual .build-deps postgresql-dev gcc musl-dev && \
+ apk add --no-cache --virtual .build-deps postgresql-dev gcc musl-dev curl-dev && \
  python3 -m pip install -r /requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 
