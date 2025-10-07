@@ -56,7 +56,6 @@ class Command(BaseCommand):
                     tenhou_object.username_created_at = account_start_date
                     save_played_games(tenhou_object, player_games)
                     recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate, now)
-                    current_player_index = current_player_index + 1
                 else:
                     tenhou_object.is_active = False
                     tenhou_object.is_main = False
@@ -66,5 +65,5 @@ class Command(BaseCommand):
                 sleep(10)
             else:
                 print("already updated, skipped...")
-
+            current_player_index = current_player_index + 1
         print("{0}: End".format(get_date_string()))
