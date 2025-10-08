@@ -1,4 +1,4 @@
-The project is working with Python **3.6+** only.
+The project is working with Python **3.9+** only.
 
 It is web-application to accumulate, calculate and display russian riichi-mahjong tournaments and ratings.
 
