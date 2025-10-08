@@ -4,11 +4,12 @@ import csv
 import io
 import logging
 import platform
+import threading
 
 import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -22,6 +23,7 @@ from haystack.forms import ModelSearchForm
 from account.models import PantheonInfoUpdateLog, User
 from club.models import Club
 from player.models import Player, PlayerQuotaEvent
+from player.player_helper import PlayerHelper
 from player.tenhou.models import TenhouAggregatedStatistics
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
@@ -241,6 +243,23 @@ def extract_pantheon_id(tournament, pantheon_type):
         return int(tournament.old_pantheon_id)
 
 
+def do_update_from_pantheon_feed(person_id, pantheon_data):
+    try:
+        user = User.objects.get(new_pantheon_id=person_id)
+    except User.DoesNotExist:
+        user = None
+
+    feed = PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
+    with transaction.atomic():
+        try:
+            PlayerHelper.update_player_from_pantheon_feed(feed)
+            feed.is_applied = True
+            feed.save()
+        except Exception as err:
+            transaction.set_rollback(True)
+            raise err
+
+
 @require_POST
 @csrf_exempt
 def update_info_from_pantheon_api(request):
@@ -260,12 +279,8 @@ def update_info_from_pantheon_api(request):
     if not person_id:
         return JsonResponse({"status": "error", "message": "Wrong json format, no person id included"}, status=500)
 
-    try:
-        user = User.objects.get(new_pantheon_id=person_id)
-    except User.DoesNotExist:
-        user = None
-
-    PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
+    update_thread = threading.Thread(target=do_update_from_pantheon_feed, args=[person_id, pantheon_data], daemon=True)
+    update_thread.start()
 
     return JsonResponse({"status": "ok"})
 

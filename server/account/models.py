@@ -35,4 +35,4 @@ class PantheonInfoUpdateLog(BaseModel):
     is_applied = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.user and self.user.__str__() or None
+        return self.user and self.user.__str__() or ""

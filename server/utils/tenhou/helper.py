@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from io import BytesIO
 from urllib.parse import quote, unquote
 
+import pycurl
 import pytz
 import requests
+import ujson
 from django.db import transaction
 from tenacity import retry, wait_exponential
 
@@ -46,7 +49,7 @@ def parse_log_line(line):
     return {"players": players, "game_rules": game_rules, "game_time": game_time, "game_length": game_length}
 
 
-def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None, four_players_rate=None):
+def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None, four_players_rate=None, now=None):
     with transaction.atomic():
         games = tenhou_object.game_logs.filter(game_players=TenhouGameLog.FOUR_PLAYERS)
 
@@ -164,6 +167,7 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
             last_played_date = games.exists() and games.last().game_date or None
 
         tenhou_object.last_played_date = last_played_date
+        tenhou_object.last_recalculated_date = now
         tenhou_object.save()
 
         stat, _ = TenhouAggregatedStatistics.objects.get_or_create(
@@ -192,22 +196,41 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
         return stat
 
 
+def get_response(url, with_pycurl=False):
+    if with_pycurl:
+        headers = [
+            "Accept: application/json; charset=UTF-8",
+            "Content-Type: application/json; charset=UTF-8",
+        ]
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.HTTPHEADER, headers)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(pycurl.SSL_VERIFYPEER, 0)
+        c.setopt(pycurl.SSL_VERIFYHOST, 0)
+        c.perform()
+        c.close()
+
+        return ujson.loads(unquote(buffer.getvalue().decode("utf-8")))
+    else:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
+            "Accept": "application/json; charset=UTF-8",
+            "Content-Type": "application/json; charset=UTF-8",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+        }
+        return requests.get(url, headers=headers).json()
+
+
 @retry(wait=wait_exponential(multiplier=1, min=5, max=30))
-def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
+def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True, with_pycurl=False):
     url = f"https://nodocchi.moe/api/listuser.php?name={quote(tenhou_username)}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
-        "Accept": "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "TE": "trailers",
-    }
-    response = requests.get(url, headers=headers).json()
+    response = get_response(url, with_pycurl)
+
+    if type(response) == bool and response is False:
+        return [], None, None, False
 
     lobbies_dict = {
         "0": TenhouStatistics.KYU_LOBBY,
@@ -249,7 +272,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
 
     games = response.get("list", [])
     if not games:
-        return [], None, None
+        return [], None, None, True
 
     account_start_date = datetime.utcfromtimestamp(int(games[0]["starttime"])).astimezone(pytz.timezone("Asia/Tokyo"))
     last_game_time = account_start_date
@@ -313,7 +336,7 @@ def download_all_games_from_nodochi(tenhou_username, only_ranking_games=True):
                 }
             )
 
-    return player_games, account_start_date, four_games_rate
+    return player_games, account_start_date, four_games_rate, True
 
 
 def save_played_games(tenhou_object, player_games):
