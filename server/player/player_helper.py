@@ -59,28 +59,43 @@ class PlayerHelper:
             feed_email = PlayerHelper.safe_strip(feed, "email")
             feed_tenhou_id = PlayerHelper.safe_strip(feed, "tenhou_id")
             feed_country_code = PlayerHelper.safe_strip(feed, "country")
+            feed_person_id = feed.updated_information["person_id"]
 
-            city_object = None
-            try:
-                city_object = City.objects.get(name_ru=feed_city) if feed_city is not None else None
-            except City.DoesNotExist:
-                city_object = None
-            current_player = PlayerHelper.find_player_smart(player_full_name=feed_title, city_object=city_object)
-            if current_player is None:
-                current_player = PlayerHelper.find_player_smart(player_full_name=feed_title)
-
-            is_need_update_user = False
-            is_need_update_player = False
             current_user = None
+            current_player = None
             if feed.user_id is not None:
                 current_user = User.objects.get(id=feed.user_id)
             else:
                 if feed_email is not None:
                     current_user = User.objects.get(email=feed_email)
 
-            if current_user is not None and feed.updated_information["person_id"] is not None:
-                if current_user.new_pantheon_id != int(feed.updated_information["person_id"]):
-                    current_user.new_pantheon_id = feed.updated_information["person_id"]
+            if current_user is not None and feed_person_id is not None:
+                if current_user.attached_player is not None and current_user.attached_player.pantheon_id == int(
+                    feed_person_id
+                ):
+                    current_player = Player.objects.get(pantheon_id=int(feed_person_id))
+
+            city_object = None
+            if current_player is None:
+                try:
+                    city_object = City.objects.get(name_ru=feed_city) if feed_city is not None else None
+                except City.DoesNotExist:
+                    city_object = None
+                if city_object is not None:
+                    current_player = PlayerHelper.find_player_smart(
+                        player_full_name=feed_title, city_object=city_object
+                    )
+                else:
+                    current_player = None
+
+            if current_player is None:
+                current_player = PlayerHelper.find_player_smart(player_full_name=feed_title)
+
+            is_need_update_user = False
+            is_need_update_player = False
+            if current_user is not None and feed_person_id is not None:
+                if current_user.new_pantheon_id != int(feed_person_id):
+                    current_user.new_pantheon_id = int(feed_person_id)
                     updated_fields.append("player's user pantheon_id updated")
                     is_need_update_user = True
 
@@ -177,10 +192,11 @@ class PlayerHelper:
                             old_tenhou_objects,
                             updated_fields,
                         )
-
-            if current_player is not None and current_player.pantheon_id != int(feed.updated_information["person_id"]):
+            if current_player is not None and feed_person_id is not None:
                 try:
-                    dirty_player = Player.objects.get(pantheon_id=int(feed.updated_information["person_id"]))
+                    dirty_player = (
+                        Player.objects.filter(pantheon_id=int(feed_person_id)).exclude(id=current_player.id).first()
+                    )
                     if dirty_player is not None:
                         dirty_player.pantheon_id = None
                         dirty_player.save()
@@ -188,7 +204,21 @@ class PlayerHelper:
                 except Player.DoesNotExist:
                     pass
 
-                current_player.pantheon_id = feed.updated_information["person_id"]
+            if (
+                current_player is not None
+                and feed_person_id is not None
+                and current_player.pantheon_id != int(feed_person_id)
+            ):
+                try:
+                    dirty_player = Player.objects.get(pantheon_id=int(feed_person_id))
+                    if dirty_player is not None:
+                        dirty_player.pantheon_id = None
+                        dirty_player.save()
+                        updated_fields.append("another player's pantheon id remove because with same person_id")
+                except Player.DoesNotExist:
+                    pass
+
+                current_player.pantheon_id = int(feed_person_id)
                 updated_fields.append("player's pantheon_id updated")
                 is_need_update_player = True
 
