@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-14 20:17+0000\n"
+"POT-Creation-Date: 2025-10-14 20:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -613,6 +613,14 @@ msgstr "Ссылку на последнюю игру"
 msgid "Update"
 msgstr "Обновить"
 
+#: templates/account/settings.html:61 templates/base.html:154
+msgid "User settings"
+msgstr "Настройки аккаунта"
+
+#: templates/account/settings.html:63
+msgid "Under development!"
+msgstr "В разработке!"
+
 #: templates/base.html:35 templates/website/home.html:5
 msgid "Mahjong portal"
 msgstr "Маджонг портал"
@@ -744,10 +752,6 @@ msgstr "Django админка"
 #: templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
-
-#: templates/base.html:154
-msgid "User settings"
-msgstr "Настройки аккаунта"
 
 #: templates/base.html:156
 msgid "My profile"
@@ -2284,6 +2288,3 @@ msgstr "Цуисо"
 #: utils/tenhou/yakuman_list.py:20
 msgid "Kazoe yakuman"
 msgstr "Казоэ"
-
-#~ msgid "Under development!"
-#~ msgstr "В разработке!"

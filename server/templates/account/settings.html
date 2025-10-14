@@ -56,6 +56,13 @@
 
         </form>
 
+    {% else %}
+        <div class="col-lg-6">
+            <h2>{% trans 'User settings' %}</h2>
+                <div class="alert alert-success mt-4">
+                    {% trans 'Under development!' %}
+                </div>
+        </div>
     {% endif %}
 
 {% endblock %}
