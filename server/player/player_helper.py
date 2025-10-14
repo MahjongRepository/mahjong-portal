@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-
-
+import math
 from typing import List, Optional
 
 from django.utils import timezone
 
 from account.models import User
+from online.parser import TenhouParser
 from player.models import Player
 from player.tenhou.models import TenhouNickname
 from settings.models import City, Country
@@ -22,6 +22,33 @@ class PlayerHelper:
             self.is_tenhou_account_exist = is_tenhou_account_exist
             self.is_tenhou_account_relate_to_player = is_tenhou_account_relate_to_player
             self.old_tenhou_account = old_tenhou_account
+
+    @staticmethod
+    def calculate_rating(log_hash, current_tenhou_nickname, games_count):
+        parser = TenhouParser()
+        players_with_results = parser.get_ratings(log_hash)
+
+        uma_map = {1: 30, 2: 10, 3: -10, 4: -30}
+
+        current_place = -1
+        current_rate = -1
+        avg_rate = 0
+
+        is_tenhou_account_found = False
+        for _, result_map in players_with_results.items():
+            if result_map["nickname"] == current_tenhou_nickname:
+                current_place = result_map["place"]
+                current_rate = result_map["rate"]
+                is_tenhou_account_found = True
+            avg_rate += int(result_map["rate"])
+        if is_tenhou_account_found:
+            avg_rate = avg_rate / 4
+            place_base = uma_map[current_place]
+            adjustment = 1 - (games_count * 0.002) if games_count < 400 else 0.2
+            raw_rating_change = adjustment * (place_base + (avg_rate - current_rate) / 40)
+            rating_change = float(format(raw_rating_change, ".3g"))
+            return math.floor(current_rate + rating_change)
+        return None
 
     @staticmethod
     def __resolve_tenhou_nickname(feed_tenhou_id: str, player) -> TenhouNicknameSearchContext:

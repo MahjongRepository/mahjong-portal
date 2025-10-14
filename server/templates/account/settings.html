@@ -2,10 +2,60 @@
 {% load i18n %}
 
 {% block content %}
-    <div class="col-lg-6">
-        <h2>{% trans 'User settings' %}</h2>
-        <div class="alert alert-success mt-4">
-            {% trans 'Under development!' %}
+
+    {% if player and tenhou_account %}
+        <h4 id="tenhou" class="mt-4">{% trans 'Tenhou.net profile' %} [ {{ tenhou_account.tenhou_username }} ]</h4>
+        <p><a href="{% url 'player_tenhou_details' player.slug %}">{% trans 'more information' %}</a></p>
+
+        <div class="col-lg-6">
+            <div class="alert alert-warning">
+                {% trans 'You can update your tenhou rating manually, pass last replay url in the form below' %}
+            </div>
         </div>
-    </div>
+
+        {% if success %}
+            <div class="col-lg-6">
+                <div class="alert alert-success">
+                    {% trans 'Success!' %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if success == False and error_code is not None %}
+            {% if error_code == 1 %}
+                <div class="col-lg-6">
+                    <div class="alert alert-danger">
+                        {% trans 'This is not looks like a link to the game log.' %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if error_code == 2 %}
+                <div class="col-lg-6">
+                    <div class="alert alert-danger">
+                        {% trans 'Your current tenhou account not found in replay.' %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <form action="{% url 'account_settings' %}" method="POST" class="form edit-tournament-form">
+            {% csrf_token %}
+
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-light">{% trans 'Last game link' %}</li>
+                <ul class="list-group-item">
+                    <div class="col-lg-11">
+                        <input class="form-control" name="log_url" type="text" />
+                    </div>
+                    <p />
+                    <div class="text-end col-lg-11">
+                        <button type="submit" class="btn btn-success">{% trans 'Update' %}</button>
+                    </div>
+                </ul>
+            </ul>
+
+        </form>
+
+    {% endif %}
+
 {% endblock %}
