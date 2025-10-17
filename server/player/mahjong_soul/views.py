@@ -25,6 +25,7 @@ def ms_accounts(request, stat_type="four"):
         MSAccountStatistic.objects.filter(rank__isnull=False, game_type=current_game_type)
         .exclude(account__account_name="")
         .filter(Q(tonpusen_games__gt=0) | Q(hanchan_games__gt=0))
+        .filter(account__player__is_hide_ms_activity=False)
         .order_by("-rank", "-points")
         .prefetch_related("account", "account__player")
     )

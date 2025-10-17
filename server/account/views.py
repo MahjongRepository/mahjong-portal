@@ -4,6 +4,7 @@ from urllib.parse import parse_qs, urlparse
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_protect
@@ -48,12 +49,16 @@ def account_settings(request):
     error_code = None
     current_player = None
     current_tenhou_account = None
+    is_anonymous = request.user is not None and isinstance(request.user, AnonymousUser)
+    if is_anonymous:
+        return render(request, "access_denied.html", status=403)
+
     if request.user is not None and request.user.attached_player is not None:
         current_player = request.user.attached_player
         current_tenhou_account = current_player.tenhou_object
 
     if request.POST:
-        if request.user is not None and request.user.is_authenticated:
+        if request.user is not None and not is_anonymous and request.user.is_authenticated:
             if current_player is not None and current_player.tenhou_object is not None:
                 current_tenhou = current_player.tenhou_object
                 current_tenhou_nickname = current_tenhou.tenhou_username

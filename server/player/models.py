@@ -25,6 +25,8 @@ class Player(BaseModel):
     is_replacement = models.BooleanField(default=False)
     is_hide = models.BooleanField(default=False)
     is_exclude_from_rating = models.BooleanField(default=False)
+    is_hide_tenhou_activity = models.BooleanField(default=False)
+    is_hide_ms_activity = models.BooleanField(default=False)
 
     ema_id = models.CharField(max_length=30, null=True, blank=True, default="")
     pantheon_id = models.PositiveIntegerField(null=True, blank=True, unique=True)
@@ -47,15 +49,21 @@ class Player(BaseModel):
 
     @property
     def tenhou_object(self):
-        tenhou = self.tenhou.all().order_by("-is_main").first()
-        return tenhou
+        if not self.is_hide_tenhou_activity:
+            tenhou = self.tenhou.all().order_by("-is_main").first()
+            return tenhou
+        else:
+            return None
 
     @property
     def ms_object(self):
-        ms_obj = self.ms.all().order_by("statistics__rank").first()
-        if not ms_obj:
+        if not self.is_hide_ms_activity:
+            ms_obj = self.ms.all().order_by("statistics__rank").first()
+            if not ms_obj:
+                return None
+            return ms_obj.statistics.all().order_by("rank").first()
+        else:
             return None
-        return ms_obj.statistics.all().order_by("rank").first()
 
     @property
     def latest_ema_id(self):

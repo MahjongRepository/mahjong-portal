@@ -267,9 +267,10 @@ class PlayerHelper:
 
     @staticmethod
     def update_player_tenhou_object(player, tenhou_account, new_tenhou_id, old_tenhou_objects, updated_fields):
+        tenhou_account_is_active = player is not None and not player.is_hide_tenhou_activity
         tenhou_account.tenhou_username = new_tenhou_id
         tenhou_account.is_main = True
-        tenhou_account.is_active = True
+        tenhou_account.is_active = tenhou_account_is_active
         tenhou_account.player = player
         tenhou_account.save()
 

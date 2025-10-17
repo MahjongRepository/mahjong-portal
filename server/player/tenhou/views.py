@@ -74,6 +74,7 @@ def tenhou_accounts(request):
     stat_query = (
         TenhouAggregatedStatistics.objects.filter(game_players=TenhouAggregatedStatistics.FOUR_PLAYERS)
         .filter(tenhou_object__is_active=True)
+        .filter(tenhou_object__player__is_hide_tenhou_activity=False)
         .exclude(played_games=0)
         .prefetch_related("tenhou_object")
         .prefetch_related("tenhou_object__player")
@@ -107,6 +108,7 @@ def games_history(request, year=None, month=None, day=None):
         TenhouGameLog.objects.filter(game_date__date=query_date)
         .filter(game_players=TenhouGameLog.FOUR_PLAYERS)
         .filter(tenhou_object__is_active=True)
+        .filter(tenhou_object__player__is_hide_tenhou_activity=False)
         .prefetch_related("tenhou_object")
         .prefetch_related("tenhou_object__player")
         .order_by("-game_date")
