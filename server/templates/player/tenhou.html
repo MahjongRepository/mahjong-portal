@@ -553,7 +553,9 @@
                     <h4>{% trans 'Statistics for' %} {{ tenhou_item.tenhou_username }}</h4>
                     <p class="mt-3">
                         {% with tenhou_data_stat|get_all_aggregated_stat:tenhou_item.id as current_tenhou_stat %}
-                            {% trans 'Rank' %}: {{ current_tenhou_stat|get_rank_display }}, {{ current_tenhou_stat|get_pt }} / {{ current_tenhou_stat|get_end_pt }}pt{% if current_tenhou_stat|get_rate %}, R{{ current_tenhou_stat|get_rate|display_rate }}{% endif %}
+                            {% if current_tenhou_stat %}
+                                {% trans 'Rank' %}: {{ current_tenhou_stat|get_rank_display }}, {{ current_tenhou_stat|get_pt }} / {{ current_tenhou_stat|get_end_pt }}pt{% if current_tenhou_stat|get_rate %}, R{{ current_tenhou_stat|get_rate|display_rate }}{% endif %}
+                            {% endif %}
                         {% endwith %}
                     </p>
                     {% with tenhou_item.prepare_latest_places as latest_games %}
@@ -625,7 +627,7 @@
                         </p>
                     {% else %}
                         <p>
-                            {% trans 'Games' %}: 0, {% trans 'Avg. place' %}: 0, {% trans 'Last played date' %}: {{ tenhou_item.last_played_date|date:SHORT_DATE_FORMAT }}
+                            {% trans 'Games' %}: 0, {% trans 'Avg. place' %}: 0
                         </p>
                     {% endif %}
                     {% if aggregated_stat %}

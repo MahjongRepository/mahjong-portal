@@ -54,17 +54,18 @@ class MSBaseCommand(BaseCommand):
 
             async with session.get("{}/1/v{}/config.json".format(MS_HOST, version)) as res:
                 config = await res.json()
-                url = config["ip"][0]["region_urls"][1]["url"]
+                url = config["ip"][0]["gateways"][1]["url"]
 
-            async with session.get(url + "?service=ws-gateway&protocol=ws&ssl=true") as res:
-                servers = await res.json()
+            async with session.get("{}/api/clientgate/routes?platform=Web&version={}".format(url, version)) as res:
+                routes = await res.json()
                 # maintenance mode
-                if not servers.get("servers"):
+                if not routes.get("data"):
                     return
 
-                servers = servers["servers"]
-                server = random.choice(servers)
-                endpoint = "wss://{}/gateway".format(server)
+                if "routes" in routes["data"]:
+                    routes = routes["data"]["routes"]
+                    server = random.choice(routes)
+                    endpoint = "wss://{}/gateway".format(server["domain"])
 
         print("Chosen endpoint: {}".format(endpoint))
         channel = MSRPCChannel(endpoint)

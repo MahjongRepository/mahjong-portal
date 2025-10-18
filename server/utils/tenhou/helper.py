@@ -10,7 +10,7 @@ import ujson
 from django.db import transaction
 from tenacity import retry, wait_exponential
 
-from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouStatistics
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouGameLog, TenhouNickname, TenhouStatistics
 from utils.general import get_month_first_day, get_month_last_day
 from utils.tenhou.current_tenhou_games import lobbies_dict
 from utils.tenhou.points_calculator import FourPlayersPointsCalculator
@@ -174,14 +174,14 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
             game_players=TenhouAggregatedStatistics.FOUR_PLAYERS, tenhou_object=tenhou_object
         )
 
-        if four_players_rate:
-            stat.rate = four_players_rate
-
         rank = [x[0] for x in TenhouAggregatedStatistics.RANKS if x[1] == calculated_rank["rank"]][0]
         # 3 or less dan
         if rank <= 12:
             # we need to erase user rate when user lost 4 dan
             stat.rate = 0
+        else:
+            if four_players_rate is not None:
+                stat.rate = four_players_rate
 
         stat.rank = rank
         stat.pt = calculated_rank["pt"]
@@ -379,3 +379,22 @@ def parse_names_from_tenhou_chat_message(message: str):
         name = item.split("(")[0]
         results.append(unquote(name))
     return results
+
+
+def get_total_games_count(tenhou_nickname: str) -> int:
+    tenhou_object = TenhouNickname.objects.get(tenhou_username=tenhou_nickname)
+
+    lobbies_data = [
+        TenhouStatistics.KYU_LOBBY,
+        TenhouStatistics.DAN_LOBBY,
+        TenhouStatistics.UPPERDAN_LOBBY,
+        TenhouStatistics.PHOENIX_LOBBY,
+    ]
+
+    total_played_games = 0
+    for lobby_key in lobbies_data:
+        stat_object, _ = TenhouStatistics.objects.get_or_create(
+            lobby=lobby_key, tenhou_object=tenhou_object, stat_type=TenhouStatistics.ALL_TIME
+        )
+        total_played_games += stat_object.played_games
+    return total_played_games
