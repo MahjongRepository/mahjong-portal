@@ -5,6 +5,7 @@ import io
 import logging
 import platform
 import threading
+from datetime import timezone
 
 import ujson as json
 from django.conf import settings
@@ -24,7 +25,8 @@ from account.models import PantheonInfoUpdateLog, User
 from club.models import Club
 from player.models import Player, PlayerQuotaEvent
 from player.player_helper import PlayerHelper
-from player.tenhou.models import TenhouAggregatedStatistics
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
+from player.tenhou.tenhou_helper import TenhouHelper
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
@@ -250,14 +252,27 @@ def do_update_from_pantheon_feed(person_id, pantheon_data):
         user = None
 
     feed = PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
+    need_recalculate_account = False
     with transaction.atomic():
         try:
-            PlayerHelper.update_player_from_pantheon_feed(feed)
+            updates = PlayerHelper.update_player_from_pantheon_feed(feed)
+            for update in updates:
+                if (
+                    update.code == PlayerHelper.oldTenhouAccountUpdate.code
+                    or update.code == PlayerHelper.newTenhouAccountUpdate.code
+                ):
+                    need_recalculate_account = True
+                    break
             feed.is_applied = True
             feed.save()
         except Exception as err:
             transaction.set_rollback(True)
             raise err
+    if need_recalculate_account:
+        now = timezone.now()
+        tenhou_nickname = PlayerHelper.safe_strip(feed, "tenhou_id")
+        tenhou_object = TenhouNickname.objects.get(tenhou_username=tenhou_nickname)
+        TenhouHelper.recalculate_tenhou_account(tenhou_object, now, with_pycurl=False)
 
 
 @require_POST

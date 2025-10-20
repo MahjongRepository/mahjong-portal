@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
+from dataclasses import dataclass
 from typing import List, Optional
 
 from django.utils import timezone
@@ -12,6 +13,23 @@ from settings.models import City, Country
 
 
 class PlayerHelper:
+
+    @dataclass
+    class AccountUpdates:
+        code: int
+        msg: str
+
+    userPantheonIdUpdate = AccountUpdates(1, "player's user pantheon_id updated")
+    userAttachedPlayerUpdate = AccountUpdates(2, "user's attached player updated")
+    playerCountryUpdate = AccountUpdates(3, "player's country updated")
+    playerCityUpdate = AccountUpdates(4, "player's city updated")
+    oldTenhouAccountUpdate = AccountUpdates(5, "old tenhou account updated")
+    newTenhouAccountUpdate = AccountUpdates(6, "new tenhou account added")
+    removeConflictPantheonIdUpdate = AccountUpdates(
+        7, "another player's pantheon id remove because with same person_id"
+    )
+    playerPantheonIdUpdate = AccountUpdates(8, "player's pantheon_id updated")
+    oldTenhouAccountDisableUpdate = AccountUpdates(9, "old tenhou account disabled")
 
     class TenhouNicknameSearchContext:
         is_tenhou_account_exist: bool
@@ -67,8 +85,8 @@ class PlayerHelper:
         old_tenhou_objects = current_player.tenhou.all().exclude(
             id=tenhou_nickname_search_context.old_tenhou_account.id
         )
-        updated_fields.append("old tenhou account updated")
-        updated_fields.append("new tenhou account added")
+        updated_fields.append(PlayerHelper.oldTenhouAccountUpdate)
+        updated_fields.append(PlayerHelper.newTenhouAccountUpdate)
         PlayerHelper.update_player_tenhou_object(
             current_player,
             tenhou_nickname_search_context.old_tenhou_account,
@@ -78,7 +96,7 @@ class PlayerHelper:
         )
 
     @staticmethod
-    def update_player_from_pantheon_feed(feed) -> List[str]:
+    def update_player_from_pantheon_feed(feed) -> List[AccountUpdates]:
         updated_fields = []
         if feed.updated_information is not None:
             feed_city = PlayerHelper.safe_strip(feed, "city")
@@ -123,18 +141,18 @@ class PlayerHelper:
             if current_user is not None and feed_person_id is not None:
                 if current_user.new_pantheon_id != int(feed_person_id):
                     current_user.new_pantheon_id = int(feed_person_id)
-                    updated_fields.append("player's user pantheon_id updated")
+                    updated_fields.append(PlayerHelper.userPantheonIdUpdate)
                     is_need_update_user = True
 
             if current_user is not None and current_player is not None:
                 if current_user.attached_player is None:
                     current_user.attached_player = current_player
-                    updated_fields.append("user's attached player updated")
+                    updated_fields.append(PlayerHelper.userAttachedPlayerUpdate)
                     is_need_update_user = True
                 else:
                     if current_user.attached_player.id != current_player.id:
                         current_user.attached_player = current_player
-                        updated_fields.append("user's attached player updated")
+                        updated_fields.append(PlayerHelper.userAttachedPlayerUpdate)
                         is_need_update_user = True
 
             if current_player is not None:
@@ -148,12 +166,12 @@ class PlayerHelper:
 
                 if country_object is not None:
                     current_player.country = country_object
-                    updated_fields.append("player's country updated")
+                    updated_fields.append(PlayerHelper.playerCountryUpdate)
                     is_need_update_player = True
 
                 if city_object is not None:
                     current_player.city = city_object
-                    updated_fields.append("player's city updated")
+                    updated_fields.append(PlayerHelper.playerCityUpdate)
                     is_need_update_player = True
 
                 if feed_tenhou_id is not None and len(feed_tenhou_id) <= 8:
@@ -171,8 +189,8 @@ class PlayerHelper:
                                 tenhou_username=feed_tenhou_id,
                             )
                             old_tenhou_objects = current_player.tenhou.all().exclude(id=new_tenhou_object.id)
-                            updated_fields.append("old tenhou account updated")
-                            updated_fields.append("new tenhou account added")
+                            updated_fields.append(PlayerHelper.oldTenhouAccountUpdate)
+                            updated_fields.append(PlayerHelper.newTenhouAccountUpdate)
                             PlayerHelper.update_player_tenhou_object(
                                 current_player,
                                 new_tenhou_object,
@@ -196,7 +214,7 @@ class PlayerHelper:
                                 tenhou_username=feed_tenhou_id,
                             )
                             old_tenhou_objects = []
-                            updated_fields.append("new tenhou account added")
+                            updated_fields.append(PlayerHelper.newTenhouAccountUpdate)
                             PlayerHelper.update_player_tenhou_object(
                                 current_player,
                                 new_tenhou_object,
@@ -211,7 +229,7 @@ class PlayerHelper:
                                 )
                     else:
                         old_tenhou_objects = current_player.tenhou.all().exclude(id=current_player.tenhou_object.id)
-                        updated_fields.append("old tenhou account updated")
+                        updated_fields.append(PlayerHelper.oldTenhouAccountUpdate)
                         PlayerHelper.update_player_tenhou_object(
                             current_player,
                             current_player.tenhou_object,
@@ -227,7 +245,7 @@ class PlayerHelper:
                     if dirty_player is not None:
                         dirty_player.pantheon_id = None
                         dirty_player.save()
-                        updated_fields.append("another player's pantheon id remove because with same person_id")
+                        updated_fields.append(PlayerHelper.removeConflictPantheonIdUpdate)
                 except Player.DoesNotExist:
                     pass
 
@@ -241,12 +259,12 @@ class PlayerHelper:
                     if dirty_player is not None:
                         dirty_player.pantheon_id = None
                         dirty_player.save()
-                        updated_fields.append("another player's pantheon id remove because with same person_id")
+                        updated_fields.append(PlayerHelper.removeConflictPantheonIdUpdate)
                 except Player.DoesNotExist:
                     pass
 
                 current_player.pantheon_id = int(feed_person_id)
-                updated_fields.append("player's pantheon_id updated")
+                updated_fields.append(PlayerHelper.playerPantheonIdUpdate)
                 is_need_update_player = True
 
             if is_need_update_user and current_user is not None:
@@ -278,7 +296,7 @@ class PlayerHelper:
             old_tenhou_object.is_main = False
             old_tenhou_object.is_active = False
             old_tenhou_object.save()
-            updated_fields.append("old tenhou account disabled")
+            updated_fields.append(PlayerHelper.oldTenhouAccountDisableUpdate)
 
     @staticmethod
     def find_player_smart(player_full_name: str, city_object=None) -> Optional[Player]:
