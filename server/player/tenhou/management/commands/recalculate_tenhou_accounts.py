@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from player.tenhou.models import TenhouNickname
 from player.tenhou.tenhou_helper import TenhouHelper
+from utils.general import is_date_before
 
 
 def get_date_string():
@@ -20,7 +21,7 @@ class Command(BaseCommand):
 
     def is_need_update(self, now, tenhou_object) -> bool:
         if tenhou_object.last_recalculated_date is not None:
-            return now.toordinal() - tenhou_object.last_recalculated_date.toordinal() > 0
+            return is_date_before(tenhou_object.last_recalculated_date, now)
         else:
             return True
 

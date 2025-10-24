@@ -69,6 +69,14 @@ def transliterate_name(russian_name):
     return transliterated.title()
 
 
+def is_date_before(source_date, target_date):
+    return target_date.toordinal() - source_date.toordinal() > 0
+
+
+def is_date_before_or_equals(source_date, target_date):
+    return target_date.toordinal() - source_date.toordinal() >= 0
+
+
 def get_month_first_day(date=None):
     date = date or timezone.now()
     return datetime(date.year, date.month, 1, tzinfo=pytz.utc)

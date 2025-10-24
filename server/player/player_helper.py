@@ -10,6 +10,8 @@ from online.parser import TenhouParser
 from player.models import Player
 from player.tenhou.models import TenhouNickname
 from settings.models import City, Country
+from tournament.models import OnlineTournamentRegistration
+from utils.general import is_date_before_or_equals
 
 
 class PlayerHelper:
@@ -297,6 +299,22 @@ class PlayerHelper:
             old_tenhou_object.is_active = False
             old_tenhou_object.save()
             updated_fields.append(PlayerHelper.oldTenhouAccountDisableUpdate)
+
+        if player is not None:
+            current_registrations = (
+                OnlineTournamentRegistration.objects.filter(player=player)
+                .filter(tournament__is_upcoming=True)
+                .filter(tournament__is_hidden=False)
+                .filter(tournament__is_event=False)
+                .filter(tournament__is_majsoul_tournament=False)
+                .prefetch_related("tournament")
+            )
+            now = timezone.now()
+            for registration in current_registrations:
+                tournament = registration.tournament
+                if is_date_before_or_equals(now, tournament.start_date):
+                    registration.tenhou_nickname = new_tenhou_id
+                    registration.save()
 
     @staticmethod
     def find_player_smart(player_full_name: str, city_object=None) -> Optional[Player]:
