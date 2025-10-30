@@ -136,6 +136,7 @@ def tournament_announcement(request, slug):
     else:
         form = TournamentRegistrationForm(initial=initial)
 
+    full_approved_players_count = 0
     if tournament.is_online():
         if tournament.is_majsoul_tournament:
             registration_results = (
@@ -145,6 +146,7 @@ def tournament_announcement(request, slug):
                 .prefetch_related("city_object")
                 .order_by("created_on")
             )
+            full_approved_players_count = registration_results.filter(is_highlighted=True).count()
         else:
             registration_results = (
                 OnlineTournamentRegistration.objects.filter(tournament=tournament)
@@ -153,6 +155,7 @@ def tournament_announcement(request, slug):
                 .prefetch_related("city_object")
                 .order_by("created_on")
             )
+            full_approved_players_count = registration_results.filter(is_highlighted=True).count()
         if tournament.display_notes:
             registration_results = registration_results.order_by("notes", "created_on")
     else:
@@ -163,6 +166,7 @@ def tournament_announcement(request, slug):
             .prefetch_related("city_object")
             .order_by("created_on")
         )
+        full_approved_players_count = registration_results.filter(is_highlighted=True).count()
         if tournament.display_notes:
             registration_results = registration_results.order_by("notes", "created_on")
 
@@ -192,6 +196,7 @@ def tournament_announcement(request, slug):
             "is_already_registered": is_already_registered,
             "missed_tenhou_id_error": missed_tenhou_id_error,
             "form_data_error": form_data_error,
+            "full_approved_players_count": full_approved_players_count,
         },
     )
 
