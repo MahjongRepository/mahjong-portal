@@ -16,52 +16,55 @@ class Command(MSBaseCommand):
         current_datetime = str(datetime.now().strftime("%H%d%m%Y"))
         ms_accounts = MSAccount.objects.exclude(last_update=current_datetime).all()
 
-        for ms_account in ms_accounts:
-            with transaction.atomic():
-                request = pb.ReqAccountInfo()
-                request.account_id = ms_account.account_id
-                response = await lobby.fetch_account_info(request)
+        if ms_accounts.count() > 0:
+            for ms_account in ms_accounts:
+                with transaction.atomic():
+                    request = pb.ReqAccountInfo()
+                    request.account_id = ms_account.account_id
+                    response = await lobby.fetch_account_info(request)
 
-                if not response.account.nickname:
-                    print(f"Can't find info for {ms_account.account_id}")
-                    continue
+                    if not response.account.nickname:
+                        print(f"Can't find info for {ms_account.account_id}")
+                        continue
 
-                current_response_nickname = response.account.nickname
+                    current_response_nickname = response.account.nickname
 
-                four_people_stat, _ = MSAccountStatistic.objects.get_or_create(
-                    game_type=MSAccountStatistic.FOUR_PLAYERS, account=ms_account
-                )
-                four_people_stat.rank = response.account.level.id
-                four_people_stat.points = response.account.level.score
+                    four_people_stat, _ = MSAccountStatistic.objects.get_or_create(
+                        game_type=MSAccountStatistic.FOUR_PLAYERS, account=ms_account
+                    )
+                    four_people_stat.rank = response.account.level.id
+                    four_people_stat.points = response.account.level.score
 
-                three_people_stat, _ = MSAccountStatistic.objects.get_or_create(
-                    game_type=MSAccountStatistic.THREE_PLAYERS, account=ms_account
-                )
-                three_people_stat.rank = response.account.level3.id
-                three_people_stat.points = response.account.level3.score
+                    three_people_stat, _ = MSAccountStatistic.objects.get_or_create(
+                        game_type=MSAccountStatistic.THREE_PLAYERS, account=ms_account
+                    )
+                    three_people_stat.rank = response.account.level3.id
+                    three_people_stat.points = response.account.level3.score
 
-                request = pb.ReqAccountStatisticInfo()
-                request.account_id = ms_account.account_id
-                response = await lobby.fetch_account_statistic_info(request)
-                response = MessageToDict(response)
+                    request = pb.ReqAccountStatisticInfo()
+                    request.account_id = ms_account.account_id
+                    response = await lobby.fetch_account_statistic_info(request)
+                    response = MessageToDict(response)
 
-                if response.get("error"):
-                    print(f"Error updating data for {ms_account.account_id} ({current_response_nickname})")
-                    continue
+                    if response.get("error"):
+                        print(f"Error updating data for {ms_account.account_id} ({current_response_nickname})")
+                        continue
 
-                self.calculate_and_save_places_statistic(response, four_people_stat, three_people_stat)
+                    self.calculate_and_save_places_statistic(response, four_people_stat, three_people_stat)
 
-                four_people_stat.save()
-                three_people_stat.save()
+                    four_people_stat.save()
+                    three_people_stat.save()
 
-                self.calculate_and_save_points_diff(four_people_stat)
-                self.calculate_and_save_points_diff(three_people_stat)
+                    self.calculate_and_save_points_diff(four_people_stat)
+                    self.calculate_and_save_points_diff(three_people_stat)
 
-                ms_account.account_name = current_response_nickname
-                ms_account.last_update = current_datetime
-                ms_account.save()
+                    ms_account.account_name = current_response_nickname
+                    ms_account.last_update = current_datetime
+                    ms_account.save()
 
-                print(f"Updated {ms_account.account_id} ({current_response_nickname})")
+                    print(f"Updated {ms_account.account_id} ({current_response_nickname})")
+        else:
+            print("Nothing updated")
 
     def calculate_and_save_points_diff(self, stat_object):
         latest_history = MSPointsHistory.objects.filter(stat_object=stat_object).order_by("-created_on").first()
