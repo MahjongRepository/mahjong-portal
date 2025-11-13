@@ -30,7 +30,9 @@
                 <th scope="row">{{ rating_result.place }}</th>
                 <td>
                     {% with rating_result.player as player %}
-                        {% include 'common/_player_name.html' %}
+                        {% with is_rating_url=True %}
+                            {% include 'common/_player_name.html' %}
+                        {% endwith %}
                     {% endwith %}
                 </td>
                 {% if rating.is_online %}
