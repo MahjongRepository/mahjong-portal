@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("tournament", "0052_alter_onlinetournamentconfig_token"),
+        ("tournament", "0054_msonlinetournamentregistration_is_highlighted"),
     ]
 
     operations = [
