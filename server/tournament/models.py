@@ -108,6 +108,7 @@ class Tournament(BaseModel):
     registrations_pre_moderation = models.BooleanField(default=False)
     is_apply_in_rating = models.BooleanField(default=False)
     is_command = models.BooleanField(default=False, verbose_name="Is team tournament")
+    is_pre_registration = models.BooleanField(default=False)
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
@@ -155,6 +156,9 @@ class Tournament(BaseModel):
 
     @property
     def registration_status_badge_class(self):
+        if self.is_pre_registration and not self.opened_registration:
+            return "info"
+
         if not self.opened_registration:
             return "danger"
 
@@ -171,6 +175,9 @@ class Tournament(BaseModel):
 
     @property
     def registration_status_help_text(self):
+        if self.is_pre_registration and not self.opened_registration:
+            return _("pre announcement")
+
         if not self.opened_registration:
             return _("registration closed")
 
@@ -387,6 +394,7 @@ class MsOnlineTournamentRegistration(BaseModel):
     ms_nickname = models.CharField(max_length=255, verbose_name="Majsoul nickname")
     ms_friend_id = models.PositiveIntegerField()
     ms_account_id = models.PositiveIntegerField(null=True, blank=True)
+    is_highlighted = models.BooleanField(default=False)
     contact = models.CharField(
         null=True,
         blank=True,
