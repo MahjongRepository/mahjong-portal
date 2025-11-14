@@ -27,7 +27,7 @@ from tournament.models import (
     TournamentRegistration,
     TournamentResult,
 )
-from utils.general import split_name, get_random_confirm_code
+from utils.general import get_random_confirm_code, split_name
 
 
 def tournament_list(request, tournament_type=None, year=None):

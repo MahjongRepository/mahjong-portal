@@ -3,7 +3,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from tournament.models import Tournament, MsOnlineTournamentRegistration, OnlineTournamentRegistration
+from tournament.models import MsOnlineTournamentRegistration, OnlineTournamentRegistration, Tournament
 
 
 def get_date_string():
@@ -40,9 +40,9 @@ class Command(BaseCommand):
 
     def load_registrations(self, tournament):
         if tournament.is_majsoul_tournament:
-           return MsOnlineTournamentRegistration.objects.filter(tournament=tournament, is_approved=True)
+            return MsOnlineTournamentRegistration.objects.filter(tournament=tournament, is_approved=True)
         else:
-           return OnlineTournamentRegistration.objects.filter(tournament=tournament, is_approved=True)
+            return OnlineTournamentRegistration.objects.filter(tournament=tournament, is_approved=True)
 
     def copy_registration(self, tournament, registration):
         if tournament.is_majsoul_tournament:

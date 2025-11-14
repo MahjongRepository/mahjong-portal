@@ -4,10 +4,10 @@ import calendar
 import random
 import string
 from datetime import datetime
-from numpy import random as nrandom
 
 import pytz
 from django.utils import timezone
+from numpy import random as nrandom
 
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 
@@ -118,6 +118,7 @@ def format_text(message, kwargs):
         else:
             message = message.replace("%%(%s)" % key, str(value))
     return message
+
 
 def get_random_confirm_code():
     return nrandom.randint(10000, 99999)
