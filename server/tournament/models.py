@@ -109,6 +109,7 @@ class Tournament(BaseModel):
     is_apply_in_rating = models.BooleanField(default=False)
     is_command = models.BooleanField(default=False, verbose_name="Is team tournament")
     is_pre_registration = models.BooleanField(default=False)
+    with_confirm_code = models.BooleanField(default=False)
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)

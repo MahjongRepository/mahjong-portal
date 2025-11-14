@@ -260,7 +260,7 @@ def pantheon_tournament_registration(request, tournament_id):
         messages.success(request, message)
 
     confirm_code = None
-    if tournament.is_online():
+    if tournament.is_online() and tournament.with_confirm_code:
         confirm_code = get_random_confirm_code()
 
     if tournament.is_majsoul_tournament:
