@@ -13,3 +13,8 @@ def get_item(dictionary, key):
 @stringfilter
 def urlize_target_blank(value):
     return mark_safe(urlize(value).replace("<a", '<a target="_blank"'))
+
+
+@register.filter(is_safe=True)
+def get_safe_str(value: str):
+    return value if value else ""

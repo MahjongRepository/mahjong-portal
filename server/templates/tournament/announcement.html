@@ -148,10 +148,10 @@
                                     {% if registration_item.player.ms_object %}
                                         <td><a href="{% url 'player_ms_details' registration_item.player.slug %}" class="d-print-none">{{ registration_item.ms_nickname }}</a></td>
                                     {% else %}
-                                        <td>{{ registration_item.ms_nickname }}</td>
+                                        <td>{{ registration_item.ms_nickname|get_safe_str }}</td>
                                     {% endif %}
                                 {% else %}
-                                    <td>{{ registration_item.tenhou_nickname }}</td>
+                                    <td>{{ registration_item.tenhou_nickname|get_safe_str }}</td>
                                 {% endif %}
                             {% endif %}
 
