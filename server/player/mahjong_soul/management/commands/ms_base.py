@@ -16,8 +16,6 @@ from django.utils import timezone
 from ms.base import MSRPCChannel
 from ms.rpc import Lobby
 
-MS_HOST = "https://game.maj-soul.com"
-
 
 def get_date_string():
     return timezone.now().strftime("%H:%M:%S")
@@ -44,15 +42,20 @@ class MSBaseCommand(BaseCommand):
         await self.run_code(lobby, *args, **options)
         await channel.close()
 
-    async def connect(self):
+    async def connect(
+        self,
+        version_url_pattern="{}/1/version.json",
+        config_url_pattern="{}/1/v{}/config.json",
+        host="https://game.maj-soul.com",
+    ):
         version_to_force = ""
         async with aiohttp.ClientSession() as session:
-            async with session.get("{}/1/version.json".format(MS_HOST)) as res:
+            async with session.get(version_url_pattern.format(host)) as res:
                 version = await res.json()
                 version = version["version"]
                 version_to_force = version.replace(".w", "")
 
-            async with session.get("{}/1/v{}/config.json".format(MS_HOST, version)) as res:
+            async with session.get(config_url_pattern.format(host, version)) as res:
                 config = await res.json()
                 url = config["ip"][0]["gateways"][1]["url"]
 
@@ -72,7 +75,7 @@ class MSBaseCommand(BaseCommand):
 
         lobby = Lobby(channel)
 
-        await channel.connect(MS_HOST)
+        await channel.connect(host)
         print("Connection was established")
 
         return lobby, channel, version_to_force

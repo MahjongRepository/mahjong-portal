@@ -29,11 +29,11 @@ class MSServerBaseCommand(BaseCommand):
     async def connect(self, server_type):
         if server_type == "en":
             client = MSGlobalLobbyClient()
-            return await client.connect()
+            return await client.do_connect()
         if server_type == "jp":
             client = MSJapanLobbyClient()
-            return await client.connect()
+            return await client.do_connect()
         if server_type == "cn":
             client = MSChinaLobbyClient()
-            return await client.connect()
+            return await client.do_connect()
         raise Exception("Incorrect server type, should be [en, jp, cn]")
