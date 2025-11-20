@@ -287,7 +287,15 @@ class PlayerHelper:
 
     @staticmethod
     def update_player_tenhou_object(player, tenhou_account, new_tenhou_id, old_tenhou_objects, updated_fields):
+        previous_active_state = tenhou_account.is_active
         tenhou_account_is_active = player is not None and not player.is_hide_tenhou_activity
+        if tenhou_account_is_active:
+            now = timezone.now().date()
+            if tenhou_account.last_played_date is not None:
+                delta = now - tenhou_account.last_played_date
+                if delta.days >= 140:
+                    tenhou_account_is_active = previous_active_state
+
         tenhou_account.tenhou_username = new_tenhou_id
         tenhou_account.is_main = True
         tenhou_account.is_active = tenhou_account_is_active
