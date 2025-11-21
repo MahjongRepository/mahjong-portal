@@ -80,6 +80,47 @@ class MSBaseCommand(BaseCommand):
 
         return lobby, channel, version_to_force
 
+    async def login_with_token(self, lobby, acess_token, version_to_force):
+        print("Login with access_token")
+        print(f"Version {version_to_force}")
+
+        req = pb.ReqOauth2Check()
+        req.type = 7
+        req.access_token = acess_token
+        res = await lobby.oauth2_check(req)
+
+        if not res.has_account:
+            print("Oauth2Check Error:")
+            print(res)
+            return False
+
+        req = pb.ReqOauth2Login()
+        req.client_version_string = f"web-{version_to_force}"
+        req.client_version.resource = version_to_force
+        req.type = 7
+        req.access_token = acess_token
+        req.device.hardware = "pc"
+        req.device.is_browser = True
+        req.device.os = "window"
+        req.device.os_version = "win10"
+        req.device.platform = "pc"
+        req.device.sale_platform = "web"
+        req.device.software = "Chrome"
+        req.device.screen_height = 474
+        req.device.screen_width = 1920
+        req.random_key = str(uuid.uuid1())
+        req.reconnect = False
+        req.tag = "en"
+
+        res = await lobby.oauth2_login(req)
+        token = res.access_token
+        if not token:
+            print("Oauth2Login Error:")
+            print(res)
+            return False
+
+        return True
+
     async def login(self, lobby, username, password, version_to_force):
         print(f"Login with username[{username}] and password[{password}]")
         print(f"Version {version_to_force}")
@@ -144,4 +185,7 @@ class MSBaseCommand(BaseCommand):
         return True
 
     async def run_code(self, lobby, *args, **options):
+        pass
+
+    async def run_code_with_channel(self, lobby, channel, version_to_force, *args, **options):
         pass
