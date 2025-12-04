@@ -45,31 +45,32 @@ class Command(BaseCommand):
             return OnlineTournamentRegistration.objects.filter(tournament=tournament, is_approved=True)
 
     def copy_registration(self, tournament, registration):
-        if tournament.is_majsoul_tournament:
-            MsOnlineTournamentRegistration.objects.get_or_create(
-                tournament=tournament,
-                user=registration.user,
-                first_name=registration.first_name,
-                last_name=registration.last_name,
-                city=registration.city,
-                player=registration.player,
-                city_object=registration.city_object,
-                allow_to_save_data=registration.allow_to_save_data,
-                notes=registration.notes,
-                is_approved=registration.is_approved,
-                confirm_code=registration.confirm_code,
-            )
-        else:
-            OnlineTournamentRegistration.objects.get_or_create(
-                tournament=tournament,
-                user=registration.user,
-                first_name=registration.first_name,
-                last_name=registration.last_name,
-                city=registration.city,
-                player=registration.player,
-                city_object=registration.city_object,
-                allow_to_save_data=registration.allow_to_save_data,
-                notes=registration.notes,
-                is_approved=registration.is_approved,
-                confirm_code=registration.confirm_code,
-            )
+        if tournament.is_online():
+            if tournament.is_majsoul_tournament:
+                MsOnlineTournamentRegistration.objects.get_or_create(
+                    tournament=tournament,
+                    user=registration.user,
+                    first_name=registration.first_name,
+                    last_name=registration.last_name,
+                    city=registration.city,
+                    player=registration.player,
+                    city_object=registration.city_object,
+                    allow_to_save_data=registration.allow_to_save_data,
+                    notes=registration.notes,
+                    is_approved=registration.is_approved,
+                    confirm_code=registration.confirm_code,
+                )
+            else:
+                OnlineTournamentRegistration.objects.get_or_create(
+                    tournament=tournament,
+                    user=registration.user,
+                    first_name=registration.first_name,
+                    last_name=registration.last_name,
+                    city=registration.city,
+                    player=registration.player,
+                    city_object=registration.city_object,
+                    allow_to_save_data=registration.allow_to_save_data,
+                    notes=registration.notes,
+                    is_approved=registration.is_approved,
+                    confirm_code=registration.confirm_code,
+                )

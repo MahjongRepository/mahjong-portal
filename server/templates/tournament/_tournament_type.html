@@ -1,11 +1,5 @@
 {% with tournament.rating_link as link  %}
-    {% if link %}
-        <a href="{{ link }}" class="badge bg-{{ tournament.type_badge_class }} {{ tournament.text_badge_class }}" title="{{ tournament.type_help_text }}" data-toggle="tooltip" data-placement="bottom">
-            {{ tournament.type_display|upper }}
-        </a>{% if is_list_context %}{% if tournament.is_apply_in_rating %}  &nbsp;&nbsp;&nbsp;<a title="{{ tournament.get_applied_in_rating_text }}" href="#"><div class="check"></div></a>{% endif %}{% endif %}
-    {% else %}
-        <span class="badge bg-{{ tournament.type_badge_class }}" title="{{ tournament.type_help_text }}" data-toggle="tooltip" data-placement="bottom">
-            {{ tournament.type_display|upper }}
-        </span>
-    {% endif %}
+    <span class="badge bg-{{ tournament.tournament_type_badge_class }} {{ tournament.tournament_text_badge_class }}" title="{{ tournament.tournament_type_help_text }}" data-toggle="tooltip" data-placement="bottom">
+        {{ tournament.tournament_type_display|upper }}
+    </span>
 {% endwith %}

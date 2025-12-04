@@ -11,7 +11,7 @@
             <th scope="col">{% trans 'Place' %}</th>
             <th scope="col">{% trans 'Power' %}</th>
             <th scope="col">{% trans 'Coefficient' %}</th>
-            <th scope="col">{% trans 'Type' %}</th>
+            <th scope="col">{% trans 'Rating' %}</th>
             <th scope="col">{% trans 'Tournament' %}</th>
             <th scope="col">{% trans 'City' %}</th>
         </tr>
@@ -48,7 +48,7 @@
                 </td>
                 <td>
                     {% with delta.tournament as tournament %}
-                        {% include 'tournament/_tournament_type.html' %}
+                        {% include 'tournament/_tournament_rating_type.html' %}
                     {% endwith %}
                 </td>
                 <td><a href="{{ delta.tournament.get_url }}">{{ delta.tournament.name }}</a></td>

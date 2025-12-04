@@ -10,7 +10,7 @@
             {% if tournament.is_stage_tournament %}
                 <th scope="col">{% trans 'Games' %}</th>
             {% endif %}
-            {% if tournament.is_online %}
+            {% if tournament.is_online_rating %}
                 <th scope="col">
                     {% trans 'Tenhou' %}
                 </th>
@@ -52,7 +52,7 @@
                         {{ result.games }}
                     </td>
                 {% endif %}
-                {% if tournament.is_online %}
+                {% if tournament.is_online_rating %}
                     <td>
                         {% with result.player as player %}
                             {% include 'player/_online_account.html' %}

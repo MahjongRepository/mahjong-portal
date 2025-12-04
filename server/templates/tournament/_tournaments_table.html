@@ -14,7 +14,11 @@
                     {% trans 'City' %}
                 {% endif %}
             </th>
-            <th scope="col">{% trans 'Type' %}</th>
+
+            {% if show_tournament_type %}
+                <th scope="col">{% trans 'Type' %}</th>
+            {% endif %}
+            <th scope="col">{% trans 'Rating' %}</th>
 
             {% if is_upcoming %}
                 <th scope="col">{% trans 'Registration status' %}</th>
@@ -97,8 +101,14 @@
                         {% endif %}
                     {% endif %}
                 </td>
+
+                {% if show_tournament_type %}
+                    <td>
+                        <nobr>{% include 'tournament/_tournament_type.html' %}</nobr>
+                    </td>
+                {% endif %}
                 <td>
-                    <nobr>{% include 'tournament/_tournament_type.html' %}</nobr>
+                    <nobr>{% include 'tournament/_tournament_rating_type.html' %}</nobr>
                 </td>
 
                 {% if is_upcoming %}

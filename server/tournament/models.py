@@ -63,6 +63,9 @@ class Tournament(BaseModel):
     ONLINE = "online"
     CHAMPIONSHIP = "champ"
 
+    OFFLINE_GAMES = "offline"
+    ONLINE_GAMES = "online"
+
     GAME_TYPES = [[RIICHI, "Riichi"], [MCR, "MCR"]]
 
     TOURNAMENT_TYPES = [
@@ -73,6 +76,11 @@ class Tournament(BaseModel):
         [OTHER, "other"],
         [ONLINE, "online"],
         [CHAMPIONSHIP, "champ."],
+    ]
+
+    TOURNAMENT_GAMES_TYPES = [
+        [OFFLINE_GAMES, "offline"],
+        [ONLINE_GAMES, "online"],
     ]
 
     objects = models.Manager()
@@ -96,6 +104,7 @@ class Tournament(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
     tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR, db_index=True)
+    tournament_games_type = models.CharField(max_length=10, choices=TOURNAMENT_GAMES_TYPES, default=OFFLINE_GAMES)
 
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
@@ -141,7 +150,7 @@ class Tournament(BaseModel):
         if self.is_crr():
             return "info"
 
-        if self.is_online():
+        if self.is_online_rating():
             return "warning"
 
         if self.is_championship():
@@ -151,7 +160,7 @@ class Tournament(BaseModel):
 
     @property
     def text_badge_class(self):
-        if self.is_online():
+        if self.is_online_rating():
             return "text-dark"
         return ""
 
@@ -204,7 +213,7 @@ class Tournament(BaseModel):
         if self.is_crr():
             return "CRR"
 
-        if self.is_online():
+        if self.is_online_rating():
             return "Online"
 
         return ""
@@ -221,6 +230,33 @@ class Tournament(BaseModel):
             return "EMA"
         else:
             return self.get_tournament_type_display()
+
+    @property
+    def tournament_type_display(self):
+        if self.is_online():
+            return _("Online")
+        else:
+            return _("Offline")
+
+    @property
+    def tournament_type_badge_class(self):
+        if self.is_online():
+            return "warning"
+
+        return "primary"
+
+    @property
+    def tournament_text_badge_class(self):
+        if self.is_online():
+            return "text-dark"
+        return ""
+
+    @property
+    def tournament_type_help_text(self):
+        if self.is_online():
+            return _("Online")
+
+        return _("Offline")
 
     @property
     def rating_link(self):
@@ -242,8 +278,11 @@ class Tournament(BaseModel):
     def is_crr(self):
         return self.tournament_type == self.CRR
 
-    def is_online(self):
+    def is_online_rating(self):
         return self.tournament_type == self.ONLINE
+
+    def is_online(self):
+        return self.tournament_type == self.ONLINE or self.tournament_games_type == self.ONLINE_GAMES
 
     def is_other(self):
         return self.tournament_type == self.OTHER

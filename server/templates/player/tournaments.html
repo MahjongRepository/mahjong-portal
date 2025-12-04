@@ -50,7 +50,7 @@
                             </td>
                             <td>
                                 {% with tournament_result.tournament as tournament %}
-                                    {% include 'tournament/_tournament_type.html' %}
+                                    {% include 'tournament/_tournament_rating_type.html' %}
                                 {% endwith %}
                             </td>
                             <td><a href="{{ tournament_result.tournament.get_url }}">{{ tournament_result.tournament.name }}</a></td>

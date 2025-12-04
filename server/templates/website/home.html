@@ -9,14 +9,14 @@
     <div>
         {% if current_tournaments %}
             <h1>{% trans 'Current tournaments' %}</h1>
-            {% with tournaments=current_tournaments is_upcoming=True  %}
+            {% with tournaments=current_tournaments is_upcoming=True show_tournament_type=True %}
                 {% include 'tournament/_current_tournaments_table.html' %}
             {% endwith %}
         {% endif %}
 
         {% if upcoming_tournaments %}
             <h1>{% trans 'Upcoming tournaments' %}</h1>
-            {% with tournaments=upcoming_tournaments is_upcoming=True leagues=leagues %}
+            {% with tournaments=upcoming_tournaments is_upcoming=True leagues=leagues show_tournament_type=True %}
                 {% include 'tournament/_tournaments_table.html' %}
             {% endwith %}
         {% endif %}

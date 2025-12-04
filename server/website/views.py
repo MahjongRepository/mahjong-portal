@@ -55,7 +55,7 @@ def home(request):
         .filter(is_event=False)
         .exclude(tournament_type=Tournament.FOREIGN_EMA)
         .prefetch_related("city")
-        .order_by("start_date")
+        .order_by("start_date", "name")
     )
 
     current_tournaments = all_tournaments.filter(start_date__lte=current_date)

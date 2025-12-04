@@ -53,10 +53,12 @@
 
         {% if is_already_registered %}
             <p class="alert alert-success">{% trans 'You are already registered on the tournament!' %}</p>
-            {% if tournament.is_online and registration_confirm_code %}
-                <p class="alert alert-warning">
-                    {% trans 'Your confirm code:' %} {{ registration_confirm_code }}
-                </p>
+            {% if tournament.is_online %}
+                {% if registration_confirm_code %}
+                    <p class="alert alert-warning">
+                        {% trans 'Your confirm code:' %} {{ registration_confirm_code }}
+                    </p>
+                {% endif %}
             {% endif %}
         {% elif tournament.is_pantheon_registration %}
             {% if tournament.opened_registration %}
