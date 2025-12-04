@@ -88,6 +88,11 @@ def get_month_last_day(date=None):
     return datetime(date.year, date.month, calendar.monthrange(date.year, date.month)[1], 23, 59, tzinfo=pytz.utc)
 
 
+def get_end_of_day(date=None):
+    date = date or timezone.now()
+    return date.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+
 # TODO: Remove these hardcoded values when tournaments with stages will be implemented
 def get_tournament_coefficient(is_ema, tournament_id, player, default_coefficient):
     if is_ema:

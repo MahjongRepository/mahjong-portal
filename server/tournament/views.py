@@ -27,7 +27,7 @@ from tournament.models import (
     TournamentRegistration,
     TournamentResult,
 )
-from utils.general import get_random_confirm_code, split_name
+from utils.general import get_end_of_day, get_random_confirm_code, split_name
 
 
 def tournament_list(request, tournament_type=None, year=None):
@@ -52,13 +52,17 @@ def tournament_list(request, tournament_type=None, year=None):
 
     tournaments = tournaments.order_by("-end_date").prefetch_related("city").prefetch_related("country")
 
-    upcoming_tournaments = (
+    current_date = get_end_of_day()
+    all_tournaments = (
         Tournament.public.filter(is_upcoming=True)
         .filter(is_event=False)
         .exclude(tournament_type=Tournament.FOREIGN_EMA)
         .prefetch_related("city")
         .order_by("start_date")
     )
+
+    current_tournaments = all_tournaments.filter(start_date__lte=current_date)
+    upcoming_tournaments = all_tournaments.filter(start_date__gt=current_date)
     tournaments = tournaments.filter(is_upcoming=False)
 
     return render(
@@ -66,6 +70,7 @@ def tournament_list(request, tournament_type=None, year=None):
         "tournament/list.html",
         {
             "tournaments": tournaments,
+            "current_tournaments": current_tournaments,
             "upcoming_tournaments": upcoming_tournaments,
             "tournament_type": tournament_type,
             "years": years,

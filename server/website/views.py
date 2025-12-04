@@ -31,6 +31,7 @@ from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
+from utils.general import get_end_of_day
 
 logger = logging.getLogger()
 OLD_PANTHEON_TYPE = "old"
@@ -48,13 +49,17 @@ def home(request):
         .order_by("place")
     )[:16]
 
-    upcoming_tournaments = (
+    current_date = get_end_of_day()
+    all_tournaments = (
         Tournament.public.filter(is_upcoming=True)
         .filter(is_event=False)
         .exclude(tournament_type=Tournament.FOREIGN_EMA)
         .prefetch_related("city")
         .order_by("start_date")
     )
+
+    current_tournaments = all_tournaments.filter(start_date__lte=current_date)
+    upcoming_tournaments = all_tournaments.filter(start_date__gt=current_date)
 
     events = (
         Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
@@ -67,6 +72,7 @@ def home(request):
             "page": "home",
             "rating_results": rating_results,
             "rating": rating,
+            "current_tournaments": current_tournaments,
             "upcoming_tournaments": upcoming_tournaments,
             "events": events,
             "rating_date": rating_date,

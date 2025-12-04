@@ -7,13 +7,6 @@
 
 {% block content %}
     <div>
-        {% if upcoming_tournaments %}
-            <h1>{% trans 'Upcoming tournaments' %}</h1>
-            {% with tournaments=upcoming_tournaments is_upcoming=True  %}
-                {% include 'tournament/_tournaments_table.html' %}
-            {% endwith %}
-        {% endif %}
-
         <h1>{{ rating.name }}</h1>
         <p>{% trans 'List of tournaments that were included in the rating.' %}</p>
 
