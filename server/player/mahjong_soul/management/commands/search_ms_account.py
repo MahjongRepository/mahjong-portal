@@ -22,7 +22,21 @@ class Command(MSServerBaseCommand):
             print("SearchAccount Error:")
             print(res)
 
-        print("found account_id: " + str(res.decode_id))
+        found_account_id = res.decode_id
+        req = pb.ReqMultiAccountId()
+        req.account_id_list.extend([found_account_id])
+        res = await lobby.fetch_multi_account_brief(req)
+
+        if res.error.code:
+            print("SearchAccount Error:")
+            print(res)
+
+        found_nickname = None
+        for player in res.players:
+            if player.account_id == found_account_id:
+                found_nickname = player.nickname
+
+        print(f"found account_id: [{str(found_account_id)}], found nickname: [{found_nickname}]")
 
     async def run_code_with_channel(self, lobby, channel, version_to_force, *args, **options):
         server_type = options.get("server_type")
