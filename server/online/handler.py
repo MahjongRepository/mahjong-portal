@@ -260,6 +260,34 @@ class TournamentHandler:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
 
+    # todo: optimization query with index table tournament_id <-> confirm_code
+    def check_player(self, nickname, confirm_code):
+        try:
+            gamePlatformType = None
+            searchError = False
+            tournamentId = -1
+            try:
+                registration = OnlineTournamentRegistration.objects.get(
+                    tenhou_nickname=nickname, confirm_code=confirm_code
+                )
+                tournamentId = registration.tournament.id
+                gamePlatformType = "tenhou"
+            except OnlineTournamentRegistration.DoesNotExist:
+                try:
+                    registration = MsOnlineTournamentRegistration.objects.get(
+                        ms_nickname=nickname, confirm_code=confirm_code
+                    )
+                    tournamentId = registration.tournament.id
+                    gamePlatformType = "majsoul"
+                except MsOnlineTournamentRegistration.DoesNotExist:
+                    gamePlatformType = None
+                    searchError = True
+
+            return {"tournament_id": tournamentId, "game_platform_type": gamePlatformType, "is_error": searchError}
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return {"is_error": True}
+
     def _send_team_names_to_pantheon(self, registrations):
         try:
             team_names = []

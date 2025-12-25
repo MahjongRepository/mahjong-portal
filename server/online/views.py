@@ -387,3 +387,23 @@ def send_team_names_to_pantheon(request):
         requested_lang = "ru"
     message = bot.send_team_names_to_pantheon(requested_lang)
     return JsonResponse({"message": message})
+
+
+@require_POST
+@csrf_exempt
+@autobot_token_require
+def check_player(request):
+    request_data = json.loads(request.body)
+    requested_lang = request_data.get("lang")
+    if not requested_lang:
+        requested_lang = "ru"
+
+    nickname = request_data.get("nickname")
+    if not nickname:
+        return HttpResponse(status=400)
+
+    confirm_code = request_data.get("confirm_code")
+    if not confirm_code:
+        return HttpResponse(status=400)
+
+    return JsonResponse(bot.check_player(nickname, confirm_code, requested_lang))

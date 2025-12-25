@@ -178,3 +178,8 @@ class PortalAutoBot:
     def send_team_names_to_pantheon(requested_lang):
         activate(requested_lang)
         return tournament_handler.send_team_names_to_pantheon()
+
+    @staticmethod
+    def check_player(nickname, confirm_code, requested_lang):
+        activate(requested_lang)
+        return tournament_handler.check_player(nickname, confirm_code)
