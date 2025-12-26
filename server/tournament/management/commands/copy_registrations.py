@@ -58,7 +58,6 @@ class Command(BaseCommand):
                     allow_to_save_data=registration.allow_to_save_data,
                     notes=registration.notes,
                     is_approved=registration.is_approved,
-                    confirm_code=registration.confirm_code,
                 )
             else:
                 OnlineTournamentRegistration.objects.get_or_create(
@@ -72,5 +71,4 @@ class Command(BaseCommand):
                     allow_to_save_data=registration.allow_to_save_data,
                     notes=registration.notes,
                     is_approved=registration.is_approved,
-                    confirm_code=registration.confirm_code,
                 )
