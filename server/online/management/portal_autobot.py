@@ -182,4 +182,4 @@ class PortalAutoBot:
     @staticmethod
     def check_player(nickname, confirm_code, requested_lang):
         activate(requested_lang)
-        return tournament_handler.check_player(nickname, confirm_code)
+        return tournament_handler.check_player(nickname, int(confirm_code))
