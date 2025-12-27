@@ -25,7 +25,7 @@
             {% for result in results %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ result.team }}</td>
+                    <td>{{ result.team_name }}</td>
                     <td>{{ result.tenhou_player_place }}</td>
                     <td>{{ result.majsoul_player_place }}</td>
                     <td class="bg-success-subtle">{{ result.team_scores|floatformat:2 }}</td>
