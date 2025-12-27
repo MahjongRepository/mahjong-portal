@@ -2,6 +2,7 @@
 
 from django.db import models
 from mahjong_portal.models import BaseModel
+from player.models import Player
 from tournament.models import Tournament
 
 
@@ -22,3 +23,19 @@ class YagiKeijiCupSettings(BaseModel):
 
     def __unicode__(self):
         return 'Yagi Keiji Cup'
+
+
+class YagiKeijiCupResults(BaseModel):
+    team_name = models.TextField(null=True, blank=True, default="")
+    tenhou_player_place = models.PositiveIntegerField(null=True, blank=True, unique=True)
+    tenhou_player = models.ForeignKey(
+        Player, on_delete=models.CASCADE, null=True, blank=True, related_name="yagi_keiji_cup_player_tenhou_results"
+    )
+    majsoul_player_place = models.PositiveIntegerField(null=True, blank=True, unique=True)
+    majsoul_player = models.ForeignKey(
+        Player, on_delete=models.CASCADE, null=True, blank=True, related_name="yagi_keiji_cup_player_majsoul_results"
+    )
+    team_scores = models.FloatField(default=0)
+
+    def __unicode__(self):
+        return 'Yagi Keiji Cup results'

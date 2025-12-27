@@ -2,7 +2,7 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
-from yagi_keiji_cup.models import YagiKeijiCupSettings
+from yagi_keiji_cup.models import YagiKeijiCupSettings, YagiKeijiCupResults
 
 
 def cup_final_information(request):
@@ -13,10 +13,12 @@ def cup_final_information(request):
     if yagiKejiCupSettings.is_hidden:
         raise Http404
 
+    results = YagiKeijiCupResults.objects.order_by("-team_scores").all()
+
     return render(
         request,
         "yagi_keiji_cup/yagi_keiji_cup.html",
         {
-            "result": [],
+            "results": results,
         },
     )

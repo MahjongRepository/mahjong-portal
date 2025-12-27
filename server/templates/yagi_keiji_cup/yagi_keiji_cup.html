@@ -10,7 +10,7 @@
     <div>
         <h1 class="mb-3">{% trans 'Yagi Keiji Cup' %}</h1>
 
-        <h3>Итоги</h3>
+        <h3>{% trans 'Result table' %}</h3>
 
         <table class="table mt-2 table-bordered table-striped">
             <thead>
@@ -22,13 +22,15 @@
                 <th class="bg-success-subtle">{% trans 'Team scores' %}</th>
             </tr>
             </thead>
-            <tr>
-                <td>1</td>
-                <td>Бурундучки</td>
-                <td>1</td>
-                <td>3</td>
-                <td class="bg-success-subtle">464050</td>
-            </tr>
+            {% for result in results %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ result.team }}</td>
+                    <td>{{ result.tenhou_player_place }}</td>
+                    <td>{{ result.majsoul_player_place }}</td>
+                    <td class="bg-success-subtle">{{ result.team_scores|floatformat:2 }}</td>
+                </tr>
+            {% endfor %}
         </table>
     </div>
 {% endblock %}

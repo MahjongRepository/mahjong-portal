@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-27 15:09+0000\n"
+"POT-Creation-Date: 2025-12-27 16:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -573,7 +573,7 @@ msgid ""
 msgstr ""
 "Мы не храним эту информацию, пароль будет использован только во время входа."
 
-#: templates/account/login.html:18 templates/base.html:174
+#: templates/account/login.html:18 templates/base.html:176
 msgctxt "action"
 msgid "Login"
 msgstr "Войти"
@@ -614,7 +614,7 @@ msgstr "Ссылку на последнюю игру"
 msgid "Update"
 msgstr "Обновить"
 
-#: templates/account/settings.html:61 templates/base.html:155
+#: templates/account/settings.html:61 templates/base.html:157
 msgid "User settings"
 msgstr "Настройки аккаунта"
 
@@ -745,45 +745,45 @@ msgstr "Чемпионаты"
 msgid "Yoroshiku League 2"
 msgstr ""
 
-#: templates/base.html:119 templates/yagi_keiji_cup/yagi_keiji_cup.html:6
+#: templates/base.html:120 templates/yagi_keiji_cup/yagi_keiji_cup.html:6
 #: templates/yagi_keiji_cup/yagi_keiji_cup.html:11
 msgid "Yagi Keiji Cup"
 msgstr "Кубок Яги Кэйдзи"
 
-#: templates/base.html:150
+#: templates/base.html:152
 msgid "Django admin"
 msgstr "Django админка"
 
-#: templates/base.html:151 templates/system_index.html:10
+#: templates/base.html:153 templates/system_index.html:10
 #: templates/tournament_admin/new_tournaments.html:10
 msgid "New tournaments"
 msgstr "Новые турниры"
 
-#: templates/base.html:157
+#: templates/base.html:159
 msgid "My profile"
 msgstr "Мой профиль"
 
-#: templates/base.html:161
+#: templates/base.html:163
 msgid "My tournaments"
 msgstr "Мои турниры"
 
-#: templates/base.html:165
+#: templates/base.html:167
 msgid "EMA players"
 msgstr "EMA игроки"
 
-#: templates/base.html:168
+#: templates/base.html:170
 msgid "Logout"
 msgstr "Выйти"
 
-#: templates/base.html:213 templates/base.html:216
+#: templates/base.html:215 templates/base.html:218
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/base.html:226
+#: templates/base.html:228
 msgid "source code"
 msgstr "исходный код"
 
-#: templates/base.html:231
+#: templates/base.html:233
 msgid "about server"
 msgstr "о сервере"
 
@@ -2038,6 +2038,10 @@ msgstr "Рейтинг RR на 3 февраля 2025 года."
 #: templates/wiki/home.html:5
 msgid "Wiki"
 msgstr ""
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:13
+msgid "Result table"
+msgstr "Таблица результатов"
 
 #: templates/yagi_keiji_cup/yagi_keiji_cup.html:20
 msgid "Player result on Tenhou platform"
