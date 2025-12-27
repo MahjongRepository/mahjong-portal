@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "online",
     "ema",
     "league",
+    "yagi_keiji_cup",
 ]
 
 MIDDLEWARE = [

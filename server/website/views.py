@@ -32,6 +32,7 @@ from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
 from utils.general import get_end_of_day
+from yagi_keiji_cup.models import YagiKeijiCupSettings
 
 logger = logging.getLogger()
 OLD_PANTHEON_TYPE = "old"
@@ -65,6 +66,13 @@ def home(request):
         Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
     )
 
+    is_yagi_keiji_cup_hidden = True
+    try:
+        yagi_settings = YagiKeijiCupSettings.objects.get(is_main=True)
+        is_yagi_keiji_cup_hidden = yagi_settings.is_hidden
+    except YagiKeijiCupSettings.DoesNotExist:
+        is_yagi_keiji_cup_hidden = True
+
     return render(
         request,
         "website/home.html",
@@ -79,6 +87,7 @@ def home(request):
             "today": today,
             "is_last": True,
             "leagues": [],
+            "is_yagi_keiji_cup_hidden": is_yagi_keiji_cup_hidden
         },
     )
 

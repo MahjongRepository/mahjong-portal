@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Yagi Keiji Cup' %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1 class="mb-3">{% trans 'Yagi Keiji Cup' %}</h1>
+
+        <h3>Итоги</h3>
+
+        <table class="table mt-2 table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans 'Team' %}</th>
+                <th>{% trans 'Player result on Tenhou platform' %}</th>
+                <th>{% trans 'Player result on Majsoul platform' %}</th>
+                <th class="bg-success-subtle">{% trans 'Team scores' %}</th>
+            </tr>
+            </thead>
+            <tr>
+                <td>1</td>
+                <td>Бурундучки</td>
+                <td>1</td>
+                <td>3</td>
+                <td class="bg-success-subtle">464050</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

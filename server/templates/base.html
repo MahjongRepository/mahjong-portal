@@ -116,6 +116,9 @@
                         <a class="dropdown-item" href="{% url 'tournament_application' %}">{% trans 'Tournament application' %}</a>
                         <a class="dropdown-item" href="{% url 'championships' %}">{% trans 'Championships' %}</a>
                         <a class="dropdown-item" href="{% url 'league_details' 'yoroshiku-league-2' %}">{% trans 'Yoroshiku League 2' %}</a>
+                        {% if not is_yagi_keiji_cup_hidden%}
+                            <a class="dropdown-item" href="{% url 'yagi_keiji_cup_details' %}">{% trans 'Yagi Keiji Cup' %}</a>
+                        {% endif %}
                     </div>
                 </li>
             </ul>
