@@ -2,7 +2,7 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
-from yagi_keiji_cup.models import YagiKeijiCupSettings, YagiKeijiCupResults
+from yagi_keiji_cup.models import YagiKeijiCupResults, YagiKeijiCupSettings
 
 
 def cup_final_information(request):

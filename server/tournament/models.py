@@ -139,7 +139,7 @@ class Tournament(BaseModel):
         else:
             return reverse("tournament_details", kwargs={"slug": self.slug})
 
-    #todo: remove after Yagi Kaiji Cup tournament!
+    # todo: remove after Yagi Kaiji Cup tournament!
     @property
     def main_registration_status_is_hide(self):
         # Yagi Kaiji Cup case

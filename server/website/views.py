@@ -87,7 +87,7 @@ def home(request):
             "today": today,
             "is_last": True,
             "leagues": [],
-            "is_yagi_keiji_cup_hidden": is_yagi_keiji_cup_hidden
+            "is_yagi_keiji_cup_hidden": is_yagi_keiji_cup_hidden,
         },
     )
 

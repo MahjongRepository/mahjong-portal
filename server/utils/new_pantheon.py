@@ -216,6 +216,7 @@ def send_team_names_to_pantheon(pantheonEventId, adminPersonId, teamMapping):
         server_path_prefix="/v2",
     )
 
+
 def get_rating_table(eventId):
     client = MimirClient(PRODUCTION_PANTHEON_GAME_MANAGMENT_API)
 
@@ -225,9 +226,7 @@ def get_rating_table(eventId):
     return client.GetRatingTable(
         ctx=context,
         request=pantheon_api.mimir_pb2.EventsGetRatingTablePayload(
-            event_id_list=[int(eventId)],
-            order_by="rating",
-            order="desc"
+            event_id_list=[int(eventId)], order_by="rating", order="desc"
         ),
         server_path_prefix="/v2",
     )
