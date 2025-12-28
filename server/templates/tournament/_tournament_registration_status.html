@@ -1,9 +1,11 @@
 {% load i18n %}
 {% with tournament.rating_link as link  %}
 
-        <span class="badge bg-{{ tournament.registration_status_badge_class }}" title="{{ tournament.registration_status_help_text }}" data-toggle="tooltip" data-placement="bottom">
-            {{ tournament.registration_status_help_text|upper }}
-        </span>
+        {% if not tournament.main_registration_status_is_hide  %}
+            <span class="badge bg-{{ tournament.registration_status_badge_class }}" title="{{ tournament.registration_status_help_text }}" data-toggle="tooltip" data-placement="bottom">
+                {{ tournament.registration_status_help_text|upper }}
+            </span>
+        {% endif %}
 
         {% if tournament.is_command  %}
             <span class="badge bg-championship" title="{% trans 'teams' %}" data-toggle="tooltip" data-placement="bottom">

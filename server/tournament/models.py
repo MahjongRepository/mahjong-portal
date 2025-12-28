@@ -139,6 +139,14 @@ class Tournament(BaseModel):
         else:
             return reverse("tournament_details", kwargs={"slug": self.slug})
 
+    #todo: remove after Yagi Kaiji Cup tournament!
+    @property
+    def main_registration_status_is_hide(self):
+        # Yagi Kaiji Cup case
+        if self.id == 604:
+            return True
+        return False
+
     @property
     def type_badge_class(self):
         if self.is_ema():
