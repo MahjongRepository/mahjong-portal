@@ -28,12 +28,20 @@ class YagiKeijiCupResults(BaseModel):
     tenhou_player_place = models.PositiveIntegerField(null=True, blank=True)
     tenhou_player_game_count = models.PositiveIntegerField(null=True, blank=True)
     tenhou_player = models.ForeignKey(
-        TournamentPlayers, on_delete=models.CASCADE, null=True, blank=True, related_name="yagi_keiji_cup_player_tenhou_results"
+        TournamentPlayers,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="yagi_keiji_cup_player_tenhou_results",
     )
     majsoul_player_place = models.PositiveIntegerField(null=True, blank=True)
     majsoul_player_game_count = models.PositiveIntegerField(null=True, blank=True)
     majsoul_player = models.ForeignKey(
-        TournamentPlayers, on_delete=models.CASCADE, null=True, blank=True, related_name="yagi_keiji_cup_player_majsoul_results"
+        TournamentPlayers,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="yagi_keiji_cup_player_majsoul_results",
     )
     team_scores = models.FloatField(default=0)
 

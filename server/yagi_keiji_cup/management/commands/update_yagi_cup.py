@@ -59,8 +59,22 @@ class Command(BaseCommand):
             majsoul_results = get_rating_table(majsoul_pantheon_tournament_id).list
 
             teams_results = {}
-            self.prepare_player_result(tenhou_results, player_team_mapping, team_mapping, teams_results, self.TEAM_MAPPING_TENHOU_PLAYER_KEY, "tenhou")
-            self.prepare_player_result(majsoul_results, player_team_mapping, team_mapping, teams_results, self.TEAM_MAPPING_MAJSOUL_PLAYER_KEY, "majsoul")
+            self.prepare_player_result(
+                tenhou_results,
+                player_team_mapping,
+                team_mapping,
+                teams_results,
+                self.TEAM_MAPPING_TENHOU_PLAYER_KEY,
+                "tenhou",
+            )
+            self.prepare_player_result(
+                majsoul_results,
+                player_team_mapping,
+                team_mapping,
+                teams_results,
+                self.TEAM_MAPPING_MAJSOUL_PLAYER_KEY,
+                "majsoul",
+            )
 
         self.calculate_result(teams_results, team_mapping)
         print("{0}: Finish update Yagi Kaiji Cup results".format(get_date_string()))
@@ -68,7 +82,9 @@ class Command(BaseCommand):
     def get_key(self, pantheon_id, prefix):
         return f"{pantheon_id}-{prefix}"
 
-    def prepare_player_result(self, tournament_results, player_team_mapping, team_mapping, teams_results, player_key, team_mapping_key_prefix):
+    def prepare_player_result(
+        self, tournament_results, player_team_mapping, team_mapping, teams_results, player_key, team_mapping_key_prefix
+    ):
         place = 1
         for result in tournament_results:
             if self.get_key(int(result.id), team_mapping_key_prefix) in player_team_mapping:
@@ -81,7 +97,9 @@ class Command(BaseCommand):
                         }
                     else:
                         teams_results[team_name][player_key] = {
-                            "place": place, "player": player, "game_count": result.games_played
+                            "place": place,
+                            "player": player,
+                            "game_count": result.games_played,
                         }
             place += 1
 
