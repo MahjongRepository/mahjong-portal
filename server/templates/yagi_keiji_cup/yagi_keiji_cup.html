@@ -17,7 +17,9 @@
             <tr>
                 <th>#</th>
                 <th>{% trans 'Team' %}</th>
+                <th>{% trans 'Player nickname on Tenhou platform' %}</th>
                 <th>{% trans 'Player result on Tenhou platform' %}</th>
+                <th>{% trans 'Player nickname on Majsoul platform' %}</th>
                 <th>{% trans 'Player result on Majsoul platform' %}</th>
                 <th class="bg-success-subtle">{% trans 'Team scores' %}</th>
             </tr>
@@ -26,8 +28,10 @@
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ result.team_name }}</td>
-                    <td>{{ result.tenhou_player_place }}</td>
-                    <td>{{ result.majsoul_player_place }}</td>
+                    <td>{{ result.tenhou_player.tenhou_username }}</td>
+                    <td>{% trans 'place in rating' %} - {{ result.tenhou_player_place }}, {% trans 'games count' %}: {{ result.tenhou_player_game_count }}</td>
+                    <td>{{ result.majsoul_player.ms_username }}</td>
+                    <td>{% trans 'place in rating' %} - {{ result.majsoul_player_place }}, {% trans 'games count' %}: {{ result.majsoul_player_game_count }}</td>
                     <td class="bg-success-subtle">{{ result.team_scores|floatformat:2 }}</td>
                 </tr>
             {% endfor %}

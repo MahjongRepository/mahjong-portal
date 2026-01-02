@@ -40,15 +40,15 @@ class Command(BaseCommand):
             for player in tenhou_tournament_players:
                 if player.team_name and player.team_name not in team_mapping:
                     team_mapping[player.team_name] = {self.TEAM_MAPPING_TENHOU_PLAYER_KEY: player}
-                    player_team_mapping[int(player.pantheon_id)] = player.team_name
+                    player_team_mapping[self.get_key(int(player.pantheon_id), "tenhou")] = player.team_name
             for player in majsoul_tournament_players:
                 if player.team_name and player.team_name not in team_mapping:
                     team_mapping[player.team_name] = {self.TEAM_MAPPING_MAJSOUL_PLAYER_KEY: player}
-                    player_team_mapping[int(player.pantheon_id)] = player.team_name
+                    player_team_mapping[self.get_key(int(player.pantheon_id), "majsoul")] = player.team_name
                 else:
                     if player.team_name:
                         team_mapping[player.team_name][self.TEAM_MAPPING_MAJSOUL_PLAYER_KEY] = player
-                        player_team_mapping[int(player.pantheon_id)] = player.team_name
+                        player_team_mapping[self.get_key(int(player.pantheon_id), "majsoul")] = player.team_name
 
             tenhou_pantheon_tournament_id = yagi_settings.tenhou_tournament.new_pantheon_id
             majsoul_pantheon_tournament_id = yagi_settings.majsoul_tournament.new_pantheon_id
@@ -59,22 +59,30 @@ class Command(BaseCommand):
             majsoul_results = get_rating_table(majsoul_pantheon_tournament_id).list
 
             teams_results = {}
-            self.prepare_player_result(tenhou_results, player_team_mapping, team_mapping, teams_results)
-            self.prepare_player_result(majsoul_results, player_team_mapping, team_mapping, teams_results)
+            self.prepare_player_result(tenhou_results, player_team_mapping, team_mapping, teams_results, self.TEAM_MAPPING_TENHOU_PLAYER_KEY, "tenhou")
+            self.prepare_player_result(majsoul_results, player_team_mapping, team_mapping, teams_results, self.TEAM_MAPPING_MAJSOUL_PLAYER_KEY, "majsoul")
 
         self.calculate_result(teams_results, team_mapping)
         print("{0}: Finish update Yagi Kaiji Cup results".format(get_date_string()))
 
-    def prepare_player_result(self, tournament_results, player_team_mapping, team_mapping, teams_results):
+    def get_key(self, pantheon_id, prefix):
+        return f"{pantheon_id}-{prefix}"
+
+    def prepare_player_result(self, tournament_results, player_team_mapping, team_mapping, teams_results, player_key, team_mapping_key_prefix):
         place = 1
         for result in tournament_results:
-            if result.id in player_team_mapping:
-                team_name = player_team_mapping[result.id]
+            if self.get_key(int(result.id), team_mapping_key_prefix) in player_team_mapping:
+                team_name = player_team_mapping[self.get_key(int(result.id), team_mapping_key_prefix)]
                 if team_name in team_mapping:
-                    player = team_mapping[team_name][self.TEAM_MAPPING_TENHOU_PLAYER_KEY]
-                    teams_results[team_name] = {
-                        "tenhou_player": {"place": place, "player": player, "game_count": result.games_played}
-                    }
+                    player = team_mapping[team_name][player_key]
+                    if team_name not in teams_results:
+                        teams_results[team_name] = {
+                            player_key: {"place": place, "player": player, "game_count": result.games_played}
+                        }
+                    else:
+                        teams_results[team_name][player_key] = {
+                            "place": place, "player": player, "game_count": result.games_played
+                        }
             place += 1
 
     def calculate_result(self, teams_results, team_mapping):

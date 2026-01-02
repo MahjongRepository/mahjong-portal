@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-02 17:25+0000\n"
+"POT-Creation-Date: 2026-01-02 20:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -251,6 +251,7 @@ msgstr ""
 " - турнирный рейтинг: %(rating_link)s"
 
 #: online/handler.py:1347
+#, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
 "command \"/me <your tenhou nickname> <confirm code>\" (registry important!). "
@@ -262,8 +263,8 @@ msgid ""
 "- tournament rating table: %(rating_link)s\n"
 msgstr ""
 "Этап подтверждения начался! Для подтверждения своего участия отправьте "
-"команду \"/me <ваш ник на тенхе> <код подтверждения>\" (регистр важен!). Этап завершится в "
-"%(confirmation_end_time)s (%(timezone)s).\n"
+"команду \"/me <ваш ник на тенхе> <код подтверждения>\" (регистр важен!). "
+"Этап завершится в %(confirmation_end_time)s (%(timezone)s).\n"
 "\n"
 " Полезные ссылки:\n"
 " - турнирное лобби: %(lobby_link)s\n"
@@ -290,6 +291,7 @@ msgstr ""
 " - турнирный рейтинг: %(rating_link)s"
 
 #: online/handler.py:1374
+#, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
 "command \"/me <your mahjongsoul nickname>\n"
@@ -301,8 +303,8 @@ msgid ""
 "- tournament rating table: %(rating_link)s\n"
 msgstr ""
 "Этап подтверждения начался! Для подтверждения своего участия отправьте "
-"команду \"/me <ваш ник на mahjongsoul> <код подтверждения>\" (регистр важен!). Этап завершится в "
-"%(confirmation_end_time)s (%(timezone)s).\n"
+"команду \"/me <ваш ник на mahjongsoul> <код подтверждения>\" (регистр "
+"важен!). Этап завершится в %(confirmation_end_time)s (%(timezone)s).\n"
 "\n"
 " Полезные ссылки:\n"
 " - турнирное лобби: %(lobby_link)s\n"
@@ -330,6 +332,7 @@ msgstr ""
 "- турнирный рейтинг: %(rating_link)s"
 
 #: online/handler.py:1404
+#, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
 "channel %(confirmation_channel)s and send command \"/me <your tenhou "
@@ -342,7 +345,8 @@ msgid ""
 "- tournament rating table: %(rating_link)s"
 msgstr ""
 "Этап подтверждения начался! Для подтверждения участия перейдите в канал "
-"%(confirmation_channel)s и отправьте команду \"/me <ваш ник на тенхе> <код подтверждения>\". \n"
+"%(confirmation_channel)s и отправьте команду \"/me <ваш ник на тенхе> <код "
+"подтверждения>\". \n"
 "Этап завершится в %(confirmation_end_time)s %(timezone)s.\n"
 "\n"
 " Полезные ссылки:\n"
@@ -372,6 +376,7 @@ msgstr ""
 "- турнирный рейтинг: %(rating_link)s"
 
 #: online/handler.py:1431
+#, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
 "channel %(confirmation_channel)s and send command \"/me <your mahjongsoul "
@@ -384,8 +389,8 @@ msgid ""
 "- tournament rating table: %(rating_link)s"
 msgstr ""
 "Этап подтверждения начался! Для подтверждения участия перейдите в канал "
-"%(confirmation_channel)s и отправьте команду \"/me <ваш ник на "
-"mahjongsoul> <код подтверждения>\". \n"
+"%(confirmation_channel)s и отправьте команду \"/me <ваш ник на mahjongsoul> "
+"<код подтверждения>\". \n"
 "Этап завершится в %(confirmation_end_time)s %(timezone)s.\n"
 "\n"
 " Полезные ссылки:\n"
@@ -2123,16 +2128,34 @@ msgid "Result table"
 msgstr "Таблица результатов"
 
 #: templates/yagi_keiji_cup/yagi_keiji_cup.html:20
+msgid "Player nickname on Tenhou platform"
+msgstr "Имя игрока на платформе Tenhou"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:21
 msgid "Player result on Tenhou platform"
 msgstr "Результаты игрока на платформе Tenhou"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:21
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:22
+msgid "Player nickname on Majsoul platform"
+msgstr "Имя игрока на платформе Majsoul"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:23
 msgid "Player result on Majsoul platform"
 msgstr "Результаты игрока на платформе Majsoul"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:22
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:24
 msgid "Team scores"
 msgstr "Очки команды"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:32
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:34
+msgid "place in rating"
+msgstr "место в рейтинге"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:32
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:34
+msgid "games count"
+msgstr "игр сыграно"
 
 #: tournament/forms.py:26 tournament/forms.py:47 tournament/forms.py:119
 #: tournament/models.py:381 tournament/models.py:415 tournament/models.py:461
