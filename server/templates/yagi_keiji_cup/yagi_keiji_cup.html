@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load tz %}
-{% load i18n %}
+{% load i18n player_helper %}
 
 {% block title %}
     {% trans 'Yagi Keiji Cup' %}
@@ -26,13 +26,15 @@
             </thead>
             {% for result in results %}
                 <tr>
+                   <!-- uncomment after tournament -->
+                   <!-- <th scope="row"><nobr>{{ forloop.counter }} {{ forloop.counter|place_medal|safe }}</nobr></th> -->
                     <th scope="row">{{ forloop.counter }}</th>
                     <td>{{ result.team_name }}</td>
                     <td>{{ result.tenhou_player.tenhou_username }}</td>
                     <td>{% trans 'place in rating' %} - {{ result.tenhou_player_place }}, {% trans 'games count' %}: {{ result.tenhou_player_game_count }}</td>
                     <td>{{ result.majsoul_player.ms_username }}</td>
                     <td>{% trans 'place in rating' %} - {{ result.majsoul_player_place }}, {% trans 'games count' %}: {{ result.majsoul_player_game_count }}</td>
-                    <td class="bg-success-subtle">{{ result.team_scores|floatformat:2 }}</td>
+                    <td class="bg-success-subtle">{{ result.team_scores|floatformat:1 }}</td>
                 </tr>
             {% endfor %}
         </table>

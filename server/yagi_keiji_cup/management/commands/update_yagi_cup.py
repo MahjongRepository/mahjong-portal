@@ -35,6 +35,11 @@ class Command(BaseCommand):
                 tournament=yagi_settings.majsoul_tournament, is_disable=False
             )
 
+            if len(tenhou_tournament_players) != len(majsoul_tournament_players):
+                raise RuntimeError("Team players count invalid")
+
+            players_count = len(tenhou_tournament_players)
+
             team_mapping = {}
             player_team_mapping = {}
             for player in tenhou_tournament_players:
@@ -76,7 +81,7 @@ class Command(BaseCommand):
                 "majsoul",
             )
 
-        self.calculate_result(teams_results, team_mapping)
+        self.calculate_result(teams_results, team_mapping, players_count)
         print("{0}: Finish update Yagi Kaiji Cup results".format(get_date_string()))
 
     def get_key(self, pantheon_id, prefix):
@@ -103,7 +108,7 @@ class Command(BaseCommand):
                         }
             place += 1
 
-    def calculate_result(self, teams_results, team_mapping):
+    def calculate_result(self, teams_results, team_mapping, players_count):
         if len(teams_results) > 0:
             with transaction.atomic():
                 # clear previous results
@@ -122,7 +127,9 @@ class Command(BaseCommand):
                         majsoul_player_place = result["majsoul_player"]["place"]
                         majsoul_player_game_count = result["majsoul_player"]["game_count"]
 
-                        team_scores = self.calculate_team_scors(4, tenhou_player_place, majsoul_player_place)
+                        team_scores = self.calculate_team_scores(
+                            players_count, tenhou_player_place, majsoul_player_place
+                        )
 
                         ykc_result = YagiKeijiCupResults.objects.create(
                             team_name=team,
@@ -136,7 +143,7 @@ class Command(BaseCommand):
                         )
                         ykc_result.save()
 
-    def calculate_team_scors(self, players_count, tenhou_player_place, majsoul_player_place):
+    def calculate_team_scores(self, players_count, tenhou_player_place, majsoul_player_place):
         scores = (
             players_count
             - (tenhou_player_place + majsoul_player_place + 0.1 * min(tenhou_player_place, majsoul_player_place)) / 2
