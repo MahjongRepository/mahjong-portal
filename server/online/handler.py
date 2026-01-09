@@ -530,6 +530,7 @@ class TournamentHandler:
                         TournamentGame.objects.filter(tournament=self.tournament)
                         .filter(game_players__player__tenhou_username__in=players)
                         .filter(tournament_round=status.current_round)
+                        .exclude(status=TournamentGame.FINISHED)
                         .distinct()
                     )
                 else:
@@ -537,6 +538,7 @@ class TournamentHandler:
                         TournamentGame.objects.filter(tournament=self.tournament)
                         .filter(game_players__player__ms_username__in=players)
                         .filter(tournament_round=status.current_round)
+                        .exclude(status=TournamentGame.FINISHED)
                         .distinct()
                     )
 
