@@ -15,13 +15,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("tournament_id", type=int)
-        parser.add_argument("is_pair", type=bool)
-        parser.add_argument("from_tournament_players", type=bool)
+        parser.add_argument("is_pair", type=int)
+        parser.add_argument("from_tournament_players", type=int)
 
     def handle(self, *args, **options):
         tournament_id = options["tournament_id"]
-        is_pair = options["is_pair"]
-        from_tournament_players = options["from_tournament_players"]
+        is_pair = bool(options["is_pair"])
+        from_tournament_players = bool(options["from_tournament_players"])
         tournament = Tournament.objects.get(id=tournament_id)
 
         assert tournament.tournament_type == Tournament.ONLINE
