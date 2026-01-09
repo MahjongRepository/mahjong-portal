@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-02 20:00+0000\n"
+"POT-Creation-Date: 2026-01-09 17:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2144,16 +2144,20 @@ msgid "Player result on Majsoul platform"
 msgstr "Результаты игрока на платформе Majsoul"
 
 #: templates/yagi_keiji_cup/yagi_keiji_cup.html:24
+msgid "Best avg. place in team"
+msgstr "Лучшее среднее место в команде"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:25
 msgid "Team scores"
 msgstr "Очки команды"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:32
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:34
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:35
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:37
 msgid "place in rating"
 msgstr "место в рейтинге"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:32
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:34
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:35
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:37
 msgid "games count"
 msgstr "игр сыграно"
 

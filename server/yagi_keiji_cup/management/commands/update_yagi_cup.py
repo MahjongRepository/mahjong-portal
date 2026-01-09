@@ -98,13 +98,19 @@ class Command(BaseCommand):
                     player = team_mapping[team_name][player_key]
                     if team_name not in teams_results:
                         teams_results[team_name] = {
-                            player_key: {"place": place, "player": player, "game_count": result.games_played}
+                            player_key: {
+                                "place": place,
+                                "player": player,
+                                "game_count": result.games_played,
+                                "avg_place": result.avg_place,
+                            }
                         }
                     else:
                         teams_results[team_name][player_key] = {
                             "place": place,
                             "player": player,
                             "game_count": result.games_played,
+                            "avg_place": result.avg_place,
                         }
             place += 1
 
@@ -123,9 +129,11 @@ class Command(BaseCommand):
 
                         tenhou_player_place = result["tenhou_player"]["place"]
                         tenhou_player_game_count = result["tenhou_player"]["game_count"]
+                        tenhou_player_avg_place = result["tenhou_player"]["avg_place"]
 
                         majsoul_player_place = result["majsoul_player"]["place"]
                         majsoul_player_game_count = result["majsoul_player"]["game_count"]
+                        majsoul_player_avg_place = result["majsoul_player"]["avg_place"]
 
                         team_scores = self.calculate_team_scores(
                             players_count, tenhou_player_place, majsoul_player_place
@@ -135,9 +143,11 @@ class Command(BaseCommand):
                             team_name=team,
                             tenhou_player_place=tenhou_player_place,
                             tenhou_player_game_count=tenhou_player_game_count,
+                            tenhou_player_avg_place=tenhou_player_avg_place,
                             tenhou_player=tenhou_player,
                             majsoul_player_place=majsoul_player_place,
                             majsoul_player_game_count=majsoul_player_game_count,
+                            majsoul_player_avg_place=majsoul_player_avg_place,
                             majsoul_player=majsoul_player,
                             team_scores=team_scores,
                         )

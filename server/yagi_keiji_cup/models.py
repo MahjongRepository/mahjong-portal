@@ -27,6 +27,7 @@ class YagiKeijiCupResults(BaseModel):
     team_name = models.TextField(null=True, blank=True, default="")
     tenhou_player_place = models.PositiveIntegerField(null=True, blank=True)
     tenhou_player_game_count = models.PositiveIntegerField(null=True, blank=True)
+    tenhou_player_avg_place = models.FloatField(default=0)
     tenhou_player = models.ForeignKey(
         TournamentPlayers,
         on_delete=models.CASCADE,
@@ -36,6 +37,7 @@ class YagiKeijiCupResults(BaseModel):
     )
     majsoul_player_place = models.PositiveIntegerField(null=True, blank=True)
     majsoul_player_game_count = models.PositiveIntegerField(null=True, blank=True)
+    majsoul_player_avg_place = models.FloatField(default=0)
     majsoul_player = models.ForeignKey(
         TournamentPlayers,
         on_delete=models.CASCADE,

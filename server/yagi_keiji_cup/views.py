@@ -13,12 +13,26 @@ def cup_final_information(request):
     if yagiKejiCupSettings.is_hidden:
         raise Http404
 
-    results = YagiKeijiCupResults.objects.order_by("-team_scores").all()
+    results = YagiKeijiCupResults.objects.all()
+    results = sorted(
+        results,
+        key=lambda x: (
+            -x.team_scores,
+            -(x.tenhou_player_game_count + x.majsoul_player_game_count),
+            min(x.tenhou_player_avg_place, x.majsoul_player_avg_place),
+        ),
+    )
+
+    calculated_results = []
+    for result in results:
+        calculated_results.append(
+            {"result": result, "team_avg_place": min(result.tenhou_player_avg_place, result.majsoul_player_avg_place)}
+        )
 
     return render(
         request,
         "yagi_keiji_cup/yagi_keiji_cup.html",
         {
-            "results": results,
+            "results": calculated_results,
         },
     )
