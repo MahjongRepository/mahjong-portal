@@ -1519,7 +1519,23 @@ class TournamentHandler:
             ),
         }
 
-        return format_text(messages.get(notification.notification_type), kwargs)
+        msg = format_text(messages.get(notification.notification_type), kwargs)
+        if notification.notification_type == TournamentNotification.GAME_FAILED:
+            return self._uppend_platform_prefix_if_needed(msg)
+        if notification.notification_type == TournamentNotification.GAME_FAILED_NO_MEMBERS:
+            return self._uppend_platform_prefix_if_needed(msg)
+        if notification.notification_type == TournamentNotification.GAME_STARTED:
+            return self._uppend_platform_prefix_if_needed(msg)
+        return msg
+
+    def _uppend_platform_prefix_if_needed(self, msg):
+        if not self.tournament.with_confirm_code:
+            return msg
+        else:
+            if not self.tournament.is_majsoul_tournament:
+                return "TENHOU: " + msg
+            else:
+                return "MAJSOUL: " + msg
 
     def get_lobby_link(self, lobby=None):
         current_lobby = lobby
