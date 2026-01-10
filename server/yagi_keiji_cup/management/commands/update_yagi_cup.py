@@ -132,8 +132,12 @@ class Command(BaseCommand):
                         tenhou_player_avg_place = result["tenhou_player"]["avg_place"]
 
                         majsoul_player_place = result["majsoul_player"]["place"]
-                        majsoul_player_game_count = result["majsoul_player"]["game_count"]
-                        majsoul_player_avg_place = result["majsoul_player"]["avg_place"]
+                        if "majsoul_player" in result:
+                            majsoul_player_game_count = result["majsoul_player"]["game_count"]
+                            majsoul_player_avg_place = result["majsoul_player"]["avg_place"]
+                        else:
+                            majsoul_player_game_count = 0
+                            majsoul_player_avg_place = 4.0
 
                         team_scores = self.calculate_team_scores(
                             players_count, tenhou_player_place, majsoul_player_place
