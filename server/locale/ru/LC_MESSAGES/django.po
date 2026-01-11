@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 17:57+0000\n"
+"POT-Creation-Date: 2026-01-11 14:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,7 +141,7 @@ msgid "Several games could not start. The administrator will fix this soon."
 msgstr "Несколько игр не смогли запуститься. Администратор скоро это исправит."
 
 #: online/handler.py:254 online/handler.py:261 online/handler.py:305
-#: online/handler.py:761 online/handler.py:790
+#: online/handler.py:763 online/handler.py:792
 msgid "Fatal error. Ask for administrator."
 msgstr "Что-то пошло не так. Обратитесь к администратору."
 
@@ -158,7 +158,7 @@ msgid "This is not looks like a link to the game log."
 msgstr "Это не похоже на ссылку на лог игры."
 
 #: online/handler.py:327 online/handler.py:372 online/handler.py:496
-#: online/handler.py:571
+#: online/handler.py:573
 msgid "The game has been added. Thank you."
 msgstr "Игра была добавлена. Спасибо."
 
@@ -181,20 +181,20 @@ msgstr ""
 msgid "Error adding a game to pantheon."
 msgstr "Ошибка добавления реплея в пантеон."
 
-#: online/handler.py:670
+#: online/handler.py:672
 msgid "The confirmation phase has already ended. Visit our next tournaments."
 msgstr ""
 "Этап подтверждения участия уже завершился. Приходите на следующий турнир."
 
-#: online/handler.py:673
+#: online/handler.py:675
 msgid "The tenhou.net nickname must not be longer than eight characters."
 msgstr "Ник на tenhou.net не должен быть длинее восьми символов."
 
-#: online/handler.py:681 online/handler.py:693
+#: online/handler.py:683 online/handler.py:695
 msgid "You need to register for the tournament on mahjong.click first."
 msgstr "Сначала нужно зарегистрироваться на турнир на портале mahjong.click"
 
-#: online/handler.py:695
+#: online/handler.py:697
 msgid ""
 "Found multiple majsoul accounts for the tournament on mahjong.click. Ask for "
 "administrator."
@@ -202,36 +202,36 @@ msgstr ""
 "Зарегистрированно несколько таких аккаунтов на турнир на портале mahjong."
 "click. Обратитесь к администратору."
 
-#: online/handler.py:699
+#: online/handler.py:701
 msgid "Majsoul account not validated. Ask for administrator."
 msgstr "Majsoul аккаунт неверифицирован. Обратитесь к администратору."
 
-#: online/handler.py:702
+#: online/handler.py:704
 msgid "You are not approved for this tournament by administrator."
 msgstr "Вы не допущены к участию в этом турнире администратором."
 
-#: online/handler.py:706 online/handler.py:712
+#: online/handler.py:708 online/handler.py:714
 #, python-format
 msgid "Nickname \"%(nickname)s\" was already confirmed for this tournament."
 msgstr "Ник \"%(nickname)s\" уже был подтверждён на турнир."
 
-#: online/handler.py:763
+#: online/handler.py:765
 msgid "Your participation in the tournament has been confirmed!"
 msgstr "Ваше участие в турнире было подтверждено!"
 
-#: online/handler.py:769 online/handler.py:787
+#: online/handler.py:771 online/handler.py:789
 msgid "Game does not exist."
 msgstr "Игра не найдена."
 
-#: online/handler.py:776
+#: online/handler.py:778
 msgid "Error adding penalty to pantheon."
 msgstr "Ошибка добавления штрафной игры в пантеон."
 
-#: online/handler.py:791
+#: online/handler.py:793
 msgid "Game penalty added successfully."
 msgstr "Штрафная игра была успешно добавлена."
 
-#: online/handler.py:1334
+#: online/handler.py:1336
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -250,7 +250,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1347
+#: online/handler.py:1349
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -270,7 +270,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1361
+#: online/handler.py:1363
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -290,7 +290,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1374
+#: online/handler.py:1376
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation send "
@@ -310,7 +310,7 @@ msgstr ""
 " - турнирное лобби: %(lobby_link)s\n"
 " - турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1391
+#: online/handler.py:1393
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -331,7 +331,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1404
+#: online/handler.py:1406
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -353,7 +353,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1418
+#: online/handler.py:1420
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -375,7 +375,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1431
+#: online/handler.py:1433
 #, python-format
 msgid ""
 "Confirmation stage has begun! To confirm your tournament participation go to "
@@ -397,7 +397,7 @@ msgstr ""
 "- турнирное лобби: %(lobby_link)s\n"
 "- турнирный рейтинг: %(rating_link)s"
 
-#: online/handler.py:1455
+#: online/handler.py:1457
 #, python-format
 msgid ""
 "All games finished. Next round %(current_round)s (of %(total_rounds)s) "
@@ -411,7 +411,7 @@ msgstr ""
 "\n"
 "Игровое лобби: %(lobby_link)s"
 
-#: online/handler.py:1463
+#: online/handler.py:1465
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -435,7 +435,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:1473
+#: online/handler.py:1475
 #, python-format
 msgid ""
 "Round %(current_round)s of %(total_rounds)s starts. Tournament seating is "
@@ -452,7 +452,7 @@ msgstr ""
 "После завершения вашей игры лог игры будет сохранен автоматически. Если "
 "этого не произошло обратитесь к администратору."
 
-#: online/handler.py:1482
+#: online/handler.py:1484
 msgid ""
 "New game was added.\n"
 "\n"
@@ -485,7 +485,7 @@ msgstr ""
 "Всего игр завершено: %(finished)s/%(total)s."
 
 # python-format
-#: online/handler.py:1495
+#: online/handler.py:1497
 #, python-format
 msgid ""
 "Confirmation stage has ended, there are %(confirmed_players)s players. Games "
@@ -496,7 +496,7 @@ msgstr ""
 "игроков. Игры начнутся через 10 минут в 10-30 МСК. Пожалуйста, пройдите в "
 "лобби %(lobby_link) и ждите начала игр (игры начнутся автоматически)."
 
-#: online/handler.py:1502
+#: online/handler.py:1504
 #, python-format
 msgid ""
 "Game №%(game_index)s: %(players)s. Is not started. The table was moved to "
@@ -505,7 +505,7 @@ msgstr ""
 "Стол №%(game_index)s: %(players)s не запустился. Стол был отодвинут в конец "
 "очереди."
 
-#: online/handler.py:1505
+#: online/handler.py:1507
 msgid ""
 "Game №%(game_index): %(players). Is not started. Missed players "
 "%(missed_players). The table was moved to the end of the queue. \n"
@@ -521,16 +521,16 @@ msgstr ""
 "%(missed_players_str) Отсутствующие игроки зайдите (или перезайдите) в "
 "турнирное лобби: %(lobby_link)."
 
-#: online/handler.py:1509
+#: online/handler.py:1511
 #, python-format
 msgid "Game №%(game_index)s: %(players)s. Started."
 msgstr "Стол №%(game_index)s: %(players)s запущен."
 
-#: online/handler.py:1510
+#: online/handler.py:1512
 msgid "The tournament is over. Thank you for participating!"
 msgstr "Турнир завершён. Спасибо за участие!"
 
-#: online/handler.py:1511
+#: online/handler.py:1513
 #, python-format
 msgid ""
 "%(message)s\n"
@@ -539,7 +539,7 @@ msgstr ""
 "%(message)s\n"
 "\n"
 
-#: online/handler.py:1513
+#: online/handler.py:1515
 #, python-format
 msgid ""
 "Players: %(player_names)s please send link to game log.\n"
@@ -553,7 +553,7 @@ msgstr ""
 "игроки, принимавшие участие в этом ханчане, получат -30000 (набранные очки "
 "считаться не будут)."
 
-#: online/handler.py:1518
+#: online/handler.py:1520
 #, python-format
 msgid ""
 "Players: %(player_names)s you got -30000 penalty because of not sent link to "
@@ -1113,7 +1113,7 @@ msgid "Teams"
 msgstr "Команды"
 
 #: templates/league/teams.html:22 templates/tournament/announcement.html:117
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:19
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:31
 msgid "Team"
 msgstr "Команда"
 
@@ -1368,6 +1368,8 @@ msgstr "Показать"
 #: templates/rating/_external_results_table.html:9
 #: templates/rating/list.html:17 templates/rating/list.html:26
 #: templates/tournament/announcement.html:36 templates/website/home.html:32
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:18
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:22
 msgid "all results"
 msgstr "все результаты"
 
@@ -1832,6 +1834,7 @@ msgid "Submit"
 msgstr "Отправить"
 
 #: templates/tournament/details.html:15
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:14
 msgid "Tournament announcement link"
 msgstr "Ссылка на анонс турнира"
 
@@ -2123,41 +2126,49 @@ msgstr "Рейтинг RR на 3 февраля 2025 года."
 msgid "Wiki"
 msgstr ""
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:13
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:18
+msgid "Tenhou tournament"
+msgstr "Турнир на платформе tenhou"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:22
+msgid "Majsoul tournament"
+msgstr "Турнир на платформе majsoul"
+
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:25
 msgid "Result table"
 msgstr "Таблица результатов"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:20
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:32
 msgid "Player nickname on Tenhou platform"
 msgstr "Имя игрока на платформе Tenhou"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:21
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:33
 msgid "Player result on Tenhou platform"
 msgstr "Результаты игрока на платформе Tenhou"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:22
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:34
 msgid "Player nickname on Majsoul platform"
 msgstr "Имя игрока на платформе Majsoul"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:23
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:35
 msgid "Player result on Majsoul platform"
 msgstr "Результаты игрока на платформе Majsoul"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:24
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:36
 msgid "Best avg. place in team"
 msgstr "Лучшее среднее место в команде"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:25
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:37
 msgid "Team scores"
 msgstr "Очки команды"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:35
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:37
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:45
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:47
 msgid "place in rating"
 msgstr "место в рейтинге"
 
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:35
-#: templates/yagi_keiji_cup/yagi_keiji_cup.html:37
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:45
+#: templates/yagi_keiji_cup/yagi_keiji_cup.html:47
 msgid "games count"
 msgstr "игр сыграно"
 

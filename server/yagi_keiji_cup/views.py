@@ -2,6 +2,7 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
+from tournament.models import Tournament
 from yagi_keiji_cup.models import YagiKeijiCupResults, YagiKeijiCupSettings
 
 
@@ -12,6 +13,10 @@ def cup_final_information(request):
 
     if yagiKejiCupSettings.is_hidden:
         raise Http404
+
+    main_tournament = Tournament.objects.get(slug="yagi-keiji-cup")
+    tenhou_tournament = Tournament.objects.get(slug="yagi-keiji-cup-tenhou")
+    majsoul_tournament = Tournament.objects.get(slug="yagi-keiji-cup-majsoul")
 
     results = YagiKeijiCupResults.objects.all()
     results = sorted(
@@ -24,15 +29,31 @@ def cup_final_information(request):
     )
 
     calculated_results = []
+    team_place = 1
+    last_team_scores_tuple = ()
     for result in results:
+        current_team_place = team_place
+        if len(last_team_scores_tuple) > 0:
+            if last_team_scores_tuple[0] == result.team_scores:
+                current_team_place = last_team_scores_tuple[1]
+
         calculated_results.append(
-            {"result": result, "team_avg_place": min(result.tenhou_player_avg_place, result.majsoul_player_avg_place)}
+            {
+                "result": result,
+                "team_avg_place": min(result.tenhou_player_avg_place, result.majsoul_player_avg_place),
+                "team_place": current_team_place,
+            }
         )
+        last_team_scores_tuple = (result.team_scores, current_team_place)
+        team_place = team_place + 1
 
     return render(
         request,
         "yagi_keiji_cup/yagi_keiji_cup.html",
         {
             "results": calculated_results,
+            "main_tournament": main_tournament,
+            "tenhou_tournament": tenhou_tournament,
+            "majsoul_tournament": majsoul_tournament,
         },
     )

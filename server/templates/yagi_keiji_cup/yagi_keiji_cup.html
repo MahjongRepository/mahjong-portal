@@ -10,6 +10,18 @@
     <div>
         <h1 class="mb-3">{% trans 'Yagi Keiji Cup' %}</h1>
 
+        <p>
+            {% trans 'Held' %} {{ main_tournament.end_date }} <a href="{% url 'tournament_announcement' main_tournament.slug %}">{% trans 'Tournament announcement link' %}</a>
+        </p>
+
+        <p>
+            {% trans 'Tenhou tournament' %}: <a href="{{ tenhou_tournament.get_url }}">{% trans 'all results' %}</a>
+        </p>
+
+        <p>
+            {% trans 'Majsoul tournament' %}: <a href="{{ majsoul_tournament.get_url }}">{% trans 'all results' %}</a>
+        </p>
+
         <h3>{% trans 'Result table' %}</h3>
 
         <table class="table mt-2 table-bordered table-striped">
@@ -27,9 +39,7 @@
             </thead>
             {% for result in results %}
                 <tr>
-                   <!-- uncomment after tournament -->
-                   <!-- <th scope="row"><nobr>{{ forloop.counter }} {{ forloop.counter|place_medal|safe }}</nobr></th> -->
-                    <th scope="row">{{ forloop.counter }}</th>
+                    <th scope="row"><nobr>{{ result.team_place }} {{ result.team_place|place_medal|safe }}</nobr></th>
                     <td>{{ result.result.team_name }}</td>
                     <td>{{ result.result.tenhou_player.tenhou_username }}</td>
                     <td>{% trans 'place in rating' %} - {{ result.result.tenhou_player_place }}, {% trans 'games count' %}: {{ result.result.tenhou_player_game_count }}</td>
