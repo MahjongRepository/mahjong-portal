@@ -32,19 +32,20 @@ def cup_final_information(request):
     team_place = 1
     last_team_scores_tuple = ()
     for result in results:
+        best_team_avg_place = min(result.tenhou_player_avg_place, result.majsoul_player_avg_place)
         current_team_place = team_place
         if len(last_team_scores_tuple) > 0:
-            if last_team_scores_tuple[0] == result.team_scores:
-                current_team_place = last_team_scores_tuple[1]
+            if last_team_scores_tuple[0] == result.team_scores and last_team_scores_tuple[1] == best_team_avg_place:
+                current_team_place = last_team_scores_tuple[2]
 
         calculated_results.append(
             {
                 "result": result,
-                "team_avg_place": min(result.tenhou_player_avg_place, result.majsoul_player_avg_place),
+                "team_avg_place": best_team_avg_place,
                 "team_place": current_team_place,
             }
         )
-        last_team_scores_tuple = (result.team_scores, current_team_place)
+        last_team_scores_tuple = (result.team_scores, best_team_avg_place, current_team_place)
         team_place = team_place + 1
 
     return render(
