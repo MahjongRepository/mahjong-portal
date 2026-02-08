@@ -61,7 +61,7 @@ msgid "Average place (descending)"
 msgstr "Среднее место (по убыванию)"
 
 #: club/views.py:40 templates/club/details.html:49
-#: templates/rating/_external_results_table.html:67
+#: templates/rating/_external_results_table.html:35
 #: templates/rating/_results_table.html:17
 #: templates/tournament/_tournament_results.html:15
 #: utils/tenhou/yakuman_list.py:18
@@ -894,7 +894,7 @@ msgid "Sorting:"
 msgstr "Сортировка:"
 
 #: templates/club/details.html:47 templates/club/list.html:19
-#: templates/rating/_external_results_table.html:64
+#: templates/rating/_external_results_table.html:32
 #: templates/rating/_results_table.html:14
 #: templates/tournament/_current_tournaments_table.html:8
 #: templates/tournament/_tournament_results.html:8
@@ -916,7 +916,7 @@ msgstr "Имя"
 #: templates/player/tenhou.html:630 templates/player/tenhou.html:642
 #: templates/player/tenhou.html:696 templates/player/tenhou.html:708
 #: templates/player/tenhou.html:768
-#: templates/rating/_external_results_table.html:72
+#: templates/rating/_external_results_table.html:40
 #: templates/tenhou/games_history.html:51
 #: templates/tenhou/tenhou_accounts.html:47
 #: templates/tenhou/tenhou_accounts.html:110
@@ -1162,7 +1162,7 @@ msgstr "Ранг"
 #: templates/ms/ms_accounts.html:29 templates/player/_changes_table.html:9
 #: templates/player/ms.html:27 templates/player/ms.html:66
 #: templates/player/tenhou.html:198
-#: templates/rating/_external_results_table.html:70
+#: templates/rating/_external_results_table.html:38
 #: templates/rating/_results_table.html:20
 #: templates/website/_qualification_2025_table.html:13
 #: templates/website/_qualification_table.html:13
@@ -1334,14 +1334,14 @@ msgstr "Ханчаны"
 
 #: templates/player/rating_changes.html:17
 #: templates/player/rating_details.html:116
-#: templates/rating/_external_results_table.html:56
+#: templates/rating/_external_results_table.html:24
 #: templates/rating/_results_table.html:6
 msgid "Rating date"
 msgstr "Рейтинг на"
 
 #: templates/player/rating_changes.html:17
 #: templates/player/rating_details.html:116
-#: templates/rating/_external_results_table.html:56
+#: templates/rating/_external_results_table.html:24
 #: templates/rating/_results_table.html:6
 msgid "latest changes"
 msgstr "последние изменения"
@@ -1502,31 +1502,15 @@ msgid "四鳳南 (Houou Hanchan)"
 msgstr "四鳳南 (Феникс ханчаны)"
 
 #: templates/rating/_external_results_table.html:17
-msgid "at least 20 games"
-msgstr "не менее 20 игр"
+msgid "at least 50 games, last game at least 2 years ago"
+msgstr "не менее 50 игр, последняя игра менее 2 лет назад"
 
 #: templates/rating/_external_results_table.html:25
-msgid "at least 50 games"
-msgstr "не менее 50 игр"
-
-#: templates/rating/_external_results_table.html:33
-msgid "last game at least 1 year ago"
-msgstr "последняя игра менее года назад"
-
-#: templates/rating/_external_results_table.html:41
-msgid "last game at least 2 year ago"
-msgstr "последняя игра менее 2 лет назад"
-
-#: templates/rating/_external_results_table.html:49
-msgid "last game at least 3 year ago"
-msgstr "последняя игра менее 3 лет назад"
-
-#: templates/rating/_external_results_table.html:57
 #: templates/rating/_results_table.html:7
 msgid "All dates"
 msgstr "Все даты"
 
-#: templates/rating/_external_results_table.html:74
+#: templates/rating/_external_results_table.html:42
 #: templates/rating/_results_table.html:24
 #: templates/tournament/_tournament_results.html:18
 #: templates/website/_qualification_2025_table.html:14
@@ -1535,7 +1519,7 @@ msgctxt "location"
 msgid "From"
 msgstr "Откуда"
 
-#: templates/rating/_external_results_table.html:75
+#: templates/rating/_external_results_table.html:43
 msgid "Last game date"
 msgstr "Дата последней игры"
 
