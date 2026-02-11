@@ -109,11 +109,11 @@ class Command(BaseCommand):
                         place = place + 1
                     else:
                         print(
-                            "find_player_smart(): found 0 players with name '{0}', game_count={1}, old_ids={2}, new_ids={3}".format(
+                            "find_player_smart(): found 0 players with name '{0}', old_ids={1}, new_ids={2}, game_count={3}".format(
                                 player_full_name,
-                                ts_player["event_game_counts"],
                                 ts_player.get("old_ids"),
                                 ts_player.get("new_ids"),
+                                ts_player["event_game_counts"],
                             )
                         )
 
