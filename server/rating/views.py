@@ -56,49 +56,33 @@ def get_external_rating_details(rating, request, year=None, month=None, day=None
     today, rating_date, is_last = parse_rating_date(year, month, day)
     if not rating_date:
         today, rating_date = get_latest_rating_date(rating, is_external=True)
-    all_results = True if stat_type is None or stat_type == ExternalRating.EXT_FILTER_ALL_RESULTS else False
+
+    all_results = stat_type is None or stat_type == ExternalRating.EXT_FILTER_ALL_RESULTS
+    more_50_games_last_game_two_years = stat_type == ExternalRating.EXT_FILTER_MORE_50_GAMES_LAST_GAME_TWO_YEARS
+
     if all_results:
         rating_results = (
-            ExternalRatingDelta.objects.filter(rating=rating, date=rating_date, game_numbers__gte=10)
-            .prefetch_related("player")
-            .order_by("-base_rank")
-        )
-    if (
-        all_results is False
-        and stat_type == ExternalRating.EXT_FILTER_MORE_20_GAMES
-        or stat_type == ExternalRating.EXT_FILTER_MORE_50_GAMES
-    ):
-        game_count_filter = 20 if stat_type == ExternalRating.EXT_FILTER_MORE_20_GAMES else 50
-        rating_results = (
-            ExternalRatingDelta.objects.filter(rating=rating, date=rating_date, game_numbers__gte=game_count_filter)
-            .prefetch_related("player")
-            .order_by("-base_rank")
-        )
-    if (
-        all_results is False
-        and stat_type == ExternalRating.EXT_FILTER_LAST_GAME_YEAR
-        or stat_type == ExternalRating.EXT_FILTER_LAST_GAME_TWO_YEARS
-        or stat_type == ExternalRating.EXT_FILTER_LAST_GAME_THREE_YEARS
-    ):
-        last_game_date_filter = rating_date
-        if stat_type == ExternalRating.EXT_FILTER_LAST_GAME_YEAR:
-            last_game_date_filter = rating_date - relativedelta(years=1)
-        if stat_type == ExternalRating.EXT_FILTER_LAST_GAME_TWO_YEARS:
-            last_game_date_filter = rating_date - relativedelta(years=2)
-        if stat_type == ExternalRating.EXT_FILTER_LAST_GAME_THREE_YEARS:
-            last_game_date_filter = rating_date - relativedelta(years=3)
-        rating_results = (
             ExternalRatingDelta.objects.filter(
-                rating=rating, date=rating_date, last_game_date__gte=last_game_date_filter
+                rating=rating,
+                date=rating_date,
+                game_numbers__gte=10,
             )
             .prefetch_related("player")
             .order_by("-base_rank")
         )
-    more_20_games = True if stat_type == ExternalRating.EXT_FILTER_MORE_20_GAMES else False
-    more_50_games = True if stat_type == ExternalRating.EXT_FILTER_MORE_50_GAMES else False
-    last_game_year = True if stat_type == ExternalRating.EXT_FILTER_LAST_GAME_YEAR else False
-    last_game_two_years = True if stat_type == ExternalRating.EXT_FILTER_LAST_GAME_TWO_YEARS else False
-    last_game_three_years = True if stat_type == ExternalRating.EXT_FILTER_LAST_GAME_THREE_YEARS else False
+    if more_50_games_last_game_two_years:
+        game_count_filter = 50
+        last_game_date_filter = rating_date - relativedelta(years=2)
+        rating_results = (
+            ExternalRatingDelta.objects.filter(
+                rating=rating,
+                date=rating_date,
+                game_numbers__gte=game_count_filter,
+                last_game_date__gte=last_game_date_filter,
+            )
+            .prefetch_related("player")
+            .order_by("-base_rank")
+        )
 
     player_places_map = {}
     place = 1
@@ -124,18 +108,10 @@ def get_external_rating_details(rating, request, year=None, month=None, day=None
             "show_games_numbers": True,
             "ext_filters": {
                 "all_results": ExternalRating.EXT_FILTER_ALL_RESULTS,
-                "more_20_games": ExternalRating.EXT_FILTER_MORE_20_GAMES,
-                "more_50_games": ExternalRating.EXT_FILTER_MORE_50_GAMES,
-                "last_game_year": ExternalRating.EXT_FILTER_LAST_GAME_YEAR,
-                "last_game_two_years": ExternalRating.EXT_FILTER_LAST_GAME_TWO_YEARS,
-                "last_game_three_years": ExternalRating.EXT_FILTER_LAST_GAME_THREE_YEARS,
+                "more_50_games_last_game_two_years": ExternalRating.EXT_FILTER_MORE_50_GAMES_LAST_GAME_TWO_YEARS,
             },
             "all_results": all_results,
-            "more_20_games": more_20_games,
-            "more_50_games": more_50_games,
-            "last_game_year": last_game_year,
-            "last_game_two_years": last_game_two_years,
-            "last_game_three_years": last_game_three_years,
+            "more_50_games_last_game_two_years": more_50_games_last_game_two_years,
         },
     )
 
