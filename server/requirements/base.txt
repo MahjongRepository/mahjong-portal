@@ -2,7 +2,7 @@
 gunicorn==23.0.0
 
 # main deps
-Django==5.2.10
+Django==5.2.11
 django-modeltranslation==0.18.10
 psycopg==3.2.5
 psycopg2==2.9.10
