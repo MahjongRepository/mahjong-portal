@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import math
+import operator
 from dataclasses import dataclass
+from functools import reduce
 from typing import List, Optional
 
+from django.db.models import Q
 from django.utils import timezone
 
 from account.models import User
@@ -373,28 +376,22 @@ class PlayerHelper:
 
     @staticmethod
     def __get_players_by_ru_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
+        first_name_conditions = reduce(operator.or_, (Q(first_name_ru__iexact=x) for x in all_full_names))
+        last_name_conditions = reduce(operator.or_, (Q(last_name_ru__iexact=x) for x in all_full_names))
         if city_object:
-            return Player.objects.filter(
-                first_name_ru__in=all_full_names,
-                last_name_ru__in=all_full_names,
-                city=city_object,
-                is_exclude_from_rating=False,
-            )
+            query = first_name_conditions & last_name_conditions & Q(city=city_object) & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
         else:
-            return Player.objects.filter(
-                first_name_ru__in=all_full_names, last_name_ru__in=all_full_names, is_exclude_from_rating=False
-            )
+            query = first_name_conditions & last_name_conditions & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
 
     @staticmethod
     def __get_players_by_en_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
+        first_name_conditions = reduce(operator.or_, (Q(first_name_en__iexact=x) for x in all_full_names))
+        last_name_conditions = reduce(operator.or_, (Q(last_name_en__iexact=x) for x in all_full_names))
         if city_object:
-            return Player.objects.filter(
-                first_name_en__in=all_full_names,
-                last_name_en__in=all_full_names,
-                city=city_object,
-                is_exclude_from_rating=False,
-            )
+            query = first_name_conditions & last_name_conditions & Q(city=city_object) & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
         else:
-            return Player.objects.filter(
-                first_name_en__in=all_full_names, last_name_en__in=all_full_names, is_exclude_from_rating=False
-            )
+            query = first_name_conditions & last_name_conditions & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
