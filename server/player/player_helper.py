@@ -325,20 +325,30 @@ class PlayerHelper:
                     registration.save()
 
     @staticmethod
+    def __generate_search_variants_tuples(raw_parts):
+        variants = []
+        for i in range(len(raw_parts) - 1):
+            variants.append((" ".join(raw_parts[: i + 1]), " ".join(raw_parts[i + 1 : len(raw_parts)])))
+        return variants
+
+    @staticmethod
     def find_player_smart(player_full_name: str, city_object=None) -> Optional[Player]:
         arr = player_full_name.strip().split()
-        if len(arr) != 2:
+        if len(arr) > 4:
             return None
-        last_names = PlayerHelper.__generate_name_variants(arr[0].strip())
-        first_names = PlayerHelper.__generate_name_variants(arr[1].strip())
+        variants = PlayerHelper.__generate_search_variants_tuples(arr)
+        founded_player = None
+        for variant in variants:
+            last_names = PlayerHelper.__generate_name_variants(variant[0].strip())
+            first_names = PlayerHelper.__generate_name_variants(variant[1].strip())
 
-        found_players = PlayerHelper.__find_all_players(
-            first_names=first_names, last_names=last_names, city_object=city_object
-        )
-        if len(found_players) == 1:
-            return found_players[0]
-        else:
-            return None
+            found_players = PlayerHelper.__find_all_players(
+                first_names=first_names, last_names=last_names, city_object=city_object
+            )
+            if len(found_players) == 1:
+                founded_player = found_players[0]
+                break
+        return founded_player
 
     @staticmethod
     def __generate_name_variants(name: str) -> List[str]:
