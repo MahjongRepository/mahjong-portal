@@ -7,6 +7,7 @@ from datetime import datetime
 
 import pytz
 from django.utils import timezone
+from numpy import random as nrandom
 
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
 
@@ -69,6 +70,14 @@ def transliterate_name(russian_name):
     return transliterated.title()
 
 
+def is_date_before(source_date, target_date):
+    return target_date.toordinal() - source_date.toordinal() > 0
+
+
+def is_date_before_or_equals(source_date, target_date):
+    return target_date.toordinal() - source_date.toordinal() >= 0
+
+
 def get_month_first_day(date=None):
     date = date or timezone.now()
     return datetime(date.year, date.month, 1, tzinfo=pytz.utc)
@@ -77,6 +86,11 @@ def get_month_first_day(date=None):
 def get_month_last_day(date=None):
     date = date or timezone.now()
     return datetime(date.year, date.month, calendar.monthrange(date.year, date.month)[1], 23, 59, tzinfo=pytz.utc)
+
+
+def get_end_of_day(date=None):
+    date = date or timezone.now()
+    return date.replace(hour=23, minute=59, second=59, microsecond=999999)
 
 
 # TODO: Remove these hardcoded values when tournaments with stages will be implemented
@@ -109,3 +123,7 @@ def format_text(message, kwargs):
         else:
             message = message.replace("%%(%s)" % key, str(value))
     return message
+
+
+def get_random_confirm_code():
+    return nrandom.randint(10000, 99999)

@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import math
+import operator
+from dataclasses import dataclass
+from functools import reduce
 from typing import List, Optional
 
+from django.db.models import Q
 from django.utils import timezone
 
 from account.models import User
@@ -9,9 +13,28 @@ from online.parser import TenhouParser
 from player.models import Player
 from player.tenhou.models import TenhouNickname
 from settings.models import City, Country
+from tournament.models import OnlineTournamentRegistration
+from utils.general import is_date_before_or_equals
 
 
 class PlayerHelper:
+
+    @dataclass
+    class AccountUpdates:
+        code: int
+        msg: str
+
+    userPantheonIdUpdate = AccountUpdates(1, "player's user pantheon_id updated")
+    userAttachedPlayerUpdate = AccountUpdates(2, "user's attached player updated")
+    playerCountryUpdate = AccountUpdates(3, "player's country updated")
+    playerCityUpdate = AccountUpdates(4, "player's city updated")
+    oldTenhouAccountUpdate = AccountUpdates(5, "old tenhou account updated")
+    newTenhouAccountUpdate = AccountUpdates(6, "new tenhou account added")
+    removeConflictPantheonIdUpdate = AccountUpdates(
+        7, "another player's pantheon id remove because with same person_id"
+    )
+    playerPantheonIdUpdate = AccountUpdates(8, "player's pantheon_id updated")
+    oldTenhouAccountDisableUpdate = AccountUpdates(9, "old tenhou account disabled")
 
     class TenhouNicknameSearchContext:
         is_tenhou_account_exist: bool
@@ -67,8 +90,8 @@ class PlayerHelper:
         old_tenhou_objects = current_player.tenhou.all().exclude(
             id=tenhou_nickname_search_context.old_tenhou_account.id
         )
-        updated_fields.append("old tenhou account updated")
-        updated_fields.append("new tenhou account added")
+        updated_fields.append(PlayerHelper.oldTenhouAccountUpdate)
+        updated_fields.append(PlayerHelper.newTenhouAccountUpdate)
         PlayerHelper.update_player_tenhou_object(
             current_player,
             tenhou_nickname_search_context.old_tenhou_account,
@@ -78,7 +101,7 @@ class PlayerHelper:
         )
 
     @staticmethod
-    def update_player_from_pantheon_feed(feed) -> List[str]:
+    def update_player_from_pantheon_feed(feed) -> List[AccountUpdates]:
         updated_fields = []
         if feed.updated_information is not None:
             feed_city = PlayerHelper.safe_strip(feed, "city")
@@ -123,18 +146,18 @@ class PlayerHelper:
             if current_user is not None and feed_person_id is not None:
                 if current_user.new_pantheon_id != int(feed_person_id):
                     current_user.new_pantheon_id = int(feed_person_id)
-                    updated_fields.append("player's user pantheon_id updated")
+                    updated_fields.append(PlayerHelper.userPantheonIdUpdate)
                     is_need_update_user = True
 
             if current_user is not None and current_player is not None:
                 if current_user.attached_player is None:
                     current_user.attached_player = current_player
-                    updated_fields.append("user's attached player updated")
+                    updated_fields.append(PlayerHelper.userAttachedPlayerUpdate)
                     is_need_update_user = True
                 else:
                     if current_user.attached_player.id != current_player.id:
                         current_user.attached_player = current_player
-                        updated_fields.append("user's attached player updated")
+                        updated_fields.append(PlayerHelper.userAttachedPlayerUpdate)
                         is_need_update_user = True
 
             if current_player is not None:
@@ -148,12 +171,12 @@ class PlayerHelper:
 
                 if country_object is not None:
                     current_player.country = country_object
-                    updated_fields.append("player's country updated")
+                    updated_fields.append(PlayerHelper.playerCountryUpdate)
                     is_need_update_player = True
 
                 if city_object is not None:
                     current_player.city = city_object
-                    updated_fields.append("player's city updated")
+                    updated_fields.append(PlayerHelper.playerCityUpdate)
                     is_need_update_player = True
 
                 if feed_tenhou_id is not None and len(feed_tenhou_id) <= 8:
@@ -171,8 +194,8 @@ class PlayerHelper:
                                 tenhou_username=feed_tenhou_id,
                             )
                             old_tenhou_objects = current_player.tenhou.all().exclude(id=new_tenhou_object.id)
-                            updated_fields.append("old tenhou account updated")
-                            updated_fields.append("new tenhou account added")
+                            updated_fields.append(PlayerHelper.oldTenhouAccountUpdate)
+                            updated_fields.append(PlayerHelper.newTenhouAccountUpdate)
                             PlayerHelper.update_player_tenhou_object(
                                 current_player,
                                 new_tenhou_object,
@@ -196,7 +219,7 @@ class PlayerHelper:
                                 tenhou_username=feed_tenhou_id,
                             )
                             old_tenhou_objects = []
-                            updated_fields.append("new tenhou account added")
+                            updated_fields.append(PlayerHelper.newTenhouAccountUpdate)
                             PlayerHelper.update_player_tenhou_object(
                                 current_player,
                                 new_tenhou_object,
@@ -211,7 +234,7 @@ class PlayerHelper:
                                 )
                     else:
                         old_tenhou_objects = current_player.tenhou.all().exclude(id=current_player.tenhou_object.id)
-                        updated_fields.append("old tenhou account updated")
+                        updated_fields.append(PlayerHelper.oldTenhouAccountUpdate)
                         PlayerHelper.update_player_tenhou_object(
                             current_player,
                             current_player.tenhou_object,
@@ -227,7 +250,7 @@ class PlayerHelper:
                     if dirty_player is not None:
                         dirty_player.pantheon_id = None
                         dirty_player.save()
-                        updated_fields.append("another player's pantheon id remove because with same person_id")
+                        updated_fields.append(PlayerHelper.removeConflictPantheonIdUpdate)
                 except Player.DoesNotExist:
                     pass
 
@@ -241,12 +264,12 @@ class PlayerHelper:
                     if dirty_player is not None:
                         dirty_player.pantheon_id = None
                         dirty_player.save()
-                        updated_fields.append("another player's pantheon id remove because with same person_id")
+                        updated_fields.append(PlayerHelper.removeConflictPantheonIdUpdate)
                 except Player.DoesNotExist:
                     pass
 
                 current_player.pantheon_id = int(feed_person_id)
-                updated_fields.append("player's pantheon_id updated")
+                updated_fields.append(PlayerHelper.playerPantheonIdUpdate)
                 is_need_update_player = True
 
             if is_need_update_user and current_user is not None:
@@ -267,7 +290,15 @@ class PlayerHelper:
 
     @staticmethod
     def update_player_tenhou_object(player, tenhou_account, new_tenhou_id, old_tenhou_objects, updated_fields):
+        previous_active_state = tenhou_account.is_active
         tenhou_account_is_active = player is not None and not player.is_hide_tenhou_activity
+        if tenhou_account_is_active:
+            now = timezone.now().date()
+            if tenhou_account.last_played_date is not None:
+                delta = now - tenhou_account.last_played_date
+                if delta.days >= 140:
+                    tenhou_account_is_active = previous_active_state
+
         tenhou_account.tenhou_username = new_tenhou_id
         tenhou_account.is_main = True
         tenhou_account.is_active = tenhou_account_is_active
@@ -278,23 +309,49 @@ class PlayerHelper:
             old_tenhou_object.is_main = False
             old_tenhou_object.is_active = False
             old_tenhou_object.save()
-            updated_fields.append("old tenhou account disabled")
+            updated_fields.append(PlayerHelper.oldTenhouAccountDisableUpdate)
+
+        if player is not None:
+            current_registrations = (
+                OnlineTournamentRegistration.objects.filter(player=player)
+                .filter(tournament__is_upcoming=True)
+                .filter(tournament__is_hidden=False)
+                .filter(tournament__is_event=False)
+                .filter(tournament__is_majsoul_tournament=False)
+                .prefetch_related("tournament")
+            )
+            now = timezone.now()
+            for registration in current_registrations:
+                tournament = registration.tournament
+                if is_date_before_or_equals(now, tournament.start_date):
+                    registration.tenhou_nickname = new_tenhou_id
+                    registration.save()
+
+    @staticmethod
+    def __generate_search_variants_tuples(raw_parts):
+        variants = []
+        for i in range(len(raw_parts) - 1):
+            variants.append((" ".join(raw_parts[: i + 1]), " ".join(raw_parts[i + 1 : len(raw_parts)])))
+        return variants
 
     @staticmethod
     def find_player_smart(player_full_name: str, city_object=None) -> Optional[Player]:
         arr = player_full_name.strip().split()
-        if len(arr) != 2:
+        if len(arr) > 4:
             return None
-        last_names = PlayerHelper.__generate_name_variants(arr[0].strip())
-        first_names = PlayerHelper.__generate_name_variants(arr[1].strip())
+        variants = PlayerHelper.__generate_search_variants_tuples(arr)
+        founded_player = None
+        for variant in variants:
+            last_names = PlayerHelper.__generate_name_variants(variant[0].strip())
+            first_names = PlayerHelper.__generate_name_variants(variant[1].strip())
 
-        found_players = PlayerHelper.__find_all_players(
-            first_names=first_names, last_names=last_names, city_object=city_object
-        )
-        if len(found_players) == 1:
-            return found_players[0]
-        else:
-            return None
+            found_players = PlayerHelper.__find_all_players(
+                first_names=first_names, last_names=last_names, city_object=city_object
+            )
+            if len(found_players) == 1:
+                founded_player = found_players[0]
+                break
+        return founded_player
 
     @staticmethod
     def __generate_name_variants(name: str) -> List[str]:
@@ -319,28 +376,22 @@ class PlayerHelper:
 
     @staticmethod
     def __get_players_by_ru_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
+        first_name_conditions = reduce(operator.or_, (Q(first_name_ru__iexact=x) for x in all_full_names))
+        last_name_conditions = reduce(operator.or_, (Q(last_name_ru__iexact=x) for x in all_full_names))
         if city_object:
-            return Player.objects.filter(
-                first_name_ru__in=all_full_names,
-                last_name_ru__in=all_full_names,
-                city=city_object,
-                is_exclude_from_rating=False,
-            )
+            query = first_name_conditions & last_name_conditions & Q(city=city_object) & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
         else:
-            return Player.objects.filter(
-                first_name_ru__in=all_full_names, last_name_ru__in=all_full_names, is_exclude_from_rating=False
-            )
+            query = first_name_conditions & last_name_conditions & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
 
     @staticmethod
     def __get_players_by_en_full_name(all_full_names: List[str], city_object=None) -> List[Player]:
+        first_name_conditions = reduce(operator.or_, (Q(first_name_en__iexact=x) for x in all_full_names))
+        last_name_conditions = reduce(operator.or_, (Q(last_name_en__iexact=x) for x in all_full_names))
         if city_object:
-            return Player.objects.filter(
-                first_name_en__in=all_full_names,
-                last_name_en__in=all_full_names,
-                city=city_object,
-                is_exclude_from_rating=False,
-            )
+            query = first_name_conditions & last_name_conditions & Q(city=city_object) & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)
         else:
-            return Player.objects.filter(
-                first_name_en__in=all_full_names, last_name_en__in=all_full_names, is_exclude_from_rating=False
-            )
+            query = first_name_conditions & last_name_conditions & Q(is_exclude_from_rating=False)
+            return Player.objects.filter(query)

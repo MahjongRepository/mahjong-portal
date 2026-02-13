@@ -22,6 +22,7 @@ from online.views import (
     add_penalty_game,
     admin_confirm_player,
     check_new_notifications,
+    check_player,
     close_registration,
     confirm_player,
     create_start_game_notification,
@@ -74,6 +75,7 @@ urlpatterns = [
     url("^api/v0/autobot/get_tournament_players$", get_allowed_players),
     url("^api/v0/autobot/add_penalty_game$", add_penalty_game),
     url("^api/v0/autobot/send_team_names_to_pantheon$", send_team_names_to_pantheon),
+    url("^api/v0/autobot/check_player$", check_player),
     url(r"^online/", include("online.urls")),
     url("i18n/", include("django.conf.urls.i18n")),
 ]
@@ -92,5 +94,6 @@ urlpatterns += i18n_patterns(
     url(r"^wiki/", include("wiki.urls")),
     url(r"^league/", include("league.urls")),
     url(r"^titles/", include("title.urls")),
+    url(r"^yagi-keiji-cup/", include("yagi_keiji_cup.urls")),
     url("i18n/", include("django.conf.urls.i18n")),
 )

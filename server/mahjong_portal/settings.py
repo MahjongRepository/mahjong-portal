@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "online",
     "ema",
     "league",
+    "yagi_keiji_cup",
 ]
 
 MIDDLEWARE = [
@@ -196,7 +197,7 @@ HAYSTACK_CONNECTIONS = {
     }
 }
 
-TENHOU_WG_URL = "https://mjv.jp/0/wg/0.js"
+TENHOU_WG_URL = "https://tenhou.net/0/wg/0000.js"
 TENHOU_LATEST_GAMES_URL = "https://tenhou.net/sc/raw/list.cgi"
 TENHOU_DOWNLOAD_ARCHIVE_URL = "https://tenhou.net/sc/raw/dat/"
 

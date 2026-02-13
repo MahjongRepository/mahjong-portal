@@ -176,7 +176,7 @@ def recalculate_tenhou_statistics_for_four_players(tenhou_object, all_games=None
 
         rank = [x[0] for x in TenhouAggregatedStatistics.RANKS if x[1] == calculated_rank["rank"]][0]
         # 3 or less dan
-        if rank <= 12:
+        if rank <= 12 and stat.rate is None:
             # we need to erase user rate when user lost 4 dan
             stat.rate = 0
         else:

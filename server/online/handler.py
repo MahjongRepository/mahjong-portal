@@ -260,6 +260,34 @@ class TournamentHandler:
             logger.error(e, exc_info=e)
             return _("Fatal error. Ask for administrator.")
 
+    # todo: optimization query with index table tournament_id <-> confirm_code
+    def check_player(self, nickname, confirm_code):
+        try:
+            gamePlatformType = None
+            searchError = False
+            tournamentId = -1
+            try:
+                registration = OnlineTournamentRegistration.objects.get(
+                    tenhou_nickname=nickname, confirm_code=confirm_code
+                )
+                tournamentId = registration.tournament.id
+                gamePlatformType = "tenhou"
+            except OnlineTournamentRegistration.DoesNotExist:
+                try:
+                    registration = MsOnlineTournamentRegistration.objects.get(
+                        ms_nickname=nickname, confirm_code=confirm_code
+                    )
+                    tournamentId = registration.tournament.id
+                    gamePlatformType = "majsoul"
+                except MsOnlineTournamentRegistration.DoesNotExist:
+                    gamePlatformType = None
+                    searchError = True
+
+            return {"tournament_id": tournamentId, "game_platform_type": gamePlatformType, "is_error": searchError}
+        except Exception as e:
+            logger.error(e, exc_info=e)
+            return {"is_error": True}
+
     def _send_team_names_to_pantheon(self, registrations):
         try:
             team_names = []
@@ -502,6 +530,7 @@ class TournamentHandler:
                         TournamentGame.objects.filter(tournament=self.tournament)
                         .filter(game_players__player__tenhou_username__in=players)
                         .filter(tournament_round=status.current_round)
+                        .exclude(status=TournamentGame.FINISHED)
                         .distinct()
                     )
                 else:
@@ -509,6 +538,7 @@ class TournamentHandler:
                         TournamentGame.objects.filter(tournament=self.tournament)
                         .filter(game_players__player__ms_username__in=players)
                         .filter(tournament_round=status.current_round)
+                        .exclude(status=TournamentGame.FINISHED)
                         .distinct()
                     )
 
@@ -1300,59 +1330,116 @@ class TournamentHandler:
         if notification.notification_type == TournamentNotification.CONFIRMATION_STARTED:
             if destination == self.TELEGRAM_DESTINATION:
                 if not self.tournament.is_majsoul_tournament:
-                    return (
-                        _(
-                            "Confirmation stage has begun! "
-                            'To confirm your tournament participation send command "/me <your tenhou nickname>" '
-                            "(registry important!). "
-                            "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
-                            "Useful links:\n"
-                            "- tournament lobby: %(lobby_link)s\n"
-                            "- tournament rating table: %(rating_link)s\n"
+                    if not self.tournament.with_confirm_code:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                'To confirm your tournament participation send command "/me <your tenhou nickname>" '
+                                "(registry important!). "
+                                "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s\n"
+                            )
+                            % kwargs
                         )
-                        % kwargs
-                    )
+                    else:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                'To confirm your tournament participation send command "/me <your tenhou nickname> <confirm code>" '
+                                "(registry important!). "
+                                "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s\n"
+                            )
+                            % kwargs
+                        )
                 else:
-                    return (
-                        _(
-                            "Confirmation stage has begun! "
-                            'To confirm your tournament participation send command "/me <your mahjongsoul nickname>" '
-                            "(registry important!). "
-                            "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
-                            "Useful links:\n"
-                            "- tournament lobby: %(lobby_link)s\n"
-                            "- tournament rating table: %(rating_link)s\n"
+                    if not self.tournament.with_confirm_code:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                'To confirm your tournament participation send command "/me <your mahjongsoul nickname>" '
+                                "(registry important!). "
+                                "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s\n"
+                            )
+                            % kwargs
                         )
-                        % kwargs
-                    )
+                    else:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                'To confirm your tournament participation send command "/me <your mahjongsoul nickname>\n'
+                                ' <confirm code>" '
+                                "(registry important!). "
+                                "Confirmation stage will be ended at %(confirmation_end_time)s (%(timezone)s).\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s\n"
+                            )
+                            % kwargs
+                        )
 
             if destination == self.DISCORD_DESTINATION:
                 if not self.tournament.is_majsoul_tournament:
-                    return (
-                        _(
-                            "Confirmation stage has begun! "
-                            "To confirm your tournament participation go to channel %(confirmation_channel)s "
-                            'and send command "/me <your tenhou nickname>" (registry important!). \n'
-                            "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
-                            "Useful links:\n"
-                            "- tournament lobby: %(lobby_link)s\n"
-                            "- tournament rating table: %(rating_link)s"
+                    if not self.tournament.with_confirm_code:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                                'and send command "/me <your tenhou nickname>" (registry important!). \n'
+                                "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s"
+                            )
+                            % kwargs
                         )
-                        % kwargs
-                    )
+                    else:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                                'and send command "/me <your tenhou nickname> <confirm code>" (registry important!). \n'
+                                "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s"
+                            )
+                            % kwargs
+                        )
                 else:
-                    return (
-                        _(
-                            "Confirmation stage has begun! "
-                            "To confirm your tournament participation go to channel %(confirmation_channel)s "
-                            'and send command "/me <your mahjongsoul nickname>" (registry important!). \n'
-                            "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
-                            "Useful links:\n"
-                            "- tournament lobby: %(lobby_link)s\n"
-                            "- tournament rating table: %(rating_link)s"
+                    if not self.tournament.with_confirm_code:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                                'and send command "/me <your mahjongsoul nickname>" (registry important!). \n'
+                                "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s"
+                            )
+                            % kwargs
                         )
-                        % kwargs
-                    )
+                    else:
+                        return (
+                            _(
+                                "Confirmation stage has begun! "
+                                "To confirm your tournament participation go to channel %(confirmation_channel)s "
+                                'and send command "/me <your mahjongsoul nickname> <confirm code>" (registry important!). \n'
+                                "Confirmation stage will be ended at %(confirmation_end_time)s %(timezone)s time.\n\n"
+                                "Useful links:\n"
+                                "- tournament lobby: %(lobby_link)s\n"
+                                "- tournament rating table: %(rating_link)s"
+                            )
+                            % kwargs
+                        )
 
         if notification.notification_type == TournamentNotification.ROUND_FINISHED:
             if destination == TournamentHandler.DISCORD_DESTINATION:
@@ -1434,7 +1521,23 @@ class TournamentHandler:
             ),
         }
 
-        return format_text(messages.get(notification.notification_type), kwargs)
+        msg = format_text(messages.get(notification.notification_type), kwargs)
+        if notification.notification_type == TournamentNotification.GAME_FAILED:
+            return self._uppend_platform_prefix_if_needed(msg)
+        if notification.notification_type == TournamentNotification.GAME_FAILED_NO_MEMBERS:
+            return self._uppend_platform_prefix_if_needed(msg)
+        if notification.notification_type == TournamentNotification.GAME_STARTED:
+            return self._uppend_platform_prefix_if_needed(msg)
+        return msg
+
+    def _uppend_platform_prefix_if_needed(self, msg):
+        if not self.tournament.with_confirm_code:
+            return msg
+        else:
+            if not self.tournament.is_majsoul_tournament:
+                return "TENHOU: " + msg
+            else:
+                return "MAJSOUL: " + msg
 
     def get_lobby_link(self, lobby=None):
         current_lobby = lobby

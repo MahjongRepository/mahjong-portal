@@ -108,7 +108,15 @@ class Command(BaseCommand):
                         )
                         place = place + 1
                     else:
-                        print("find_player_smart(): found 0 players with name '{0}'".format(player_full_name))
+                        print(
+                            "find_player_smart(): found 0 players with name '{0}', old_ids={1}, new_ids={2}, "
+                            "last_game_date={3}".format(
+                                player_full_name,
+                                ts_player.get("old_ids"),
+                                ts_player.get("new_ids"),
+                                ts_player["last_game_date"],
+                            )
+                        )
 
                 if deltas:
                     ExternalRatingDelta.objects.bulk_create(deltas)

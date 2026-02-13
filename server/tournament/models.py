@@ -63,6 +63,9 @@ class Tournament(BaseModel):
     ONLINE = "online"
     CHAMPIONSHIP = "champ"
 
+    OFFLINE_GAMES = "offline"
+    ONLINE_GAMES = "online"
+
     GAME_TYPES = [[RIICHI, "Riichi"], [MCR, "MCR"]]
 
     TOURNAMENT_TYPES = [
@@ -73,6 +76,11 @@ class Tournament(BaseModel):
         [OTHER, "other"],
         [ONLINE, "online"],
         [CHAMPIONSHIP, "champ."],
+    ]
+
+    TOURNAMENT_GAMES_TYPES = [
+        [OFFLINE_GAMES, "offline"],
+        [ONLINE_GAMES, "online"],
     ]
 
     objects = models.Manager()
@@ -96,6 +104,7 @@ class Tournament(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
 
     tournament_type = models.CharField(max_length=10, choices=TOURNAMENT_TYPES, default=RR, db_index=True)
+    tournament_games_type = models.CharField(max_length=10, choices=TOURNAMENT_GAMES_TYPES, default=OFFLINE_GAMES)
 
     is_upcoming = models.BooleanField(default=False)
     is_hidden = models.BooleanField(default=False)
@@ -108,6 +117,8 @@ class Tournament(BaseModel):
     registrations_pre_moderation = models.BooleanField(default=False)
     is_apply_in_rating = models.BooleanField(default=False)
     is_command = models.BooleanField(default=False, verbose_name="Is team tournament")
+    is_pre_registration = models.BooleanField(default=False)
+    with_confirm_code = models.BooleanField(default=False)
 
     # Sometimes people need to leave notes in registration form
     display_notes = models.BooleanField(default=False)
@@ -139,7 +150,7 @@ class Tournament(BaseModel):
         if self.is_crr():
             return "info"
 
-        if self.is_online():
+        if self.is_online_rating():
             return "warning"
 
         if self.is_championship():
@@ -149,12 +160,15 @@ class Tournament(BaseModel):
 
     @property
     def text_badge_class(self):
-        if self.is_online():
+        if self.is_online_rating():
             return "text-dark"
         return ""
 
     @property
     def registration_status_badge_class(self):
+        if self.is_pre_registration and not self.opened_registration:
+            return "info"
+
         if not self.opened_registration:
             return "danger"
 
@@ -171,6 +185,9 @@ class Tournament(BaseModel):
 
     @property
     def registration_status_help_text(self):
+        if self.is_pre_registration and not self.opened_registration:
+            return _("pre announcement")
+
         if not self.opened_registration:
             return _("registration closed")
 
@@ -196,7 +213,7 @@ class Tournament(BaseModel):
         if self.is_crr():
             return "CRR"
 
-        if self.is_online():
+        if self.is_online_rating():
             return "Online"
 
         return ""
@@ -213,6 +230,33 @@ class Tournament(BaseModel):
             return "EMA"
         else:
             return self.get_tournament_type_display()
+
+    @property
+    def tournament_type_display(self):
+        if self.is_online():
+            return _("Online")
+        else:
+            return _("Offline")
+
+    @property
+    def tournament_type_badge_class(self):
+        if self.is_online():
+            return "warning"
+
+        return "primary"
+
+    @property
+    def tournament_text_badge_class(self):
+        if self.is_online():
+            return "text-dark"
+        return ""
+
+    @property
+    def tournament_type_help_text(self):
+        if self.is_online():
+            return _("Online")
+
+        return _("Offline")
 
     @property
     def rating_link(self):
@@ -234,8 +278,11 @@ class Tournament(BaseModel):
     def is_crr(self):
         return self.tournament_type == self.CRR
 
-    def is_online(self):
+    def is_online_rating(self):
         return self.tournament_type == self.ONLINE
+
+    def is_online(self):
+        return self.tournament_type == self.ONLINE or self.tournament_games_type == self.ONLINE_GAMES
 
     def is_other(self):
         return self.tournament_type == self.OTHER
@@ -360,6 +407,7 @@ class OnlineTournamentRegistration(BaseModel):
     allow_to_save_data = models.BooleanField(default=False, verbose_name=_("I allow to store my personal data"))
 
     notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
+    confirm_code = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = ["tenhou_nickname", "tournament"]
@@ -387,6 +435,7 @@ class MsOnlineTournamentRegistration(BaseModel):
     ms_nickname = models.CharField(max_length=255, verbose_name="Majsoul nickname")
     ms_friend_id = models.PositiveIntegerField()
     ms_account_id = models.PositiveIntegerField(null=True, blank=True)
+    is_highlighted = models.BooleanField(default=False)
     contact = models.CharField(
         null=True,
         blank=True,
@@ -405,6 +454,7 @@ class MsOnlineTournamentRegistration(BaseModel):
 
     notes = models.TextField(null=True, blank=True, default="", verbose_name=_("Additional info"))
     is_validated = models.BooleanField(default=False)
+    confirm_code = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = ["ms_nickname", "ms_friend_id", "tournament"]

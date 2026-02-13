@@ -10,11 +10,7 @@ from utils.general import get_tournament_coefficient
 
 class ExternalRating(BaseModel):
     EXT_FILTER_ALL_RESULTS = "all_results"
-    EXT_FILTER_MORE_20_GAMES = "more_20_games"
-    EXT_FILTER_MORE_50_GAMES = "more_50_games"
-    EXT_FILTER_LAST_GAME_YEAR = "last_game_year"
-    EXT_FILTER_LAST_GAME_TWO_YEARS = "last_game_two_years"
-    EXT_FILTER_LAST_GAME_THREE_YEARS = "last_game_three_years"
+    EXT_FILTER_MORE_50_GAMES_LAST_GAME_TWO_YEARS = "more_50_games_last_game_two_years"
 
     TRUESKILL = 0
     ONLINE_TRUESKILL = 1

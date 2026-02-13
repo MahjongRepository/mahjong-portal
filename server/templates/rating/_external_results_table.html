@@ -10,43 +10,11 @@
     </a>
 
     {% if is_last == True %}
-        <a href="{% url 'rating_filter' rating.slug ext_filters.more_20_games %}">
+        <a href="{% url 'rating_filter' rating.slug ext_filters.more_50_games_last_game_two_years %}">
     {% else %}
-        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_20_games %}">
+        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_50_games_last_game_two_years %}">
     {% endif %}
-            <span class="badge bg-{% if not more_20_games %}success{% else %}primary{% endif %}">{% trans 'at least 20 games' %}</span>
-        </a>
-
-    {% if is_last == True %}
-        <a href="{% url 'rating_filter' rating.slug ext_filters.more_50_games %}">
-    {% else %}
-        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.more_50_games %}">
-    {% endif %}
-            <span class="badge bg-{% if not more_50_games %}success{% else %}primary{% endif %}">{% trans 'at least 50 games' %}</span>
-        </a>
-
-    {% if is_last == True %}
-        <a href="{% url 'rating_filter' rating.slug ext_filters.last_game_year %}">
-    {% else %}
-        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_year %}">
-    {% endif %}
-            <span class="badge bg-{% if not last_game_year %}success{% else %}primary{% endif %}">{% trans 'last game at least 1 year ago' %}</span>
-        </a>
-
-    {% if is_last == True %}
-        <a href="{% url 'rating_filter' rating.slug ext_filters.last_game_two_years %}">
-    {% else %}
-        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_two_years %}">
-    {% endif %}
-            <span class="badge bg-{% if not last_game_two_years %}success{% else %}primary{% endif %}">{% trans 'last game at least 2 year ago' %}</span>
-        </a>
-
-    {% if is_last == True %}
-        <a href="{% url 'rating_filter' rating.slug ext_filters.last_game_three_years %}">
-    {% else %}
-        <a href="{% url 'rating_filter' rating.slug rating_date.year rating_date.month rating_date.day ext_filters.last_game_three_years %}">
-    {% endif %}
-            <span class="badge bg-{% if not last_game_three_years %}success{% else %}primary{% endif %}">{% trans 'last game at least 3 year ago' %}</span>
+            <span class="badge bg-{% if not more_50_games_last_game_two_years %}success{% else %}primary{% endif %}">{% trans 'at least 50 games, last game at least 2 years ago' %}</span>
         </a>
 </div>
 

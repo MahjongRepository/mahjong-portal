@@ -112,7 +112,7 @@
                         <th scope="col">{% trans 'Name' %}</th>
                         <th scope="col">{% trans 'City' %}</th>
                         <th scope="col">{% trans 'Registered at' %}</th>
-                        {% if not tournament.is_online %}
+                        {% if not tournament.is_online_rating %}
                             <th scope="col">{% trans 'Phone' %}</th>
                         {% endif %}
                         <th scope="col">{% trans 'Additional contact' %}</th>
@@ -161,7 +161,7 @@
                                     {{ registration_item.notes }}
                                 </td>
                             {% endif %}
-                            {% if not tournament.is_online %}
+                            {% if not tournament.is_online_rating %}
                                 <td>{{ registration_item.phone }}</td>
                             {% endif %}
                             <td>

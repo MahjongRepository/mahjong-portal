@@ -28,6 +28,9 @@
                 {% else %}
                     <p>{% trans 'Registered players' %} {{ tournament.tournament_registrations.count }}</p>
                 {% endif %}
+                {% if full_approved_players_count > 0 %}
+                    <p>{% trans 'Approved players' %} {{ full_approved_players_count }}</p>
+                {% endif %}
             {% endif %}
         {% else %}
             <p>{% trans 'Held' %} {{ tournament.end_date }}, <a href="{{ tournament.get_url }}">{% trans 'all results' %}</a></p>
@@ -50,6 +53,13 @@
 
         {% if is_already_registered %}
             <p class="alert alert-success">{% trans 'You are already registered on the tournament!' %}</p>
+            {% if tournament.is_online %}
+                {% if registration_confirm_code %}
+                    <p class="alert alert-warning">
+                        {% trans 'Your confirm code:' %} {{ registration_confirm_code }}
+                    </p>
+                {% endif %}
+            {% endif %}
         {% elif tournament.is_pantheon_registration %}
             {% if tournament.opened_registration %}
                 {% if not user.is_authenticated %}
@@ -140,10 +150,10 @@
                                     {% if registration_item.player.ms_object %}
                                         <td><a href="{% url 'player_ms_details' registration_item.player.slug %}" class="d-print-none">{{ registration_item.ms_nickname }}</a></td>
                                     {% else %}
-                                        <td>{{ registration_item.ms_nickname }}</td>
+                                        <td>{{ registration_item.ms_nickname|get_safe_str }}</td>
                                     {% endif %}
                                 {% else %}
-                                    <td>{{ registration_item.tenhou_nickname }}</td>
+                                    <td>{{ registration_item.tenhou_nickname|get_safe_str }}</td>
                                 {% endif %}
                             {% endif %}
 

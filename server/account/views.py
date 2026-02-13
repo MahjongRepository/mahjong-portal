@@ -67,9 +67,12 @@ def account_settings(request):
                     if log_url is not None:
                         error_code, log_hash = get_replay_hash(log_url)
                         if error_code is None and log_hash is not None:
-                            stat = TenhouAggregatedStatistics.objects.get(
-                                game_players=TenhouAggregatedStatistics.FOUR_PLAYERS, tenhou_object=current_tenhou
-                            )
+                            try:
+                                stat = TenhouAggregatedStatistics.objects.get(
+                                    game_players=TenhouAggregatedStatistics.FOUR_PLAYERS, tenhou_object=current_tenhou
+                                )
+                            except TenhouAggregatedStatistics.DoesNotExist:
+                                stat = None
                             if stat is not None:
                                 new_rating = PlayerHelper.calculate_rating(
                                     log_hash, current_tenhou_nickname, stat.played_games

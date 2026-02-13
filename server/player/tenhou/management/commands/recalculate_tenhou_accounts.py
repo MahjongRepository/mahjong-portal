@@ -4,12 +4,9 @@ from time import sleep
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from player.tenhou.models import TenhouGameLog, TenhouNickname
-from utils.tenhou.helper import (
-    download_all_games_from_nodochi,
-    recalculate_tenhou_statistics_for_four_players,
-    save_played_games,
-)
+from player.tenhou.models import TenhouNickname
+from player.tenhou.tenhou_helper import TenhouHelper
+from utils.general import is_date_before
 
 
 def get_date_string():
@@ -24,7 +21,7 @@ class Command(BaseCommand):
 
     def is_need_update(self, now, tenhou_object) -> bool:
         if tenhou_object.last_recalculated_date is not None:
-            return now.toordinal() - tenhou_object.last_recalculated_date.toordinal() > 0
+            return is_date_before(tenhou_object.last_recalculated_date, now)
         else:
             return True
 
@@ -44,22 +41,7 @@ class Command(BaseCommand):
         for tenhou_object in tenhou_objects:
             print(f"[{current_player_index}/{tenhou_players_count}] Processing {tenhou_object.tenhou_username}")
             if rebuild_from_zero or (rebuild_from_zero is False and self.is_need_update(now, tenhou_object)):
-                TenhouGameLog.objects.filter(tenhou_object=tenhou_object).delete()
-
-                player_games, account_start_date, four_players_rate, is_active_account = (
-                    download_all_games_from_nodochi(
-                        tenhou_object.tenhou_username, only_ranking_games=True, with_pycurl=with_pycurl
-                    )
-                )
-
-                if is_active_account:
-                    tenhou_object.username_created_at = account_start_date
-                    save_played_games(tenhou_object, player_games)
-                    recalculate_tenhou_statistics_for_four_players(tenhou_object, player_games, four_players_rate, now)
-                else:
-                    tenhou_object.is_active = False
-                    tenhou_object.is_main = False
-                    tenhou_object.save()
+                TenhouHelper.recalculate_tenhou_account(tenhou_object, now, with_pycurl)
 
                 # let's be gentle and don't ddos nodochi
                 sleep(10)

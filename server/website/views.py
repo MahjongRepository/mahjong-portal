@@ -5,6 +5,7 @@ import io
 import logging
 import platform
 import threading
+from datetime import timezone
 
 import ujson as json
 from django.conf import settings
@@ -24,11 +25,14 @@ from account.models import PantheonInfoUpdateLog, User
 from club.models import Club
 from player.models import Player, PlayerQuotaEvent
 from player.player_helper import PlayerHelper
-from player.tenhou.models import TenhouAggregatedStatistics
+from player.tenhou.models import TenhouAggregatedStatistics, TenhouNickname
+from player.tenhou.tenhou_helper import TenhouHelper
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
+from utils.general import get_end_of_day
+from yagi_keiji_cup.models import YagiKeijiCupSettings
 
 logger = logging.getLogger()
 OLD_PANTHEON_TYPE = "old"
@@ -46,17 +50,28 @@ def home(request):
         .order_by("place")
     )[:16]
 
-    upcoming_tournaments = (
+    current_date = get_end_of_day()
+    all_tournaments = (
         Tournament.public.filter(is_upcoming=True)
         .filter(is_event=False)
         .exclude(tournament_type=Tournament.FOREIGN_EMA)
         .prefetch_related("city")
-        .order_by("start_date")
+        .order_by("start_date", "name")
     )
+
+    current_tournaments = all_tournaments.filter(start_date__lte=current_date)
+    upcoming_tournaments = all_tournaments.filter(start_date__gt=current_date)
 
     events = (
         Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
     )
+
+    is_yagi_keiji_cup_hidden = True
+    try:
+        yagi_settings = YagiKeijiCupSettings.objects.get(is_main=True)
+        is_yagi_keiji_cup_hidden = yagi_settings.is_hidden
+    except YagiKeijiCupSettings.DoesNotExist:
+        is_yagi_keiji_cup_hidden = True
 
     return render(
         request,
@@ -65,12 +80,14 @@ def home(request):
             "page": "home",
             "rating_results": rating_results,
             "rating": rating,
+            "current_tournaments": current_tournaments,
             "upcoming_tournaments": upcoming_tournaments,
             "events": events,
             "rating_date": rating_date,
             "today": today,
             "is_last": True,
             "leagues": [],
+            "is_yagi_keiji_cup_hidden": is_yagi_keiji_cup_hidden,
         },
     )
 
@@ -250,14 +267,27 @@ def do_update_from_pantheon_feed(person_id, pantheon_data):
         user = None
 
     feed = PantheonInfoUpdateLog.objects.create(user=user, pantheon_id=person_id, updated_information=pantheon_data)
+    need_recalculate_account = False
     with transaction.atomic():
         try:
-            PlayerHelper.update_player_from_pantheon_feed(feed)
+            updates = PlayerHelper.update_player_from_pantheon_feed(feed)
+            for update in updates:
+                if (
+                    update.code == PlayerHelper.oldTenhouAccountUpdate.code
+                    or update.code == PlayerHelper.newTenhouAccountUpdate.code
+                ):
+                    need_recalculate_account = True
+                    break
             feed.is_applied = True
             feed.save()
         except Exception as err:
             transaction.set_rollback(True)
             raise err
+    if need_recalculate_account:
+        now = timezone.now()
+        tenhou_nickname = PlayerHelper.safe_strip(feed, "tenhou_id")
+        tenhou_object = TenhouNickname.objects.get(tenhou_username=tenhou_nickname)
+        TenhouHelper.recalculate_tenhou_account(tenhou_object, now, with_pycurl=False)
 
 
 @require_POST
