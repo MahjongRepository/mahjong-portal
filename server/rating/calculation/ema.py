@@ -212,9 +212,9 @@ class RatingEMACalculation(RatingRRCalculation, RatingDatesMixin):
         )
 
     def players_coefficient(self, tournament):
-        if tournament.number_of_players <= 40:
+        if tournament.get_players_count() <= 40:
             return 0.0
-        elif 41 <= tournament.number_of_players <= 80:
+        elif 41 <= tournament.get_players_count() <= 80:
             return 0.5
         else:
             return 1.0

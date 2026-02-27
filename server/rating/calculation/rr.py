@@ -227,7 +227,7 @@ class RatingRRCalculation:
         Last place 0 points
         And other places between these marks
         """
-        number_of_players = tournament.number_of_players
+        number_of_players = tournament.get_players_count()
         place = tournament_result.place
 
         # first place
@@ -263,18 +263,18 @@ class RatingRRCalculation:
         Check about page for detailed description
         """
         calculated = 0
-        players_multiplicator = tournament.number_of_players // 4
+        players_multiplicator = tournament.get_players_count() // 4
 
         first_value = 10
         second_value = 5
         third_value = 1
 
-        if tournament.number_of_players <= 60:
+        if tournament.get_players_count() <= 60:
             calculated += players_multiplicator * first_value
-        elif 61 <= tournament.number_of_players <= 120:
+        elif 61 <= tournament.get_players_count() <= 120:
             second_part = players_multiplicator - 15
             calculated += 15 * first_value + second_part * second_value
-        elif 121 <= tournament.number_of_players <= 180:
+        elif 121 <= tournament.get_players_count() <= 180:
             third_part = players_multiplicator - 30
             calculated += 15 * first_value + 15 * second_value + third_part * third_value
         else:
