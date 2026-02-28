@@ -44,7 +44,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ tournament_result.place|place_medal|safe }}</td>
-                            <td>{{ tournament_result.place }}/{{ tournament_result.tournament.get_players_count }}</td>
+                            <td>{{ tournament_result.place }}/{{ tournaments_data|get_item:tournament_result.tournament.id }}</td>
                             <td>
                                 <nobr>{{ tournament_result.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                             </td>
