@@ -17,7 +17,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for delta in deltas %}
+        {% for delta in deltas.deltas %}
             <tr {% if not delta.is_active %}class="table-secondary" {% elif delta.tournament_id in top_tournament_ids %}class="table-success"{% endif %}>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>
@@ -39,7 +39,7 @@
                     <nobr>{{ delta.tournament.end_date|date:SHORT_DATE_FORMAT }}</nobr>
                 </td>
                 <td>{{ delta.tournament_place|place_medal|safe }}</td>
-                <td>{{ delta.tournament_place }}/{{ delta.tournament.number_of_players }}</td>
+                <td>{{ delta.tournament_place }}/{{ deltas.tournaments|get_item:delta.tournament.id }}</td>
                 <td>
                     {{ delta.coefficient_obj.age|floatformat:0 }}%
                 </td>

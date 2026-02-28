@@ -139,6 +139,13 @@ class Tournament(BaseModel):
         else:
             return reverse("tournament_details", kwargs={"slug": self.slug})
 
+    def get_players_count(self):
+        results = self.results.order_by("-place")[:1]
+        if results:
+            return results.first().place
+        else:
+            return self.number_of_players
+
     @property
     def type_badge_class(self):
         if self.is_ema():
@@ -330,7 +337,7 @@ class TournamentResult(BaseModel):
 
     @property
     def base_rank(self):
-        number_of_players = self.tournament.number_of_players
+        number_of_players = self.tournament.get_players_count()
         place = self.place
 
         # first place

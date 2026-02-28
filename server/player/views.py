@@ -61,6 +61,10 @@ def player_details(request, slug, year=None, month=None, day=None):
         TournamentResult.objects.filter(player=player).prefetch_related("tournament").order_by("-tournament__end_date")
     )[:10]
 
+    tournaments_data = {}
+    for result in tournament_results:
+        tournaments_data[result.tournament.id] = result.tournament.get_players_count()
+
     tenhou_data = TenhouNickname.all_objects.filter(player=player, is_main=True)
     ms_data = MSAccount.objects.filter(player=player).first()
     club_ratings = (
@@ -80,6 +84,7 @@ def player_details(request, slug, year=None, month=None, day=None):
             "external_rating_date": external_entered_date,
             "ms_data": ms_data,
             "club_ratings": club_ratings,
+            "tournaments_data": tournaments_data,
         },
     )
 
@@ -91,7 +96,19 @@ def player_tournaments(request, slug):
         TournamentResult.objects.filter(player=player).prefetch_related("tournament").order_by("-tournament__end_date")
     )
 
-    return render(request, "player/tournaments.html", {"player": player, "tournament_results": tournament_results})
+    tournaments_data = {}
+    for result in tournament_results:
+        tournaments_data[result.tournament.id] = result.tournament.get_players_count()
+
+    return render(
+        request,
+        "player/tournaments.html",
+        {
+            "player": player,
+            "tournament_results": tournament_results,
+            "tournaments_data": tournaments_data,
+        },
+    )
 
 
 def player_rating_details(request, slug, rating_slug, year=None, month=None, day=None):
@@ -111,6 +128,10 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
         .order_by("-tournament__end_date")
     )
 
+    tournaments_data = {}
+    for delta in rating_deltas:
+        tournaments_data[delta.tournament.id] = delta.tournament.get_players_count()
+
     top_tournaments_number = 3 if rating.is_online() else 4
     top_tournament_ids = tuple(
         d.tournament_id
@@ -121,8 +142,12 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
         )
     )[:top_tournaments_number]
 
-    last_rating_place = RatingResult.objects.filter(rating=rating, date=rating_date).order_by("place").last().place
+    last_rating_place = (
+        RatingResult.objects.filter(rating=rating, date=rating_date).order_by("-place")[:1].first().place
+    )
     filtered_results = _get_rating_changes(rating, player, today)
+
+    rating_deltas_data = {"deltas": rating_deltas, "tournaments": tournaments_data}
 
     return render(
         request,
@@ -130,7 +155,7 @@ def player_rating_details(request, slug, rating_slug, year=None, month=None, day
         {
             "player": player,
             "rating": rating,
-            "rating_deltas": rating_deltas,
+            "rating_deltas": rating_deltas_data,
             "rating_result": rating_result,
             "filtered_results": filtered_results,
             "last_rating_place": last_rating_place,

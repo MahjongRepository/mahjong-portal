@@ -449,7 +449,7 @@ def export_tournament_results(request, tournament_id):
         rows.append(
             [
                 "{} {}".format(tournament.name_en, tournament.end_date.year),
-                tournament.number_of_players,
+                tournament.get_players_count(),
                 result.place,
                 player.first_name_en,
                 player.last_name_en.upper(),
