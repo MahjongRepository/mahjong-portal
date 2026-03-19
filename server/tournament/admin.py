@@ -83,6 +83,7 @@ class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "is_approved",
+        "is_validated",
         "tournament",
         "first_name",
         "last_name",
@@ -96,7 +97,7 @@ class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
     ]
 
     raw_id_fields = ["tournament", "player", "city_object", "user"]
-    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "is_validated"]
 
 
 class TournamentApplicationAdmin(admin.ModelAdmin):
