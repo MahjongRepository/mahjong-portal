@@ -48,6 +48,11 @@ class Command(MSServerBaseCommand):
                 print(res)
                 not_found_on_server = not_found_on_server + 1
 
+            if not res.players:
+                print("friend_id=%d SearchMultiAccount Error:" % registration_mapping[current_account_id].ms_friend_id)
+                print(res)
+                not_found_on_server = not_found_on_server + 1
+
             for player in res.players:
                 registrant = registration_mapping[player.account_id]
                 if registrant.ms_nickname == player.nickname:
