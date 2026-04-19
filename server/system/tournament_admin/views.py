@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import logging
 import typing as ty
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import MultipleObjectsReturned
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -24,6 +26,8 @@ from tournament.models import (
     TournamentResult,
 )
 from utils.general import transliterate_name
+
+logger = logging.getLogger()
 
 
 def update_placing(rows: ty.List[list]) -> None:
@@ -81,12 +85,22 @@ def upload_results(request, tournament_id):
                 else:
                     temp = name.split(" ")
 
-                    if form.cleaned_data["switch_names"]:
-                        first_name = temp[0].title()
-                        last_name = temp[1].title()
+                    if load_player:
+                        extracted_first_name = temp[1].title()
+                        extracted_last_name = temp[0].title()
+                    elif not load_player and len(temp) < 2:
+                        extracted_first_name = temp[0].title()
+                        extracted_last_name = ""
                     else:
-                        first_name = temp[1].title()
-                        last_name = temp[0].title()
+                        extracted_first_name = temp[1].title()
+                        extracted_last_name = temp[0].title()
+
+                    if form.cleaned_data["switch_names"]:
+                        first_name = extracted_last_name
+                        last_name = extracted_first_name
+                    else:
+                        first_name = extracted_first_name
+                        last_name = extracted_last_name
 
                     if first_name == "Замены":
                         first_name = "замены"
@@ -107,7 +121,11 @@ def upload_results(request, tournament_id):
                         else:
                             Player.objects.get(first_name_en=first_name, last_name_en=last_name)
                     else:
-                        Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                        try:
+                            Player.objects.get(first_name_ru=first_name, last_name_ru=last_name)
+                        except MultipleObjectsReturned as e:
+                            logger.error(f"Multiple players found: [{first_name} {last_name}]")
+                            raise e
                 except Player.DoesNotExist:
                     if is_ema:
                         not_found_users.append("{} {} {}".format(first_name, last_name, ema_id))
