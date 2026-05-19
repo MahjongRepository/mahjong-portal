@@ -18,23 +18,21 @@
         {% if tournament.is_upcoming %}
             <p>{% trans 'Will be held' %} {{ tournament.start_date }}</p>
 
-            {% if tournament.opened_registration %}
-                {% if tournament.is_online %}
-                    {% if tournament.is_majsoul_tournament %}
-                        <p>{% trans 'Registered players' %} {{ tournament.ms_online_tournament_registrations.count }}</p>
-                    {% else %}
-                        <p>{% trans 'Registered players' %} {{ tournament.online_tournament_registrations.count }}</p>
-                    {% endif %}
+            {% if tournament.is_online %}
+                {% if tournament.is_majsoul_tournament %}
+                    <p>{% trans 'Registered players' %} {{ tournament.ms_online_tournament_registrations.count }}</p>
                 {% else %}
-                    <p>{% trans 'Registered players' %} {{ tournament.tournament_registrations.count }}</p>
+                    <p>{% trans 'Registered players' %} {{ tournament.online_tournament_registrations.count }}</p>
                 {% endif %}
-                {% if full_approved_players_count > 0 %}
-                    <p>{% trans 'Approved players' %} {{ full_approved_players_count }}</p>
-                {% endif %}
+            {% else %}
+                <p>{% trans 'Registered players' %} {{ tournament.tournament_registrations.count }}</p>
             {% endif %}
-        {% else %}
-            <p>{% trans 'Held' %} {{ tournament.end_date }}, <a href="{{ tournament.get_url }}">{% trans 'all results' %}</a></p>
-        {% endif %}
+            {% if full_approved_players_count > 0 %}
+                <p>{% trans 'Approved players' %} {{ full_approved_players_count }}</p>
+            {% endif %}
+            {% else %}
+                <p>{% trans 'Held' %} {{ tournament.end_date }}, <a href="{{ tournament.get_url }}">{% trans 'all results' %}</a></p>
+            {% endif %}
 
         {% include 'tournament/_tournament_header.html' %}
 
