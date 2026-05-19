@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from tournament.models import (
     MsOnlineTournamentRegistration,
@@ -18,6 +19,19 @@ class UploadResultsForm(forms.Form):
 
 
 class TournamentForm(forms.ModelForm):
+    name_ru = forms.CharField(max_length=255, label=_("Name [ru]"), localize=True)
+    name_en = forms.CharField(max_length=255, label=_("Name [en]"), localize=True)
+    slug = forms.SlugField(max_length=255, label=_("Slug"), localize=True)
+    start_date = forms.DateField(label=_("Start date"), localize=True)
+    end_date = forms.DateField(label=_("End date"), localize=True)
+    number_of_players = forms.DecimalField(min_value=0, label=_("Number of players"), localize=True)
+    registration_description_ru = forms.CharField(
+        widget=forms.Textarea, required=False, label=_("Registration description [ru]"), localize=True
+    )
+    registration_description_en = forms.CharField(
+        widget=forms.Textarea, required=False, label=_("Registration description [en]"), localize=True
+    )
+
     class Meta:
         model = Tournament
         fields = [
@@ -26,6 +40,7 @@ class TournamentForm(forms.ModelForm):
             "slug",
             "start_date",
             "end_date",
+            "number_of_players",
             "registration_description_ru",
             "registration_description_en",
         ]
