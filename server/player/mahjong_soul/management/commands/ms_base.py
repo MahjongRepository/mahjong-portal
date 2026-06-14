@@ -133,7 +133,9 @@ class MSBaseCommand(BaseCommand):
         req.device.is_browser = True
         req.random_key = uuid_key
         req.gen_access_token = True
-        req.client_version_string = f"web-{version_to_force}"
+        # todo: search path to resolve version
+        # req.client_version_string = f"web-{version_to_force}"
+        req.client_version_string = "web-0.16.23"
         req.currency_platforms.append(2)
 
         res = await lobby.login(req)
