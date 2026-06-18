@@ -2,11 +2,16 @@
 
 from modeltranslation.translator import TranslationOptions, translator
 
-from tournament.models import Tournament
+from tournament.models import Tournament, TournamentAttribute
 
 
 class TournamentTranslationOptions(TranslationOptions):
     fields = ["name", "registration_description", "results_description"]
 
 
+class TournamentAttributeTranslationOptions(TranslationOptions):
+    fields = ["description"]
+
+
 translator.register(Tournament, TournamentTranslationOptions)
+translator.register(TournamentAttribute, TournamentAttributeTranslationOptions)

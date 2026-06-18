@@ -51,6 +51,15 @@ class OnlineTournamentConfig(BaseModel):
             return PlainOnlineTournamentConfig()
 
 
+class TournamentAttribute(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
+    asset_path = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Tournament(BaseModel):
     RIICHI = 0
     MCR = 1
@@ -129,6 +138,8 @@ class Tournament(BaseModel):
     new_pantheon_id = models.CharField(max_length=20, null=True, blank=True)
     ema_id = models.CharField(max_length=20, null=True, blank=True)
     online_config = models.ForeignKey(OnlineTournamentConfig, on_delete=models.PROTECT, null=True, blank=True)
+    attribute = models.ForeignKey(TournamentAttribute, on_delete=models.PROTECT, null=True, blank=True)
+    attribute_is_hide = models.BooleanField(null=True, blank=True)
 
     def __unicode__(self):
         return self.name

@@ -66,6 +66,21 @@ def home(request):
         Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
     )
 
+    current_tournament_attributes = {}
+    for t in current_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            current_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    upcoming_tournament_attributes = {}
+    for t in upcoming_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            upcoming_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    current_is_with_attribute = False if len(current_tournament_attributes) == 0 else True
+    upcoming_is_with_attribute = False if len(upcoming_tournament_attributes) == 0 else True
+
     is_yagi_keiji_cup_hidden = True
     try:
         yagi_settings = YagiKeijiCupSettings.objects.get(is_main=True)
@@ -81,7 +96,11 @@ def home(request):
             "rating_results": rating_results,
             "rating": rating,
             "current_tournaments": current_tournaments,
+            "current_tournament_attributes": current_tournament_attributes,
+            "current_is_with_attribute": current_is_with_attribute,
             "upcoming_tournaments": upcoming_tournaments,
+            "upcoming_tournament_attributes": upcoming_tournament_attributes,
+            "upcoming_is_with_attribute": upcoming_is_with_attribute,
             "events": events,
             "rating_date": rating_date,
             "today": today,

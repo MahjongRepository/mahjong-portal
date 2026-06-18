@@ -65,13 +65,32 @@ def tournament_list(request, tournament_type=None, year=None):
     upcoming_tournaments = all_tournaments.filter(start_date__gt=current_date)
     tournaments = tournaments.filter(is_upcoming=False)
 
+    current_tournament_attributes = {}
+    for t in current_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            current_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    upcoming_tournament_attributes = {}
+    for t in upcoming_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            upcoming_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    current_is_with_attribute = False if len(current_tournament_attributes) == 0 else True
+    upcoming_is_with_attribute = False if len(upcoming_tournament_attributes) == 0 else True
+
     return render(
         request,
         "tournament/list.html",
         {
             "tournaments": tournaments,
             "current_tournaments": current_tournaments,
+            "current_tournament_attributes": current_tournament_attributes,
+            "current_is_with_attribute": current_is_with_attribute,
             "upcoming_tournaments": upcoming_tournaments,
+            "upcoming_tournament_attributes": upcoming_tournament_attributes,
+            "upcoming_is_with_attribute": upcoming_is_with_attribute,
             "tournament_type": tournament_type,
             "years": years,
             "selected_year": selected_year,

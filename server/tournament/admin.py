@@ -11,6 +11,7 @@ from tournament.models import (
     OnlineTournamentRegistration,
     Tournament,
     TournamentApplication,
+    TournamentAttribute,
     TournamentRegistration,
     TournamentResult,
 )
@@ -126,6 +127,11 @@ class OnlineTournamentConfigAdmin(admin.ModelAdmin):
     ]
 
 
+class TournamentAttributeAdmin(admin.ModelAdmin):
+    list_display = ["name", "description", "asset_path"]
+    exclude = ["description"]
+
+
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(OnlineTournamentConfig, OnlineTournamentConfigAdmin)
 admin.site.register(TournamentRegistration, TournamentRegistrationAdmin)
@@ -133,3 +139,4 @@ admin.site.register(OnlineTournamentRegistration, OnlineTournamentRegistrationAd
 admin.site.register(MsOnlineTournamentRegistration, MsOnlineTournamentRegistrationAdmin)
 admin.site.register(TournamentApplication, TournamentApplicationAdmin)
 admin.site.register(TournamentResult, TournamentResultAdmin)
+admin.site.register(TournamentAttribute, TournamentAttributeAdmin)
