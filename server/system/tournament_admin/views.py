@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import dataclasses
 import logging
 import typing as ty
 
@@ -30,14 +31,25 @@ from utils.general import transliterate_name
 logger = logging.getLogger()
 
 
-def update_placing(rows: ty.List[list]) -> None:
+@dataclasses.dataclass
+class FilteredResult:
+    place: int = None
+    first_name: str = None
+    last_name: str = None
+    scores: float = None
+    ema_id: str = None
+    games: int = None
+    load_player: bool = None
+
+
+def update_placing(rows: ty.List[FilteredResult]) -> None:
     """Update players placing according to their score."""
-    rows.sort(key=lambda row: (-row[5], -row[3]))  # ORDER BY games DESC, scores DESC
-    place, scores, games = None, None, None
+    rows.sort(key=lambda row: (-row.games, -row.scores))  # ORDER BY games DESC, scores DESC
+    place, scores, games = 0, None, None
     for i, row in enumerate(rows, start=1):
-        if row[3] != scores or row[5] != games:
-            place, scores, games = i, row[3], row[5]
-        row[0] = place
+        if row.scores != scores or row.games != games:
+            place, scores, games = i, row.scores, row.games
+        row.place = place
 
 
 @login_required
@@ -68,7 +80,7 @@ def upload_results(request, tournament_id):
             decoded_file = csv_file.read().decode("utf-8").splitlines()
             reader = csv.DictReader(decoded_file)
 
-            filtered_results = []
+            filtered_results: ty.List[FilteredResult] = []
             for row in reader:
                 place = int(row["place"])
                 name = row.get("name", "")
@@ -108,8 +120,17 @@ def upload_results(request, tournament_id):
                 first_name = first_name.strip()
                 last_name = last_name.strip()
 
-                data = [place, first_name, last_name, scores, ema_id, games, load_player]
-                filtered_results.append(data)
+                filtered_results.append(
+                    FilteredResult(
+                        place=place,
+                        first_name=first_name,
+                        last_name=last_name,
+                        scores=scores,
+                        ema_id=ema_id,
+                        games=games,
+                        load_player=load_player,
+                    )
+                )
 
                 if not load_player:
                     continue
@@ -143,13 +164,13 @@ def upload_results(request, tournament_id):
             # everything is fine
             if not not_found_users:
                 for result in filtered_results:
-                    place = result[0]
-                    first_name = result[1]
-                    last_name = result[2]
-                    scores = result[3]
-                    ema_id = result[4]
-                    games = result[5]
-                    load_player = result[6]
+                    place = result.place
+                    first_name = result.first_name
+                    last_name = result.last_name
+                    scores = result.scores
+                    ema_id = result.ema_id
+                    games = result.games
+                    load_player = result.load_player
 
                     player = None
                     player_string = None
