@@ -34,6 +34,7 @@ logger = logging.getLogger()
 @dataclasses.dataclass
 class FilteredResult:
     place: int = None
+    player_pantheon_id: int = None
     first_name: str = None
     last_name: str = None
     scores: float = None
@@ -50,6 +51,13 @@ def update_placing(rows: ty.List[FilteredResult]) -> None:
         if row.scores != scores or row.games != games:
             place, scores, games = i, row.scores, row.games
         row.place = place
+
+
+def get_csv_field(row: ty.Dict[str, ty.Any], possible_fields: ty.List[str], default=None) -> ty.Any:
+    for field in possible_fields:
+        if field in row:
+            return row[field]
+    return default
 
 
 @login_required
@@ -82,10 +90,11 @@ def upload_results(request, tournament_id):
 
             filtered_results: ty.List[FilteredResult] = []
             for row in reader:
-                place = int(row["place"])
-                name = row.get("name", "")
-                scores = float(row["scores"])
-                games = int(row.get("games", 0))
+                place = int(get_csv_field(row, possible_fields=["place", "Place"]))
+                name = get_csv_field(row, possible_fields=["name", "Player name"], default="")
+                scores = float(get_csv_field(row, possible_fields=["scores", "Rating points"]))
+                games = int(get_csv_field(row, possible_fields=["games", "Games played"], default=0))
+                player_pantheon_id = int(get_csv_field(row, possible_fields=["player_id", "Player ID"]))
 
                 ema_id = row.get("ema", "").strip()
                 load_player = row.get("load_player", "true").strip().lower()
@@ -123,6 +132,7 @@ def upload_results(request, tournament_id):
                 filtered_results.append(
                     FilteredResult(
                         place=place,
+                        player_pantheon_id=player_pantheon_id,
                         first_name=first_name,
                         last_name=last_name,
                         scores=scores,
@@ -165,6 +175,7 @@ def upload_results(request, tournament_id):
             if not not_found_users:
                 for result in filtered_results:
                     place = result.place
+                    player_pantheon_id = result.player_pantheon_id
                     first_name = result.first_name
                     last_name = result.last_name
                     scores = result.scores
@@ -192,6 +203,7 @@ def upload_results(request, tournament_id):
                         place=place,
                         scores=scores,
                         games=games,
+                        player_pantheon_id=player_pantheon_id,
                     )
 
                 tournament.is_upcoming = False
