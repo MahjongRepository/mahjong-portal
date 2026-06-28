@@ -110,6 +110,7 @@ def tournament_details(request, slug):
         .prefetch_related("player__city")
         .prefetch_related("player__country")
         .prefetch_related("player")
+        .prefetch_related("tournament")  # to render pantheon links
     )
 
     countries = {}

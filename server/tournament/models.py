@@ -311,6 +311,9 @@ class Tournament(BaseModel):
     def is_stage_tournament(self):
         return self.id == AGARI_TOURNAMENT_ID
 
+    def has_pantheon_link(self) -> bool:
+        return bool(self.old_pantheon_id) or bool(self.new_pantheon_id)
+
     def get_tournament_registrations(self):
         if self.is_online():
             if self.is_majsoul_tournament:
@@ -360,6 +363,22 @@ class TournamentResult(BaseModel):
             return 0
 
         return round(((number_of_players - place) / (number_of_players - 1)) * 1000, 2)
+
+    @property
+    def player_pantheon_stats_url(self) -> str:
+        if not self.player_pantheon_id:
+            return ""
+        if self.tournament.new_pantheon_id:
+            return (
+                f"https://rating.riichimahjong.org/"
+                f"event/{self.tournament.new_pantheon_id}/player/{self.player_pantheon_id}"
+            )
+        if self.tournament.old_pantheon_id:
+            return (
+                f"https://mahjongpantheon.github.io/pantheon-v1-archive/"
+                f"eid{self.tournament.old_pantheon_id}/user/{self.player_pantheon_id}.html"
+            )
+        return ""
 
 
 class TournamentRegistration(BaseModel):
