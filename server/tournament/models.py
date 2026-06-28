@@ -339,6 +339,7 @@ class TournamentResult(BaseModel):
     scores = models.DecimalField(default=None, decimal_places=2, max_digits=10, null=True, blank=True)
     exclude_from_rating = models.BooleanField(default=False)
     games = models.PositiveSmallIntegerField(default=0)
+    player_pantheon_id = models.PositiveSmallIntegerField(default=None, null=True, blank=True)
 
     # for players without profile
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
