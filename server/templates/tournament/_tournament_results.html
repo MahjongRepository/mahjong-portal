@@ -1,4 +1,4 @@
-{% load i18n humanize %}
+{% load i18n humanize static %}
 
 <div class="table-responsive-sm">
     <table class="table table-hover">
@@ -77,7 +77,12 @@
                 </td>
                 {% if tournament.has_pantheon_link %}
                     <td>
-                        {{ result.player_pantheon_stats_url }}
+                        {% if result.player_pantheon_stats_url %}
+                            <a href="{{ result.player_pantheon_stats_url }}" target="_blank">
+                                <img src="{% static 'img/pantheon-favicon.png' %}" alt="Pantheon"
+                                     style="height: 24px; width: 24px; display: block;">
+                            </a>
+                        {% endif %}
                     </td>
                 {% endif %}
             </tr>
