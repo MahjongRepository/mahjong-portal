@@ -3,11 +3,12 @@ import argparse
 import dataclasses
 import json
 from collections import defaultdict
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import requests
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 
 from tournament.models import Tournament, TournamentResult
 
@@ -167,9 +168,27 @@ def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, Lis
     print(f"Updated {update_count} in DB")
 
 
+def load_tournaments(slug: Optional[str], year: Optional[int]) -> List[Tournament]:
+    if slug is None and year is None:
+        print("No slug or year provided, returning empty list from load_tournaments()")
+        return []
+
+    if slug is not None and year is not None:
+        print("Both slug and year provided, returning empty list from load_tournaments()")
+        return []
+
+    qs = Tournament.objects.filter(Q(old_pantheon_id__isnull=False) | Q(new_pantheon_id__isnull=False))
+    if slug is not None:
+        qs = qs.filter(slug=slug)
+    else:
+        qs = qs.filter(end_date__year=year)
+    return list(qs.order_by("end_date"))
+
+
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--slug", type=str)
+        parser.add_argument("--year", type=int)
         parser.add_argument("--dry-run", default=False, action=argparse.BooleanOptionalAction)
 
     def handle(self, *args, **options):
@@ -178,27 +197,35 @@ class Command(BaseCommand):
         # place_to_ids = fix_shared_places(parsed_records=parsed_records)
         # return
 
+        year = options.get("year")
         slug = options.get("slug")
         dry_run: bool = options.get("dry_run", False)
-        print(f"Slug: {slug}, dry_run: {dry_run}")
-        if slug is None:
-            print("No slug provided, exit command")
+        print(f"Slug: {slug}, year: {year}, dry_run: {dry_run}")
+
+        tournaments: list[Tournament] = load_tournaments(slug=slug, year=year)
+        if not tournaments:
+            print("No tournaments found, exit command")
+            return
+
+        print(f"Found {len(tournaments)} tournaments:")
+        for i, tournament in enumerate(tournaments):
+            print(f"{i + 1}: {tournament.slug} | {tournament.name}")
 
         print("Start adding pantheon ids to tournament results")
-        try:
-            tournament = Tournament.objects.get(slug=slug)
-        except Tournament.DoesNotExist:
-            print("Tournament not found, exit command")
-            return
 
-        if tournament.old_pantheon_id:
-            parsed_records = parse_old_pantheon_ids(old_pantheon_id=tournament.old_pantheon_id)
-        elif tournament.new_pantheon_id:
-            parsed_records = parse_new_pantheon_ids(new_pantheon_id=tournament.new_pantheon_id)
-        else:
-            print("This tournament doesn't have pantheon id linked, exit command")
-            return
+        for tournament in tournaments:
+            print("============================================================")
+            print(f"Start processing tournament {tournament.slug}")
+            if tournament.old_pantheon_id:
+                parsed_records = parse_old_pantheon_ids(old_pantheon_id=tournament.old_pantheon_id)
+            elif tournament.new_pantheon_id:
+                parsed_records = parse_new_pantheon_ids(new_pantheon_id=tournament.new_pantheon_id)
+            else:
+                print("This tournament doesn't have pantheon id linked (what?), skip")
+                continue
 
-        place_to_ids = fix_shared_places(parsed_records=parsed_records)
-        update_db(tournament=tournament, dry_run=dry_run, place_to_ids=place_to_ids)
+            place_to_ids = fix_shared_places(parsed_records=parsed_records)
+            update_db(tournament=tournament, dry_run=dry_run, place_to_ids=place_to_ids)
+            print(f"Finished processing tournament {tournament.slug}")
+
         print("End of command")
