@@ -152,20 +152,31 @@ def parse_new_pantheon_ids(new_pantheon_id: int) -> List[ParsedRatingTableRecord
 def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, List[ParsedRatingTableRecord]]):
     tournament_results = list(TournamentResult.objects.filter(tournament=tournament))
     print(f"Found {len(tournament_results)} tournament results in DB")
-    update_count = 0
+    objects_to_update: List[TournamentResult] = []
+    already_set_count = 0
+    manual_count = 0
     for tournament_result in tournament_results:
+        if tournament_result.player_pantheon_id is not None:
+            print(
+                f"Place {tournament_result.place} already has player pantheon id {tournament_result.player_pantheon_id}"
+            )
+            already_set_count += 1
+            continue
         updates = place_to_ids[tournament_result.place]
         if len(updates) == 1:
             player_pantheon_id = updates[0].player_pantheon_id
-            print(f"Updating place {tournament_result.place}, set player pantheon id = {player_pantheon_id}")
-            if not dry_run:
-                tournament_result.player_pantheon_id = player_pantheon_id
-                tournament_result.save()
-                update_count += 1
+            print(f"Processing place {tournament_result.place}, will set player pantheon id to {player_pantheon_id}")
+            tournament_result.player_pantheon_id = player_pantheon_id
+            objects_to_update.append(tournament_result)
         else:
             print(f"There are {len(updates)} players sharing place {tournament_result.place}, update them manually")
+            manual_count += len(updates)
 
-    print(f"Updated {update_count} in DB")
+    print(f"To update: {len(objects_to_update)}, already set: {already_set_count}, manual: {manual_count}")
+
+    if not dry_run:
+        TournamentResult.objects.bulk_update(objects_to_update, fields=["player_pantheon_id"])
+        print(f"Updated {len(objects_to_update)} objects in DB")
 
 
 def load_tournaments(slug: Optional[str], year: Optional[int]) -> List[Tournament]:
