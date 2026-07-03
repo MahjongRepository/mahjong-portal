@@ -150,7 +150,7 @@ def parse_new_pantheon_ids(new_pantheon_id: int) -> List[ParsedRatingTableRecord
 
 
 def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, List[ParsedRatingTableRecord]]):
-    tournament_results = list(TournamentResult.objects.filter(tournament=tournament))
+    tournament_results = list(TournamentResult.objects.filter(tournament=tournament).prefetch_related("player"))
     print(f"Found {len(tournament_results)} tournament results in DB")
     objects_to_update: List[TournamentResult] = []
     already_set_count = 0
@@ -158,19 +158,27 @@ def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, Lis
     for tournament_result in tournament_results:
         if tournament_result.player_pantheon_id is not None:
             print(
-                f"Place {tournament_result.place} already has player pantheon id {tournament_result.player_pantheon_id}"
+                f"Place {tournament_result.place} (portal name {tournament_result.player.full_name}) "
+                f"already has player pantheon id {tournament_result.player_pantheon_id}"
             )
             already_set_count += 1
             continue
-        updates = place_to_ids[tournament_result.place]
-        if len(updates) == 1:
-            player_pantheon_id = updates[0].player_pantheon_id
-            print(f"Processing place {tournament_result.place}, will set player pantheon id to {player_pantheon_id}")
+        parsed_records = place_to_ids[tournament_result.place]
+        if len(parsed_records) == 1:
+            player_pantheon_id = parsed_records[0].player_pantheon_id
+            print(
+                f"Processing place {tournament_result.place} (portal name {tournament_result.player.full_name}), "
+                f"will set player pantheon id to {player_pantheon_id} (parsed name {parsed_records[0].player_name})"
+            )
             tournament_result.player_pantheon_id = player_pantheon_id
             objects_to_update.append(tournament_result)
         else:
-            print(f"There are {len(updates)} players sharing place {tournament_result.place}, update them manually")
-            manual_count += len(updates)
+            print(
+                f"Place {tournament_result.place} (portal name {tournament_result.player.full_name}) "
+                f"is shared between {len(parsed_records)} players. Update them manually. "
+                f"Their parsed names and ids: {[(r.player_name, r.player_pantheon_id) for r in parsed_records]}"
+            )
+            manual_count += 1
 
     print(f"To update: {len(objects_to_update)}, already set: {already_set_count}, manual: {manual_count}")
 
