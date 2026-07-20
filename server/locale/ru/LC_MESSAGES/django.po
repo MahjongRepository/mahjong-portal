@@ -1699,7 +1699,11 @@ msgstr "Игр"
 msgid "teams"
 msgstr "командная"
 
-#: templates/tournament/_tournament_results.html:31
+#: templates/tournament/_tournament_results.html:20
+msgid "Pantheon stats"
+msgstr "Статистика в Pantheon"
+
+#: templates/tournament/_tournament_results.html:34
 msgid "Substitution"
 msgstr "Замена"
 
