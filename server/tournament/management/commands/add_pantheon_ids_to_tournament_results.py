@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import argparse
 import dataclasses
-import json
 from collections import defaultdict
 from typing import Dict, List, Optional
 
@@ -11,6 +10,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Q
 
 from tournament.models import Tournament, TournamentResult
+from utils.new_pantheon import get_rating_table
 
 
 @dataclasses.dataclass
@@ -107,42 +107,16 @@ def parse_old_pantheon_ids(old_pantheon_id: int) -> List[ParsedRatingTableRecord
 def parse_new_pantheon_ids(new_pantheon_id: int) -> List[ParsedRatingTableRecord]:
     print(f"New pantheon id: {new_pantheon_id}")
 
-    response = requests.get(f"https://rating.riichimahjong.org/event/{new_pantheon_id}/order/rating")
-    if response.status_code != 200:
-        print(f"Http request returned status code {response.status_code}, message: {response.text}")
-        return []
-
-    text = response.text
-    start_index = text.find("<script>window.initialData = ")
-    if start_index == -1:
-        print("Can't parse HTML: start_index == -1")
-        return []
-    end_index = text.find(";</script>", start_index)
-    if end_index == -1:
-        print("Can't parse HTML: end_index == -1")
-        return []
-
-    initial_data_str = text[start_index + len("<script>window.initialData = ") : end_index]
-    initial_data = json.loads(initial_data_str)
-    rating_table = None
-    for key, value in initial_data.items():
-        if "RatingTable" in key and str(new_pantheon_id) in key:
-            rating_table = value
-            break
-    if rating_table is None:
-        print("Rating table not found in HTML")
-        return []
-
-    rating_table: List
-    print(f"Found {len(rating_table)} records in HTML")
+    rating_table = list(get_rating_table(eventId=new_pantheon_id).list)  # list[atoms_pb2.PlayerInRating]
+    print(f"Got {len(rating_table)} records from Pantheon api")
     parsed_records: List[ParsedRatingTableRecord] = []
-    for i, record in enumerate(rating_table):
+    for i, player in enumerate(rating_table):
         parsed_records.append(
             ParsedRatingTableRecord(
-                player_pantheon_id=record["id"],
-                player_name=record["title"],
+                player_pantheon_id=player.id,
+                player_name=player.title,
                 place=i + 1,
-                score=record["rating"],
+                score=player.rating,
             )
         )
 
