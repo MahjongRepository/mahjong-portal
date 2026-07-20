@@ -127,9 +127,17 @@ def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, Lis
     tournament_results = list(TournamentResult.objects.filter(tournament=tournament).prefetch_related("player"))
     print(f"Found {len(tournament_results)} tournament results in DB")
     objects_to_update: List[TournamentResult] = []
+    null_player_count = 0
     already_set_count = 0
     manual_count = 0
     for tournament_result in tournament_results:
+        if tournament_result.player is None:
+            print(
+                f"Place {tournament_result.place} has null player, can't process it, "
+                f"(portal player_string {tournament_result.player_string})"
+            )
+            null_player_count += 1
+            continue
         if tournament_result.player_pantheon_id is not None:
             print(
                 f"Place {tournament_result.place} (portal name {tournament_result.player.full_name}) "
@@ -154,7 +162,10 @@ def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, Lis
             )
             manual_count += 1
 
-    print(f"To update: {len(objects_to_update)}, already set: {already_set_count}, manual: {manual_count}")
+    print(
+        f"To update: {len(objects_to_update)}, null players: {null_player_count}, "
+        f"already set: {already_set_count}, manual: {manual_count}"
+    )
 
     if not dry_run:
         TournamentResult.objects.bulk_update(objects_to_update, fields=["player_pantheon_id"])
