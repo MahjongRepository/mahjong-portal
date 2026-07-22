@@ -263,19 +263,23 @@ def finished_tournaments_api(request):
 
 def aggregate_tournaments(tournaments, pantheon_type, result):
     for tournament in tournaments:
+        players = []
+        for res in tournament.results.all().order_by("place"):
+            player_dict = {}
+            player_dict["place"] = res.place
+            if res.player_pantheon_id:
+                player_dict["player_pantheon_id"] = res.player_pantheon_id
+            if res.player:
+                player_dict["player_name"] = res.player.full_name
+            else:
+                player_dict["player_name"] = res.player_string
+            players.append(player_dict)
         result.append(
             {
                 "pantheon_type": pantheon_type,
                 "pantheon_id": extract_pantheon_id(tournament, pantheon_type),
                 "name": tournament.name,
-                "players": [
-                    {
-                        "place": res.place,
-                        "player_id": res.player_pantheon_id,
-                        "player_name": res.player.full_name,
-                    }
-                    for res in tournament.results.all().order_by("place")
-                ],
+                "players": players,
             }
         )
 
