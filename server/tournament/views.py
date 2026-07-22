@@ -114,6 +114,7 @@ def tournament_details(request, slug):
     )
 
     countries = {}
+    with_pantheon_stats = False
     for result in results:
         if not result.player:
             continue
@@ -127,6 +128,9 @@ def tournament_details(request, slug):
 
         countries[country.id]["count"] += 1
 
+        if result.player_pantheon_stats_url:
+            with_pantheon_stats = True
+
     countries = sorted(countries.values(), key=lambda x: x["count"], reverse=True)
 
     has_multiple_countries = len(countries) > 1
@@ -137,6 +141,7 @@ def tournament_details(request, slug):
         {
             "tournament": tournament,
             "results": results,
+            "with_pantheon_stats": with_pantheon_stats,
             "page": "tournament",
             "countries": countries,
             "has_multiple_countries": has_multiple_countries,
