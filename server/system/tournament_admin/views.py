@@ -94,7 +94,8 @@ def upload_results(request, tournament_id):
                 name = get_csv_field(row, possible_fields=["name", "Player name"], default="")
                 scores = float(get_csv_field(row, possible_fields=["scores", "Rating points"]))
                 games = int(get_csv_field(row, possible_fields=["games", "Games played"], default=0))
-                player_pantheon_id = int(get_csv_field(row, possible_fields=["player_id", "Player ID"]))
+                player_id = get_csv_field(row, possible_fields=["player_id", "Player ID"])
+                player_pantheon_id = int(player_id) if player_id else None
 
                 ema_id = row.get("ema", "").strip()
                 load_player = row.get("load_player", "true").strip().lower()
