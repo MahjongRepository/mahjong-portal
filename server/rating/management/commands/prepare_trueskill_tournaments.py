@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         with open("ts_tournaments.txt", "w") as f:
-            tournaments = Tournament.objects.all().prefetch_related("results__player")
+            tournaments = Tournament.objects.all()
             count = 0
             new_pantheon_tournaments = []
             old_pantheon_tournaments = []
@@ -48,14 +48,6 @@ class Command(BaseCommand):
                         "type": pantheon_type,
                         "id": self.extract_pantheon_id(tournament, pantheon_type),
                         "name": tournament.name,
-                        "players": [
-                            {
-                                "place": res.place,
-                                "player_id": res.player_pantheon_id,
-                                "player_name": res.player.full_name,
-                            }
-                            for res in tournament.results.all().order_by("place")
-                        ],
                     }
                 )
             )
