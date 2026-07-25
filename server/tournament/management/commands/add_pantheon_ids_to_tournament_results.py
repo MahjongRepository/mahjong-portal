@@ -21,7 +21,7 @@ class ParsedRatingTableRecord:
     score: float
 
 
-def fix_shared_places(parsed_records: list[ParsedRatingTableRecord]) -> Dict[int, List[ParsedRatingTableRecord]]:
+def fix_shared_places(parsed_records: list[ParsedRatingTableRecord]):
     prev_place = 0
     prev_score = None
     for record in parsed_records:
@@ -30,16 +30,6 @@ def fix_shared_places(parsed_records: list[ParsedRatingTableRecord]) -> Dict[int
         else:
             prev_place = record.place
             prev_score = record.score
-
-    place_to_ids: Dict[int, List[ParsedRatingTableRecord]] = defaultdict(list)
-    for record in parsed_records:
-        place_to_ids[record.place].append(record)
-
-    print("Parsed records with fixed shared places:")
-    for place in sorted(place_to_ids.keys()):
-        print(f"Place: {place}, ids and names: {place_to_ids[place]}")
-
-    return place_to_ids
 
 
 def parse_old_pantheon_ids(old_pantheon_id: int) -> List[ParsedRatingTableRecord]:
@@ -123,44 +113,109 @@ def parse_new_pantheon_ids(new_pantheon_id: int) -> List[ParsedRatingTableRecord
     return parsed_records
 
 
-def update_db(tournament: Tournament, dry_run: bool, place_to_ids: Dict[int, List[ParsedRatingTableRecord]]):
-    tournament_results = list(TournamentResult.objects.filter(tournament=tournament).prefetch_related("player"))
-    print(f"Found {len(tournament_results)} tournament results in DB")
+def filter_null_scores(tournament_results: List[TournamentResult]) -> List[TournamentResult]:
+    results_with_not_null_scores = []
+    null_score_count = 0
+    for tournament_result in tournament_results:
+        if tournament_result.scores is None:
+            print(
+                f"Place {tournament_result.place} has null score, can't process it "
+                f"(portal name {tournament_result.player.full_name if tournament_result.player else None}) "
+                f"(portal player_string {tournament_result.player_string})"
+            )
+            null_score_count += 1
+            continue
+        results_with_not_null_scores.append(tournament_result)
+
+    print(f"Null scores: {null_score_count}")
+    return results_with_not_null_scores
+
+
+def update_db(tournament: Tournament, dry_run: bool, parsed_records: List[ParsedRatingTableRecord]):
+    tournament_results_all = list(TournamentResult.objects.filter(tournament=tournament).prefetch_related("player"))
+    print(f"Found {len(tournament_results_all)} tournament results in DB")
+
+    tournament_results_to_process = filter_null_scores(tournament_results=tournament_results_all)
+    print(f"Results to process: {len(tournament_results_to_process)}, parsed records: {len(parsed_records)}")
+
+    tournament_results_by_score: Dict[float, list[TournamentResult]] = defaultdict(list)
+    parsed_records_by_score: Dict[float, list[ParsedRatingTableRecord]] = defaultdict(list)
+    for tournament_result in tournament_results_to_process:
+        tournament_results_by_score[tournament_result.scores].append(tournament_result)
+    for parsed_record in parsed_records:
+        parsed_records_by_score[parsed_record.score].append(parsed_record)
+    unique_scores = sorted(set(tournament_results_by_score.keys()) | set(parsed_records_by_score.keys()), reverse=True)
+    print(
+        f"Found {len(unique_scores)} unique scores total, "
+        f"{len(tournament_results_by_score)} in portal results, "
+        f"{len(parsed_records_by_score)} in parsed records"
+    )
+
     objects_to_update: List[TournamentResult] = []
     null_player_count = 0
     already_set_count = 0
     manual_count = 0
-    for tournament_result in tournament_results:
-        if tournament_result.player is None:
+    for score in unique_scores:
+        tournament_results_for_score: List[TournamentResult] = tournament_results_by_score[score]
+        parsed_records_for_score: List[ParsedRatingTableRecord] = parsed_records_by_score[score]
+
+        if len(tournament_results_for_score) == len(parsed_records_for_score) == 1:
+            tournament_result = tournament_results_for_score[0]
+            parsed_record = parsed_records_for_score[0]
+
+            if tournament_result.player is None:
+                print(
+                    f"Place {tournament_result.place} (score {tournament_result.scores}) "
+                    f"has null player, can't process it (portal player_string {tournament_result.player_string})"
+                )
+                null_player_count += 1
+                continue
+
+            if tournament_result.player_pantheon_id is not None:
+                print(
+                    f"Place {tournament_result.place} (score {tournament_result.scores}) "
+                    f"(portal name {tournament_result.player.full_name}) "
+                    f"already has player pantheon id {tournament_result.player_pantheon_id}"
+                )
+                already_set_count += 1
+                continue
+
+            player_pantheon_id = parsed_record.player_pantheon_id
             print(
-                f"Place {tournament_result.place} has null player, can't process it, "
-                f"(portal player_string {tournament_result.player_string})"
-            )
-            null_player_count += 1
-            continue
-        if tournament_result.player_pantheon_id is not None:
-            print(
-                f"Place {tournament_result.place} (portal name {tournament_result.player.full_name}) "
-                f"already has player pantheon id {tournament_result.player_pantheon_id}"
-            )
-            already_set_count += 1
-            continue
-        parsed_records = place_to_ids[tournament_result.place]
-        if len(parsed_records) == 1:
-            player_pantheon_id = parsed_records[0].player_pantheon_id
-            print(
-                f"Processing place {tournament_result.place} (portal name {tournament_result.player.full_name}), "
-                f"will set player pantheon id to {player_pantheon_id} (parsed name {parsed_records[0].player_name})"
+                f"Processing place {tournament_result.place} (score {tournament_result.scores}) "
+                f"(portal name {tournament_result.player.full_name}), "
+                f"will set player pantheon id to {player_pantheon_id} (parsed name {parsed_record.player_name})"
             )
             tournament_result.player_pantheon_id = player_pantheon_id
             objects_to_update.append(tournament_result)
         else:
+            equal_sizes: bool = len(tournament_results_for_score) == len(parsed_records_for_score)
             print(
-                f"Place {tournament_result.place} (portal name {tournament_result.player.full_name}) "
-                f"is shared between {len(parsed_records)} players. Update them manually. "
-                f"Their parsed names and ids: {[(r.player_name, r.player_pantheon_id) for r in parsed_records]}"
+                f"{'Unsupported' if equal_sizes else 'Wrong'} number of players for score {score}. "
+                f"Portal has {len(tournament_results_for_score)} tournament results. "
+                f"Pantheon has {len(parsed_records_for_score)} parsed records"
             )
-            manual_count += 1
+            if len(tournament_results_for_score) > 0:
+                print(f"  Portal tournament results for score {score}:")
+                for tournament_result in tournament_results_for_score:
+                    if tournament_result.player_pantheon_id is not None:
+                        already_set_count += 1
+                    else:
+                        manual_count += 1
+                    print(
+                        f"    Place {tournament_result.place}, "
+                        f"portal name {tournament_result.player.full_name if tournament_result.player else None}, "
+                        f"portal player_string {tournament_result.player_string}, "
+                        f"portal pantheon id {tournament_result.player_pantheon_id}"
+                    )
+            if len(parsed_records_for_score) > 0:
+                print(f"  Pantheon parsed records for score {score}:")
+                for parsed_record in parsed_records_for_score:
+                    print(
+                        f"    Place {parsed_record.place}, "
+                        f"name {parsed_record.player_name}, "
+                        f"pantheon id {parsed_record.player_pantheon_id}"
+                    )
 
     print(
         f"To update: {len(objects_to_update)}, null players: {null_player_count}, "
@@ -198,7 +253,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # parsed_records = parse_new_pantheon_ids(new_pantheon_id=888)
         # parsed_records = parse_old_pantheon_ids(old_pantheon_id=349)
-        # place_to_ids = fix_shared_places(parsed_records=parsed_records)
         # return
 
         year = options.get("year")
@@ -206,7 +260,7 @@ class Command(BaseCommand):
         dry_run: bool = options.get("dry_run", False)
         print(f"Slug: {slug}, year: {year}, dry_run: {dry_run}")
 
-        tournaments: list[Tournament] = load_tournaments(slug=slug, year=year)
+        tournaments: List[Tournament] = load_tournaments(slug=slug, year=year)
         if not tournaments:
             print("No tournaments found, exit command")
             return
@@ -228,8 +282,8 @@ class Command(BaseCommand):
                 print("This tournament doesn't have pantheon id linked (what?), skip")
                 continue
 
-            place_to_ids = fix_shared_places(parsed_records=parsed_records)
-            update_db(tournament=tournament, dry_run=dry_run, place_to_ids=place_to_ids)
+            fix_shared_places(parsed_records=parsed_records)
+            update_db(tournament=tournament, dry_run=dry_run, parsed_records=parsed_records)
             print(f"Finished processing tournament {tournament.slug}")
 
         print("End of command")
