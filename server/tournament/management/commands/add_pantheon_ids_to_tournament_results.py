@@ -131,9 +131,16 @@ def filter_null_scores(tournament_results: List[TournamentResult]) -> List[Tourn
     return results_with_not_null_scores
 
 
-def update_db(tournament: Tournament, dry_run: bool, parsed_records: List[ParsedRatingTableRecord]):
+def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_records: List[ParsedRatingTableRecord]):
     tournament_results_all = list(TournamentResult.objects.filter(tournament=tournament).prefetch_related("player"))
     print(f"Found {len(tournament_results_all)} tournament results in DB")
+
+    if clean_old:
+        print("Option --clean-old enabled, delete all old player pantheon ids")
+        for tournament_result in tournament_results_all:
+            tournament_result.player_pantheon_id = None
+        TournamentResult.objects.bulk_update(tournament_results_all, fields=["player_pantheon_id"])
+        print(f"Deleted all old player pantheon ids from {len(tournament_results_all)} objects in DB")
 
     tournament_results_to_process = filter_null_scores(tournament_results=tournament_results_all)
     print(f"Results to process: {len(tournament_results_to_process)}, parsed records: {len(parsed_records)}")
@@ -222,7 +229,7 @@ def update_db(tournament: Tournament, dry_run: bool, parsed_records: List[Parsed
         f"already set: {already_set_count}, manual: {manual_count}"
     )
 
-    if not dry_run:
+    if update:
         TournamentResult.objects.bulk_update(objects_to_update, fields=["player_pantheon_id"])
         print(f"Updated {len(objects_to_update)} objects in DB")
 
@@ -248,7 +255,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--slug", type=str)
         parser.add_argument("--year", type=int)
-        parser.add_argument("--dry-run", default=False, action=argparse.BooleanOptionalAction)
+        parser.add_argument("--clean-old", default=False, action=argparse.BooleanOptionalAction)
+        parser.add_argument("--update", default=False, action=argparse.BooleanOptionalAction)
 
     def handle(self, *args, **options):
         # parsed_records = parse_new_pantheon_ids(new_pantheon_id=888)
@@ -257,8 +265,9 @@ class Command(BaseCommand):
 
         year = options.get("year")
         slug = options.get("slug")
-        dry_run: bool = options.get("dry_run", False)
-        print(f"Slug: {slug}, year: {year}, dry_run: {dry_run}")
+        clean_old: bool = options.get("clean_old", False)
+        update: bool = options.get("update", False)
+        print(f"Slug: {slug}, year: {year}, clean_old: {clean_old}, update: {update}")
 
         tournaments: List[Tournament] = load_tournaments(slug=slug, year=year)
         if not tournaments:
@@ -283,7 +292,7 @@ class Command(BaseCommand):
                 continue
 
             fix_shared_places(parsed_records=parsed_records)
-            update_db(tournament=tournament, dry_run=dry_run, parsed_records=parsed_records)
+            update_db(tournament=tournament, clean_old=clean_old, update=update, parsed_records=parsed_records)
             print(f"Finished processing tournament {tournament.slug}")
 
         print("End of command")
