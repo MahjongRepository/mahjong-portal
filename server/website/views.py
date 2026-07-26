@@ -267,9 +267,11 @@ def aggregate_tournaments(tournaments, pantheon_type, result):
         for res in tournament.results.all().order_by("place"):
             player_dict = {}
             player_dict["place"] = res.place
+            player_dict["score"] = res.scores
             if res.player_pantheon_id:
                 player_dict["player_pantheon_id"] = res.player_pantheon_id
             if res.player:
+                player_dict["player_slug"] = res.player.slug
                 player_dict["player_name"] = res.player.full_name
             else:
                 player_dict["player_name"] = res.player_string
