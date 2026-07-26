@@ -11,6 +11,7 @@ from tournament.models import (
     OnlineTournamentRegistration,
     Tournament,
     TournamentApplication,
+    TournamentAttribute,
     TournamentRegistration,
     TournamentResult,
 )
@@ -83,6 +84,7 @@ class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "is_approved",
+        "is_validated",
         "tournament",
         "first_name",
         "last_name",
@@ -96,7 +98,7 @@ class MsOnlineTournamentRegistrationAdmin(admin.ModelAdmin):
     ]
 
     raw_id_fields = ["tournament", "player", "city_object", "user"]
-    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter]]
+    list_filter = [["tournament", admin.RelatedOnlyFieldListFilter], "is_validated"]
 
 
 class TournamentApplicationAdmin(admin.ModelAdmin):
@@ -125,6 +127,11 @@ class OnlineTournamentConfigAdmin(admin.ModelAdmin):
     ]
 
 
+class TournamentAttributeAdmin(admin.ModelAdmin):
+    list_display = ["name", "description", "asset_path"]
+    exclude = ["description"]
+
+
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(OnlineTournamentConfig, OnlineTournamentConfigAdmin)
 admin.site.register(TournamentRegistration, TournamentRegistrationAdmin)
@@ -132,3 +139,4 @@ admin.site.register(OnlineTournamentRegistration, OnlineTournamentRegistrationAd
 admin.site.register(MsOnlineTournamentRegistration, MsOnlineTournamentRegistrationAdmin)
 admin.site.register(TournamentApplication, TournamentApplicationAdmin)
 admin.site.register(TournamentResult, TournamentResultAdmin)
+admin.site.register(TournamentAttribute, TournamentAttributeAdmin)

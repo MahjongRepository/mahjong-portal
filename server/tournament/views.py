@@ -65,13 +65,32 @@ def tournament_list(request, tournament_type=None, year=None):
     upcoming_tournaments = all_tournaments.filter(start_date__gt=current_date)
     tournaments = tournaments.filter(is_upcoming=False)
 
+    current_tournament_attributes = {}
+    for t in current_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            current_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    upcoming_tournament_attributes = {}
+    for t in upcoming_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            upcoming_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    current_is_with_attribute = False if len(current_tournament_attributes) == 0 else True
+    upcoming_is_with_attribute = False if len(upcoming_tournament_attributes) == 0 else True
+
     return render(
         request,
         "tournament/list.html",
         {
             "tournaments": tournaments,
             "current_tournaments": current_tournaments,
+            "current_tournament_attributes": current_tournament_attributes,
+            "current_is_with_attribute": current_is_with_attribute,
             "upcoming_tournaments": upcoming_tournaments,
+            "upcoming_tournament_attributes": upcoming_tournament_attributes,
+            "upcoming_is_with_attribute": upcoming_is_with_attribute,
             "tournament_type": tournament_type,
             "years": years,
             "selected_year": selected_year,
@@ -91,9 +110,11 @@ def tournament_details(request, slug):
         .prefetch_related("player__city")
         .prefetch_related("player__country")
         .prefetch_related("player")
+        .prefetch_related("tournament")  # to render pantheon links
     )
 
     countries = {}
+    with_pantheon_stats = False
     for result in results:
         if not result.player:
             continue
@@ -107,6 +128,9 @@ def tournament_details(request, slug):
 
         countries[country.id]["count"] += 1
 
+        if result.player_pantheon_stats_url:
+            with_pantheon_stats = True
+
     countries = sorted(countries.values(), key=lambda x: x["count"], reverse=True)
 
     has_multiple_countries = len(countries) > 1
@@ -117,6 +141,7 @@ def tournament_details(request, slug):
         {
             "tournament": tournament,
             "results": results,
+            "with_pantheon_stats": with_pantheon_stats,
             "page": "tournament",
             "countries": countries,
             "has_multiple_countries": has_multiple_countries,

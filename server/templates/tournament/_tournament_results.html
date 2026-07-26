@@ -16,6 +16,9 @@
                 </th>
             {% endif %}
             <th scope="col">{% trans 'From' context 'location' %}</th>
+            {% if tournament.has_pantheon_link and with_pantheon_stats %}
+                <th scope="col">{% trans 'Player statistics' %}</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -72,6 +75,16 @@
                         {% endif %}
                     {% endif %}
                 </td>
+                {% if tournament.has_pantheon_link and with_pantheon_stats %}
+                    <td class="text-left">
+                        {% if result.player_pantheon_stats_url %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="{{ result.player_pantheon_stats_url }}" target="_blank">
+                                &#128279; <!-- Link Symbol -->
+                            </a>
+                        {% endif %}
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

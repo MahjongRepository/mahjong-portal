@@ -197,6 +197,8 @@ HAYSTACK_CONNECTIONS = {
     }
 }
 
+SIGNED_COOKIE_LEGACY_SALT_FALLBACK = False
+
 TENHOU_WG_URL = "https://tenhou.net/0/wg/0000.js"
 TENHOU_LATEST_GAMES_URL = "https://tenhou.net/sc/raw/list.cgi"
 TENHOU_DOWNLOAD_ARCHIVE_URL = "https://tenhou.net/sc/raw/dat/"

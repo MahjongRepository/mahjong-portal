@@ -1,9 +1,12 @@
-{% load i18n %}
+{% load static i18n %}
 
 <div class="table-responsive-sm">
     <table class="table table-hover mt-4">
         <thead>
         <tr>
+            {% if show_attribute %}
+                <th scope="col"></th>
+            {% endif %}
             <th scope="col">#</th>
             <th scope="col">{% trans 'Name' %}</th>
             <th scope="col">{% trans 'Start date' %}</th>
@@ -44,6 +47,16 @@
                 <tr {% if tournament.get_tournament_registrations.count >= 72 %}class="table-warning" {% endif %}>
             {% else %}
                 <tr {% if tournament.id in top_tournament_ids %}class="table-success" {% endif %}>
+            {% endif %}
+
+            {% if show_attribute %}
+                {% with attribute_dict=attributes|get_item:tournament.id %}
+                    {% if attribute_dict.has_attribute %}
+                        <td><a href="{{ tournament.get_url }}"><img src="{% static attribute_dict.attribute.asset_path %}" title="{{ attribute_dict.attribute.description }}" /></a></td>
+                    {% else %}
+                        <td><a href="{{ tournament.get_url }}"></a></td>
+                    {% endif %}
+                {% endwith %}
             {% endif %}
 
                 {% if reverse_counter %}

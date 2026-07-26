@@ -41,7 +41,7 @@ class Club(BaseModel):
     def get_archive_link_to_club_rating(self, event_id=None):
         if not event_id:
             event_id = self.current_club_rating_pantheon_id
-        return f"https://archive.riichimahjong.org/eid{event_id}/stat.html"
+        return f"https://mahjongpantheon.github.io/pantheon-v1-archive/eid{event_id}/stat.html"
 
     def get_links_to_previous_games(self):
         ids = sorted([int(x) for x in self.pantheon_ids.split(",")], reverse=True)

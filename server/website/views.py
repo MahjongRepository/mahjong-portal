@@ -66,6 +66,21 @@ def home(request):
         Tournament.public.filter(is_upcoming=True).filter(is_event=True).prefetch_related("city").order_by("start_date")
     )
 
+    current_tournament_attributes = {}
+    for t in current_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            current_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    upcoming_tournament_attributes = {}
+    for t in upcoming_tournaments:
+        attribute = t.attribute
+        if attribute and t.attribute_is_hide is not True:
+            upcoming_tournament_attributes[t.id] = {"has_attribute": True, "attribute": attribute}
+
+    current_is_with_attribute = False if len(current_tournament_attributes) == 0 else True
+    upcoming_is_with_attribute = False if len(upcoming_tournament_attributes) == 0 else True
+
     is_yagi_keiji_cup_hidden = True
     try:
         yagi_settings = YagiKeijiCupSettings.objects.get(is_main=True)
@@ -81,7 +96,11 @@ def home(request):
             "rating_results": rating_results,
             "rating": rating,
             "current_tournaments": current_tournaments,
+            "current_tournament_attributes": current_tournament_attributes,
+            "current_is_with_attribute": current_is_with_attribute,
             "upcoming_tournaments": upcoming_tournaments,
+            "upcoming_tournament_attributes": upcoming_tournament_attributes,
+            "upcoming_is_with_attribute": upcoming_is_with_attribute,
             "events": events,
             "rating_date": rating_date,
             "today": today,
@@ -219,7 +238,7 @@ def players_api(request):
 def finished_tournaments_api(request):
     translation.activate("ru")
 
-    tournaments = Tournament.objects.all()
+    tournaments = Tournament.objects.all().prefetch_related("results__player")
     new_pantheon_tournaments = []
     old_pantheon_tournaments = []
     for tournament in tournaments:
@@ -244,11 +263,25 @@ def finished_tournaments_api(request):
 
 def aggregate_tournaments(tournaments, pantheon_type, result):
     for tournament in tournaments:
+        players = []
+        for res in tournament.results.all().order_by("place"):
+            player_dict = {}
+            player_dict["place"] = res.place
+            player_dict["score"] = res.scores
+            if res.player_pantheon_id:
+                player_dict["player_pantheon_id"] = res.player_pantheon_id
+            if res.player:
+                player_dict["player_slug"] = res.player.slug
+                player_dict["player_name"] = res.player.full_name
+            else:
+                player_dict["player_name"] = res.player_string
+            players.append(player_dict)
         result.append(
             {
                 "pantheon_type": pantheon_type,
                 "pantheon_id": extract_pantheon_id(tournament, pantheon_type),
                 "name": tournament.name,
+                "players": players,
             }
         )
 
