@@ -243,7 +243,7 @@ def load_tournaments(slug: Optional[str], year: Optional[int]) -> List[Tournamen
         print("Both slug and year provided, returning empty list from load_tournaments()")
         return []
 
-    qs = Tournament.objects.filter(Q(old_pantheon_id__isnull=False) | Q(new_pantheon_id__isnull=False))
+    qs = Tournament.objects.filter(Q(old_pantheon_id__isnull=False) | Q(new_pantheon_id__isnull=False), is_hidden=False)
     if slug is not None:
         qs = qs.filter(slug=slug)
     else:
