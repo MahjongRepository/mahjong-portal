@@ -162,6 +162,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
     objects_to_update: List[TournamentResult] = []
     null_player_count = 0
     already_set_count = 0
+    wrongly_set_count = 0
     manual_count = 0
     for score in unique_scores:
         tournament_results_for_score: List[TournamentResult] = tournament_results_by_score[score]
@@ -179,16 +180,26 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
                 null_player_count += 1
                 continue
 
+            player_pantheon_id: int = parsed_record.player_pantheon_id
+
             if tournament_result.player_pantheon_id is not None:
-                print(
-                    f"Place {tournament_result.place} (score {score}) "
-                    f"(portal name {tournament_result.player.full_name}) "
-                    f"already has player pantheon id {tournament_result.player_pantheon_id}"
-                )
-                already_set_count += 1
+                if tournament_result.player_pantheon_id == player_pantheon_id:
+                    print(
+                        f"Place {tournament_result.place} (score {score}) "
+                        f"(portal name {tournament_result.player.full_name}) "
+                        f"already has player pantheon id {tournament_result.player_pantheon_id}"
+                    )
+                    already_set_count += 1
+                else:
+                    print(
+                        f"Place {tournament_result.place} (score {score}) "
+                        f"(portal name {tournament_result.player.full_name}) "
+                        f"currently has player pantheon id {tournament_result.player_pantheon_id}, "
+                        f"but we want to set it to {player_pantheon_id}"
+                    )
+                    wrongly_set_count += 1
                 continue
 
-            player_pantheon_id = parsed_record.player_pantheon_id
             print(
                 f"Processing place {tournament_result.place} (score {score}) "
                 f"(portal name {tournament_result.player.full_name}), "
@@ -227,7 +238,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
     print(
         f"To update: {len(objects_to_update)}, null players: {null_player_count}, "
-        f"already set: {already_set_count}, manual: {manual_count}"
+        f"already set: {already_set_count}, wrongly set: {wrongly_set_count}, manual: {manual_count}"
     )
 
     if update:
