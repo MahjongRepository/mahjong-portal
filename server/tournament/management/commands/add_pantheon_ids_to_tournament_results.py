@@ -147,10 +147,11 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
     tournament_results_by_score: Dict[float, list[TournamentResult]] = defaultdict(list)
     parsed_records_by_score: Dict[float, list[ParsedRatingTableRecord]] = defaultdict(list)
+    # DB stores scores in Decimal, round keys to prevent precision errors
     for tournament_result in tournament_results_to_process:
-        tournament_results_by_score[tournament_result.scores].append(tournament_result)
+        tournament_results_by_score[round(float(tournament_result.scores), ndigits=2)].append(tournament_result)
     for parsed_record in parsed_records:
-        parsed_records_by_score[parsed_record.score].append(parsed_record)
+        parsed_records_by_score[round(parsed_record.score, ndigits=2)].append(parsed_record)
     unique_scores = sorted(set(tournament_results_by_score.keys()) | set(parsed_records_by_score.keys()), reverse=True)
     print(
         f"Found {len(unique_scores)} unique scores total, "
@@ -172,7 +173,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
             if tournament_result.player is None:
                 print(
-                    f"Place {tournament_result.place} (score {tournament_result.scores}) "
+                    f"Place {tournament_result.place} (score {score}) "
                     f"has null player, can't process it (portal player_string {tournament_result.player_string})"
                 )
                 null_player_count += 1
@@ -180,7 +181,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
             if tournament_result.player_pantheon_id is not None:
                 print(
-                    f"Place {tournament_result.place} (score {tournament_result.scores}) "
+                    f"Place {tournament_result.place} (score {score}) "
                     f"(portal name {tournament_result.player.full_name}) "
                     f"already has player pantheon id {tournament_result.player_pantheon_id}"
                 )
@@ -189,7 +190,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
             player_pantheon_id = parsed_record.player_pantheon_id
             print(
-                f"Processing place {tournament_result.place} (score {tournament_result.scores}) "
+                f"Processing place {tournament_result.place} (score {score}) "
                 f"(portal name {tournament_result.player.full_name}), "
                 f"will set player pantheon id to {player_pantheon_id} (parsed name {parsed_record.player_name})"
             )
