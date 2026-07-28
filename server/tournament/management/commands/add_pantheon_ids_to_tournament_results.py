@@ -161,6 +161,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
     objects_to_update: List[TournamentResult] = []
     null_player_count = 0
+    replacement_player_count = 0
     already_set_count = 0
     wrongly_set_count = 0
     manual_count = 0
@@ -181,6 +182,15 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
                 continue
 
             player_pantheon_id: int = parsed_record.player_pantheon_id
+
+            if tournament_result.player.is_replacement:
+                print(
+                    f"Place {tournament_result.place} (score {score}) "
+                    f"has replacement player (portal name {tournament_result.player.full_name}), can't process it "
+                    f"(player pantheon id {player_pantheon_id}, parsed name {parsed_record.player_name})"
+                )
+                replacement_player_count += 1
+                continue
 
             if tournament_result.player_pantheon_id is not None:
                 if tournament_result.player_pantheon_id == player_pantheon_id:
@@ -222,6 +232,8 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
                 for tournament_result in tournament_results_for_score:
                     if tournament_result.player is None:
                         null_player_count += 1
+                    elif tournament_result.player.is_replacement:
+                        replacement_player_count += 1
                     else:
                         suitable_count += 1
                         if tournament_result.player_pantheon_id is not None:
@@ -260,7 +272,8 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
                 wrongly_set_count += suitable_count
 
     print(
-        f"To update: {len(objects_to_update)}, null players: {null_player_count}, "
+        f"To update: {len(objects_to_update)}, "
+        f"null players: {null_player_count}, replacement players: {replacement_player_count}, "
         f"already set: {already_set_count}, wrongly set: {wrongly_set_count}, manual: {manual_count}"
     )
 
