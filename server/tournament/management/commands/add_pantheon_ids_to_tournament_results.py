@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import dataclasses
-from collections import defaultdict
+from collections import Counter, defaultdict
 from typing import Dict, List, Optional
 
 import requests
@@ -147,10 +147,11 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
     tournament_results_by_score: Dict[float, list[TournamentResult]] = defaultdict(list)
     parsed_records_by_score: Dict[float, list[ParsedRatingTableRecord]] = defaultdict(list)
+    # DB stores scores in Decimal, round keys to prevent precision errors
     for tournament_result in tournament_results_to_process:
-        tournament_results_by_score[tournament_result.scores].append(tournament_result)
+        tournament_results_by_score[round(float(tournament_result.scores), ndigits=2)].append(tournament_result)
     for parsed_record in parsed_records:
-        parsed_records_by_score[parsed_record.score].append(parsed_record)
+        parsed_records_by_score[round(parsed_record.score, ndigits=2)].append(parsed_record)
     unique_scores = sorted(set(tournament_results_by_score.keys()) | set(parsed_records_by_score.keys()), reverse=True)
     print(
         f"Found {len(unique_scores)} unique scores total, "
@@ -161,6 +162,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
     objects_to_update: List[TournamentResult] = []
     null_player_count = 0
     already_set_count = 0
+    wrongly_set_count = 0
     manual_count = 0
     for score in unique_scores:
         tournament_results_for_score: List[TournamentResult] = tournament_results_by_score[score]
@@ -172,24 +174,34 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
 
             if tournament_result.player is None:
                 print(
-                    f"Place {tournament_result.place} (score {tournament_result.scores}) "
+                    f"Place {tournament_result.place} (score {score}) "
                     f"has null player, can't process it (portal player_string {tournament_result.player_string})"
                 )
                 null_player_count += 1
                 continue
 
+            player_pantheon_id: int = parsed_record.player_pantheon_id
+
             if tournament_result.player_pantheon_id is not None:
-                print(
-                    f"Place {tournament_result.place} (score {tournament_result.scores}) "
-                    f"(portal name {tournament_result.player.full_name}) "
-                    f"already has player pantheon id {tournament_result.player_pantheon_id}"
-                )
-                already_set_count += 1
+                if tournament_result.player_pantheon_id == player_pantheon_id:
+                    print(
+                        f"Place {tournament_result.place} (score {score}) "
+                        f"(portal name {tournament_result.player.full_name}) "
+                        f"already has player pantheon id {tournament_result.player_pantheon_id}"
+                    )
+                    already_set_count += 1
+                else:
+                    print(
+                        f"Place {tournament_result.place} (score {score}) "
+                        f"(portal name {tournament_result.player.full_name}) "
+                        f"currently has player pantheon id {tournament_result.player_pantheon_id}, "
+                        f"but we want to set it to {player_pantheon_id}"
+                    )
+                    wrongly_set_count += 1
                 continue
 
-            player_pantheon_id = parsed_record.player_pantheon_id
             print(
-                f"Processing place {tournament_result.place} (score {tournament_result.scores}) "
+                f"Processing place {tournament_result.place} (score {score}) "
                 f"(portal name {tournament_result.player.full_name}), "
                 f"will set player pantheon id to {player_pantheon_id} (parsed name {parsed_record.player_name})"
             )
@@ -202,13 +214,18 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
                 f"Portal has {len(tournament_results_for_score)} tournament results. "
                 f"Pantheon has {len(parsed_records_for_score)} parsed records"
             )
+            current_ids_map: Counter[int] = Counter()
+            new_ids_map: Counter[int] = Counter()
+            suitable_count = 0
             if len(tournament_results_for_score) > 0:
                 print(f"  Portal tournament results for score {score}:")
                 for tournament_result in tournament_results_for_score:
-                    if tournament_result.player_pantheon_id is not None:
-                        already_set_count += 1
+                    if tournament_result.player is None:
+                        null_player_count += 1
                     else:
-                        manual_count += 1
+                        suitable_count += 1
+                        if tournament_result.player_pantheon_id is not None:
+                            current_ids_map[tournament_result.player_pantheon_id] += 1
                     print(
                         f"    Place {tournament_result.place}, "
                         f"portal name {tournament_result.player.full_name if tournament_result.player else None}, "
@@ -218,15 +235,33 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
             if len(parsed_records_for_score) > 0:
                 print(f"  Pantheon parsed records for score {score}:")
                 for parsed_record in parsed_records_for_score:
+                    new_ids_map[parsed_record.player_pantheon_id] += 1
                     print(
                         f"    Place {parsed_record.place}, "
                         f"name {parsed_record.player_name}, "
                         f"pantheon id {parsed_record.player_pantheon_id}"
                     )
 
+            print(
+                f"  Pantheon ids counters for score {score}: "
+                f"non-null players count in DB: {suitable_count}, "
+                f"current non-null values among them: {sorted(current_ids_map.elements())}, "
+                f"new values from parsed records: {sorted(new_ids_map.elements())}"
+            )
+
+            if len(current_ids_map) == 0:
+                # no existing values, need to set everything manually
+                manual_count += suitable_count
+            elif suitable_count == current_ids_map.total() and (current_ids_map - new_ids_map).total() == 0:
+                # all existing values are set to correct values from pantheon
+                already_set_count += suitable_count
+            else:
+                # something is wrong
+                wrongly_set_count += suitable_count
+
     print(
         f"To update: {len(objects_to_update)}, null players: {null_player_count}, "
-        f"already set: {already_set_count}, manual: {manual_count}"
+        f"already set: {already_set_count}, wrongly set: {wrongly_set_count}, manual: {manual_count}"
     )
 
     if update:
