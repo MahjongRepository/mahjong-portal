@@ -267,7 +267,7 @@ def aggregate_tournaments(tournaments, pantheon_type, result):
         for res in tournament.results.all().order_by("place"):
             player_dict = {}
             player_dict["place"] = res.place
-            player_dict["score"] = res.scores
+            player_dict["score"] = round(float(res.scores), ndigits=2)
             if res.player_pantheon_id:
                 player_dict["player_pantheon_id"] = res.player_pantheon_id
             if res.player:
