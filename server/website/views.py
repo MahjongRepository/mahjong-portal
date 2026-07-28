@@ -251,17 +251,15 @@ def finished_tournaments_api(request):
             if tournament.new_pantheon_id is not None:
                 new_pantheon_tournaments.append(tournament)
 
-    new_pantheon_tournaments = sorted(new_pantheon_tournaments, key=lambda x: x.new_pantheon_id, reverse=False)
-    old_pantheon_tournaments = sorted(old_pantheon_tournaments, key=lambda x: x.old_pantheon_id, reverse=False)
-
     data = []
-    aggregate_tournaments(new_pantheon_tournaments, NEW_PANTHEON_TYPE, data)
-    aggregate_tournaments(old_pantheon_tournaments, OLD_PANTHEON_TYPE, data)
+    data += extract_tournament_data(old_pantheon_tournaments, OLD_PANTHEON_TYPE)
+    data += extract_tournament_data(new_pantheon_tournaments, NEW_PANTHEON_TYPE)
 
     return JsonResponse(data, safe=False)
 
 
-def aggregate_tournaments(tournaments, pantheon_type, result):
+def extract_tournament_data(tournaments, pantheon_type):
+    result = []
     for tournament in tournaments:
         players = []
         for res in tournament.results.all().order_by("place"):
@@ -284,6 +282,8 @@ def aggregate_tournaments(tournaments, pantheon_type, result):
                 "players": players,
             }
         )
+    result.sort(key=lambda x: x["pantheon_id"])
+    return result
 
 
 def extract_pantheon_id(tournament, pantheon_type):
