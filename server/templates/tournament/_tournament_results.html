@@ -47,7 +47,7 @@
                     {% if result.scores == None %}
                         -
                     {% else %}
-                        {{ result.scores|floatformat:-1|intcomma }}
+                        {{ result.scores|floatformat:"-1g"|intcomma }}
                     {% endif %}
                 </td>
                 {% if tournament.is_stage_tournament %}
