@@ -265,7 +265,7 @@ def extract_tournament_data(tournaments, pantheon_type):
         for res in tournament.results.all().order_by("place"):
             player_dict = {}
             player_dict["place"] = res.place
-            player_dict["score"] = round(float(res.scores), ndigits=2)
+            player_dict["score"] = round(float(res.scores), ndigits=2) if res.scores else None
             if res.player_pantheon_id:
                 player_dict["player_pantheon_id"] = res.player_pantheon_id
             if res.player:
