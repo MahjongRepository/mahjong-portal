@@ -3,6 +3,7 @@
 import itertools
 import math
 from datetime import timedelta
+from typing import Collection
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Q
@@ -121,7 +122,12 @@ class RatingRRCalculation:
             if num_tournaments == total_tournaments:
                 tournaments_results = deltas
                 best_rating_calculation, best_score = self._calculate_player_rating(
-                    player, tournaments_results, deltas, coefficients_cache, max_coefficient, selected_coefficients
+                    player=player,
+                    tournaments_results=tournaments_results,
+                    deltas=deltas,
+                    coefficients_cache=coefficients_cache,
+                    max_coefficient=max_coefficient,
+                    selected_coefficients=selected_coefficients,
                 )
                 best_tournament_results_option = tournaments_results
             else:
@@ -131,12 +137,12 @@ class RatingRRCalculation:
 
                 for tournaments_results_option in itertools.combinations(deltas, num_tournaments):
                     rating_calculation, score = self._calculate_player_rating(
-                        player,
-                        tournaments_results_option,
-                        deltas,
-                        coefficients_cache,
-                        max_coefficient,
-                        selected_coefficients,
+                        player=player,
+                        tournaments_results=tournaments_results_option,
+                        deltas=deltas,
+                        coefficients_cache=coefficients_cache,
+                        max_coefficient=max_coefficient,
+                        selected_coefficients=selected_coefficients,
                     )
                     if score >= best_score:
                         best_score = score
@@ -331,12 +337,43 @@ class RatingRRCalculation:
             return 0
 
     def _calculate_player_rating(
-        self, player, tournaments_results, deltas, coefficients_cache, max_coefficient, selected_coefficients
-    ):
+        self,
+        player: Player,
+        tournaments_results: Collection[RatingDelta],
+        deltas: list[RatingDelta],
+        coefficients_cache: dict[int, TournamentCoefficients],
+        max_coefficient: float,
+        selected_coefficients: list[dict[str, float]],
+    ) -> tuple[str, float]:
+        first_part_calculation, first_part = self._calculate_player_rating_first_part(
+            player=player,
+            tournaments_results=tournaments_results,
+            coefficients_cache=coefficients_cache,
+        )
+        max_coefficient_template, second_part_calculation, second_part = self._calculate_player_rating_second_part(
+            player=player,
+            deltas=deltas,
+            coefficients_cache=coefficients_cache,
+            max_coefficient=max_coefficient,
+            selected_coefficients=selected_coefficients,
+        )
+        rating_calculation, score = self._join_player_rating_parts(
+            max_coefficient_template=max_coefficient_template,
+            first_part_calculation=first_part_calculation,
+            second_part_calculation=second_part_calculation,
+            first_part=first_part,
+            second_part=second_part,
+        )
+        return rating_calculation, score
+
+    def _calculate_player_rating_first_part(
+        self,
+        player: Player,
+        tournaments_results: Collection[RatingDelta],
+        coefficients_cache: dict[int, TournamentCoefficients],
+    ) -> tuple[str, float]:
         first_part_numerator_calculation = []
         first_part_denominator_calculation = []
-
-        second_part_numerator_calculation = []
 
         first_part_numerator = 0
         first_part_denominator = 0
@@ -372,6 +409,21 @@ class RatingRRCalculation:
 
         first_part = first_part_numerator / first_part_denominator
 
+        first_part_calculation = "p1 = ({}) / ({}) = {}".format(
+            " + ".join(first_part_numerator_calculation), " + ".join(first_part_denominator_calculation), first_part
+        )
+        return first_part_calculation, first_part
+
+    def _calculate_player_rating_second_part(
+        self,
+        player: Player,
+        deltas: list[RatingDelta],
+        coefficients_cache: dict[int, TournamentCoefficients],
+        max_coefficient: float,
+        selected_coefficients: list[dict[str, float]],
+    ) -> tuple[str, str, float]:
+        second_part_numerator_calculation = []
+
         second_part_numerator = 0
         second_part_denominator = max_coefficient
 
@@ -394,10 +446,6 @@ class RatingRRCalculation:
 
         second_part = second_part_numerator / second_part_denominator
 
-        score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(
-            second_part, self.SECOND_PART_WEIGHT
-        )
-
         max_coefficient_calculation = []
         for x in selected_coefficients:
             max_coefficient_calculation.append(
@@ -406,11 +454,21 @@ class RatingRRCalculation:
         max_coefficient_template = "max_coefficients = ({}) = {}".format(
             " + ".join(max_coefficient_calculation), max_coefficient
         )
-        first_part_calculation = "p1 = ({}) / ({}) = {}".format(
-            " + ".join(first_part_numerator_calculation), " + ".join(first_part_denominator_calculation), first_part
-        )
         second_part_calculation = "p2 = ({}) / max_coefficients = {}".format(
             " + ".join(second_part_numerator_calculation), second_part
+        )
+        return max_coefficient_template, second_part_calculation, second_part
+
+    def _join_player_rating_parts(
+        self,
+        max_coefficient_template: str,
+        first_part_calculation: str,
+        second_part_calculation: str,
+        first_part: float,
+        second_part: float,
+    ) -> tuple[str, float]:
+        score = self._calculate_percentage(first_part, self.FIRST_PART_WEIGHT) + self._calculate_percentage(
+            second_part, self.SECOND_PART_WEIGHT
         )
         total_calculation = "score = {} * {} + {} * {} = {}".format(
             first_part, self.FIRST_PART_WEIGHT / 100, second_part, self.SECOND_PART_WEIGHT / 100, score
@@ -418,7 +476,6 @@ class RatingRRCalculation:
         rating_calculation = "\n\n".join(
             (max_coefficient_template, first_part_calculation, second_part_calculation, total_calculation)
         )
-
         return rating_calculation, score
 
     def _assume_number_of_sessions(self, tournament):
