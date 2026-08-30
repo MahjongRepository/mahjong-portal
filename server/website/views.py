@@ -271,18 +271,23 @@ def extract_tournament_data(tournaments, pantheon_type):
             if res.player:
                 player_dict["player_slug"] = res.player.slug
                 player_dict["player_name"] = res.player.full_name
+                if res.player.is_replacement:
+                    player_dict["is_replacement_player"] = True
             else:
                 player_dict["player_name"] = res.player_string
             players.append(player_dict)
         result.append(
             {
                 "pantheon_type": pantheon_type,
-                "pantheon_id": extract_pantheon_id(tournament, pantheon_type),
-                "name": tournament.name,
+                "tournament_pantheon_id": extract_pantheon_id(tournament, pantheon_type),
+                "tournament_name": tournament.name,
+                "tournament_slug": tournament.slug,
+                "tournament_type": tournament.tournament_type,
+                "tournament_games_type": tournament.tournament_games_type,
                 "players": players,
             }
         )
-    result.sort(key=lambda x: x["pantheon_id"])
+    result.sort(key=lambda x: x["tournament_pantheon_id"])
     return result
 
 
