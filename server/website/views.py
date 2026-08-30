@@ -35,8 +35,6 @@ from utils.general import get_end_of_day
 from yagi_keiji_cup.models import YagiKeijiCupSettings
 
 logger = logging.getLogger()
-OLD_PANTHEON_TYPE = "old"
-NEW_PANTHEON_TYPE = "new"
 
 
 def home(request):
@@ -252,13 +250,13 @@ def finished_tournaments_api(request):
                 new_pantheon_tournaments.append(tournament)
 
     data = []
-    data += extract_tournament_data(old_pantheon_tournaments, OLD_PANTHEON_TYPE)
-    data += extract_tournament_data(new_pantheon_tournaments, NEW_PANTHEON_TYPE)
+    data += extract_tournament_data(old_pantheon_tournaments)
+    data += extract_tournament_data(new_pantheon_tournaments)
 
     return JsonResponse(data, safe=False)
 
 
-def extract_tournament_data(tournaments, pantheon_type):
+def extract_tournament_data(tournaments):
     result = []
     for tournament in tournaments:
         players = []
@@ -278,8 +276,8 @@ def extract_tournament_data(tournaments, pantheon_type):
             players.append(player_dict)
         result.append(
             {
-                "pantheon_type": pantheon_type,
-                "tournament_pantheon_id": extract_pantheon_id(tournament, pantheon_type),
+                "pantheon_type": tournament.get_pantheon_type(),
+                "tournament_pantheon_id": tournament.get_pantheon_id(),
                 "tournament_name": tournament.name,
                 "tournament_slug": tournament.slug,
                 "tournament_type": tournament.tournament_type,
@@ -289,13 +287,6 @@ def extract_tournament_data(tournaments, pantheon_type):
         )
     result.sort(key=lambda x: x["tournament_pantheon_id"])
     return result
-
-
-def extract_pantheon_id(tournament, pantheon_type):
-    if pantheon_type == NEW_PANTHEON_TYPE:
-        return int(tournament.new_pantheon_id)
-    if pantheon_type == OLD_PANTHEON_TYPE:
-        return int(tournament.old_pantheon_id)
 
 
 def do_update_from_pantheon_feed(person_id, pantheon_data):
