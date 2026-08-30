@@ -92,6 +92,9 @@ class Tournament(BaseModel):
         [ONLINE_GAMES, "online"],
     ]
 
+    PANTHEON_TYPE_OLD = "old"
+    PANTHEON_TYPE_NEW = "new"
+
     objects = models.Manager()
     public = PublicTournamentManager()
 
@@ -312,7 +315,22 @@ class Tournament(BaseModel):
         return self.id == AGARI_TOURNAMENT_ID
 
     def has_pantheon_link(self) -> bool:
-        return bool(self.old_pantheon_id) or bool(self.new_pantheon_id)
+        return self.get_pantheon_type() is not None
+
+    def get_pantheon_type(self) -> str | None:
+        if bool(self.new_pantheon_id):
+            return Tournament.PANTHEON_TYPE_NEW
+        if bool(self.old_pantheon_id):
+            return Tournament.PANTHEON_TYPE_OLD
+        return None
+
+    def get_pantheon_id(self) -> int | None:
+        pantheon_type = self.get_pantheon_type()
+        if pantheon_type == Tournament.PANTHEON_TYPE_NEW:
+            return int(self.new_pantheon_id)
+        if pantheon_type == Tournament.PANTHEON_TYPE_OLD:
+            return int(self.old_pantheon_id)
+        return None
 
     def get_tournament_registrations(self):
         if self.is_online():

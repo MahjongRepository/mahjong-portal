@@ -6,10 +6,9 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from player.player_helper import PlayerHelper
+from player.models import Player
 from rating.models import ExternalRating, ExternalRatingDate, ExternalRatingDelta, ExternalRatingTournament
 from tournament.models import Tournament
-from website.views import NEW_PANTHEON_TYPE, OLD_PANTHEON_TYPE
 
 
 def get_date_string():
@@ -18,9 +17,9 @@ def get_date_string():
 
 def get_tournament(pantheon_type, tournament_id):
     try:
-        if NEW_PANTHEON_TYPE == pantheon_type:
+        if Tournament.PANTHEON_TYPE_NEW == pantheon_type:
             return Tournament.objects.get(new_pantheon_id=str(tournament_id))
-        if OLD_PANTHEON_TYPE == pantheon_type:
+        if Tournament.PANTHEON_TYPE_OLD == pantheon_type:
             return Tournament.objects.get(old_pantheon_id=str(tournament_id))
     except Tournament.DoesNotExist as e:
         print(f"Tournament [type={pantheon_type} id={tournament_id}] not found")
@@ -91,8 +90,9 @@ class Command(BaseCommand):
                 sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
                 place = 1
                 for ts_player in sorted_rating:
-                    player_full_name = ts_player["player"]
-                    player = PlayerHelper.find_player_smart(player_full_name=player_full_name)
+                    if "slug" not in ts_player:
+                        continue
+                    player = Player.objects.get(slug=ts_player["slug"])
                     if player:
                         deltas.append(
                             ExternalRatingDelta(
@@ -109,13 +109,10 @@ class Command(BaseCommand):
                         place = place + 1
                     else:
                         print(
-                            "find_player_smart(): found 0 players with name '{0}', old_ids={1}, new_ids={2}, "
-                            "last_game_date={3}".format(
-                                player_full_name,
-                                ts_player.get("old_ids"),
-                                ts_player.get("new_ids"),
-                                ts_player["last_game_date"],
-                            )
+                            f"find_player_smart(): found 0 players with "
+                            f"slug {ts_player.get('slug')}, name {ts_player.get('player')}, "
+                            f"old_ids={ts_player.get('old_ids')}, new_ids={ts_player.get('new_ids')}, "
+                            f"last_game_date={ts_player['last_game_date']}"
                         )
 
                 if deltas:

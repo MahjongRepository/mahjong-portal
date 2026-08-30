@@ -5,6 +5,7 @@ import io
 import logging
 import platform
 import threading
+from collections import defaultdict
 from datetime import timezone
 
 import ujson as json
@@ -31,12 +32,11 @@ from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
 from tournament.models import Tournament, TournamentResult
+from tournament.utils import load_last_player_pantheon_results
 from utils.general import get_end_of_day
 from yagi_keiji_cup.models import YagiKeijiCupSettings
 
 logger = logging.getLogger()
-OLD_PANTHEON_TYPE = "old"
-NEW_PANTHEON_TYPE = "new"
 
 
 def home(request):
@@ -235,6 +235,44 @@ def players_api(request):
     return JsonResponse(data, safe=False)
 
 
+def players_with_pantheon_account_api(request):
+    translation.activate("ru")
+
+    last_result_by_pantheon_id: dict[tuple[str, int], TournamentResult] = load_last_player_pantheon_results()
+    pantheon_ids_by_player: dict[int, list[tuple[str, int]]] = defaultdict(list)
+    players_by_id: dict[int, Player] = {}
+    for (pantheon_type, player_pantheon_id), tournament_result in last_result_by_pantheon_id.items():
+        player: Player = tournament_result.player
+        if player is None:
+            raise Exception("Only not-null players must be loaded in load_last_player_pantheon_results()")
+        player_id: int = player.id
+        if player_id not in players_by_id:
+            players_by_id[player_id] = player
+        pantheon_ids_by_player[player_id].append((pantheon_type, player_pantheon_id))
+
+    data = []
+    for player_id, pantheon_accounts in pantheon_ids_by_player.items():
+        player = players_by_id[player_id]
+        data.append(
+            {
+                "player_slug": player.slug,
+                "player_name": player.full_name,
+                "pantheon_accounts": [
+                    {
+                        "pantheon_type": p_type,
+                        "player_pantheon_id": p_id,
+                        "last_tournament_slug": last_result_by_pantheon_id[(p_type, p_id)].tournament.slug,
+                        "last_tournament_name": last_result_by_pantheon_id[(p_type, p_id)].tournament.name,
+                        "last_tournament_date": last_result_by_pantheon_id[(p_type, p_id)].tournament.end_date,
+                    }
+                    for (p_type, p_id) in pantheon_accounts
+                ],
+            }
+        )
+
+    return JsonResponse(data, safe=False)
+
+
 def finished_tournaments_api(request):
     translation.activate("ru")
 
@@ -252,13 +290,13 @@ def finished_tournaments_api(request):
                 new_pantheon_tournaments.append(tournament)
 
     data = []
-    data += extract_tournament_data(old_pantheon_tournaments, OLD_PANTHEON_TYPE)
-    data += extract_tournament_data(new_pantheon_tournaments, NEW_PANTHEON_TYPE)
+    data += extract_tournament_data(old_pantheon_tournaments)
+    data += extract_tournament_data(new_pantheon_tournaments)
 
     return JsonResponse(data, safe=False)
 
 
-def extract_tournament_data(tournaments, pantheon_type):
+def extract_tournament_data(tournaments):
     result = []
     for tournament in tournaments:
         players = []
@@ -271,26 +309,24 @@ def extract_tournament_data(tournaments, pantheon_type):
             if res.player:
                 player_dict["player_slug"] = res.player.slug
                 player_dict["player_name"] = res.player.full_name
+                if res.player.is_replacement:
+                    player_dict["is_replacement_player"] = True
             else:
                 player_dict["player_name"] = res.player_string
             players.append(player_dict)
         result.append(
             {
-                "pantheon_type": pantheon_type,
-                "pantheon_id": extract_pantheon_id(tournament, pantheon_type),
-                "name": tournament.name,
+                "pantheon_type": tournament.get_pantheon_type(),
+                "tournament_pantheon_id": tournament.get_pantheon_id(),
+                "tournament_name": tournament.name,
+                "tournament_slug": tournament.slug,
+                "tournament_type": tournament.tournament_type,
+                "tournament_games_type": tournament.tournament_games_type,
                 "players": players,
             }
         )
-    result.sort(key=lambda x: x["pantheon_id"])
+    result.sort(key=lambda x: x["tournament_pantheon_id"])
     return result
-
-
-def extract_pantheon_id(tournament, pantheon_type):
-    if pantheon_type == NEW_PANTHEON_TYPE:
-        return int(tournament.new_pantheon_id)
-    if pantheon_type == OLD_PANTHEON_TYPE:
-        return int(tournament.old_pantheon_id)
 
 
 def do_update_from_pantheon_feed(person_id, pantheon_data):
