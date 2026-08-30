@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
+from rating.calculation.rr import RatingRRCalculation
 from rating.mixins import RatingTestMixin
 from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
 
@@ -301,3 +302,129 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 
         self.assertEqual(float(delta_object.score), 342.86)
+
+    @classmethod
+    def _date(cls, date_str: str) -> date:
+        return datetime.fromisoformat(date_str).date()
+
+    def test_calculate_players_rating_algorithm_19(self):
+        rating, _ = Rating.objects.get_or_create(type=Rating.RR)
+        rating_date = self._date("2026-08-27")
+
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-09-01"), sessions=10, players=96), 32),
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 39),
+            (self.create_tournament(end_date=self._date("2025-01-26"), sessions=8, players=43), 27),
+            (self.create_tournament(end_date=self._date("2025-02-02"), sessions=9, players=52), 31),
+            (self.create_tournament(end_date=self._date("2025-02-16"), sessions=9, players=60), 28),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 2),
+            (self.create_tournament(end_date=self._date("2025-06-08"), sessions=8, players=16), 5),
+            (self.create_tournament(end_date=self._date("2025-06-15"), sessions=15, players=68), 31),
+            (self.create_tournament(end_date=self._date("2025-07-13"), sessions=9, players=31), 6),
+            (self.create_tournament(end_date=self._date("2025-08-03"), sessions=10, players=44), 12),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), 48),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), 3),
+            (self.create_tournament(end_date=self._date("2025-11-30"), sessions=12, players=32), 12),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 5),
+            (self.create_tournament(end_date=self._date("2026-02-23"), sessions=9, players=75), 28),
+            (self.create_tournament(end_date=self._date("2026-04-05"), sessions=10, players=51), 13),
+            (self.create_tournament(end_date=self._date("2026-05-03"), sessions=10, players=43), 6),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 58),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), 6),
+        ]
+
+        calculator = RatingRRCalculation()
+
+        for tournament, place in tournaments_data:
+            t_coef = calculator.tournament_coefficient(tournament)
+            t_age = calculator.tournament_age(tournament.end_date, rating_date)
+            t_score = ((tournament.number_of_players - place) / (tournament.number_of_players - 1)) * 1000
+            delta = calculator._calculate_percentage(t_coef * t_score, t_age)
+            self.create_rating_delta(rating, tournament, self.player, delta, rating_date)
+            TournamentCoefficients.objects.create(
+                rating=rating, tournament=tournament, coefficient=t_coef, age=t_age, date=rating_date
+            )
+
+        calculator.calculate_players_rating_rank(rating, rating_date)
+
+        delta_object = RatingResult.objects.get(player=self.player, rating=rating)
+
+        self.assertEqual(float(delta_object.score), 785.37)
+
+    def test_calculate_players_rating_algorithm_5(self):
+        rating, _ = Rating.objects.get_or_create(type=Rating.RR)
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 51),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 23),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), None),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 22),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 17),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), 5),
+        ]
+
+        calculator = RatingRRCalculation()
+
+        another_player = self.create_player()
+        for tournament, place in tournaments_data:
+            t_coef = calculator.tournament_coefficient(tournament)
+            t_age = calculator.tournament_age(tournament.end_date, rating_date)
+            if place is not None:
+                t_score = ((tournament.number_of_players - place) / (tournament.number_of_players - 1)) * 1000
+                delta = calculator._calculate_percentage(t_coef * t_score, t_age)
+                self.create_rating_delta(rating, tournament, self.player, delta, rating_date)
+            else:
+                # for max_coefficient
+                delta = calculator._calculate_percentage(t_coef * 1000, t_age)
+                self.create_rating_delta(rating, tournament, another_player, delta, rating_date)
+            TournamentCoefficients.objects.create(
+                rating=rating, tournament=tournament, coefficient=t_coef, age=t_age, date=rating_date
+            )
+
+        calculator.calculate_players_rating_rank(rating, rating_date)
+
+        delta_object = RatingResult.objects.get(player=self.player, rating=rating)
+
+        self.assertEqual(float(delta_object.score), 747.54)
+
+    def test_calculate_players_rating_algorithm_4(self):
+        rating, _ = Rating.objects.get_or_create(type=Rating.RR)
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2025-01-26"), sessions=8, players=43), 13),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 18),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), None),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 3),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 33),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), None),
+        ]
+
+        calculator = RatingRRCalculation()
+
+        another_player = self.create_player()
+        for tournament, place in tournaments_data:
+            t_coef = calculator.tournament_coefficient(tournament)
+            t_age = calculator.tournament_age(tournament.end_date, rating_date)
+            if place is not None:
+                t_score = ((tournament.number_of_players - place) / (tournament.number_of_players - 1)) * 1000
+                delta = calculator._calculate_percentage(t_coef * t_score, t_age)
+                self.create_rating_delta(rating, tournament, self.player, delta, rating_date)
+            else:
+                # for max_coefficient
+                delta = calculator._calculate_percentage(t_coef * 1000, t_age)
+                self.create_rating_delta(rating, tournament, another_player, delta, rating_date)
+            TournamentCoefficients.objects.create(
+                rating=rating, tournament=tournament, coefficient=t_coef, age=t_age, date=rating_date
+            )
+
+        calculator.calculate_players_rating_rank(rating, rating_date)
+
+        delta_object = RatingResult.objects.get(player=self.player, rating=rating)
+
+        self.assertEqual(float(delta_object.score), 673.39)
