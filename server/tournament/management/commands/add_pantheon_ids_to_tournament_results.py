@@ -9,7 +9,9 @@ from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 
+from player.models import Player
 from tournament.models import Tournament, TournamentResult
+from tournament.utils import load_last_player_pantheon_results
 from utils.new_pantheon import get_rating_table
 
 
@@ -131,7 +133,13 @@ def filter_null_scores(tournament_results: List[TournamentResult]) -> List[Tourn
     return results_with_not_null_scores
 
 
-def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_records: List[ParsedRatingTableRecord]):
+def update_db(
+    tournament: Tournament,
+    known_pantheon_accounts: dict[str, list[tuple[str, int]]],
+    clean_old: bool,
+    update: bool,
+    parsed_records: List[ParsedRatingTableRecord],
+):
     tournament_results_all = list(TournamentResult.objects.filter(tournament=tournament).prefetch_related("player"))
     print(f"Found {len(tournament_results_all)} tournament results in DB")
 
@@ -160,6 +168,8 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
     )
 
     objects_to_update: List[TournamentResult] = []
+    set_from_known = 0
+    set_from_score = 0
     null_player_count = 0
     replacement_player_count = 0
     already_set_count = 0
@@ -167,6 +177,43 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
     manual_count = 0
     for score in unique_scores:
         tournament_results_for_score: List[TournamentResult] = tournament_results_by_score[score]
+
+        # first try to set from known tournament results
+        for tournament_result in tournament_results_for_score:
+            if tournament_result.player_pantheon_id is not None:
+                continue
+            if tournament_result.player is None:
+                continue
+            if tournament_result.player.is_replacement:
+                continue
+            tournament_pantheon_type = tournament.get_pantheon_type()
+            assert tournament_pantheon_type is not None
+
+            known_pantheon_ids: set[int] = set()
+            for p_type, p_id in known_pantheon_accounts.get(tournament_result.player.slug, []):
+                if p_type == tournament_pantheon_type:
+                    known_pantheon_ids.add(p_id)
+            if len(known_pantheon_ids) == 0:
+                continue
+
+            occurrences_in_parsed_records: dict[int, int] = defaultdict(int)
+            for parsed_record in parsed_records:
+                if parsed_record.player_pantheon_id in known_pantheon_ids:
+                    occurrences_in_parsed_records[parsed_record.player_pantheon_id] += 1
+
+            if len(occurrences_in_parsed_records) == 1 and sum(occurrences_in_parsed_records.values()) == 1:
+                # if there is a single occurrence among parsed records, we can set it
+                player_pantheon_id: int = list(occurrences_in_parsed_records.keys())[0]
+                print(
+                    f"Set already known pantheon id {player_pantheon_id} "
+                    f"to place {tournament_result.place} (score {score}) "
+                    f"(portal name {tournament_result.player.full_name})"
+                )
+                tournament_result.player_pantheon_id = player_pantheon_id
+                objects_to_update.append(tournament_result)
+                set_from_known += 1
+
+        # then try to match by score
         parsed_records_for_score: List[ParsedRatingTableRecord] = parsed_records_by_score[score]
 
         if len(tournament_results_for_score) == len(parsed_records_for_score) == 1:
@@ -217,6 +264,7 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
             )
             tournament_result.player_pantheon_id = player_pantheon_id
             objects_to_update.append(tournament_result)
+            set_from_score += 1
         else:
             equal_sizes: bool = len(tournament_results_for_score) == len(parsed_records_for_score)
             print(
@@ -272,9 +320,9 @@ def update_db(tournament: Tournament, clean_old: bool, update: bool, parsed_reco
                 wrongly_set_count += suitable_count
 
     print(
-        f"To update: {len(objects_to_update)}, "
+        f"To update: {len(objects_to_update)} (from known: {set_from_known}, from score: {set_from_score}), "
         f"null players: {null_player_count}, replacement players: {replacement_player_count}, "
-        f"already set: {already_set_count}, wrongly set: {wrongly_set_count}, manual: {manual_count}"
+        f"already set by score: (correct {already_set_count}, wrong {wrongly_set_count}), manual: {manual_count}"
     )
 
     if update:
@@ -297,6 +345,17 @@ def load_tournaments(slug: Optional[str], year: Optional[int]) -> List[Tournamen
     else:
         qs = qs.filter(end_date__year=year)
     return list(qs.order_by("end_date"))
+
+
+def load_known_pantheon_accounts() -> dict[str, list[tuple[str, int]]]:
+    last_result_by_pantheon_id: dict[tuple[str, int], TournamentResult] = load_last_player_pantheon_results()
+    result: dict[str, list[tuple[str, int]]] = defaultdict(list)
+    for key, tournament_result in last_result_by_pantheon_id.items():
+        player: Player = tournament_result.player
+        if player is None:
+            raise Exception("Only not-null players must be loaded in load_last_player_pantheon_results()")
+        result[player.slug].append(key)
+    return result
 
 
 class Command(BaseCommand):
@@ -326,6 +385,10 @@ class Command(BaseCommand):
         for i, tournament in enumerate(tournaments):
             print(f"{i + 1}: {tournament.slug} | {tournament.name}")
 
+        print("Loading known pantheon accounts")
+        known_pantheon_accounts: dict[str, list[tuple[str, int]]] = load_known_pantheon_accounts()
+        print(f"Loaded {len(known_pantheon_accounts)} known pantheon accounts")
+
         print("Start adding pantheon ids to tournament results")
 
         for tournament in tournaments:
@@ -340,7 +403,13 @@ class Command(BaseCommand):
                 continue
 
             fix_shared_places(parsed_records=parsed_records)
-            update_db(tournament=tournament, clean_old=clean_old, update=update, parsed_records=parsed_records)
+            update_db(
+                tournament=tournament,
+                known_pantheon_accounts=known_pantheon_accounts,
+                clean_old=clean_old,
+                update=update,
+                parsed_records=parsed_records,
+            )
             print(f"Finished processing tournament {tournament.slug}")
 
         print("End of command")
