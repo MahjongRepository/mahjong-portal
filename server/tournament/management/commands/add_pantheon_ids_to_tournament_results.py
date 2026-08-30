@@ -179,6 +179,7 @@ def update_db(
         tournament_results_for_score: List[TournamentResult] = tournament_results_by_score[score]
 
         # first try to set from known tournament results
+        tournament_result_ids_set_from_known: set[int] = set()
         for tournament_result in tournament_results_for_score:
             if tournament_result.player_pantheon_id is not None:
                 continue
@@ -211,6 +212,7 @@ def update_db(
                 )
                 tournament_result.player_pantheon_id = player_pantheon_id
                 objects_to_update.append(tournament_result)
+                tournament_result_ids_set_from_known.add(tournament_result.pk)
                 set_from_known += 1
 
         # then try to match by score
@@ -219,6 +221,9 @@ def update_db(
         if len(tournament_results_for_score) == len(parsed_records_for_score) == 1:
             tournament_result = tournament_results_for_score[0]
             parsed_record = parsed_records_for_score[0]
+
+            if tournament_result.pk in tournament_result_ids_set_from_known:
+                continue
 
             if tournament_result.player is None:
                 print(
