@@ -31,6 +31,7 @@ from player.tenhou.tenhou_helper import TenhouHelper
 from rating.models import Rating, RatingResult
 from rating.utils import get_latest_rating_date
 from settings.models import City
+from system.decorators import token_require
 from tournament.models import Tournament, TournamentResult
 from tournament.utils import load_last_player_pantheon_results
 from utils.general import get_end_of_day
@@ -235,6 +236,9 @@ def players_api(request):
     return JsonResponse(data, safe=False)
 
 
+@require_POST
+@csrf_exempt
+@token_require(http_param_name="trueskill_token", django_property_name="TRUESKILL_TOKEN")
 def players_with_pantheon_account_api(request):
     translation.activate("ru")
 
