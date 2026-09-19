@@ -238,7 +238,7 @@ def players_api(request):
 
 @require_POST
 @csrf_exempt
-@token_require(http_param_name="trueskill_token", django_property_name="TRUESKILL_TOKEN")
+@token_require(token_header_name="trueskill-token", django_property_name="TRUESKILL_TOKEN")
 def players_with_pantheon_account_api(request):
     translation.activate("ru")
 
