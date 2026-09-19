@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from functools import wraps
 
+from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -37,3 +38,17 @@ def tournament_manager_auth_required(view_func):
         return view_func(request, *args, **kwargs)
 
     return wraps(view_func)(_checklogin)
+
+
+def token_require(token_header_name: str, django_property_name: str):
+    def decorator(function):
+        @wraps(function)
+        def wrap(request, *args, **kwargs):
+            api_token = request.headers.get(token_header_name)
+            if not api_token or api_token != getattr(settings, django_property_name):
+                return HttpResponse(status=403)
+            return function(request, *args, **kwargs)
+
+        return wrap
+
+    return decorator
