@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
+from rating.calculation.rr import RatingRRCalculation
 from rating.mixins import RatingTestMixin
 from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
+from tournament.models import Tournament
 
 
 class InnerRatingTestCase(TestCase, RatingTestMixin):
@@ -301,3 +303,204 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         delta_object = RatingResult.objects.get(player=self.player, rating=rating)
 
         self.assertEqual(float(delta_object.score), 342.86)
+
+    @classmethod
+    def _date(cls, date_str: str) -> date:
+        return datetime.fromisoformat(date_str).date()
+
+    def _calculate_rating(
+        self,
+        tournaments_data: list[tuple[Tournament, int | None]],
+        rating_date: date,
+    ) -> RatingResult:
+        rating, _ = Rating.objects.get_or_create(type=Rating.RR)
+
+        calculator = RatingRRCalculation()
+
+        another_player = self.create_player()
+        for tournament, place in tournaments_data:
+            t_coef = calculator.tournament_coefficient(tournament)
+            t_age = calculator.tournament_age(tournament.end_date, rating_date)
+            if place is not None:
+                t_score = ((tournament.number_of_players - place) / (tournament.number_of_players - 1)) * 1000
+                delta = calculator._calculate_percentage(t_coef * t_score, t_age)
+                self.create_rating_delta(rating, tournament, self.player, delta, rating_date)
+            else:
+                # for max_coefficient
+                delta = calculator._calculate_percentage(t_coef * 1000, t_age)
+                self.create_rating_delta(rating, tournament, another_player, delta, rating_date)
+            TournamentCoefficients.objects.create(
+                rating=rating, tournament=tournament, coefficient=t_coef, age=t_age, date=rating_date
+            )
+
+        calculator.calculate_players_rating_rank(rating, rating_date)
+
+        rating_result = RatingResult.objects.get(player=self.player, rating=rating)
+        return rating_result
+
+    def test_calculate_players_rating_algorithm_4(self):
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2025-01-26"), sessions=8, players=43), 13),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 18),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), None),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 3),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 33),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), None),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 673.39)
+
+    def test_calculate_players_rating_algorithm_5(self):
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 51),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 23),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), None),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 22),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 17),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), 5),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 747.54)
+
+    def test_calculate_players_rating_algorithm_9(self):
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-09-01"), sessions=10, players=96), 48),
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 23),
+            (self.create_tournament(end_date=self._date("2025-06-15"), sessions=15, players=68), 1),
+            (self.create_tournament(end_date=self._date("2025-08-03"), sessions=10, players=44), 5),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), 36),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2025-11-30"), sessions=12, players=32), 13),
+            (self.create_tournament(end_date=self._date("2026-04-05"), sessions=10, players=51), 4),
+            (self.create_tournament(end_date=self._date("2026-05-03"), sessions=10, players=43), 19),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), None),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), 25),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 691.77)
+
+    def test_calculate_players_rating_algorithm_10(self):
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-09-01"), sessions=10, players=96), 39),
+            (self.create_tournament(end_date=self._date("2025-02-16"), sessions=9, players=60), 2),
+            (self.create_tournament(end_date=self._date("2025-04-26"), sessions=5, players=36), 1),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), 19),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2025-11-30"), sessions=12, players=32), 5),
+            (self.create_tournament(end_date=self._date("2026-02-23"), sessions=9, players=75), 48),
+            (self.create_tournament(end_date=self._date("2026-04-05"), sessions=10, players=51), 9),
+            (self.create_tournament(end_date=self._date("2026-04-11"), sessions=5, players=31), 16),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 2),
+            (self.create_tournament(end_date=self._date("2026-07-25"), sessions=5, players=32), 4),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 833.56)
+
+    def test_calculate_players_rating_algorithm_14(self):
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-09-01"), sessions=10, players=96), 5),
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 75),
+            (self.create_tournament(end_date=self._date("2025-01-07"), sessions=13, players=32), 11),
+            (self.create_tournament(end_date=self._date("2025-01-26"), sessions=8, players=43), 3),
+            (self.create_tournament(end_date=self._date("2025-02-02"), sessions=9, players=52), 6),
+            (self.create_tournament(end_date=self._date("2025-03-02"), sessions=8, players=32), 32),
+            (self.create_tournament(end_date=self._date("2025-04-26"), sessions=5, players=36), 16),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 46),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), 15),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 15),
+            (self.create_tournament(end_date=self._date("2026-02-23"), sessions=9, players=75), 14),
+            (self.create_tournament(end_date=self._date("2026-05-03"), sessions=10, players=43), 36),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 21),
+            (self.create_tournament(end_date=self._date("2026-07-25"), sessions=5, players=32), 28),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 718.25)
+
+    def test_calculate_players_rating_algorithm_19(self):
+        rating_date = self._date("2026-08-27")
+
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-09-01"), sessions=10, players=96), 32),
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 39),
+            (self.create_tournament(end_date=self._date("2025-01-26"), sessions=8, players=43), 27),
+            (self.create_tournament(end_date=self._date("2025-02-02"), sessions=9, players=52), 31),
+            (self.create_tournament(end_date=self._date("2025-02-16"), sessions=9, players=60), 28),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 2),
+            (self.create_tournament(end_date=self._date("2025-06-08"), sessions=8, players=16), 5),
+            (self.create_tournament(end_date=self._date("2025-06-15"), sessions=15, players=68), 31),
+            (self.create_tournament(end_date=self._date("2025-07-13"), sessions=9, players=31), 6),
+            (self.create_tournament(end_date=self._date("2025-08-03"), sessions=10, players=44), 12),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), 48),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), 3),
+            (self.create_tournament(end_date=self._date("2025-11-30"), sessions=12, players=32), 12),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 5),
+            (self.create_tournament(end_date=self._date("2026-02-23"), sessions=9, players=75), 28),
+            (self.create_tournament(end_date=self._date("2026-04-05"), sessions=10, players=51), 13),
+            (self.create_tournament(end_date=self._date("2026-05-03"), sessions=10, players=43), 6),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 58),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), 6),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 785.37)
+
+    def test_calculate_players_rating_algorithm_20(self):
+        rating_date = self._date("2026-08-27")
+
+        # place == None -> not participated, but used for max_coefficient
+        tournaments_data = [
+            (self.create_tournament(end_date=self._date("2024-09-01"), sessions=10, players=96), 22),
+            (self.create_tournament(end_date=self._date("2024-10-13"), sessions=10, players=90), 24),
+            (self.create_tournament(end_date=self._date("2025-01-07"), sessions=13, players=32), 10),
+            (self.create_tournament(end_date=self._date("2025-01-26"), sessions=8, players=43), 21),
+            (self.create_tournament(end_date=self._date("2025-02-02"), sessions=9, players=52), 13),
+            (self.create_tournament(end_date=self._date("2025-02-16"), sessions=9, players=60), 38),
+            (self.create_tournament(end_date=self._date("2025-03-02"), sessions=8, players=32), 11),
+            (self.create_tournament(end_date=self._date("2025-04-26"), sessions=5, players=36), 18),
+            (self.create_tournament(end_date=self._date("2025-05-03"), sessions=10, players=71), 65),
+            (self.create_tournament(end_date=self._date("2025-06-08"), sessions=8, players=16), 3),
+            (self.create_tournament(end_date=self._date("2025-06-15"), sessions=15, players=68), 55),
+            (self.create_tournament(end_date=self._date("2025-07-13"), sessions=9, players=31), 25),
+            (self.create_tournament(end_date=self._date("2025-08-31"), sessions=9, players=78), 69),
+            (self.create_tournament(end_date=self._date("2025-11-04"), sessions=15, players=58), None),
+            (self.create_tournament(end_date=self._date("2025-12-07"), sessions=9, players=20), 5),
+            (self.create_tournament(end_date=self._date("2026-01-25"), sessions=8, players=56), 31),
+            (self.create_tournament(end_date=self._date("2026-02-23"), sessions=9, players=75), 66),
+            (self.create_tournament(end_date=self._date("2026-04-05"), sessions=10, players=51), 38),
+            (self.create_tournament(end_date=self._date("2026-05-03"), sessions=10, players=43), 24),
+            (self.create_tournament(end_date=self._date("2026-06-14"), sessions=14, players=144), 43),
+            (self.create_tournament(end_date=self._date("2026-08-16"), sessions=10, players=60), 16),
+        ]
+
+        rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
+
+        self.assertEqual(float(rating_result.score), 562.21)
