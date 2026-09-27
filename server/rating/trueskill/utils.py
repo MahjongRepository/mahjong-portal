@@ -1,0 +1,132 @@
+# -*- coding: utf-8 -*-
+from datetime import date
+from typing import Any
+
+from django.db import transaction
+
+from player.models import Player
+from rating.models import ExternalRating, ExternalRatingDate, ExternalRatingDelta, ExternalRatingTournament
+from tournament.models import Tournament
+
+
+def get_tournament(pantheon_type, tournament_id):
+    try:
+        if Tournament.PANTHEON_TYPE_NEW == pantheon_type:
+            return Tournament.objects.get(new_pantheon_id=str(tournament_id))
+        if Tournament.PANTHEON_TYPE_OLD == pantheon_type:
+            return Tournament.objects.get(old_pantheon_id=str(tournament_id))
+    except Tournament.DoesNotExist as e:
+        print(f"Tournament [type={pantheon_type} id={tournament_id}] not found")
+        raise e
+    except Tournament.MultipleObjectsReturned as e:
+        print(f"found not unique Tournament [type={pantheon_type} id={tournament_id}]")
+        raise e
+
+
+def get_rating_by_type(type):
+    if ExternalRating.TYPES[ExternalRating.TRUESKILL][1] == type.upper():
+        return ExternalRating.objects.get_or_create(
+            name="Trueskill",
+            name_en="Trueskill rating (beta version)",
+            name_ru="Trueskill рейтинг (бета версия)",
+            slug="trueskill",
+            description="Trueskill rating",
+            description_en="Trueskill rating system for players developed by "
+            "Microsoft Research. Link for more information https://trueskill.org/",
+            description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
+            "Ссылка на подробное описание https://trueskill.org/",
+            type=ExternalRating.TRUESKILL,
+            order=0,
+        )[0]
+    if ExternalRating.TYPES[ExternalRating.ONLINE_TRUESKILL][1] == type.upper():
+        return ExternalRating.objects.get_or_create(
+            name="Online Trueskill",
+            name_en="Online Trueskill rating (beta version)",
+            name_ru="Online Trueskill рейтинг (бета версия)",
+            slug="online-trueskill",
+            description="Online Trueskill rating",
+            description_en="Trueskill online rating system for players developed by "
+            "Microsoft Research. Link for more information https://trueskill.org/",
+            description_ru="Trueskill рейтинг, разработанный Microsoft Research. "
+            "Ссылка на подробное описание https://trueskill.org/",
+            type=ExternalRating.ONLINE_TRUESKILL,
+            order=1,
+        )[0]
+    raise AssertionError("Passed type not allowed!")
+
+
+def update_trueskill(
+    trueskill_map: dict[str, Any], trueskill_type: str, rating_date: date
+) -> tuple[list[ExternalRatingDelta], list[str]]:
+    try:
+        with transaction.atomic():
+            rating_date_str = rating_date.strftime("%d-%m-%Y")
+            print(f"Called update for type {trueskill_type}, rating date {rating_date_str}")
+            rating = get_rating_by_type(trueskill_type)
+            print(f"Erasing dates {rating_date_str}...")
+            ExternalRatingDelta.objects.filter(rating=rating, date=rating_date).delete()
+            ExternalRatingDate.objects.filter(rating=rating, date=rating_date).delete()
+            ExternalRatingTournament.objects.filter(rating=rating).delete()
+
+            deltas = []
+            sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
+            place = 1
+            errors = []
+            for ts_player in sorted_rating:
+                if "slug" not in ts_player:
+                    continue
+                try:
+                    player = Player.objects.get(slug=ts_player["slug"])
+                    deltas.append(
+                        ExternalRatingDelta(
+                            rating=rating,
+                            player=player,
+                            date=rating_date,
+                            base_rank=ts_player["rating"],
+                            is_active=True,
+                            place=place,
+                            game_numbers=ts_player["game_count"],
+                            last_game_date=ts_player["last_game_date"],
+                        )
+                    )
+                    place = place + 1
+                except Player.DoesNotExist:
+                    message = (
+                        f"update_trueskill(): found 0 players with "
+                        f"slug {ts_player.get('slug')}, name {ts_player.get('player')}, "
+                        f"old_ids={ts_player.get('old_ids')}, new_ids={ts_player.get('new_ids')}, "
+                        f"last_game_date={ts_player['last_game_date']}"
+                    )
+                    print(message)
+                    errors.append(message)
+
+            if deltas:
+                ExternalRatingDelta.objects.bulk_create(deltas)
+            print(f"Trueskill players updated on date {rating_date_str}!")
+
+            tournaments = []
+            ts_tournaments_count = len(trueskill_map["tournament_ids"])
+            tournaments_count = 0
+            for tournament_id_map in trueskill_map["tournament_ids"]:
+                try:
+                    tournament_id = tournament_id_map["pantheon_id"]
+                    tournament_pantheon_type = tournament_id_map["pantheon_type"]
+                    tournament = get_tournament(tournament_pantheon_type, tournament_id)
+                    tournaments.append(ExternalRatingTournament(rating=rating, tournament=tournament))
+                    tournaments_count += 1
+                except (Tournament.DoesNotExist, Tournament.MultipleObjectsReturned) as e:
+                    raise e
+
+            if tournaments_count != ts_tournaments_count:
+                raise AssertionError("Not all tournaments found!")
+
+            if tournaments:
+                ExternalRatingTournament.objects.bulk_create(tournaments)
+            print(f"Trueskill tournaments updated on date {rating_date_str}!")
+
+            ExternalRatingDate.objects.create(rating=rating, date=rating_date)
+            return deltas, errors
+
+    except Exception as e:
+        print(e)
+        raise e
