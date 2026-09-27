@@ -7,12 +7,13 @@ import platform
 import threading
 from collections import defaultdict
 from datetime import timezone
+from typing import Any
 
 import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import connection, transaction
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import translation
@@ -280,57 +281,57 @@ def players_with_pantheon_account_api(request):
 def finished_tournaments_api(request):
     translation.activate("ru")
 
-    tournaments = Tournament.objects.all().prefetch_related("results__player")
-    new_pantheon_tournaments = []
-    old_pantheon_tournaments = []
-    for tournament in tournaments:
-        tournament_results_count = TournamentResult.objects.filter(tournament=tournament).count()
-        if tournament_results_count > 0:
-            if tournament.new_pantheon_id is not None and tournament.old_pantheon_id is not None:
-                raise RuntimeError(f"Found not valid tournament with id {tournament.id}")
-            if tournament.old_pantheon_id is not None:
-                old_pantheon_tournaments.append(tournament)
-            if tournament.new_pantheon_id is not None:
-                new_pantheon_tournaments.append(tournament)
-
-    data = []
-    data += extract_tournament_data(old_pantheon_tournaments)
-    data += extract_tournament_data(new_pantheon_tournaments)
-
-    return JsonResponse(data, safe=False)
-
-
-def extract_tournament_data(tournaments):
+    tournaments = Tournament.objects.prefetch_related(
+        Prefetch("results", queryset=TournamentResult.objects.order_by("place")),
+        "results__player",
+    )
     result = []
     for tournament in tournaments:
-        players = []
-        for res in tournament.results.all().order_by("place"):
-            player_dict = {}
-            player_dict["place"] = res.place
-            player_dict["score"] = round(float(res.scores), ndigits=2) if res.scores else None
-            if res.player_pantheon_id:
-                player_dict["player_pantheon_id"] = res.player_pantheon_id
-            if res.player:
-                player_dict["player_slug"] = res.player.slug
-                player_dict["player_name"] = res.player.full_name
-                if res.player.is_replacement:
-                    player_dict["is_replacement_player"] = True
-            else:
-                player_dict["player_name"] = res.player_string
-            players.append(player_dict)
-        result.append(
-            {
-                "pantheon_type": tournament.get_pantheon_type(),
-                "tournament_pantheon_id": tournament.get_pantheon_id(),
-                "tournament_name": tournament.name,
-                "tournament_slug": tournament.slug,
-                "tournament_type": tournament.tournament_type,
-                "tournament_games_type": tournament.tournament_games_type,
-                "players": players,
-            }
-        )
-    result.sort(key=lambda x: x["tournament_pantheon_id"])
-    return result
+        if tournament.get_pantheon_type() is None:
+            continue
+        if tournament.new_pantheon_id is not None and tournament.old_pantheon_id is not None:
+            raise RuntimeError(f"Found not valid tournament with id {tournament.id}")
+        tournament_dict = extract_tournament_data(tournament=tournament)
+        if len(tournament_dict["players"]) == 0:
+            continue
+        result.append(tournament_dict)
+
+    # [2]: ol[d] < ne[w]
+    result.sort(key=lambda x: (x["pantheon_type"][2], x["tournament_pantheon_id"]))
+    return JsonResponse(result, safe=False)
+
+
+def extract_tournament_data(tournament: Tournament) -> dict[str, Any]:
+    players = []
+    for res in tournament.results.all():
+        player_dict = {}
+        player_dict["place"] = res.place
+        player_dict["score"] = round(float(res.scores), ndigits=2) if res.scores else None
+        if res.player_pantheon_id:
+            player_dict["player_pantheon_id"] = res.player_pantheon_id
+        if res.player:
+            player_dict["player_slug"] = res.player.slug
+            player_dict["player_name"] = res.player.full_name
+            if res.player.is_replacement:
+                player_dict["is_replacement_player"] = True
+        else:
+            player_dict["player_name"] = res.player_string
+        players.append(player_dict)
+
+    tournament_dict = {
+        "pantheon_type": tournament.get_pantheon_type(),
+        "tournament_pantheon_id": tournament.get_pantheon_id(),
+        "tournament_name": tournament.name,
+        "tournament_slug": tournament.slug,
+        "tournament_type": tournament.tournament_type,
+        "tournament_games_type": tournament.tournament_games_type,
+        "tournament_games_count": tournament.number_of_sessions,
+        "tournament_end_date": tournament.end_date,
+        "players": players,
+    }
+    if players:
+        tournament_dict["tournament_players_count"] = players[-1]["place"]
+    return tournament_dict
 
 
 def do_update_from_pantheon_feed(person_id, pantheon_data):
