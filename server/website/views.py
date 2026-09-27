@@ -325,8 +325,12 @@ def extract_tournament_data(tournament: Tournament) -> dict[str, Any]:
         "tournament_slug": tournament.slug,
         "tournament_type": tournament.tournament_type,
         "tournament_games_type": tournament.tournament_games_type,
+        "tournament_games_count": tournament.number_of_sessions,
+        "tournament_end_date": tournament.end_date,
         "players": players,
     }
+    if players:
+        tournament_dict["tournament_players_count"] = players[-1]["place"]
     return tournament_dict
 
 
