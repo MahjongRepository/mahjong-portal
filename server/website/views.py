@@ -13,7 +13,7 @@ import ujson as json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import connection, transaction
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import translation
@@ -281,7 +281,10 @@ def players_with_pantheon_account_api(request):
 def finished_tournaments_api(request):
     translation.activate("ru")
 
-    tournaments = Tournament.objects.all().prefetch_related("results__player")
+    tournaments = Tournament.objects.prefetch_related(
+        Prefetch("results", queryset=TournamentResult.objects.order_by("place")),
+        "results__player",
+    )
     result = []
     for tournament in tournaments:
         if tournament.get_pantheon_type() is None:
@@ -300,7 +303,7 @@ def finished_tournaments_api(request):
 
 def extract_tournament_data(tournament: Tournament) -> dict[str, Any]:
     players = []
-    for res in tournament.results.all().order_by("place"):
+    for res in tournament.results.all():
         player_dict = {}
         player_dict["place"] = res.place
         player_dict["score"] = round(float(res.scores), ndigits=2) if res.scores else None
