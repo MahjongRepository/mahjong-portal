@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument("--date", default=None, type=str)
 
     def handle(self, *args, **options):
-        print("{0}: Start trueskill rating update".format(get_date_string()))
+        print(f"{get_date_string()}: Start trueskill rating update")
 
         trueskill_file = options["trueskill_file"]
         trueskill_type = options["type"]
@@ -28,6 +28,10 @@ class Command(BaseCommand):
             trueskill_map = ujson.loads(f.read())
 
         rating_date = datetime.strptime(trueskill_date, "%d%m%Y") if trueskill_date else timezone.now().date()
-        update_trueskill(trueskill_map=trueskill_map, trueskill_type=trueskill_type, rating_date=rating_date)
+        deltas, errors = update_trueskill(
+            trueskill_map=trueskill_map,
+            trueskill_type=trueskill_type,
+            rating_date=rating_date,
+        )
 
-        print("{0}: End trueskill rating update".format(get_date_string()))
+        print(f"{get_date_string()}: End trueskill rating update, created {len(deltas)} records, {len(errors)} errors")

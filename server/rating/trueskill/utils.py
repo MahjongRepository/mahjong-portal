@@ -55,7 +55,9 @@ def get_rating_by_type(type):
     raise AssertionError("Passed type not allowed!")
 
 
-def update_trueskill(trueskill_map: dict[str, Any], trueskill_type: str, rating_date: date):
+def update_trueskill(
+    trueskill_map: dict[str, Any], trueskill_type: str, rating_date: date
+) -> tuple[list[ExternalRatingDelta], list[str]]:
     try:
         with transaction.atomic():
             rating_date_str = rating_date.strftime("%d-%m-%Y")
@@ -69,11 +71,12 @@ def update_trueskill(trueskill_map: dict[str, Any], trueskill_type: str, rating_
             deltas = []
             sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
             place = 1
+            errors = []
             for ts_player in sorted_rating:
                 if "slug" not in ts_player:
                     continue
-                player = Player.objects.get(slug=ts_player["slug"])
-                if player:
+                try:
+                    player = Player.objects.get(slug=ts_player["slug"])
                     deltas.append(
                         ExternalRatingDelta(
                             rating=rating,
@@ -87,13 +90,15 @@ def update_trueskill(trueskill_map: dict[str, Any], trueskill_type: str, rating_
                         )
                     )
                     place = place + 1
-                else:
-                    print(
-                        f"find_player_smart(): found 0 players with "
+                except Player.DoesNotExist:
+                    message = (
+                        f"update_trueskill(): found 0 players with "
                         f"slug {ts_player.get('slug')}, name {ts_player.get('player')}, "
                         f"old_ids={ts_player.get('old_ids')}, new_ids={ts_player.get('new_ids')}, "
                         f"last_game_date={ts_player['last_game_date']}"
                     )
+                    print(message)
+                    errors.append(message)
 
             if deltas:
                 ExternalRatingDelta.objects.bulk_create(deltas)
@@ -120,6 +125,7 @@ def update_trueskill(trueskill_map: dict[str, Any], trueskill_type: str, rating_
             print(f"Trueskill tournaments updated on date {rating_date_str}!")
 
             ExternalRatingDate.objects.create(rating=rating, date=rating_date)
+            return deltas, errors
 
     except Exception as e:
         print(e)
