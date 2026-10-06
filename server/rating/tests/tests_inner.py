@@ -216,6 +216,40 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         self.assertEqual(calculator._determine_tournaments_number(20), 17)
         self.assertEqual(calculator._determine_tournaments_number(25), 21)
 
+    def test_calculate_number_of_not_decayed_tournaments(self):
+        calculator = RatingRRCalculation()
+
+        self.assertEqual(calculator._get_tournaments_number_without_decay(1), 1)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(5), 5)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(6), 5)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(7), 6)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(8), 7)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(9), 8)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(10), 9)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(11), 9)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(14), 12)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(15), 13)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(16), 13)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(19), 16)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(20), 17)
+        self.assertEqual(calculator._get_tournaments_number_without_decay(21), 17)
+
+    def test_calculate_last_decay_multiplier(self):
+        calculator = RatingRRCalculation()
+
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(6), 0.8)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(7), 0.6)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(8), 0.4)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(9), 0.2)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(10), 0.0)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(11), 0.8)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(14), 0.2)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(15), 0.0)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(16), 0.8)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(19), 0.2)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(20), 0.0)
+        self.assertEqual(calculator._get_last_tournament_decay_coefficient(21), 0.8)
+
     def test_calculate_age_weight_of_tournament(self):
         calculator = RatingCRRCalculation()
 
