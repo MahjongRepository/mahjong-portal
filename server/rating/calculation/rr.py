@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import math
 from datetime import timedelta
 
 from dateutil.relativedelta import relativedelta
@@ -112,14 +111,8 @@ class RatingRRCalculation:
             if total_tournaments < self.MIN_TOURNAMENTS_NUMBER:
                 continue
 
-            if total_tournaments <= self.FIRST_PART_MIN_TOURNAMENTS:
-                num_tournaments = total_tournaments
-            else:
-                num_tournaments = self._determine_tournaments_number(total_tournaments)
-
             best_rating_calculation, best_score, best_tournament_results_option = self._calculate_player_rating(
                 player=player,
-                num_tournaments=num_tournaments,
                 deltas=deltas,
                 coefficients_cache=coefficients_cache,
                 max_coefficient=max_coefficient,
@@ -315,7 +308,6 @@ class RatingRRCalculation:
     def _calculate_player_rating(
         self,
         player: Player,
-        num_tournaments: int,
         deltas: list[RatingDelta],
         coefficients_cache: dict[int, TournamentCoefficients],
         max_coefficient: float,
@@ -323,7 +315,6 @@ class RatingRRCalculation:
     ) -> tuple[str, float, list[RatingDelta]]:
         first_part_calculation, first_part, best_tournament_results = self._calculate_player_rating_first_part(
             player=player,
-            num_tournaments=num_tournaments,
             deltas=deltas,
             coefficients_cache=coefficients_cache,
         )
@@ -346,10 +337,9 @@ class RatingRRCalculation:
     def _calculate_first_part_score(
         self,
         player: Player,
-        num_tournaments: int,
         deltas: list[RatingDelta],
         coefficients_cache: dict[int, TournamentCoefficients],
-    ) -> tuple[float, list[RatingDelta]]:
+    ) -> tuple[float, list[RatingDelta], list[float | int]]:
         multipliers: list[float] = []
         for delta in deltas:
             coefficient_obj = coefficients_cache[delta.tournament_id]
@@ -359,31 +349,42 @@ class RatingRRCalculation:
             multiplier = float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
             multipliers.append(multiplier)
 
-        if len(deltas) <= num_tournaments:
+        tournaments_without_decay = self._get_tournaments_number_without_decay(total_played_tournaments=len(deltas))
+
+        if len(deltas) == tournaments_without_decay:
             numerator = 0.0
             denominator = 0.0
             for delta, multiplier in zip(deltas, multipliers, strict=True):
                 numerator += float(delta.delta)
                 denominator += multiplier
-            return numerator / denominator, deltas
+            return numerator / denominator, deltas, [1] * tournaments_without_decay
+
+        last_decay_multiplier = self._get_last_tournament_decay_coefficient(total_played_tournaments=len(deltas))
 
         # Bruteforce one tournament is faster than binary search
-        if len(deltas) == num_tournaments + 1:
+        if len(deltas) == tournaments_without_decay + 1:
             best_score = -1.0
             best_values = []
-            for exclude_index in range(len(deltas)):
+            for decay_index in range(len(deltas)):
                 numerator = 0.0
                 denominator = 0.0
                 for i, (delta, multiplier) in enumerate(zip(deltas, multipliers, strict=True)):
-                    if i == exclude_index:
-                        continue
-                    numerator += float(delta.delta)
-                    denominator += multiplier
+                    if i == decay_index:
+                        numerator += float(delta.delta) * last_decay_multiplier
+                        denominator += multiplier * last_decay_multiplier
+                    else:
+                        numerator += float(delta.delta)
+                        denominator += multiplier
                 score = numerator / denominator
                 if score > best_score:
                     best_score = score
-                    best_values = deltas[:exclude_index] + deltas[exclude_index + 1 :]
-            return best_score, best_values
+                    best_values = (
+                        # put decayed tournament in the end
+                        deltas[:decay_index]
+                        + deltas[decay_index + 1 :]
+                        + deltas[decay_index : decay_index + 1]
+                    )
+            return best_score, best_values, [1] * tournaments_without_decay + [last_decay_multiplier]
 
         # this problem can be solved by binary search
         left_score = 0.0
@@ -394,7 +395,8 @@ class RatingRRCalculation:
             for delta, multiplier in zip(deltas, multipliers, strict=True):
                 values.append(float(delta.delta) - check_score * multiplier)
             values.sort(reverse=True)
-            values = values[:num_tournaments]
+            values = values[: tournaments_without_decay + 1]
+            values[-1] *= last_decay_multiplier
             if sum(values) >= 0.0:
                 left_score = check_score
             else:
@@ -405,23 +407,25 @@ class RatingRRCalculation:
         for delta, multiplier in zip(deltas, multipliers, strict=True):
             best_values.append((float(delta.delta) - best_score * multiplier, delta))
         best_values.sort(key=lambda t: t[0], reverse=True)
-        best_values = best_values[:num_tournaments]
-        return best_score, [t[1] for t in best_values]
+        decay_multipliers = [last_decay_multiplier] + [0] * (len(deltas) - tournaments_without_decay - 1)
+        return best_score, [t[1] for t in best_values], [1] * tournaments_without_decay + decay_multipliers
 
     def _calculate_player_rating_first_part(
         self,
         player: Player,
-        num_tournaments: int,
         deltas: list[RatingDelta],
         coefficients_cache: dict[int, TournamentCoefficients],
     ) -> tuple[str, float, list[RatingDelta]]:
-        _, tournaments_results = self._calculate_first_part_score(
+        _, tournaments_results, decay_multipliers = self._calculate_first_part_score(
             player=player,
-            num_tournaments=num_tournaments,
             deltas=deltas,
             coefficients_cache=coefficients_cache,
         )
-        assert len(tournaments_results) == num_tournaments
+        # deltas are all kept, but they are sorted by impact
+        assert len(tournaments_results) == len(deltas)
+
+        # decay_multipliers = [1, ..., 1, X, 0, ..., 0] where X is in {0.0, 0.2, 0.4, 0.6, 0.8}
+        assert len(decay_multipliers) == len(deltas)
 
         first_part_numerator_calculation = []
         first_part_denominator_calculation = []
@@ -429,26 +433,53 @@ class RatingRRCalculation:
         first_part_numerator = 0
         first_part_denominator = 0
 
-        for result in tournaments_results:
+        fully_decayed = 0
+        for i, result in enumerate(tournaments_results):
             coefficient_obj = coefficients_cache[result.tournament_id]
             coefficient = get_tournament_coefficient(
                 self.IS_EMA, coefficient_obj.tournament_id, player, coefficient_obj.coefficient
             )
 
-            first_part_numerator += float(result.delta)
-            first_part_denominator += float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
+            current_numerator = float(result.delta)
+            current_denominator = float(self._calculate_percentage(float(coefficient), coefficient_obj.age))
 
-            first_part_numerator_calculation.append(
-                "{} * {} * {}".format(
-                    floatformat(result.base_rank, -2),
-                    floatformat(coefficient, -2),
-                    floatformat(coefficient_obj.age / 100, -2),
+            current_numerator *= decay_multipliers[i]
+            current_denominator *= decay_multipliers[i]
+
+            if decay_multipliers[i] == 1:
+                # no decay
+                first_part_numerator_calculation.append(
+                    "{} * {} * {}".format(
+                        floatformat(result.base_rank, -2),
+                        floatformat(coefficient, -2),
+                        floatformat(coefficient_obj.age / 100, -2),
+                    )
                 )
-            )
+                first_part_denominator_calculation.append(
+                    "{} * {}".format(floatformat(coefficient, -2), floatformat(coefficient_obj.age / 100, -2))
+                )
+            elif decay_multipliers[i] > 0:
+                # partial decay
+                first_part_numerator_calculation.append(
+                    "{} * {} * {} * {}".format(
+                        floatformat(result.base_rank, -2),
+                        floatformat(coefficient, -2),
+                        floatformat(coefficient_obj.age / 100, -2),
+                        floatformat(decay_multipliers[i], -1),
+                    )
+                )
+                first_part_denominator_calculation.append(
+                    "{} * {} * {}".format(
+                        floatformat(coefficient, -2),
+                        floatformat(coefficient_obj.age / 100, -2),
+                        floatformat(decay_multipliers[i], -1),
+                    )
+                )
+            else:
+                fully_decayed += 1
 
-            first_part_denominator_calculation.append(
-                "{} * {}".format(floatformat(coefficient, -2), floatformat(coefficient_obj.age / 100, -2))
-            )
+            first_part_numerator += current_numerator
+            first_part_denominator += current_denominator
 
         if len(tournaments_results) < self.FIRST_PART_MIN_TOURNAMENTS:
             fill_missed_data = self.FIRST_PART_MIN_TOURNAMENTS - len(tournaments_results)
@@ -463,7 +494,7 @@ class RatingRRCalculation:
         first_part_calculation = "p1 = ({}) / ({}) = {}".format(
             " + ".join(first_part_numerator_calculation), " + ".join(first_part_denominator_calculation), first_part
         )
-        return first_part_calculation, first_part, tournaments_results
+        return first_part_calculation, first_part, tournaments_results[: len(tournaments_results) - fully_decayed]
 
     def _calculate_player_rating_second_part(
         self,
@@ -566,19 +597,6 @@ class RatingRRCalculation:
         # 11->9, ..., 15->13 (subtract 2)
         to_subtract = (total_played_tournaments - 1) // 5
         return total_played_tournaments - to_subtract
-
-    def _determine_tournaments_number(self, number_of_tournaments):
-        """
-        5 tournaments is a base
-        for additional calculations we are taking 80% of additional tournaments
-        Check about page for detailed description
-        """
-        if number_of_tournaments <= 5:
-            return number_of_tournaments
-
-        n = number_of_tournaments - 5
-
-        return 5 + math.ceil(self._calculate_percentage(n, 80))
 
     def _calculate_percentage(self, number, percentage):
         if percentage == 100:

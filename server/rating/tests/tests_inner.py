@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from rating.calculation.crr import RatingCRRCalculation
+from rating.calculation.ema import RatingEMACalculation
 from rating.calculation.rr import RatingRRCalculation
 from rating.mixins import RatingTestMixin
 from rating.models import Rating, RatingDelta, RatingResult, TournamentCoefficients
@@ -204,7 +205,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
         self.assertEqual(calculator._assume_number_of_sessions(tournament), 12)
 
     def test_calculate_number_of_accepted_tournaments(self):
-        calculator = RatingCRRCalculation()
+        calculator = RatingEMACalculation()
 
         self.assertEqual(calculator._determine_tournaments_number(5), 5)
         self.assertEqual(calculator._determine_tournaments_number(6), 6)
@@ -428,7 +429,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
 
-        self.assertEqual(float(rating_result.score), 691.77)
+        self.assertEqual(float(rating_result.score), 704.32)
 
     def test_calculate_players_rating_algorithm_10(self):
         rating_date = self._date("2026-08-27")
@@ -476,7 +477,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
 
-        self.assertEqual(float(rating_result.score), 718.25)
+        self.assertEqual(float(rating_result.score), 733.89)
 
     def test_calculate_players_rating_algorithm_19(self):
         rating_date = self._date("2026-08-27")
@@ -505,7 +506,7 @@ class InnerRatingTestCase(TestCase, RatingTestMixin):
 
         rating_result = self._calculate_rating(tournaments_data=tournaments_data, rating_date=rating_date)
 
-        self.assertEqual(float(rating_result.score), 785.37)
+        self.assertEqual(float(rating_result.score), 792.08)
 
     def test_calculate_players_rating_algorithm_20(self):
         rating_date = self._date("2026-08-27")
