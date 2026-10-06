@@ -548,6 +548,25 @@ class RatingRRCalculation:
 
         return days * 4
 
+    @classmethod
+    def _get_last_tournament_decay_coefficient(cls, total_played_tournaments: int) -> float:
+        assert total_played_tournaments >= 6  # no decay on <= 5
+        remains = total_played_tournaments % 5
+        if remains == 0:
+            remains = 5
+        # 1 -> 0.8
+        # 5 -> 0.0
+        return round(1.0 - 0.2 * remains, 2)
+
+    @classmethod
+    def _get_tournaments_number_without_decay(cls, total_played_tournaments: int) -> int:
+        if total_played_tournaments <= 5:
+            return total_played_tournaments
+        # 6->5, ... 10->9 (subtract 1)
+        # 11->9, ..., 15->13 (subtract 2)
+        to_subtract = (total_played_tournaments - 1) // 5
+        return total_played_tournaments - to_subtract
+
     def _determine_tournaments_number(self, number_of_tournaments):
         """
         5 tournaments is a base
