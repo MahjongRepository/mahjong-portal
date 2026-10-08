@@ -33,14 +33,20 @@
         <p>Where W = tournament weight, R = player’s base rank based on tournament results, A = tournament obsolescence coefficient.</p>
         <p>Scheme for calculating the coefficients W, R and A are presented next.</p>
         <p>If a player has played less than 5 tournaments, all missing tournaments in formula substitutes for zero values in the numerator and for one in the denominator. Thus, the player gets maximum results in the first part of the formula, when he has played 5 and more tournaments.</p>
-        <p>If a player has played more than 5 tournaments, in the first part enter 5 + 80% remaining of his best tournaments with rounding up. This allows you to ignore the worst results for players actively participating in tournaments.</p>
+        <p>If a player has played 5 or more tournaments, in the first part enter 5 + 80% remaining of his best tournaments with rounding up. These 80% are a continuous value: for each played tournament, 20% is cut off from the weight of the current worst tournament. The worst tournament is the one, cutting off from which maximizes the value of the first part of the formula. This allows you to ignore the worst results for players actively participating in tournaments.</p>
+        <p><i>Example of tournaments selection:</i></p>
         <ul>
             <li>5 or less tournaments. All results count towards rating.</li>
-            <li>10 tournaments. 9 best results count towards rating (5 + 5 * 80% = 9)</li>
-            <li>11 tournaments. 10 best results count towards rating (5 + 6 * 80% = 10)</li>
-            <li>15 tournaments. 13 best results count towards rating (5 + 10 * 80% = 13)</li>
-            <li>20 tournaments. 17 best results count towards rating (5 + 15 * 80% = 17)</li>
-            <li>25 tournaments. 21 best results count towards rating (5 + 20 * 80% = 21)</li>
+            <li>6 tournaments. 5 best results and 80% of the 6th result count towards rating.</li>
+            <li>9 tournaments. 8 best results and 20% of the 9th result count towards rating.</li>
+            <li>10 tournaments. 9 best results count towards rating.</li>
+            <li>11 tournaments. 9 best results and 80% of the 10th result count towards rating.</li>
+            <li>14 tournaments. 12 best results and 20% of the 13th result count towards rating.</li>
+            <li>15 tournaments. 13 best results count towards rating.</li>
+            <li>16 tournaments. 13 best results and 80% of the 14th result count towards rating.</li>
+            <li>19 tournaments. 16 best results and 20% of the 17th result count towards rating.</li>
+            <li>20 tournaments. 17 best results count towards rating.</li>
+            <li>and so on.</li>
         </ul>
 
         <h3>Second part</h3>
