@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
+import traceback
+from datetime import datetime
+
+import ujson
 from dateutil.relativedelta import relativedelta
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
@@ -19,8 +25,10 @@ from rating.models import (
     RatingResult,
     TournamentCoefficients,
 )
+from rating.trueskill.utils import update_trueskill
 from rating.utils import get_latest_rating_date, parse_rating_date
 from settings.models import Country
+from system.decorators import token_require
 from tournament.models import Tournament
 
 
@@ -307,3 +315,41 @@ def rating_tournaments(request, slug):
             "top_tournament_ids": top_tournament_ids,
         },
     )
+
+
+@require_POST
+@csrf_exempt
+@token_require(token_header_name="trueskill-token", django_property_name="TRUESKILL_TOKEN")
+def update_trueskill_rating(request):
+    try:
+        rating_date = datetime.strptime(request.GET["date"], "%Y-%m-%d").date()
+    except (KeyError, ValueError):
+        return JsonResponse({"error": "expected ?date=YYYY-MM-DD"}, status=400)
+
+    try:
+        trueskill_type = request.GET["type"]
+    except KeyError:
+        return JsonResponse({"error": "expected ?type=..."}, status=400)
+
+    try:
+        trueskill_map = ujson.loads(request.body)
+    except ValueError:
+        return JsonResponse({"error": "missing POST body"}, status=400)
+
+    try:
+        deltas, errors = update_trueskill(
+            trueskill_map=trueskill_map,
+            trueskill_type=trueskill_type,
+            rating_date=rating_date,
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e), "traceback": traceback.format_exception(e)}, status=422)
+
+    response_data = {
+        "type": trueskill_type,
+        "date": rating_date.strftime("%Y-%m-%d"),
+        "count": len(deltas),
+        "errors": errors,
+    }
+
+    return JsonResponse(response_data, safe=False)
