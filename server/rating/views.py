@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import traceback
-from datetime import datetime
 
 import ujson
 from dateutil.relativedelta import relativedelta
@@ -322,32 +321,24 @@ def rating_tournaments(request, slug):
 @token_require(token_header_name="trueskill-token", django_property_name="TRUESKILL_TOKEN")
 def update_trueskill_rating(request):
     try:
-        rating_date = datetime.strptime(request.GET["date"], "%Y-%m-%d").date()
-    except (KeyError, ValueError):
-        return JsonResponse({"error": "expected ?date=YYYY-MM-DD"}, status=400)
-
-    try:
-        trueskill_type = request.GET["type"]
-    except KeyError:
-        return JsonResponse({"error": "expected ?type=..."}, status=400)
-
-    try:
-        trueskill_map = ujson.loads(request.body)
+        trueskill_data = ujson.loads(request.body)
     except ValueError:
         return JsonResponse({"error": "missing POST body"}, status=400)
 
     try:
-        deltas, errors = update_trueskill(
-            trueskill_map=trueskill_map,
-            trueskill_type=trueskill_type,
-            rating_date=rating_date,
-        )
+        trueskill_type = trueskill_data["type"]
+        trueskill_date = trueskill_data["date"]
+    except (KeyError, ValueError):
+        return JsonResponse({"error": "missing required parameters 'date' and 'type' in POST body"}, status=400)
+
+    try:
+        deltas, errors = update_trueskill(trueskill_data=trueskill_data)
     except Exception as e:
         return JsonResponse({"error": str(e), "traceback": traceback.format_exception(e)}, status=422)
 
     response_data = {
         "type": trueskill_type,
-        "date": rating_date.strftime("%Y-%m-%d"),
+        "date": trueskill_date,
         "count": len(deltas),
         "errors": errors,
     }

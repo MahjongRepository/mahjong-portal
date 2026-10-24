@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 from django.db import transaction
@@ -55,13 +55,14 @@ def get_rating_by_type(type):
     raise AssertionError("Passed type not allowed!")
 
 
-def update_trueskill(
-    trueskill_map: dict[str, Any], trueskill_type: str, rating_date: date
-) -> tuple[list[ExternalRatingDelta], list[str]]:
+def update_trueskill(trueskill_data: dict[str, Any]) -> tuple[list[ExternalRatingDelta], list[str]]:
     try:
+        trueskill_type: str = trueskill_data["type"]
+        rating_date_str: str = trueskill_data["date"]
+        rating_date: date = datetime.strptime(rating_date_str, "%Y-%m-%d").date()
+        print(f"Called update for type {trueskill_type}, rating date {rating_date_str}")
+
         with transaction.atomic():
-            rating_date_str = rating_date.strftime("%d-%m-%Y")
-            print(f"Called update for type {trueskill_type}, rating date {rating_date_str}")
             rating = get_rating_by_type(trueskill_type)
             print(f"Erasing dates {rating_date_str}...")
             ExternalRatingDelta.objects.filter(rating=rating, date=rating_date).delete()
@@ -69,7 +70,7 @@ def update_trueskill(
             ExternalRatingTournament.objects.filter(rating=rating).delete()
 
             deltas = []
-            sorted_rating = sorted(trueskill_map["trueskill"], key=lambda d: d["rating"], reverse=True)
+            sorted_rating = sorted(trueskill_data["ratings"], key=lambda d: d["rating"], reverse=True)
             place = 1
             errors = []
             for ts_player in sorted_rating:
@@ -105,9 +106,9 @@ def update_trueskill(
             print(f"Trueskill players updated on date {rating_date_str}!")
 
             tournaments = []
-            ts_tournaments_count = len(trueskill_map["tournament_ids"])
+            ts_tournaments_count = len(trueskill_data["tournament_ids"])
             tournaments_count = 0
-            for tournament_id_map in trueskill_map["tournament_ids"]:
+            for tournament_id_map in trueskill_data["tournament_ids"]:
                 try:
                     tournament_id = tournament_id_map["pantheon_id"]
                     tournament_pantheon_type = tournament_id_map["pantheon_type"]
