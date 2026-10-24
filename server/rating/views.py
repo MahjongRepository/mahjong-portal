@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+import traceback
+
+import ujson
 from dateutil.relativedelta import relativedelta
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from rating.calculation.crr import RatingCRRCalculation
 from rating.calculation.hardcoded_coefficients import HARDCODED_COEFFICIENTS
@@ -19,8 +24,10 @@ from rating.models import (
     RatingResult,
     TournamentCoefficients,
 )
+from rating.trueskill.utils import update_trueskill
 from rating.utils import get_latest_rating_date, parse_rating_date
 from settings.models import Country
+from system.decorators import token_require
 from tournament.models import Tournament
 
 
@@ -307,3 +314,33 @@ def rating_tournaments(request, slug):
             "top_tournament_ids": top_tournament_ids,
         },
     )
+
+
+@require_POST
+@csrf_exempt
+@token_require(token_header_name="trueskill-token", django_property_name="TRUESKILL_TOKEN")
+def update_trueskill_rating(request):
+    try:
+        trueskill_data = ujson.loads(request.body)
+    except ValueError:
+        return JsonResponse({"error": "missing POST body"}, status=400)
+
+    try:
+        trueskill_type = trueskill_data["type"]
+        trueskill_date = trueskill_data["date"]
+    except (KeyError, ValueError):
+        return JsonResponse({"error": "missing required parameters 'date' and 'type' in POST body"}, status=400)
+
+    try:
+        deltas, errors = update_trueskill(trueskill_data=trueskill_data)
+    except Exception as e:
+        return JsonResponse({"error": str(e), "traceback": traceback.format_exception(e)}, status=422)
+
+    response_data = {
+        "type": trueskill_type,
+        "date": trueskill_date,
+        "count": len(deltas),
+        "errors": errors,
+    }
+
+    return JsonResponse(response_data, safe=False)

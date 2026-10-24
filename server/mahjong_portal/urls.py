@@ -35,6 +35,7 @@ from online.views import (
     process_notification,
     send_team_names_to_pantheon,
 )
+from rating.views import update_trueskill_rating
 from website.views import (
     finished_tournaments_api,
     players_api,
@@ -64,6 +65,7 @@ urlpatterns = [
     ),
     url("^api/v0/players/$", players_api),
     url("^api/v0/players_with_pantheon_account/$", players_with_pantheon_account_api),
+    url("^api/v0/ratings/update_trueskill/$", update_trueskill_rating),
     url("^api/v0/tournaments/finished/$", finished_tournaments_api),
     url("^api/v0/update_info_from_pantheon/$", update_info_from_pantheon_api),
     url("^api/v0/finish_game_api/$", finish_game_api),
