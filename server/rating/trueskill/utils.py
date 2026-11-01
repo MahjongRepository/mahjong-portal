@@ -116,7 +116,9 @@ def update_trueskill(trueskill_data: dict[str, Any]) -> tuple[list[ExternalRatin
                     raise e
                 except Tournament.DoesNotExist:
                     message = (
-                        f"update_trueskill(): tournament with pantheon type=[{tournament_pantheon_type}] and tournament id=[{tournament_id}] not found"
+                        f"update_trueskill(): tournament with "
+                        f"pantheon type=[{tournament_pantheon_type}] and "
+                        f"tournament id=[{tournament_id}] not found"
                     )
                     print(message)
                     errors.append(message)
