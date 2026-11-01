@@ -106,20 +106,22 @@ def update_trueskill(trueskill_data: dict[str, Any]) -> tuple[list[ExternalRatin
             print(f"Trueskill players updated on date {rating_date_str}!")
 
             tournaments = []
-            ts_tournaments_count = len(trueskill_data["tournament_ids"])
-            tournaments_count = 0
             for tournament_id_map in trueskill_data["tournament_ids"]:
                 try:
                     tournament_id = tournament_id_map["pantheon_id"]
                     tournament_pantheon_type = tournament_id_map["pantheon_type"]
                     tournament = get_tournament(tournament_pantheon_type, tournament_id)
                     tournaments.append(ExternalRatingTournament(rating=rating, tournament=tournament))
-                    tournaments_count += 1
-                except (Tournament.DoesNotExist, Tournament.MultipleObjectsReturned) as e:
+                except Tournament.MultipleObjectsReturned as e:
                     raise e
-
-            if tournaments_count != ts_tournaments_count:
-                raise AssertionError("Not all tournaments found!")
+                except Tournament.DoesNotExist:
+                    message = (
+                        f"update_trueskill(): tournament with "
+                        f"pantheon type=[{tournament_pantheon_type}] and "
+                        f"tournament id=[{tournament_id}] not found"
+                    )
+                    print(message)
+                    errors.append(message)
 
             if tournaments:
                 ExternalRatingTournament.objects.bulk_create(tournaments)
