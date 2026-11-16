@@ -6,6 +6,8 @@ import hmac
 import os
 import random
 import uuid
+from datetime import datetime
+from datetime import timezone as stdtimezone
 
 import aiohttp
 import ms.protocol_pb2 as pb
@@ -14,7 +16,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from ms.base import MSRPCChannel
-from ms.rpc import Lobby
+from ms.rpc import Lobby, Route
 
 
 def get_date_string():
@@ -69,16 +71,31 @@ class MSBaseCommand(BaseCommand):
                     routes = routes["data"]["routes"]
                     server = random.choice(routes)
                     endpoint = "wss://{}/gateway".format(server["domain"])
+                    route_id = str(server["id"]).strip()
 
         print("Chosen endpoint: {}".format(endpoint))
         channel = MSRPCChannel(endpoint)
 
         lobby = Lobby(channel)
+        route = Route(channel)
 
+        await self.route_connect(channel, route, route_id, host)
+        return lobby, channel, version_to_force
+
+    async def route_connect(self, channel, route, route_id, host):
         await channel.connect(host)
         print("Connection was established")
 
-        return lobby, channel, version_to_force
+        utc_now = int(datetime.now(stdtimezone.utc).timestamp() * 1000)
+        req_connection = pb.ReqRequestConnection()
+        req_connection.type = 3
+        req_connection.route_id = route_id
+        req_connection.timestamp = utc_now
+        req_connection.platform = "Web"
+        req_connection_result = await route.request_connection(req_connection)
+        if int(req_connection_result.error.ByteSize()) > 0:
+            await channel.close()
+            raise RuntimeError("request connection for route {} failed".format(route_id))
 
     async def login_with_token(self, lobby, acess_token, version_to_force):
         print("Login with access_token")
@@ -127,16 +144,42 @@ class MSBaseCommand(BaseCommand):
 
         uuid_key = str(uuid.uuid1())
 
+        resource_version = "0.16.290"
+        package_version = "4.0.51"
+
         req = pb.ReqLogin()
         req.account = username
         req.password = hmac.new(b"lailai", password.encode(), hashlib.sha256).hexdigest()
+        req.reconnect = False
+        req.device.platform = "pc"
+        req.device.hardware = "pc"
+        req.device.os = "windows"
+        req.device.os_version = "win10"
         req.device.is_browser = True
+        req.device.software = "Chrome"
+        req.device.sale_platform = "web"
+        req.device.screen_width = 2133
+        req.device.screen_height = 1103
+        req.device.user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/150.0.0.0 Safari/537.36"
+        )
+        req.device.screen_type = 1
         req.random_key = uuid_key
         req.gen_access_token = True
         # todo: search path to resolve version
-        # req.client_version_string = f"web-{version_to_force}"
-        req.client_version_string = "web-0.16.23"
+        req.client_version_string = f"WebGL_2022-{resource_version}"
+        req.currency_platforms.append(1)
         req.currency_platforms.append(2)
+        req.currency_platforms.append(5)
+        req.currency_platforms.append(6)
+        req.currency_platforms.append(8)
+        req.currency_platforms.append(10)
+        req.currency_platforms.append(11)
+        req.tag = "cn"
+        req.client_version.resource = resource_version
+        req.client_version.package = package_version
 
         res = await lobby.login(req)
         token = res.access_token
@@ -170,12 +213,40 @@ class MSBaseCommand(BaseCommand):
             print("Invalid access token")
             return False
 
+        resource_version = "0.16.290"
+        package_version = "4.0.51"
+
         request = pb.ReqOauth2Login()
         request.access_token = data["access_token"]
+        request.reconnect = False
+        request.device.platform = "pc"
+        request.device.hardware = "pc"
+        request.device.os = "windows"
+        request.device.os_version = "win10"
         request.device.is_browser = True
+        request.device.software = "Chrome"
+        request.device.sale_platform = "web"
+        request.device.screen_width = 2133
+        request.device.screen_height = 1103
+        request.device.user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/150.0.0.0 Safari/537.36"
+        )
+        request.device.screen_type = 1
         request.random_key = data["random_key"]
-        request.client_version_string = f"web-{version_to_force}"
+        # todo: search path to resolve version
+        request.client_version_string = f"WebGL_2022-{resource_version}"
+        request.currency_platforms.append(1)
         request.currency_platforms.append(2)
+        request.currency_platforms.append(5)
+        request.currency_platforms.append(6)
+        request.currency_platforms.append(8)
+        request.currency_platforms.append(10)
+        request.currency_platforms.append(11)
+        request.tag = "cn"
+        request.client_version.resource = resource_version
+        request.client_version.package = package_version
 
         response = await lobby.oauth2_login(request)
         if not response.access_token:
