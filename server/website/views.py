@@ -14,7 +14,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import connection, transaction
 from django.db.models import Prefetch, Q
-from django.http import HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import translation
 from django.utils.text import slugify
@@ -299,6 +299,26 @@ def finished_tournaments_api(request):
     # [2]: ol[d] < ne[w]
     result.sort(key=lambda x: (x["pantheon_type"][2], x["tournament_pantheon_id"]))
     return JsonResponse(result, safe=False)
+
+
+def tournament_registrations_api(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    if not tournament.is_online():
+        raise Http404
+
+    registrations = tournament.get_tournament_registrations().select_related("user").order_by("created_on", "id")
+    data = [
+        {
+            "pantheon_id": registration.user.new_pantheon_id if registration.user else None,
+            "display_name": registration.full_name.strip(),
+            "tenhou_nickname": getattr(registration, "tenhou_nickname", None) or None,
+            "ms_nickname": getattr(registration, "ms_nickname", None) or None,
+            "ms_account_id": getattr(registration, "ms_account_id", None),
+            "ronin_id": getattr(registration, "ronin_id", None) or None,
+        }
+        for registration in registrations
+    ]
+    return JsonResponse(data, safe=False)
 
 
 def extract_tournament_data(tournament: Tournament) -> dict[str, Any]:

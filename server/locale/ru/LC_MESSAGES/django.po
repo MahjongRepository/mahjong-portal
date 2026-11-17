@@ -1771,6 +1771,22 @@ msgid ""
 msgstr "Перед записью на турнир, пожалуйста, укажите свой tenhou id в Pantheon"
 
 #: templates/tournament/announcement.html:49
+msgid ""
+"Before applying for the tournament, please set your Ronin ID in Pantheon "
+"settings first"
+msgstr ""
+"Перед записью на турнир, пожалуйста, укажите свой Ronin ID в настройках "
+"Pantheon"
+
+#: tournament/models.py:157
+msgid ""
+"Ronin tournament should be an online tournament with Pantheon registration "
+"and without Majsoul."
+msgstr ""
+"Турнир Ronin должен быть онлайн-турниром с регистрацией через Pantheon и без "
+"Majsoul."
+
+#: templates/tournament/announcement.html:49
 msgid "Incorrect form data"
 msgstr "Некорректные данные в форме регистрации"
 

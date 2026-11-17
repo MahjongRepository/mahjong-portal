@@ -220,6 +220,7 @@ def tournament_announcement(request, slug):
                 registration_confirm_code = current_registration[0].confirm_code
 
     missed_tenhou_id_error = request.GET.get("error") == "tenhou_id"
+    missed_ronin_id_error = request.GET.get("error") == "ronin_id"
     form_data_error = request.GET.get("error") == "form_data"
 
     return render(
@@ -232,6 +233,7 @@ def tournament_announcement(request, slug):
             "registration_results": registration_results,
             "is_already_registered": is_already_registered,
             "missed_tenhou_id_error": missed_tenhou_id_error,
+            "missed_ronin_id_error": missed_ronin_id_error,
             "form_data_error": form_data_error,
             "full_approved_players_count": full_approved_players_count,
             "registration_confirm_code": registration_confirm_code,
@@ -279,7 +281,10 @@ def pantheon_tournament_registration(request, tournament_id):
     player = PlayerHelper.find_player_smart(player_full_name=full_name)
     city_object = City.objects.filter(name_ru=data["city"].title()).first()
 
-    if not tournament.is_majsoul_tournament and not data["tenhou_id"]:
+    if tournament.is_ronin_tournament:
+        if not data["ronin_id"]:
+            return redirect(tournament.get_url() + "?error=ronin_id")
+    elif not tournament.is_majsoul_tournament and not data["tenhou_id"]:
         return redirect(tournament.get_url() + "?error=tenhou_id")
 
     player_is_approved = True
@@ -314,7 +319,8 @@ def pantheon_tournament_registration(request, tournament_id):
         OnlineTournamentRegistration.objects.create(
             tournament=tournament,
             user=user,
-            tenhou_nickname=data["tenhou_id"],
+            tenhou_nickname=None if tournament.is_ronin_tournament else data["tenhou_id"],
+            ronin_id=data["ronin_id"] if tournament.is_ronin_tournament else None,
             first_name=first_name,
             last_name=last_name,
             city=data["city"],
@@ -330,7 +336,7 @@ def pantheon_tournament_registration(request, tournament_id):
 
 @require_POST
 def tournament_registration(request, tournament_id):
-    tournament = get_object_or_404(Tournament, id=tournament_id)
+    tournament = get_object_or_404(Tournament, id=tournament_id, is_ronin_tournament=False)
 
     if tournament.is_online():
         form = OnlineTournamentRegistrationForm(request.POST, initial={"tournament": tournament})

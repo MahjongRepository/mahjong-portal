@@ -52,5 +52,6 @@ def get_pantheon_public_person_information(person_id):
         "country": person.country,
         "city": person.city,
         "tenhou_id": person.tenhou_id,
+        "ronin_id": person.ronin_id,
         "title": person.title,
     }

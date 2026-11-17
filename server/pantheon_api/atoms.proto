@@ -1,19 +1,15 @@
-/*  Pantheon common files
- *  Copyright (C) 2016  o.klimenko aka ctizen
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright 2020 o.klimenko aka ctizen
+//
+// Licensed under the Apache License, Version 2.0 (the "License"). You may not
+// use this file except in compliance with the License. A copy of the License is
+// located at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// or in the "license" file accompanying this file. This file is distributed on
+// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+// express or implied. See the License for the specific language governing
+// permissions and limitations under the License.
 
 // protolint:disable REPEATED_FIELD_NAMES_PLURALIZED
 syntax = "proto3";
@@ -45,6 +41,7 @@ message Person {
   string title = 4;
   bool has_avatar = 5;
   string last_update = 6;
+  string ronin_id = 7;
 }
 
 message PersonEx {
@@ -61,6 +58,7 @@ message PersonEx {
   int32 ms_account_id = 12;
   string telegram_id = 13;
   string notifications = 14;
+  string ronin_id = 15;
 }
 
 // Mimir specifics
@@ -98,6 +96,13 @@ enum SessionStatus {
   SESSION_STATUS_PLANNED = 5;
 }
 
+enum WindShuffleMode {
+  WIND_SHUFFLE_MODE_UNSPECIFIED = 0;
+  WIND_SHUFFLE_MODE_RANDOM = 1;
+  WIND_SHUFFLE_MODE_BALANCED = 2;
+  WIND_SHUFFLE_MODE_PRESCRIPTED = 3;
+}
+
 message Country {
   string code = 1;
   string name = 2;
@@ -120,6 +125,7 @@ message Event {
   bool achievements_shown = 15;
   bool with_yakitori = 16;
   PlatformType platform_id = 17;
+  bool allow_manual_add_replay = 18;
 }
 
 message MyEvent {
@@ -143,7 +149,6 @@ message GameConfig {
   bool auto_seating = 38;
   bool sync_start = 39;
   bool sync_end = 40;
-  bool sort_by_games = 41;
   bool allow_player_append = 42;
   int32 series_length = 45;
   int32 min_games_count = 46;
@@ -155,6 +160,7 @@ message GameConfig {
   RulesetConfig ruleset_config = 53;
   int32 lobby_id = 54;
   bool allow_view_other_tables = 55;
+  optional WindShuffleMode wind_shuffle_mode = 56;
 }
 
 message PlayerInRating {
@@ -172,6 +178,7 @@ message PlayerInRating {
   string last_update = 12;
   float penalties_amount = 13;
   int32 penalties_count = 14;
+  string ronin_id = 15;
 }
 
 message Player {
@@ -180,6 +187,7 @@ message Player {
   string tenhou_id = 3;
   bool has_avatar = 4;
   string last_update = 5;
+  string ronin_id = 6;
 }
 
 message FinalResultOfSession {
@@ -271,7 +279,9 @@ message AbortResult {
 message ChomboResult {
   int32 round_index = 1;
   int32 honba = 2;
-  int32 loser_id = 3;
+  reserved 3;
+  reserved "loser_id";
+  repeated int32 loser_ids = 4;
 }
 
 message NagashiResult {
@@ -298,9 +308,9 @@ message GameResult {
   string session_hash = 1;
   optional string date = 2;
   string replay_link = 3;
-  repeated int32 players = 4;
   repeated FinalResultOfSession final_results = 5;
   repeated Round rounds = 7;
+  repeated PersonEx players = 8;
 }
 
 message PlayerPlaceInSeries {
@@ -343,11 +353,14 @@ message RegisteredPlayer {
   string title = 2;
   optional int32 local_id = 3;
   optional string team_name = 4;
-  string tenhou_id = 5;
+  optional string tenhou_id = 5;
   bool ignore_seating = 6;
   optional ReplacementPlayer replaced_by = 7;
   bool has_avatar = 8;
   string last_update = 9;
+  optional int32 majsoul_id = 10;
+  optional string majsoul_nickname = 11;
+  optional string ronin_id = 12;
 }
 
 message SessionHistoryResult {
@@ -454,13 +467,15 @@ message EventData {
   int32 min_games = 9;
   bool is_team = 10;
   bool is_prescripted = 11;
-  int32 autostart = 12; // time until game autostart
   RulesetConfig ruleset_config = 14;
   bool is_listed = 15;
   bool is_rating_shown = 16;
   bool achievements_shown = 17;
   bool allow_view_other_tables = 18;
   PlatformType platform_id = 19;
+  bool allow_manual_add_replay = 20;
+  optional WindShuffleMode wind_shuffle_mode = 21;
+  optional string request_id = 22; // required by CreateEvent; reuse across retries
 }
 
 message TableState {
@@ -503,15 +518,16 @@ message PlayerSeating {
 
 message PlayerSeatingSwiss {
   int32 player_id = 1;
-  float rating = 2;
 }
 
 message TableItemSwiss {
-  repeated PlayerSeatingSwiss players = 1; // should be 4 elements
+  // Three real players for sanma events, four otherwise.
+  repeated PlayerSeatingSwiss players = 1;
 }
 
 message PrescriptedTable {
-  repeated RegisteredPlayer players = 1; // should be 4 elements
+  // Three real players for sanma events, four otherwise.
+  repeated RegisteredPlayer players = 1;
 }
 
 message Chombo {
@@ -530,6 +546,7 @@ message SessionState {
   repeated Chombo chombo = 9;
 }
 
+// For sanma (3-player) events place4 is unused and ignored.
 message Uma {
   int32 place1 = 1;
   int32 place2 = 2;
@@ -559,6 +576,7 @@ enum PlatformType {
   PLATFORM_TYPE_UNSPECIFIED = 0;
   PLATFORM_TYPE_TENHOUNET = 1;
   PLATFORM_TYPE_MAHJONGSOUL = 2;
+  PLATFORM_TYPE_RONIN = 3;
 }
 
 message RulesetConfig {
@@ -575,7 +593,7 @@ message RulesetConfig {
   bool tonpuusen = 11;
   bool with_abortives = 12;
   bool with_atamahane = 13;
-  bool with_buttobi = 14;
+  bool with_tobi = 14;
   bool with_kazoe = 15;
   bool with_kiriage_mangan = 16;
   bool with_kuitan = 17;
@@ -599,13 +617,30 @@ message RulesetConfig {
   repeated int32 yaku_with_pao = 35;
   bool with_yakitori = 36;
   int32 yakitori_penalty = 37;
-  bool chombo_ends_game = 38;
-  int32 honba_value = 39;
+  reserved 38;
+  reserved "chombo_ends_game";
+  reserved 39;
+  reserved "honba_value";
   repeated int32 double_yakuman = 40;
+  // False uses separate wind and dragon yaku for new events.
+  bool use_aggregated_yakuhai = 41;
+  // Sanma (3-player) settings. When with_sanma is false the rest are ignored.
+  // 3-player mode for this event
+  bool with_sanma = 42;
+  // Total points exchanged on exhaustive draw; 0/unset means 3000.
+  int32 sanma_draw_payments = 43;
+  // Points paid to EACH other player on chombo; 0/unset means 6000.
+  int32 sanma_chombo_payments = 44;
+  // Count chombo after timeout as one hand under either timed ending policy.
+  // All players penalized together consume a single hand.
+  bool chombo_counts_as_hand = 45;
+  // Points paid by each opponent per honba on tsumo. The discarder pays
+  // (player_count - 1) shares on ron, including pao tsumo settled as ron.
+  int32 honba_value_per_player = 46;
 }
 
 message MajsoulSearchEx {
-  string nickname= 1;
+  string nickname = 1;
   int32 account_id = 2;
 }
 

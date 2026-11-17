@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import ujson as json
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -123,6 +124,7 @@ class Tournament(BaseModel):
     is_event = models.BooleanField(default=False)
     is_majsoul_tournament = models.BooleanField(default=False)
     is_pantheon_registration = models.BooleanField(default=False)
+    is_ronin_tournament = models.BooleanField(default=False)
     russian_cup = models.BooleanField(default=False)
     fill_city_in_registration = models.BooleanField(default=False)
     opened_registration = models.BooleanField(default=False)
@@ -146,6 +148,14 @@ class Tournament(BaseModel):
 
     def __unicode__(self):
         return self.name
+
+    def clean(self):
+        if self.is_ronin_tournament and not (
+            self.is_online() and self.is_pantheon_registration and not self.is_majsoul_tournament
+        ):
+            raise ValidationError(
+                _("Ronin tournament should be an online tournament with Pantheon registration and without Majsoul.")
+            )
 
     def get_url(self):
         if self.is_upcoming:
@@ -447,6 +457,7 @@ class OnlineTournamentRegistration(BaseModel):
     last_name = models.CharField(max_length=255, verbose_name=_("Last name"), null=True, blank=True)
     city = models.CharField(max_length=255, verbose_name=_("City"))
     tenhou_nickname = models.CharField(max_length=255, verbose_name=_("Tenhou.net nickname"), null=True, blank=True)
+    ronin_id = models.CharField(max_length=255, verbose_name=_("Ronin ID"), null=True, blank=True)
     is_highlighted = models.BooleanField(default=False)
     contact = models.CharField(
         max_length=255,
