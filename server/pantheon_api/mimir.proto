@@ -1,19 +1,15 @@
-/*  Pantheon common files
- *  Copyright (C) 2016  o.klimenko aka ctizen
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// Copyright 2020 o.klimenko aka ctizen
+//
+// Licensed under the Apache License, Version 2.0 (the "License"). You may not
+// use this file except in compliance with the License. A copy of the License is
+// located at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// or in the "license" file accompanying this file. This file is distributed on
+// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+// express or implied. See the License for the specific language governing
+// permissions and limitations under the License.
 
 // protolint:disable REPEATED_FIELD_NAMES_PLURALIZED
 syntax = "proto3";
@@ -23,158 +19,80 @@ package common;
 import "atoms.proto";
 
 service Mimir {
-  rpc GetRulesets (EventsGetRulesetsPayload)
-    returns (EventsGetRulesetsResponse);
-  rpc GetTimezones (EventsGetTimezonesPayload)
-    returns (EventsGetTimezonesResponse);
-  rpc GetCountries (EventsGetCountriesPayload)
-    returns (EventsGetCountriesResponse);
-  rpc GetEvents (EventsGetEventsPayload)
-    returns (EventsGetEventsResponse);
-  rpc GetEventsById (EventsGetEventsByIdPayload)
-    returns (EventsGetEventsByIdResponse);
-  rpc GetMyEvents (PlayersGetMyEventsPayload)
-    returns (PlayersGetMyEventsResponse);
-  rpc GetGameConfig (GenericEventPayload)
-    returns (GameConfig);
-  rpc GetRatingTable (EventsGetRatingTablePayload)
-    returns (EventsGetRatingTableResponse);
-  rpc GetLastGames (EventsGetLastGamesPayload)
-    returns (EventsGetLastGamesResponse);
-  rpc GetGame (GenericSessionPayload)
-    returns (EventsGetGameResponse);
-  rpc GetGamesSeries (GenericEventPayload)
-    returns (EventsGetGamesSeriesResponse);
-  rpc GetCurrentSessions (PlayersGetCurrentSessionsPayload)
-    returns (PlayersGetCurrentSessionsResponse);
-  rpc GetAllRegisteredPlayers (EventsGetAllRegisteredPlayersPayload)
-    returns (EventsGetAllRegisteredPlayersResponse);
-  rpc GetTimerState (GenericEventPayload)
-    returns (EventsGetTimerStateResponse);
-  rpc GetSessionOverview (GenericSessionPayload)
-    returns (GamesGetSessionOverviewResponse);
-  rpc GetPlayerStats (PlayersGetPlayerStatsPayload)
-    returns (PlayersGetPlayerStatsResponse);
-  rpc AddRound (GamesAddRoundPayload)
-    returns (GamesAddRoundResponse);
-  rpc PreviewRound (GamesPreviewRoundPayload)
-    returns (GamesPreviewRoundResponse);
-  rpc AddOnlineReplay (GamesAddOnlineReplayPayload)
-    returns (GamesAddOnlineReplayResponse);
-  rpc GetLastResults (PlayersGetLastResultsPayload)
-    returns (PlayersGetLastResultsResponse);
-  rpc GetLastRound (PlayersGetLastRoundPayload)
-    returns (PlayersGetLastRoundResponse);
-  rpc GetAllRounds (GenericSessionPayload)
-    returns (PlayersGetAllRoundsResponse);
-  rpc GetLastRoundByHash (GenericSessionPayload)
-    returns (PlayersGetLastRoundByHashResponse);
-  rpc GetEventForEdit (EventsGetEventForEditPayload)
-    returns (EventsGetEventForEditResponse);
-  rpc RebuildScoring (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc CreateEvent (EventData)
-    returns (GenericEventPayload); // note: input data is EventData here
-  rpc UpdateEvent (EventsUpdateEventPayload)
-    returns (GenericSuccessResponse);
-  rpc FinishEvent (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc ToggleListed (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc GetTablesState (EventsGetTablesStatePayload)
-    returns (EventsGetTablesStateResponse);
-  rpc StartTimer (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc RegisterPlayer (EventsRegisterPlayerPayload)
-    returns (GenericSuccessResponse);
-  rpc UnregisterPlayer (EventsUnregisterPlayerPayload)
-    returns (GenericSuccessResponse);
-  rpc UpdatePlayerSeatingFlag (EventsUpdatePlayerSeatingFlagPayload)
-    returns (GenericSuccessResponse);
-  rpc GetAchievements (EventsGetAchievementsPayload)
-    returns (EventsGetAchievementsResponse);
-  rpc ToggleHideResults (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc ToggleHideAchievements (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc UpdatePlayersLocalIds (EventsUpdatePlayersLocalIdsPayload)
-    returns (GenericSuccessResponse);
-  rpc UpdatePlayerReplacement (EventsUpdatePlayerReplacementPayload)
-    returns (GenericSuccessResponse);
-  rpc UpdatePlayersTeams (EventsUpdatePlayersTeamsPayload)
-    returns (GenericSuccessResponse);
-  rpc StartGame (GamesStartGamePayload)
-    returns (GenericSessionPayload);
-  rpc EndGame (GenericSessionPayload)
-    returns (GenericSuccessResponse);
-  rpc CancelGame (GenericSessionPayload)
-    returns (GenericSuccessResponse);
-  rpc FinalizeSession (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc DropLastRound (GamesDropLastRoundPayload)
-    returns (GenericSuccessResponse);
-  rpc DefinalizeGame (GenericSessionPayload)
-    returns (GenericSuccessResponse);
-  rpc AddPenalty (GamesAddPenaltyPayload)
-    returns (GenericSuccessResponse);
-  rpc AddPenaltyGame (GamesAddPenaltyGamePayload)
-    returns (GenericSessionPayload);
-  rpc GetPlayer (PlayersGetPlayerPayload)
-    returns (PlayersGetPlayerResponse);
-  rpc GetCurrentSeating (GenericEventPayload)
-    returns (EventsGetCurrentSeatingResponse);
-  rpc MakeShuffledSeating (SeatingMakeShuffledSeatingPayload)
-    returns (GenericSuccessResponse);
-  rpc MakeSwissSeating (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc ResetSeating (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc GenerateSwissSeating (SeatingGenerateSwissSeatingPayload)
-    returns (SeatingGenerateSwissSeatingResponse);
-  rpc MakeIntervalSeating (SeatingMakeIntervalSeatingPayload)
-    returns (GenericSuccessResponse);
-  rpc MakePrescriptedSeating (SeatingMakePrescriptedSeatingPayload)
-    returns (GenericSuccessResponse);
-  rpc GetNextPrescriptedSeating (GenericEventPayload)
-    returns (SeatingGetNextPrescriptedSeatingResponse);
-  rpc GetPrescriptedEventConfig (GenericEventPayload)
-    returns (EventsGetPrescriptedEventConfigResponse);
-  rpc UpdatePrescriptedEventConfig (EventsUpdatePrescriptedEventConfigPayload)
-    returns (GenericSuccessResponse);
-  rpc InitStartingTimer (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc GetStartingTimer (GenericEventPayload)
-    returns (EventsGetStartingTimerResponse);
-  rpc ClearStatCache (ClearStatCachePayload)
-    returns (GenericSuccessResponse);
-  rpc ForceFinishGame (GenericSessionPayload)
-    returns (GenericSuccessResponse);
-  rpc AddTypedOnlineReplay (TypedGamesAddOnlineReplayPayload)
-    returns (GamesAddOnlineReplayResponse);
-  rpc NotifyPlayersSessionStartsSoon (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc CallReferee (CallRefereePayload)
-    returns (GenericSuccessResponse);
-  rpc RecalcAchievements (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc RecalcPlayerStats (GenericEventPayload)
-    returns (GenericSuccessResponse);
-  rpc ListPenalties (GenericEventPayload)
-    returns (PenaltiesResponse);
-  rpc CancelPenalty (CancelPenaltyPayload)
-    returns (GenericSuccessResponse);
-  rpc AddExtraTime (AddExtraTimePayload)
-    returns (GenericSuccessResponse);
-  rpc ListMyPenalties (GenericEventPayload)
-    returns (PenaltiesResponse);
-  rpc ListChombo (GenericEventPayload)
-    returns (ChomboResponse);
-  rpc GetCurrentStateForPlayer (GetCurrentStatePayload)
-    returns (GetCurrentStateResponse);
+  rpc GetRulesets(EventsGetRulesetsPayload) returns (EventsGetRulesetsResponse);
+  rpc GetEvents(EventsGetEventsPayload) returns (EventsGetEventsResponse);
+  rpc GetEventsById(EventsGetEventsByIdPayload) returns (EventsGetEventsByIdResponse);
+  rpc GetEventStates(EventsGetEventStatesPayload)
+      returns (EventsGetEventStatesResponse);
+  rpc GetMyEvents(PlayersGetMyEventsPayload) returns (PlayersGetMyEventsResponse);
+  rpc GetGameConfig(GenericEventPayload) returns (GameConfig);
+  rpc GetRatingTable(EventsGetRatingTablePayload) returns (EventsGetRatingTableResponse);
+  rpc GetLastGames(EventsGetLastGamesPayload) returns (EventsGetLastGamesResponse);
+  rpc GetRecentPublicGames(EventsGetRecentPublicGamesPayload) returns (EventsGetRecentPublicGamesResponse);
+  rpc GetGame(GenericSessionPayload) returns (EventsGetGameResponse);
+  rpc GetGamesSeries(GenericEventPayload) returns (EventsGetGamesSeriesResponse);
+  rpc GetCurrentSessions(PlayersGetCurrentSessionsPayload) returns (PlayersGetCurrentSessionsResponse);
+  rpc GetAllRegisteredPlayers(EventsGetAllRegisteredPlayersPayload) returns (EventsGetAllRegisteredPlayersResponse);
+  rpc GetTimerState(GenericEventPayload) returns (EventsGetTimerStateResponse);
+  rpc GetSessionOverview(GenericSessionPayload) returns (GamesGetSessionOverviewResponse);
+  rpc GetPlayerStats(PlayersGetPlayerStatsPayload) returns (PlayersGetPlayerStatsResponse);
+  rpc AddRound(GamesAddRoundPayload) returns (GamesAddRoundResponse);
+  rpc PreviewRound(GamesPreviewRoundPayload) returns (GamesPreviewRoundResponse);
+  rpc AddOnlineReplay(GamesAddOnlineReplayPayload) returns (GamesAddOnlineReplayResponse);
+  rpc GetLastResults(PlayersGetLastResultsPayload) returns (PlayersGetLastResultsResponse);
+  rpc GetLastRound(PlayersGetLastRoundPayload) returns (PlayersGetLastRoundResponse);
+  rpc GetAllRounds(GenericSessionPayload) returns (PlayersGetAllRoundsResponse);
+  rpc GetLastRoundByHash(GenericSessionPayload) returns (PlayersGetLastRoundByHashResponse);
+  rpc GetEventForEdit(EventsGetEventForEditPayload) returns (EventsGetEventForEditResponse);
+  rpc RebuildScoring(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc CreateEvent(EventData) returns (GenericEventPayload); // note: input data is EventData here
+  rpc UpdateEvent(EventsUpdateEventPayload) returns (GenericSuccessResponse);
+  rpc FinishEvent(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc ToggleListed(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc GetTablesState(EventsGetTablesStatePayload) returns (EventsGetTablesStateResponse);
+  rpc StartTimer(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc RegisterPlayer(EventsRegisterPlayerPayload) returns (GenericSuccessResponse);
+  rpc UnregisterPlayer(EventsUnregisterPlayerPayload) returns (GenericSuccessResponse);
+  rpc UpdatePlayerSeatingFlag(EventsUpdatePlayerSeatingFlagPayload) returns (GenericSuccessResponse);
+  rpc GetAchievements(EventsGetAchievementsPayload) returns (EventsGetAchievementsResponse);
+  rpc ToggleHideResults(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc ToggleHideAchievements(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc UpdatePlayersLocalIds(EventsUpdatePlayersLocalIdsPayload) returns (GenericSuccessResponse);
+  rpc UpdatePlayerReplacement(EventsUpdatePlayerReplacementPayload) returns (GenericSuccessResponse);
+  rpc UpdatePlayersTeams(EventsUpdatePlayersTeamsPayload) returns (GenericSuccessResponse);
+  rpc StartGame(GamesStartGamePayload) returns (GenericSessionPayload);
+  rpc CancelGame(GenericSessionPayload) returns (GenericSuccessResponse);
+  rpc FinalizeSession(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc DropLastRound(GamesDropLastRoundPayload) returns (GenericSuccessResponse);
+  rpc DefinalizeGame(GenericSessionPayload) returns (GenericSuccessResponse);
+  rpc AddPenalty(GamesAddPenaltyPayload) returns (GenericSuccessResponse);
+  rpc AddPenaltyGame(GamesAddPenaltyGamePayload) returns (GenericSessionPayload);
+  rpc GetPlayer(PlayersGetPlayerPayload) returns (PlayersGetPlayerResponse);
+  rpc GetCurrentSeating(GenericEventPayload) returns (EventsGetCurrentSeatingResponse);
+  rpc MakeShuffledSeating(SeatingMakeShuffledSeatingPayload) returns (GenericSuccessResponse);
+  rpc MakeSwissSeating(SeatingMakeSwissSeatingPayload) returns (GenericSuccessResponse);
+  rpc ResetSeating(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc GenerateSwissSeating(SeatingGenerateSwissSeatingPayload) returns (SeatingGenerateSwissSeatingResponse);
+  rpc MakeIntervalSeating(SeatingMakeIntervalSeatingPayload) returns (GenericSuccessResponse);
+  rpc MakePrescriptedSeating(SeatingMakePrescriptedSeatingPayload) returns (GenericSuccessResponse);
+  rpc GetPrescriptedEventConfig(GenericEventPayload) returns (EventsGetPrescriptedEventConfigResponse);
+  rpc UpdatePrescriptedEventConfig(EventsUpdatePrescriptedEventConfigPayload) returns (GenericSuccessResponse);
+  rpc ClearStatCache(ClearStatCachePayload) returns (GenericSuccessResponse);
+  rpc ForceFinishGame(GenericSessionPayload) returns (GenericSuccessResponse);
+  rpc AddTypedOnlineReplay(TypedGamesAddOnlineReplayPayload) returns (GamesAddOnlineReplayResponse);
+  rpc NotifyPlayersSessionStartsSoon(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc CallReferee(CallRefereePayload) returns (GenericSuccessResponse);
+  rpc RecalcAchievements(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc RecalcPlayerStats(GenericEventPayload) returns (GenericSuccessResponse);
+  rpc ListPenalties(GenericEventPayload) returns (PenaltiesResponse);
+  rpc CancelPenalty(CancelPenaltyPayload) returns (GenericSuccessResponse);
+  rpc AddExtraTime(AddExtraTimePayload) returns (GenericSuccessResponse);
+  rpc ListMyPenalties(GenericEventPayload) returns (PenaltiesResponse);
+  rpc ListChombo(GenericEventPayload) returns (ChomboResponse);
+  rpc GetCurrentStateForPlayer(GetCurrentStatePayload) returns (GetCurrentStateResponse);
 }
 
-message EventsGetRulesetsPayload {
-}
+message EventsGetRulesetsPayload {}
 
 message EventsGetRulesetsResponse {
   repeated RulesetConfig rulesets = 1;
@@ -182,29 +100,12 @@ message EventsGetRulesetsResponse {
   repeated string ruleset_titles = 3;
 }
 
-message EventsGetTimezonesPayload {
-  string addr = 1;
-}
-
-message EventsGetTimezonesResponse {
-  string preferred_by_ip = 1;
-  repeated string timezones = 2;
-}
-
-message EventsGetCountriesPayload {
-  string addr = 1;
-}
-
-message EventsGetCountriesResponse {
-  string preferred_by_ip = 1;
-  repeated Country countries = 2;
-}
-
 message EventsGetEventsPayload {
   int32 limit = 1;
   int32 offset = 2;
   bool filter_unlisted = 3;
   string filter = 4;
+  optional bool only_ongoing = 5;
 }
 
 message EventsGetEventsResponse {
@@ -220,8 +121,20 @@ message EventsGetEventsByIdResponse {
   repeated Event events = 1;
 }
 
-message PlayersGetMyEventsPayload {
+message EventsGetEventStatesPayload {
+  repeated int32 ids = 1;
 }
+
+message EventState {
+  int32 id = 1;
+  bool finished = 2;
+}
+
+message EventsGetEventStatesResponse {
+  repeated EventState events = 1;
+}
+
+message PlayersGetMyEventsPayload {}
 
 message PlayersGetMyEventsResponse {
   repeated MyEvent events = 1;
@@ -231,13 +144,36 @@ message EventsGetRatingTablePayload {
   repeated int32 event_id_list = 1;
   string order_by = 2;
   string order = 3;
-  // @deprecated
-  optional bool with_prefinished = 4 [deprecated = true];
   optional bool only_min_games = 5;
+  optional string date_from = 6;
+  optional string date_to = 7;
 }
 
 message EventsGetRatingTableResponse {
   repeated PlayerInRating list = 1;
+}
+
+// Fixed-size feed of the latest finished sessions with publicly listed results.
+message EventsGetRecentPublicGamesPayload {}
+
+message RecentPublicGamePlayer {
+  int32 player_id = 1;
+  string title = 2;
+  int32 score = 3;
+}
+
+message RecentPublicGame {
+  reserved 1, 2;
+  string session_hash = 3;
+  int32 event_id = 4;
+  string event_title = 5;
+  string date = 6;
+  repeated RecentPublicGamePlayer players = 7;
+  int32 start_points = 8;
+}
+
+message EventsGetRecentPublicGamesResponse {
+  repeated RecentPublicGame games = 1;
 }
 
 message EventsGetLastGamesPayload {
@@ -250,13 +186,11 @@ message EventsGetLastGamesPayload {
 
 message EventsGetLastGamesResponse {
   repeated GameResult games = 1;
-  repeated Player players = 2;
   int32 total_games = 3;
 }
 
 message EventsGetGameResponse {
   GameResult game = 1;
-  repeated Player players = 2;
 }
 
 message EventsGetGamesSeriesResponse {
@@ -293,8 +227,6 @@ message EventsGetTimerStateResponse {
   bool finished = 2;
   int32 time_remaining = 3;
   bool waiting_for_timer = 4;
-  bool have_autostart = 5;
-  bool autostart_timer = 6;
   int32 hide_seating_after = 8;
 }
 
@@ -305,11 +237,14 @@ message GamesGetSessionOverviewResponse {
   repeated PlayerInSession players = 4;
   SessionState state = 5;
   EventsGetTimerStateResponse timer_state = 6;
+  optional string next_round_token = 7;
 }
 
 message PlayersGetPlayerStatsPayload {
   int32 player_id = 1;
   repeated int32 event_id_list = 2;
+  optional string date_from = 3;
+  optional string date_to = 4;
 }
 
 message PlayersGetPlayerStatsResponse {
@@ -330,6 +265,10 @@ message PlayersGetPlayerStatsResponse {
 message GamesAddRoundPayload {
   string session_hash = 1;
   Round round_data = 2;
+  optional string round_token = 3;
+  // Timer reading when the outcome menu opened, before score entry.
+  // Absent for untimed events and clients using server submission time.
+  optional int32 outcome_timer_seconds_remaining = 4;
 }
 
 message GamesAddRoundResponse {
@@ -352,6 +291,7 @@ message GamesAddRoundResponse {
   // certain rules should be applied in current case, e.g., agariyame
   // should not be applied on chombo or abortive draw.
   optional RoundOutcome last_outcome = 10;
+  optional string next_round_token = 11;
 }
 
 message GamesPreviewRoundPayload {
@@ -447,6 +387,7 @@ message EventsGetAchievementsPayload {
 message EventsGetAchievementsResponse {
   repeated Achievement achievements = 1;
   string last_update = 2;
+  repeated PersonEx players = 3;
 }
 
 message EventsUpdatePlayersLocalIdsPayload {
@@ -468,11 +409,15 @@ message EventsUpdatePlayersTeamsPayload {
 message GamesStartGamePayload {
   int32 event_id = 1;
   repeated int32 players = 2; // ids list, e-s-w-n
+  optional string request_id = 3;
 }
 
 message GamesDropLastRoundPayload {
   string session_hash = 1;
   repeated IntermediateResultOfSession intermediate_results = 2;
+  // Explicit confirmation to undo a finished club game's results and last round
+  // atomically. Normal last-round cancellation leaves this unset.
+  optional bool cancel_results = 3;
 }
 
 message GamesAddPenaltyPayload {
@@ -503,11 +448,18 @@ message SeatingMakeShuffledSeatingPayload {
   int32 event_id = 1;
   int32 groups_count = 2;
   int32 seed = 3; // randomness factor
+  optional WindShuffleMode wind_shuffle_mode = 4;
+}
+
+message SeatingMakeSwissSeatingPayload {
+  int32 event_id = 1;
+  optional WindShuffleMode wind_shuffle_mode = 2;
 }
 
 message SeatingGenerateSwissSeatingPayload {
   int32 event_id = 1;
   bool substitute_replacement_players = 2;
+  optional WindShuffleMode wind_shuffle_mode = 3;
 }
 
 message SeatingGenerateSwissSeatingResponse {
@@ -517,15 +469,12 @@ message SeatingGenerateSwissSeatingResponse {
 message SeatingMakeIntervalSeatingPayload {
   int32 event_id = 1;
   int32 step = 2;
+  optional WindShuffleMode wind_shuffle_mode = 3;
 }
 
 message SeatingMakePrescriptedSeatingPayload {
   int32 event_id = 1;
-  bool randomize_at_tables = 2;
-}
-
-message SeatingGetNextPrescriptedSeatingResponse {
-  repeated PrescriptedTable tables = 1;
+  optional WindShuffleMode wind_shuffle_mode = 3; // instead of 'bool randomize_at_tables'
 }
 
 message EventsGetPrescriptedEventConfigResponse {
@@ -541,17 +490,13 @@ message EventsUpdatePrescriptedEventConfigPayload {
   string prescript = 3;
 }
 
-message EventsGetStartingTimerResponse {
-  int32 timer = 1; // seconds to start
-}
-
 message ClearStatCachePayload {
   int32 player_id = 1;
 }
 
 message TypedGamesAddOnlineReplayPayload {
   int32 event_id = 1;
-  int32 platform_id = 2;
+  PlatformType platform_id = 2;
   int32 content_type = 3;
   int32 log_timestamp = 4;
   string replay_hash = 5;

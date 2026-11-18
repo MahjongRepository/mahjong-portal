@@ -45,6 +45,10 @@
             <p class="alert alert-danger">{% trans 'Before applying for the tournament, please set tenhou id on Pantheon first' %}</p>
         {% endif %}
 
+        {% if missed_ronin_id_error %}
+            <p class="alert alert-danger">{% trans 'Before applying for the tournament, please set your Ronin ID in Pantheon settings first' %}</p>
+        {% endif %}
+
         {% if form_data_error %}
             <p class="alert alert-danger">{% trans 'Incorrect form data' %}</p>
         {% endif %}
@@ -102,12 +106,14 @@
                         {% if tournament.is_online %}
                             {% if tournament.is_majsoul_tournament %}
                                 <th scope="col">{% trans 'Majsoul nickname' %}</th>
+                            {% elif tournament.is_ronin_tournament %}
+                                <th scope="col">{% trans 'Ronin ID' %}</th>
                             {% else %}
                                 <th scope="col">{% trans 'Tenhou.net nickname' %}</th>
                             {% endif %}
                         {% endif %}
 
-                        {% if not tournament.is_majsoul_tournament %}
+                        {% if not tournament.is_majsoul_tournament and not tournament.is_ronin_tournament %}
                             <th scope="col">{% trans 'Dan' %}</th>
                         {% endif %}
 
@@ -150,12 +156,14 @@
                                     {% else %}
                                         <td>{{ registration_item.ms_nickname|get_safe_str }}</td>
                                     {% endif %}
+                                {% elif tournament.is_ronin_tournament %}
+                                    <td>{{ registration_item.ronin_id|get_safe_str }}</td>
                                 {% else %}
                                     <td>{{ registration_item.tenhou_nickname|get_safe_str }}</td>
                                 {% endif %}
                             {% endif %}
 
-                            {% if not tournament.is_majsoul_tournament %}
+                            {% if not tournament.is_majsoul_tournament and not tournament.is_ronin_tournament %}
                                 <td>
                                     {% with registration_item.player as player %}
                                         {% include 'player/_online_account.html' %}

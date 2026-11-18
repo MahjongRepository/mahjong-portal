@@ -100,6 +100,13 @@ class FreyServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsPayload"),
                 output=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),
             ),
+            "FindByRoninIds": Endpoint(
+                service_name="Frey",
+                name="FindByRoninIds",
+                function=getattr(service, "FindByRoninIds"),
+                input=_sym_db.GetSymbol("common.PersonsFindByRoninIdsPayload"),
+                output=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),
+            ),
             "FindByMajsoulAccountId": Endpoint(
                 service_name="Frey",
                 name="FindByMajsoulAccountId",
@@ -182,6 +189,27 @@ class FreyServer(TwirpServer):
                 name="SetNotificationsSettings",
                 function=getattr(service, "SetNotificationsSettings"),
                 input=_sym_db.GetSymbol("common.PersonsSetNotificationsSettingsPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "E2eCreateAccounts": Endpoint(
+                service_name="Frey",
+                name="E2eCreateAccounts",
+                function=getattr(service, "E2eCreateAccounts"),
+                input=_sym_db.GetSymbol("common.E2eCreateAccountsPayload"),
+                output=_sym_db.GetSymbol("common.E2eCreateAccountsResponse"),
+            ),
+            "E2eRegisterPlayers": Endpoint(
+                service_name="Frey",
+                name="E2eRegisterPlayers",
+                function=getattr(service, "E2eRegisterPlayers"),
+                input=_sym_db.GetSymbol("common.E2eEventPlayersPayload"),
+                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            ),
+            "E2eUnregisterPlayers": Endpoint(
+                service_name="Frey",
+                name="E2eUnregisterPlayers",
+                function=getattr(service, "E2eUnregisterPlayers"),
+                input=_sym_db.GetSymbol("common.E2eEventPlayersPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
         }
@@ -297,6 +325,15 @@ class FreyClient(TwirpClient):
             **kwargs,
         )
 
+    def FindByRoninIds(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/FindByRoninIds",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.PersonsFindByTenhouIdsResponse"),
+            **kwargs,
+        )
+
     def FindByMajsoulAccountId(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/FindByMajsoulAccountId",
@@ -399,6 +436,33 @@ class FreyClient(TwirpClient):
     def SetNotificationsSettings(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Frey/SetNotificationsSettings",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def E2eCreateAccounts(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/E2eCreateAccounts",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.E2eCreateAccountsResponse"),
+            **kwargs,
+        )
+
+    def E2eRegisterPlayers(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/E2eRegisterPlayers",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
+            **kwargs,
+        )
+
+    def E2eUnregisterPlayers(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Frey/E2eUnregisterPlayers",
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),

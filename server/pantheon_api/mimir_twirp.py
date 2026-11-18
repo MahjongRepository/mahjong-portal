@@ -23,20 +23,6 @@ class MimirServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.EventsGetRulesetsPayload"),
                 output=_sym_db.GetSymbol("common.EventsGetRulesetsResponse"),
             ),
-            "GetTimezones": Endpoint(
-                service_name="Mimir",
-                name="GetTimezones",
-                function=getattr(service, "GetTimezones"),
-                input=_sym_db.GetSymbol("common.EventsGetTimezonesPayload"),
-                output=_sym_db.GetSymbol("common.EventsGetTimezonesResponse"),
-            ),
-            "GetCountries": Endpoint(
-                service_name="Mimir",
-                name="GetCountries",
-                function=getattr(service, "GetCountries"),
-                input=_sym_db.GetSymbol("common.EventsGetCountriesPayload"),
-                output=_sym_db.GetSymbol("common.EventsGetCountriesResponse"),
-            ),
             "GetEvents": Endpoint(
                 service_name="Mimir",
                 name="GetEvents",
@@ -50,6 +36,13 @@ class MimirServer(TwirpServer):
                 function=getattr(service, "GetEventsById"),
                 input=_sym_db.GetSymbol("common.EventsGetEventsByIdPayload"),
                 output=_sym_db.GetSymbol("common.EventsGetEventsByIdResponse"),
+            ),
+            "GetEventStates": Endpoint(
+                service_name="Mimir",
+                name="GetEventStates",
+                function=getattr(service, "GetEventStates"),
+                input=_sym_db.GetSymbol("common.EventsGetEventStatesPayload"),
+                output=_sym_db.GetSymbol("common.EventsGetEventStatesResponse"),
             ),
             "GetMyEvents": Endpoint(
                 service_name="Mimir",
@@ -78,6 +71,13 @@ class MimirServer(TwirpServer):
                 function=getattr(service, "GetLastGames"),
                 input=_sym_db.GetSymbol("common.EventsGetLastGamesPayload"),
                 output=_sym_db.GetSymbol("common.EventsGetLastGamesResponse"),
+            ),
+            "GetRecentPublicGames": Endpoint(
+                service_name="Mimir",
+                name="GetRecentPublicGames",
+                function=getattr(service, "GetRecentPublicGames"),
+                input=_sym_db.GetSymbol("common.EventsGetRecentPublicGamesPayload"),
+                output=_sym_db.GetSymbol("common.EventsGetRecentPublicGamesResponse"),
             ),
             "GetGame": Endpoint(
                 service_name="Mimir",
@@ -303,13 +303,6 @@ class MimirServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.GamesStartGamePayload"),
                 output=_sym_db.GetSymbol("common.GenericSessionPayload"),
             ),
-            "EndGame": Endpoint(
-                service_name="Mimir",
-                name="EndGame",
-                function=getattr(service, "EndGame"),
-                input=_sym_db.GetSymbol("common.GenericSessionPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
             "CancelGame": Endpoint(
                 service_name="Mimir",
                 name="CancelGame",
@@ -377,7 +370,7 @@ class MimirServer(TwirpServer):
                 service_name="Mimir",
                 name="MakeSwissSeating",
                 function=getattr(service, "MakeSwissSeating"),
-                input=_sym_db.GetSymbol("common.GenericEventPayload"),
+                input=_sym_db.GetSymbol("common.SeatingMakeSwissSeatingPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
             "ResetSeating": Endpoint(
@@ -408,13 +401,6 @@ class MimirServer(TwirpServer):
                 input=_sym_db.GetSymbol("common.SeatingMakePrescriptedSeatingPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
             ),
-            "GetNextPrescriptedSeating": Endpoint(
-                service_name="Mimir",
-                name="GetNextPrescriptedSeating",
-                function=getattr(service, "GetNextPrescriptedSeating"),
-                input=_sym_db.GetSymbol("common.GenericEventPayload"),
-                output=_sym_db.GetSymbol("common.SeatingGetNextPrescriptedSeatingResponse"),
-            ),
             "GetPrescriptedEventConfig": Endpoint(
                 service_name="Mimir",
                 name="GetPrescriptedEventConfig",
@@ -428,20 +414,6 @@ class MimirServer(TwirpServer):
                 function=getattr(service, "UpdatePrescriptedEventConfig"),
                 input=_sym_db.GetSymbol("common.EventsUpdatePrescriptedEventConfigPayload"),
                 output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "InitStartingTimer": Endpoint(
-                service_name="Mimir",
-                name="InitStartingTimer",
-                function=getattr(service, "InitStartingTimer"),
-                input=_sym_db.GetSymbol("common.GenericEventPayload"),
-                output=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            ),
-            "GetStartingTimer": Endpoint(
-                service_name="Mimir",
-                name="GetStartingTimer",
-                function=getattr(service, "GetStartingTimer"),
-                input=_sym_db.GetSymbol("common.GenericEventPayload"),
-                output=_sym_db.GetSymbol("common.EventsGetStartingTimerResponse"),
             ),
             "ClearStatCache": Endpoint(
                 service_name="Mimir",
@@ -548,24 +520,6 @@ class MimirClient(TwirpClient):
             **kwargs,
         )
 
-    def GetTimezones(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Mimir/GetTimezones",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.EventsGetTimezonesResponse"),
-            **kwargs,
-        )
-
-    def GetCountries(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Mimir/GetCountries",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.EventsGetCountriesResponse"),
-            **kwargs,
-        )
-
     def GetEvents(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Mimir/GetEvents",
@@ -581,6 +535,15 @@ class MimirClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.EventsGetEventsByIdResponse"),
+            **kwargs,
+        )
+
+    def GetEventStates(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/GetEventStates",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.EventsGetEventStatesResponse"),
             **kwargs,
         )
 
@@ -617,6 +580,15 @@ class MimirClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.EventsGetLastGamesResponse"),
+            **kwargs,
+        )
+
+    def GetRecentPublicGames(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
+        return self._make_request(
+            url=f"{server_path_prefix}/common.Mimir/GetRecentPublicGames",
+            ctx=ctx,
+            request=request,
+            response_obj=_sym_db.GetSymbol("common.EventsGetRecentPublicGamesResponse"),
             **kwargs,
         )
 
@@ -908,15 +880,6 @@ class MimirClient(TwirpClient):
             **kwargs,
         )
 
-    def EndGame(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Mimir/EndGame",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
     def CancelGame(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Mimir/CancelGame",
@@ -1043,15 +1006,6 @@ class MimirClient(TwirpClient):
             **kwargs,
         )
 
-    def GetNextPrescriptedSeating(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Mimir/GetNextPrescriptedSeating",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.SeatingGetNextPrescriptedSeatingResponse"),
-            **kwargs,
-        )
-
     def GetPrescriptedEventConfig(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
         return self._make_request(
             url=f"{server_path_prefix}/common.Mimir/GetPrescriptedEventConfig",
@@ -1067,24 +1021,6 @@ class MimirClient(TwirpClient):
             ctx=ctx,
             request=request,
             response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def InitStartingTimer(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Mimir/InitStartingTimer",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.GenericSuccessResponse"),
-            **kwargs,
-        )
-
-    def GetStartingTimer(self, *args, ctx, request, server_path_prefix="/twirp", **kwargs):
-        return self._make_request(
-            url=f"{server_path_prefix}/common.Mimir/GetStartingTimer",
-            ctx=ctx,
-            request=request,
-            response_obj=_sym_db.GetSymbol("common.EventsGetStartingTimerResponse"),
             **kwargs,
         )
 
