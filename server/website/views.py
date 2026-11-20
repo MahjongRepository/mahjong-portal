@@ -315,6 +315,7 @@ def tournament_registrations_api(request, tournament_id):
             "ms_nickname": getattr(registration, "ms_nickname", None) or None,
             "ms_account_id": getattr(registration, "ms_account_id", None),
             "ronin_id": getattr(registration, "ronin_id", None) or None,
+            "is_highlighted": getattr(registration, "is_highlighted", False),
         }
         for registration in registrations
     ]
