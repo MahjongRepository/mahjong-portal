@@ -30,11 +30,15 @@ class MSBaseCommand(BaseCommand):
         asyncio.run(self.run(settings.MS_USERNAME, settings.MS_PASSWORD, *args, **options))
 
     async def run(self, username, password, *args, **options):
+        from player.mahjong_soul.management.ms_loader import collect
+
+        client_info = collect(timeout=30)
+
         lobby, channel, version_to_force = await self.connect()
 
-        result = await self.re_login(lobby, version_to_force)
+        result = await self.re_login(lobby, client_info)
         if not result:
-            result = await self.login(lobby, username, password, version_to_force)
+            result = await self.login(lobby, username, password, client_info)
 
         if not result:
             print("Exit")
@@ -138,14 +142,14 @@ class MSBaseCommand(BaseCommand):
 
         return True
 
-    async def login(self, lobby, username, password, version_to_force):
+    async def login(self, lobby, username, password, client_info):
         print(f"Login with username[{username}] and password[{password}]")
-        print(f"Version {version_to_force}")
+        print(f"Version {client_info['resource_version']}")
 
         uuid_key = str(uuid.uuid1())
 
-        resource_version = "0.16.290"
-        package_version = "4.0.51"
+        resource_version = client_info["resource_version"]
+        package_version = client_info["package_version"]
 
         req = pb.ReqLogin()
         req.account = username
@@ -168,7 +172,6 @@ class MSBaseCommand(BaseCommand):
         req.device.screen_type = 1
         req.random_key = uuid_key
         req.gen_access_token = True
-        # todo: search path to resolve version
         req.client_version_string = f"WebGL_2022-{resource_version}"
         req.currency_platforms.append(1)
         req.currency_platforms.append(2)
@@ -194,8 +197,8 @@ class MSBaseCommand(BaseCommand):
 
         return True
 
-    async def re_login(self, lobby, version_to_force):
-        print(f"Version {version_to_force}")
+    async def re_login(self, lobby, client_info):
+        print(f"Version: {client_info['resource_version']}")
 
         if not os.path.exists(self.TOKEN_PATH):
             print("Access token is not present")
@@ -213,8 +216,8 @@ class MSBaseCommand(BaseCommand):
             print("Invalid access token")
             return False
 
-        resource_version = "0.16.290"
-        package_version = "4.0.51"
+        resource_version = client_info["resource_version"]
+        package_version = client_info["package_version"]
 
         request = pb.ReqOauth2Login()
         request.access_token = data["access_token"]
@@ -235,7 +238,6 @@ class MSBaseCommand(BaseCommand):
         )
         request.device.screen_type = 1
         request.random_key = data["random_key"]
-        # todo: search path to resolve version
         request.client_version_string = f"WebGL_2022-{resource_version}"
         request.currency_platforms.append(1)
         request.currency_platforms.append(2)
