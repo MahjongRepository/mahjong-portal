@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import Max, Q
+from django.db.models.functions import Cast
 from django.utils.translation import gettext as _
 
 from mahjong_portal.models import BaseModel
@@ -67,7 +68,11 @@ class Player(BaseModel):
 
     @property
     def latest_ema_id(self):
-        return int(Player.ema_queryset().first().ema_id)
+        return int(
+            Player.ema_queryset().aggregate(latest_ema_id=Max(Cast("ema_id", output_field=models.IntegerField())))[
+                "latest_ema_id"
+            ]
+        )
 
     @property
     def attaching_request_in_progress(self):
