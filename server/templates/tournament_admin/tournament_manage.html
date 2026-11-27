@@ -117,6 +117,9 @@
                         <th scope="col">#</th>
                         <th scope="col">{% trans 'Name' %}</th>
                         <th scope="col">{% trans 'City' %}</th>
+                        {% if tournament.is_online %}
+                            <th scope="col">{% trans 'Nickname' %}</th>
+                        {% endif %}
                         <th scope="col">{% trans 'Registered at' %}</th>
                         {% if not tournament.is_online_rating %}
                             <th scope="col">{% trans 'Phone' %}</th>
@@ -154,6 +157,17 @@
                                     {{ registration_item.city }}
                                 {% endif %}
                             </td>
+                            {% if tournament.is_online %}
+                                <td>
+                                    {% if tournament.is_majsoul_tournament %}
+                                        {{ registration_item.ms_nickname }}
+                                    {% elif tournament.is_ronin_tournament %}
+                                        {{ registration_item.ronin_id }}
+                                    {% else %}
+                                        {{ registration_item.tenhou_nickname }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
                             <td>
                                 <nobr>
                                     {% timezone 'Europe/Moscow' %}
