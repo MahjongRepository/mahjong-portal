@@ -282,10 +282,22 @@ def toggle_registration(request, tournament_id, **kwargs):
     if tournament.opened_registration and tournament.is_hidden:
         tournament.is_hidden = False
 
+    if tournament.opened_registration:
+        tournament.is_pre_registration = False
+
     tournament.save()
 
     return redirect(tournament_manage, tournament.id)
 
+@login_required
+@tournament_manager_auth_required
+def toggle_preregistration(request, tournament_id, **kwargs):
+    tournament = kwargs["tournament"]
+    tournament.opened_registration = False
+    tournament.is_pre_registration = True
+    tournament.save()
+
+    return redirect(tournament_manage, tournament.id)
 
 @login_required
 @tournament_manager_auth_required

@@ -63,6 +63,12 @@
                                 <td><a href="{% url 'toggle_registration' tournament.id %}" class="btn btn-success">{% trans 'Open registration'%}</a></td>
                             </tr>
                         {% endif %}
+                        {% if not tournament.is_pre_registration %}
+                            <tr>
+                                <td>{% trans 'Change to preregistration' %}</td>
+                                <td><a href="{% url 'toggle_preregistration' tournament.id %}" class="btn btn-success">{% trans 'Change to preregistration'%}</a></td>
+                            </tr>
+                        {% endif %}
                         {% if tournament.registrations_pre_moderation %}
                             <tr>
                                 <td>{% trans 'Premoderation of participants' %}</td>
