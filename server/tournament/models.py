@@ -157,6 +157,26 @@ class Tournament(BaseModel):
                 _("Ronin tournament should be an online tournament with Pantheon registration and without Majsoul.")
             )
 
+        if self.is_pantheon_registration and not self.is_online():
+            raise ValidationError(
+                _("Pantheon registration should be enabled for online tournaments only.")
+            )
+
+        if self.with_confirm_code and not self.is_online():
+            raise ValidationError(
+                _("Confirm code allowed for online tournaments only.")
+            )
+
+        if self.is_online() and not self.is_pantheon_registration:
+            raise ValidationError(
+                _("Pantheon registration should be enabled for online tournaments.")
+            )
+
+        if self.is_online() and not self.is_ronin_tournament and not self.online_config:
+            raise ValidationError(
+                _("Required attached online config for online tournament.")
+            )
+
     def get_url(self):
         if self.is_upcoming:
             return reverse("tournament_announcement", kwargs={"slug": self.slug})
