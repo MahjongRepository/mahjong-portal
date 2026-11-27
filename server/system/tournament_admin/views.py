@@ -289,6 +289,7 @@ def toggle_registration(request, tournament_id, **kwargs):
 
     return redirect(tournament_manage, tournament.id)
 
+
 @login_required
 @tournament_manager_auth_required
 def toggle_preregistration(request, tournament_id, **kwargs):
@@ -298,6 +299,7 @@ def toggle_preregistration(request, tournament_id, **kwargs):
     tournament.save()
 
     return redirect(tournament_manage, tournament.id)
+
 
 @login_required
 @tournament_manager_auth_required

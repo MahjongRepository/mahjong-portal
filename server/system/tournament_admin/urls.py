@@ -11,11 +11,12 @@ from system.tournament_admin.views import (
     toggle_hidden,
     toggle_highlight,
     toggle_premoderation,
+    toggle_preregistration,
     toggle_registration,
     toggle_share_notes,
     tournament_edit,
     tournament_manage,
-    upload_results, toggle_preregistration,
+    upload_results,
 )
 
 urlpatterns = [
@@ -39,7 +40,11 @@ urlpatterns = [
         name="approve_registration",
     ),
     url(r"^managed/(?P<tournament_id>\d+)/registration/toggle$", toggle_registration, name="toggle_registration"),
-    url(r"^managed/(?P<tournament_id>\d+)/preregistration/toggle$", toggle_preregistration, name="toggle_preregistration"),
+    url(
+        r"^managed/(?P<tournament_id>\d+)/preregistration/toggle$",
+        toggle_preregistration,
+        name="toggle_preregistration",
+    ),
     url(r"^managed/(?P<tournament_id>\d+)/premoderation/toggle$", toggle_premoderation, name="toggle_premoderation"),
     url(r"^(?P<tournament_id>\d+)/upload/$", upload_results, name="upload_results"),
     url(r"^managed/(?P<tournament_id>\d+)/share_notes/toggle$", toggle_share_notes, name="toggle_share_notes"),
