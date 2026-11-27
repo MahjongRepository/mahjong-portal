@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import math
+
 from dateutil.relativedelta import relativedelta
 from django.template.defaultfilters import floatformat
 from django.utils import timezone
@@ -254,3 +256,16 @@ class RatingEMACalculation(RatingRRCalculation, RatingDatesMixin):
             return 50
         else:
             return 0
+
+    def _determine_tournaments_number(self, number_of_tournaments):
+        """
+        5 tournaments is a base
+        for additional calculations we are taking 80% of additional tournaments
+        Check about page for detailed description
+        """
+        if number_of_tournaments <= 5:
+            return number_of_tournaments
+
+        n = number_of_tournaments - 5
+
+        return 5 + math.ceil(self._calculate_percentage(n, 80))
